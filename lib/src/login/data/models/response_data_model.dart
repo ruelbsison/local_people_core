@@ -5,9 +5,9 @@ part 'response_data_model.g.dart';
 @JsonSerializable()
 class ResponseDataModel{
   int code;
-  dynamic meta;
+  String description;
   List<dynamic>data;
-  ResponseDataModel({this.code, this.meta, this.data});
+  ResponseDataModel({this.code, this.description, this.data});
   factory ResponseDataModel.fromJson(Map<String, dynamic> json) => _$ResponseDataModelFromJson(json);
   Map<String, dynamic> toJson() => _$ResponseDataModelToJson(this);
 

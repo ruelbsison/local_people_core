@@ -8,11 +8,13 @@ part of 'user_model.dart';
 
 UserModel _$UserModelFromJson(Map<String, dynamic> json) {
   return UserModel(
-    id: json['id'] as String,
+    id: json['id'] as int,
     name: json['name'] as String,
     email: json['email'] as String,
     token: json['token'] as String,
-    tokenExpirationDate: json['tokenExpirationDate'] as String,
+    token_expiration_date: json['token_expiration_date'] as String,
+    created_at: json['created_at'] as String,
+    updated_at: json['updated_at'] as String,
   );
 }
 
@@ -21,5 +23,7 @@ Map<String, dynamic> _$UserModelToJson(UserModel instance) => <String, dynamic>{
       'name': instance.name,
       'email': instance.email,
       'token': instance.token,
-      'tokenExpirationDate': instance.tokenExpirationDate,
+      'token_expiration_date': instance.token_expiration_date,
+      'created_at': instance.created_at,
+      'updated_at': instance.updated_at,
     };

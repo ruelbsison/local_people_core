@@ -9,7 +9,7 @@ part of 'response_data_model.dart';
 ResponseDataModel _$ResponseDataModelFromJson(Map<String, dynamic> json) {
   return ResponseDataModel(
     code: json['code'] as int,
-    meta: json['meta'],
+    description: json['description'] as String,
     data: json['data'] as List,
   );
 }
@@ -17,6 +17,6 @@ ResponseDataModel _$ResponseDataModelFromJson(Map<String, dynamic> json) {
 Map<String, dynamic> _$ResponseDataModelToJson(ResponseDataModel instance) =>
     <String, dynamic>{
       'code': instance.code,
-      'meta': instance.meta,
+      'description': instance.description,
       'data': instance.data,
     };
