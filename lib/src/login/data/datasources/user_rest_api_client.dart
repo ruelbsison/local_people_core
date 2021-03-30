@@ -20,7 +20,7 @@ abstract class UserRestApiClient {
   Future<List<UserModel>> listUsers();
 
   @POST(UserRestApi.users)
-  Future<ResponseDataModel> createUser();
+  Future<UserModel> createUser();
 
   @GET(UserRestApi.usersWithId)
   //Future<Response> showUser(String id);

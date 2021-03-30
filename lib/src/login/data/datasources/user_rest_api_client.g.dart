@@ -36,7 +36,7 @@ class _UserRestApiClient implements UserRestApiClient {
   }
 
   @override
-  Future<ResponseDataModel> createUser() async {
+  Future<UserModel> createUser() async {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
@@ -48,7 +48,7 @@ class _UserRestApiClient implements UserRestApiClient {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = ResponseDataModel.fromJson(_result.data);
+    final value = UserModel.fromJson(_result.data);
     return value;
   }
 
