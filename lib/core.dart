@@ -19,15 +19,6 @@ export './src/core/utils/scroll_behavior.dart';
 export './src/core/utils/validators.dart';
 export './src/core/utils/logging_setup.dart';
 
-/*import './src/core/bloc/bloc_event_state.dart';
-import './src/core/bloc/bloc_provider.dart';
-import './src/core/bloc/bloc_state_builder.dart';
-import './src/core/bloc/bloc_state_transform_base.dart';
-import './src/core/bloc/bloc_state_transform_builder.dart';*/
-
-//export 'src/splash/ui/views/splash_screen.dart';
-export './splash.dart';
-
 export './src/data/models/user_model.dart';
 export './src/data/models/auth_session_model.dart';
 export './src/data/models/auth_profile_model.dart';
