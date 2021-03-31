@@ -2,6 +2,7 @@ import 'package:retrofit/retrofit.dart';
 import 'package:dio/dio.dart';
 import '../models/user_model.dart';
 import '../models/response_data_model.dart';
+//import '../../../core/network/server_response.dart';
 
 part 'user_rest_api_client.g.dart';
 
@@ -20,17 +21,17 @@ abstract class UserRestApiClient {
   Future<List<UserModel>> listUsers();
 
   @POST(UserRestApi.users)
-  Future<UserModel> createUser();
+  Future<UserModel> createUser(@Path("id") int id, @Body() UserModel user);
 
   @GET(UserRestApi.usersWithId)
   //Future<Response> showUser(String id);
-  Future<UserModel> showUser(String id);
+  Future<UserModel> showUser(@Path("id") int id);
 
   @PATCH(UserRestApi.usersWithId)
-  Future<ResponseDataModel> updateUser(String id);
+  Future<UserModel> updateUser(@Path("id") int id, @Body() UserModel user);
 
   @DELETE(UserRestApi.usersWithId)
-  Future<ResponseDataModel> deleteUser(String id);
+  Future<void> deleteUser(@Path("id") int id);
 }
 
 

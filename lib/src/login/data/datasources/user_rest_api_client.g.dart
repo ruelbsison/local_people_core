@@ -36,10 +36,13 @@ class _UserRestApiClient implements UserRestApiClient {
   }
 
   @override
-  Future<UserModel> createUser() async {
+  Future<UserModel> createUser(id, user) async {
+    ArgumentError.checkNotNull(id, 'id');
+    ArgumentError.checkNotNull(user, 'user');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
+    _data.addAll(user?.toJson() ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/users',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -58,7 +61,7 @@ class _UserRestApiClient implements UserRestApiClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.request<Map<String, dynamic>>('/users/{id}',
+    final _result = await _dio.request<Map<String, dynamic>>('/users/$id',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'GET',
@@ -71,12 +74,14 @@ class _UserRestApiClient implements UserRestApiClient {
   }
 
   @override
-  Future<ResponseDataModel> updateUser(id) async {
+  Future<UserModel> updateUser(id, user) async {
     ArgumentError.checkNotNull(id, 'id');
+    ArgumentError.checkNotNull(user, 'user');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.request<Map<String, dynamic>>('/users/{id}',
+    _data.addAll(user?.toJson() ?? <String, dynamic>{});
+    final _result = await _dio.request<Map<String, dynamic>>('/users/$id',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'PATCH',
@@ -84,17 +89,17 @@ class _UserRestApiClient implements UserRestApiClient {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = ResponseDataModel.fromJson(_result.data);
+    final value = UserModel.fromJson(_result.data);
     return value;
   }
 
   @override
-  Future<ResponseDataModel> deleteUser(id) async {
+  Future<void> deleteUser(id) async {
     ArgumentError.checkNotNull(id, 'id');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    final _result = await _dio.request<Map<String, dynamic>>('/users/{id}',
+    await _dio.request<void>('/users/$id',
         queryParameters: queryParameters,
         options: RequestOptions(
             method: 'DELETE',
@@ -102,7 +107,6 @@ class _UserRestApiClient implements UserRestApiClient {
             extra: _extra,
             baseUrl: baseUrl),
         data: _data);
-    final value = ResponseDataModel.fromJson(_result.data);
-    return value;
+    return null;
   }
 }
