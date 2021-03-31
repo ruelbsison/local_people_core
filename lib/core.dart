@@ -19,7 +19,8 @@ export './src/core/utils/scroll_behavior.dart';
 export './src/core/utils/validators.dart';
 export './src/core/utils/logging_setup.dart';
 
-export './src/data/models/user_model.dart';
+export './src/core/exceptions/server_exception.dart';
+/*export './src/data/models/user_model.dart';
 export './src/data/models/auth_session_model.dart';
 export './src/data/models/auth_profile_model.dart';
 export './src/data/models/auth_model.dart';
@@ -37,4 +38,4 @@ export './src/data/datasources/auth_data_source.dart';
 export './src/domain/repositories/authentication_repository.dart';
 export './src/domain/repositories/user_repository.dart';
 export './src/data/repositories/user_repository.dart';
-export './src/data/repositories/authentication_repository.dart';
+export './src/data/repositories/authentication_repository.dart';*/
