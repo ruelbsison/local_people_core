@@ -25,7 +25,13 @@ class AuthorizationConfig {
     @required this.authRedirectURI,
     @required this.authTokenKey,
     @required this.authDebugTag,
-  }) :  authIssuer = 'https://$authDomain',
+    @required this.authUserBaseKey,
+  }) :  authUserIdKey = 'user_id_$authUserBaseKey',
+        authUserNameKey = 'user_name_$authUserBaseKey',
+        authUserEmailKey = 'user_email_$authUserBaseKey',
+        authUserTokenKey = 'user_token_$authUserBaseKey',
+        authUserTokenDateKey = 'user_token_data_$authUserBaseKey',
+        authIssuer = 'https://$authDomain',
         authDiscoveryUrl = 'https://$authDomain/.well-known/openid-configuration',
         authServiceConfiguration = AuthorizationServiceConfiguration(
           'https://$authDomain/authorize',
@@ -41,6 +47,12 @@ class AuthorizationConfig {
   final String authRedirectURI;
   final String authTokenKey;
   final bool authDebugTag;
+  final String authUserBaseKey;
+  final String authUserIdKey;
+  final String authUserNameKey;
+  final String authUserEmailKey;
+  final String authUserTokenKey;
+  final String authUserTokenDateKey;
   final String authIssuer;
   final String authDiscoveryUrl;
   //preferEphemeralSession
@@ -64,7 +76,8 @@ class AuthorizationConfig {
         authClientId: AUTH0_TRADER_CLIENT_ID_DEV,
         authRedirectURI: AUTH0_TRADER_REDIRECT_URI_DEV,
         authTokenKey: AUTH0_PROVIDER_TOKEN_KEY,
-        authDebugTag: true
+        authDebugTag: true,
+        authUserBaseKey: 'trader',
     );
   }
 
@@ -74,7 +87,8 @@ class AuthorizationConfig {
         authClientId: AUTH0_CLIENT_CLIENT_ID_DEV,
         authRedirectURI: AUTH0_CLIENT_REDIRECT_URI_DEV,
         authTokenKey: AUTH0_CLIENT_TOKEN_KEY,
-        authDebugTag: true
+        authDebugTag: true,
+        authUserBaseKey: 'client',
     );
   }
 
