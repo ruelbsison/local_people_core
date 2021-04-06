@@ -4,6 +4,7 @@ export './src/core/widgets/loading_widget.dart';
 export './src/core/widgets/custom_alert.dart';
 export './src/core/widgets/spacer_widget.dart';
 export './src/core/widgets/logo_widget.dart';
+export './src/core/widgets/appbar_widget.dart';
 
 export './src/core/local/localization.dart';
 
@@ -18,6 +19,8 @@ export './src/core/utils/dialogs.dart';
 export './src/core/utils/scroll_behavior.dart';
 export './src/core/utils/validators.dart';
 export './src/core/utils/logging_setup.dart';
+
+export './src/core/network/network_info.dart';
 
 export './src/core/exceptions/server_exception.dart';
 /*export './src/data/models/user_model.dart';
