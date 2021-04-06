@@ -1,9 +1,11 @@
-import '../blocs/splash_bloc.dart';
-import 'dart:async';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+//import '../blocs/splash_bloc.dart';
+//import 'dart:async';
+//import 'package:flutter/material.dart';
+//import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../../core/widgets/logo_widget.dart';
 
-/*class SplashScreen extends StatelessWidget {
+class SplashScreen extends StatelessWidget {
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => SplashScreen());
   }
@@ -11,19 +13,20 @@ import 'package:flutter_bloc/flutter_bloc.dart';
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
-        child: Image.asset(
-          "assets/images/app-icon.png",
-          key: const Key('splash_bloc_image'),
-          height: 300.0,
-          width: 300.0,
+      body: Container(
+        color: Colors.white,
+        child: Center(
+          child: SizedBox(
+            width: 240,
+            child: LogoWidget(),
+          ),
         ),
       ),
     );
   }
-}*/
+}
 
-class SplashScreen extends StatefulWidget {
+/*class SplashScreen extends StatefulWidget {
   static Route route() {
     return MaterialPageRoute<void>(builder: (_) => SplashScreen());
   }
@@ -61,44 +64,14 @@ class _SplashScreenState extends State<SplashScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       body: Container(
-        width: MediaQuery.of(context).size.width,
-        height: MediaQuery.of(context).size.height,
-        //color: Colors.blue,
-        child: _buildSplashWidget(),
-        /*child: BlocProvider(
-          create: (_) => _splashBloc,
-          child: BlocListener<SplashBloc, SplashState>(
-            listener: (context, state) {
-              if (state is SplashLoaded) {
-                /* AppRouter.pushPageReplacement(
-                  context,
-                  MainScreen(),
-                ); */
-              }
-            },
-            child: _buildSplashWidget(),
+        color: Colors.white,
+        child: Center(
+          child: SizedBox(
+            width: 240,
+            child: LogoWidget(),
           ),
-        ),*/
+        ),
       ),
     );
   }
-
-  Widget _buildSplashWidget() {
-    //BlocProvider.of<SplashBloc>(context).add(SplashEventStarted());
-    //_splashBloc.add(SplashEventStarted());
-    startTimeout();
-    return Center(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Image.asset(
-            "assets/images/company-logo.png",
-            height: 300.0,
-            width: 300.0,
-          ),
-        ],
-      ),
-    );
-  }
-}
+}*/
