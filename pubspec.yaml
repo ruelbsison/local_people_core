@@ -96,24 +96,38 @@ flutter:
   # For details regarding fonts in packages, see
   # https://flutter.dev/custom-fonts/#from-packages
 fonts:
-  - family: Inter
+  - family: Merriweather
     fonts:
-      - assets: packages/local_people_core/assets/fonts/Inter/OFL.txt
-      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Thin.ttf
-        weight: 100
-      - assets: packages/local_people_core/assets/fonts/Inter/Inter-ExtraLight.ttf
-        weight: 200
-      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Light.ttf
-        weight: 300
-      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Regular.ttf
-        weight: 400
-      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Medium.ttf
-        weight: 500
-      - assets: packages/local_people_core/assets/fonts/Inter/Inter-SemiBold.ttf
-        weight: 600
-      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Bold.ttf
-        weight: 700
-      - assets: packages/local_people_core/assets/fonts/Inter/Inter-ExtraBold.ttf
-        weight: 800
-      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Black.ttf
+      - asset: packages/local_people_core/assets/fonts/Merriweather-Black.ttf
         weight: 900
+  - family: RedHatDisplay
+    fonts:
+      - asset: packages/local_people_core/assets/fonts/RedHatDisplay-Regular.ttf
+        weight: 400
+      - asset: packages/local_people_core/assets/fonts/RedHatDisplay-Medium.ttf
+        weight: 500
+      - asset: packages/local_people_core/assets/fonts/RedHatDisplay-Bold.ttf
+        weight: 700
+
+#fonts:
+#  - family: Inter
+#    fonts:
+#      - assets: packages/local_people_core/assets/fonts/Inter/OFL.txt
+#      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Thin.ttf
+#        weight: 100
+#      - assets: packages/local_people_core/assets/fonts/Inter/Inter-ExtraLight.ttf
+#        weight: 200
+#      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Light.ttf
+#        weight: 300
+#      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Regular.ttf
+#        weight: 400
+#      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Medium.ttf
+#        weight: 500
+#      - assets: packages/local_people_core/assets/fonts/Inter/Inter-SemiBold.ttf
+#        weight: 600
+#      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Bold.ttf
+#        weight: 700
+#      - assets: packages/local_people_core/assets/fonts/Inter/Inter-ExtraBold.ttf
+#        weight: 800
+#      - assets: packages/local_people_core/assets/fonts/Inter/Inter-Black.ttf
+#        weight: 900
