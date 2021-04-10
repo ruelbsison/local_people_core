@@ -4,10 +4,11 @@ import 'package:flutter/material.dart';
 
 class LogoWidget extends StatelessWidget {
   final double height;
+  final double width;
   final BoxFit fit;
-  final Color backgroundColor = Colors.white;
+  final Color backgroundColor = Color.fromRGBO(255, 255, 255, 0.5);
 
-  LogoWidget({Key key, this.fit, this.height}) : super(key: key);
+  LogoWidget({Key key, this.fit, this.width, this.height}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -15,6 +16,8 @@ class LogoWidget extends StatelessWidget {
       'packages/local_people_core/assets/images/app-logo.png',
       fit: fit,
       height: height,
+      width: width,
+      //color: Colors.green,
       //color: backgroundColor,
     );
   }

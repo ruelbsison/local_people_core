@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
+//import 'package:intl/intl.dart';
 import 'logo_widget.dart';
+import '../utils/date_format.dart';
 
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor = Colors.white;
@@ -15,51 +16,69 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   @override
   Widget build(BuildContext context) {
-    //final Size size = MediaQuery.of(context).size;
-    return AppBar(
-      automaticallyImplyLeading: false, // Don't show the leading button
-      titleSpacing: 8,
-      centerTitle: false,
-      backgroundColor: backgroundColor,
-      title: LogoWidget(
-        fit: BoxFit.contain,
-        height: AppBar().preferredSize.height * 2,
-      ),
-      /*title: Row(
-        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-        children: [
-          LogoWidget(
+    final headline6Style = Theme.of(context).textTheme.headline6;
+    final MediaQueryData mediaQueryData = MediaQuery.of(context);
+    final Size size = MediaQuery.of(context).size;
+    return PreferredSize(
+      preferredSize: Size.fromHeight(120.0),
+      child: AppBar(
+        automaticallyImplyLeading: false, // Don't show the leading button
+        titleSpacing: 0,
+        centerTitle: false,
+        /*title: Container(
+          width: size.width,
+          padding: EdgeInsets.only(top: 20, left: 12),
+          //color: Colors.green,
+          alignment: Alignment.centerLeft,
+          child: LogoWidget(
             fit: BoxFit.contain,
-            height: AppBar().preferredSize.height * 2,
+            height: 40 * mediaQueryData.devicePixelRatio,
+            //width: 105 * mediaQueryData.devicePixelRatio,
           ),
-        ]
-      ),*/
-      actions: actions,
-      bottom: PreferredSize (
-        preferredSize: Size(double.infinity, 20),
-        child: SafeArea (
-          child: Container (
-            // padding: EdgeInsets.all(16.0),
-            padding: EdgeInsets.only(left: 16.0),
-            child: Text(
-              DateFormat.yMMMMEEEEd().format(DateTime.now()),  //+ ' (' + size.width.toString() + 'x' + size.height.toString() + ')',
-              textAlign: TextAlign.left,
-              style: TextStyle(
-                color: Color.fromRGBO(0, 0, 0, 1),
-                fontFamily: 'Inter',
-                fontSize: 16,
-                letterSpacing: 0 /*percentages not used in flutter. defaulting to zero*/,
-                fontWeight: FontWeight.bold,
+        ),*/
+        flexibleSpace: Row(
+          mainAxisAlignment: MainAxisAlignment.start,
+          children: [
+            Container(
+              width: size.width,
+              padding: EdgeInsets.only(top: 20, left: 12),
+              //color: Colors.green,
+              alignment: Alignment.centerLeft,
+              child: LogoWidget(
+                fit: BoxFit.contain,
+                height: 40 * mediaQueryData.devicePixelRatio,
+                //width: 105 * mediaQueryData.devicePixelRatio,
               ),
             ),
+          ],
+        ),
+        elevation: 0.0,
+        bottom: PreferredSize(
+          preferredSize: Size.fromHeight(60.0),
+          child: Container(
+            //margin: EdgeInsets.only(top: 12.0, bottom: 12.0),
+            padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
+            child: Text(
+              //DateFormat('dd MMMM yyyy').format(DateTime.now()),  //+ ' (' + size.width.toString() + 'x' + size.height.toString() + ')',
+              DateFormatUtil.getFormattedDate(),
+              textAlign: TextAlign.left,
+              style: headline6Style,
+            ),
             alignment: Alignment.centerLeft,
+            decoration: BoxDecoration(
+              color: Colors.white,
+              border: Border(
+                bottom: BorderSide(
+                  color: Color.fromRGBO(186, 207, 216, 1),
+                ),
+              ),
+            ),
           ),
         ),
-        // preferredSize: Size.fromHeight(20.0),
-      )
+      ),
     );
   }
 
   @override
-  Size get preferredSize => new Size.fromHeight(appBar.preferredSize.height + 20);
+  Size get preferredSize => new Size.fromHeight(120.0);
 }
