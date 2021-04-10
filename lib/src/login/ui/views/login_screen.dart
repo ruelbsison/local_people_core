@@ -24,7 +24,7 @@ class LoginScreen extends StatelessWidget {
         ),
       ],
     );*/
-    final theme = Theme.of(context);
+    final headline6Style = Theme.of(context).textTheme.headline6;
     return Scaffold(
       body: Center (
         //child: LoadingWidget(),
@@ -39,7 +39,7 @@ class LoginScreen extends StatelessWidget {
             //const Text('⛅', style: TextStyle(fontSize: 64)),
             Text(
               'Verifying access',
-              style: theme.textTheme.headline5,
+              style: headline6Style,
             ),
           ],
         )
