@@ -5,7 +5,7 @@ class AppThemeConfig {
   static Color darkPrimary = Color(0xff1f1f1f);
   static Color lightAccent = Color(0xff2ca8e2);
   static Color darkAccent = Color(0xff2ca8e2);
-  static Color lightBG = Colors.white;
+  static Color lightBG = Color.fromRGBO(239, 244, 246, 1); //Color.fromRGBO(222, 232, 237, 0.5); //Color(0xe5e5e5);//Colors.white;
   static Color darkBG = Color(0xff121212);
 
   static ThemeData lightTheme = ThemeData(
@@ -20,26 +20,89 @@ class AppThemeConfig {
     textTheme: TextTheme(
       button: TextStyle(
         // OpenSans is similar to NotoSans but the uppercases look a bit better IMO
-        fontFamily: 'Inter',
+        fontFamily: 'RedHatDisplay',
       ),
+      headline3: TextStyle(
+          fontFamily: 'RedHatDisplay'
+      ), // display2
+      headline1: TextStyle(
+          fontFamily: 'RedHatDisplay'
+      ), // display2
+      headline2: TextStyle(
+          fontFamily: 'RedHatDisplay'
+      ), // display2
+      headline4: TextStyle(
+        fontFamily: "Merriweather",
+        color: Color.fromRGBO(0, 63, 92, 1),
+        fontSize: 18,
+        fontWeight: FontWeight.w900,
+      ), // display2
+      headline5: TextStyle(
+          fontFamily: 'RedHatDisplay'
+      ), // headline
+      headline6: TextStyle(
+          fontFamily: 'Merriweather',
+          color: Color.fromRGBO(0, 63, 92, 1),
+          fontSize: 30,
+          fontWeight: FontWeight.w900,
+          //height: 1.5
+      ),     // title
+      subtitle1: TextStyle(
+          fontFamily: 'RedHatDisplay'
+      ),   // subhead
+      bodyText1: TextStyle (
+          color: Color.fromRGBO(87,106,129,1),
+          fontFamily: 'RedHatDisplay',
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+      ),    // body2
+      bodyText2: TextStyle(
+        fontFamily: 'RedHatDisplay',
+        color: Color.fromRGBO(1, 43, 58, 1),
+        fontSize: 14,
+        fontWeight: FontWeight.w600,
+      ),    // body1
+      subtitle2: TextStyle(
+        fontFamily: 'RedHatDisplay',
+        color: Color.fromRGBO(1, 43, 58, 1),
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+      ), // subtitle
       caption: TextStyle(
-        fontFamily: 'Inter',
-        fontSize: 12.0,
-        fontWeight: FontWeight.normal,
-        color: Colors.deepPurple[300],
+        fontFamily: 'RedHatDisplay',
+        color: Color.fromRGBO(1, 43, 58, 1),
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
       ),
-      headline3: TextStyle(fontFamily: 'Inter'), // display2
-      headline1: TextStyle(fontFamily: 'Inter'), // display2
-      headline2: TextStyle(fontFamily: 'Inter'), // display2
-      headline4: TextStyle(fontFamily: 'Inter'), // display2
-      headline5: TextStyle(fontFamily: 'Inter'), // headline
-      headline6: TextStyle(fontFamily: 'Inter'),     // title
-      subtitle1: TextStyle(fontFamily: 'Inter'),   // subhead
-      bodyText1: TextStyle(fontFamily: 'Inter'),    // body2
-      bodyText2: TextStyle(fontFamily: 'Inter'),    // body1
-      subtitle2: TextStyle(fontFamily: 'Inter'), // subtitle
-      overline: TextStyle(fontFamily: 'Inter'),
+      overline: TextStyle(
+          color: Color.fromRGBO(87, 106, 128, 1),
+          fontFamily: 'RedHatDisplay',
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          //height: 1.5 /*PERCENT not supported*/
+      ),
     ),
+    textButtonTheme: TextButtonThemeData (
+      style: TextButton.styleFrom(
+          primary: Color(0xaabacd)
+      ),
+    ),
+    elevatedButtonTheme: ElevatedButtonThemeData (
+      style: ElevatedButton.styleFrom(
+        primary: Color.fromRGBO(170, 186, 205, 1),
+        /*textStyle: TextStyle(
+          fontFamily: 'RedHatDisplay',
+          color: Color(0xffffff),
+          fontSize: 16,
+          fontWeight: FontWeight.normal,
+        )*/
+      ),
+    ),
+    outlinedButtonTheme: OutlinedButtonThemeData (
+      style: OutlinedButton.styleFrom(
+          primary: Color(0xaabacd)
+      ),
+    )
   );
 
   static ThemeData darkTheme = ThemeData(
