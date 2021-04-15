@@ -2,8 +2,8 @@ import 'package:intl/intl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
 import 'package:local_people_core/login.dart';
-import 'package:local_people_core/src/data/models/job_model.dart';
-import 'package:local_people_core/src/data/datasources/job_rest_api_client.dart';
+import 'package:local_people_core/src/jobs/data/models/job_model.dart';
+import 'package:local_people_core/src/jobs/data/datasources/job_rest_api_client.dart';
 import 'package:mockito/mockito.dart';
 
 class MockUserRestApiClient extends Mock implements UserRestApiClient {}
