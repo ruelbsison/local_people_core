@@ -1,35 +1,24 @@
-// import 'package:meta/meta.dart';
-// import 'package:logging/logging.dart';
-//
-// import '../../../../core.dart';
-// import 'user_rest_api_client.dart';
+import 'package:meta/meta.dart';
+import 'package:logging/logging.dart';
+
+import '../../../../core.dart';
+import 'client_rest_api_client.dart';
 import '../models/user_model.dart';
+import 'user_remote_data_source.dart';
 
-abstract class UserRemoteDataSource {
-  Future<List<UserModel>> listUsers();
+class ClientRemoteDataSourceImpl implements UserRemoteDataSource {
+  final logger = Logger("ClientRemoteDataSourceImpl");
+  final ClientRestApiClient clientRestApiClient;
 
-  Future<UserModel> createUser(UserModel user);
-
-  Future<UserModel> showUser(int id);
-
-  Future<UserModel> updateUser(UserModel user);
-
-  Future<void> deleteUser(int id);
-}
-
-/*class UserRemoteDataSourceImpl implements UserRemoteDataSource {
-  final logger = Logger("UserRemoteDataSourceImpl");
-  final UserRestApiClient userRestApiClient;
-
-  UserRemoteDataSourceImpl({
-    @required this.userRestApiClient
-  })  : assert(userRestApiClient != null);
+  ClientRemoteDataSourceImpl({
+    @required this.clientRestApiClient
+  })  : assert(ClientRestApiClient != null);
 
   @override
   Future<UserModel> createUser(UserModel user) async {
     UserModel data;
     try {
-        data = await userRestApiClient.createUser(user.id, user);
+      data = await clientRestApiClient.createUser(user.id, user);
     } catch (error, stacktrace) {
       logger.severe("Exception occured in createUser", error, stacktrace);
       throw ServerException.withError(error: error);
@@ -41,7 +30,7 @@ abstract class UserRemoteDataSource {
   @override
   Future<void> deleteUser(int id) async {
     try {
-      await userRestApiClient.showUser(id);
+      await clientRestApiClient.showUser(id);
     } catch (error, stacktrace) {
       logger.severe("Exception occured in showUser", error, stacktrace);
       throw ServerException.withError(error: error);
@@ -52,7 +41,7 @@ abstract class UserRemoteDataSource {
   Future<List<UserModel>> listUsers() async {
     List<UserModel> data;
     try {
-      data = await userRestApiClient.listUsers();
+      data = await clientRestApiClient.listUsers();
     } catch (error, stacktrace) {
       logger.severe("Exception occured in showUser", error, stacktrace);
       throw ServerException.withError(error: error);
@@ -65,7 +54,7 @@ abstract class UserRemoteDataSource {
   Future<UserModel> showUser(int id) async {
     UserModel data;
     try {
-      data = await userRestApiClient.showUser(id);
+      data = await clientRestApiClient.showUser(id);
     } catch (error, stacktrace) {
       logger.severe("Exception occured in showUser", error, stacktrace);
       throw ServerException.withError(error: error);
@@ -78,7 +67,7 @@ abstract class UserRemoteDataSource {
   Future<UserModel> updateUser(UserModel user) async {
     UserModel data;
     try {
-      data = await userRestApiClient.updateUser(user.id, user);
+      data = await clientRestApiClient.updateUser(user.id, user);
     } catch (error, stacktrace) {
       logger.severe("Exception occured in updateUser" , error, stacktrace);
       throw ServerException.withError(error: error);
@@ -87,4 +76,4 @@ abstract class UserRemoteDataSource {
     return data;
   }
 
-}*/
+}

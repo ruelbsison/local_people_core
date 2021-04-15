@@ -1,23 +1,12 @@
-// import 'package:meta/meta.dart';
-// import 'package:logging/logging.dart';
-//
-// import '../../../../core.dart';
-// import 'user_rest_api_client.dart';
+import 'package:meta/meta.dart';
+import 'package:logging/logging.dart';
+
+import 'user_remote_data_source.dart';
+import '../../../../core.dart';
+import 'user_rest_api_client.dart';
 import '../models/user_model.dart';
 
-abstract class UserRemoteDataSource {
-  Future<List<UserModel>> listUsers();
-
-  Future<UserModel> createUser(UserModel user);
-
-  Future<UserModel> showUser(int id);
-
-  Future<UserModel> updateUser(UserModel user);
-
-  Future<void> deleteUser(int id);
-}
-
-/*class UserRemoteDataSourceImpl implements UserRemoteDataSource {
+class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final logger = Logger("UserRemoteDataSourceImpl");
   final UserRestApiClient userRestApiClient;
 
@@ -29,7 +18,7 @@ abstract class UserRemoteDataSource {
   Future<UserModel> createUser(UserModel user) async {
     UserModel data;
     try {
-        data = await userRestApiClient.createUser(user.id, user);
+      data = await userRestApiClient.createUser(user.id, user);
     } catch (error, stacktrace) {
       logger.severe("Exception occured in createUser", error, stacktrace);
       throw ServerException.withError(error: error);
@@ -87,4 +76,4 @@ abstract class UserRemoteDataSource {
     return data;
   }
 
-}*/
+}
