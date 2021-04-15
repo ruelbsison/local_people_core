@@ -48,7 +48,10 @@ class AppThemeConfig {
           //height: 1.5
       ),     // title
       subtitle1: TextStyle(
-          fontFamily: 'RedHatDisplay'
+        fontFamily: 'RedHatDisplay',
+        color: Color.fromRGBO(0, 63, 92, 1),
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
       ),   // subhead
       bodyText1: TextStyle (
           color: Color.fromRGBO(87,106,129,1),
@@ -60,7 +63,7 @@ class AppThemeConfig {
         fontFamily: 'RedHatDisplay',
         color: Color.fromRGBO(1, 43, 58, 1),
         fontSize: 14,
-        fontWeight: FontWeight.w600,
+        fontWeight: FontWeight.normal,
       ),    // body1
       subtitle2: TextStyle(
         fontFamily: 'RedHatDisplay',
@@ -84,12 +87,13 @@ class AppThemeConfig {
     ),
     textButtonTheme: TextButtonThemeData (
       style: TextButton.styleFrom(
-          primary: Color(0xaabacd)
+          primary: Color(0xaabacd),
       ),
     ),
     elevatedButtonTheme: ElevatedButtonThemeData (
       style: ElevatedButton.styleFrom(
         primary: Color.fromRGBO(170, 186, 205, 1),
+        onPrimary: Color.fromRGBO(255, 99, 95, 1),
         /*textStyle: TextStyle(
           fontFamily: 'RedHatDisplay',
           color: Color(0xffffff),

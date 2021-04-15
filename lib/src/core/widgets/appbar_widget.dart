@@ -6,12 +6,16 @@ import '../utils/date_format.dart';
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor = Colors.white;
   final Widget title;
+  final String subTitle;
   final AppBar appBar;
   final List<Widget> actions;
-
+  final PreferredSizeWidget bottom;
+  final Size appBarPreferredSize;
   /// you can add more fields that meet your needs
 
-  const AppBarWidget({Key key, this.title, this.appBar, this.actions})
+  const AppBarWidget({Key key, 
+    this.title, this.appBar, this.actions,
+    this.subTitle, this.bottom, this.appBarPreferredSize})
       : super(key: key);
 
   @override
@@ -20,65 +24,45 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Size size = MediaQuery.of(context).size;
     return PreferredSize(
-      preferredSize: Size.fromHeight(120.0),
+      preferredSize: appBarPreferredSize,
       child: AppBar(
-        automaticallyImplyLeading: false, // Don't show the leading button
+       // automaticallyImplyLeading: false, // Don't show the leading button
         titleSpacing: 0,
         centerTitle: false,
-        /*title: Container(
-          width: size.width,
-          padding: EdgeInsets.only(top: 20, left: 12),
-          //color: Colors.green,
-          alignment: Alignment.centerLeft,
-          child: LogoWidget(
-            fit: BoxFit.contain,
-            height: 40 * mediaQueryData.devicePixelRatio,
-            //width: 105 * mediaQueryData.devicePixelRatio,
-          ),
-        ),*/
-        flexibleSpace: Row(
+        actions: actions,
+        title: Flex (
+          direction: Axis.vertical,
+          mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
-          children: [
-            Container(
-              width: size.width,
-              padding: EdgeInsets.only(top: 20, left: 12),
-              //color: Colors.green,
-              alignment: Alignment.centerLeft,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget> [
+            Container (
+              padding: EdgeInsets.only(left: 10),
+              //padding: EdgeInsets.only(left: 12, top: 40),
               child: LogoWidget(
-                fit: BoxFit.contain,
-                height: 40 * mediaQueryData.devicePixelRatio,
+                  fit: BoxFit.contain,
+                  height: 22,
                 //width: 105 * mediaQueryData.devicePixelRatio,
               ),
+              //color: Colors.green,
             ),
+            Container (
+              padding: EdgeInsets.only(left: 12),
+              child: Text(
+                subTitle,
+                textAlign: TextAlign.left,
+                style: headline6Style,
+              ),
+              //color: Colors.yellow,
+            )
           ],
         ),
         elevation: 0.0,
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(60.0),
-          child: Container(
-            //margin: EdgeInsets.only(top: 12.0, bottom: 12.0),
-            padding: EdgeInsets.only(left: 16.0, bottom: 8.0),
-            child: Text(
-              //DateFormat('dd MMMM yyyy').format(DateTime.now()),  //+ ' (' + size.width.toString() + 'x' + size.height.toString() + ')',
-              DateFormatUtil.getFormattedDate(),
-              textAlign: TextAlign.left,
-              style: headline6Style,
-            ),
-            alignment: Alignment.centerLeft,
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                bottom: BorderSide(
-                  color: Color.fromRGBO(186, 207, 216, 1),
-                ),
-              ),
-            ),
-          ),
-        ),
+        bottom: bottom,
       ),
     );
   }
 
   @override
-  Size get preferredSize => new Size.fromHeight(120.0);
+  Size get preferredSize => appBarPreferredSize;
 }
