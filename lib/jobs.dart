@@ -15,7 +15,15 @@ export './src/jobs/ui/widgets/locations_view_widget.dart';
 export './src/jobs/ui/widgets/tags_view_widget.dart';
 export './src/jobs/ui/widgets/posted_by_widget.dart';
 export './src/jobs/ui/widgets/job_card.dart';
+export './src/jobs/ui/widgets/your_job_card.dart';
+export './src/jobs/ui/widgets/post_actions_widget.dart';
+export './src/jobs/ui/widgets/job_actions_widget.dart';
+export './src/jobs/ui/widgets/job_view_widget.dart';
 
 export './src/jobs/ui/views/job_screen.dart';
+export './src/jobs/ui/views/job_create_screen.dart';
 export './src/jobs/ui/views/job_detail_screen.dart';
 export './src/jobs/ui/views/job_request_screen.dart';
+export './src/jobs/ui/views/job_bid_screen.dart';
+export './src/jobs/ui/views/job_award_screen.dart';
+export './src/jobs/ui/views/job_preview_screen.dart';
