@@ -13,7 +13,7 @@ class MessageLookup extends MessageLookupByLibrary {
   @override
   String get localeName => 'en';
 
-  static String m0(task) => 'Deleted "${task}"';
+  //static String m0(task) => 'Deleted "${task}"';
 
   @override
   final messages = _notInlinedMessages(_notInlinedMessages);
@@ -28,28 +28,33 @@ class MessageLookup extends MessageLookupByLibrary {
     MessageLookupByLibrary.simpleMessage('More'),
     'menuTitleSchedule': MessageLookupByLibrary.simpleMessage('Schedule'),
     'menuTitleOpportunities': MessageLookupByLibrary.simpleMessage('Opportunities'),
-    'btnTitlePostJob':
-    MessageLookupByLibrary.simpleMessage('POST JOB'),
-    'editTodo': MessageLookupByLibrary.simpleMessage('Edit Todo'),
-    'emptyTodoError':
-    MessageLookupByLibrary.simpleMessage('Please enter some text'),
-    'filterTodos': MessageLookupByLibrary.simpleMessage('Filter Todos'),
-    'markAllComplete':
-    MessageLookupByLibrary.simpleMessage('Mark all complete'),
-    'markAllIncomplete':
-    MessageLookupByLibrary.simpleMessage('Mark all incomplete'),
-    'newTodoHint':
-    MessageLookupByLibrary.simpleMessage('What needs to be done?'),
-    'notesHint':
-    MessageLookupByLibrary.simpleMessage('Additional Notes...'),
-    'saveChanges': MessageLookupByLibrary.simpleMessage('Save changes'),
-    'showActive': MessageLookupByLibrary.simpleMessage('Show Active'),
-    'showAll': MessageLookupByLibrary.simpleMessage('Show All'),
-    'showCompleted': MessageLookupByLibrary.simpleMessage('Show Completed'),
-    'stats': MessageLookupByLibrary.simpleMessage('Stats'),
-    'todoDeleted': m0,
-    'todoDetails': MessageLookupByLibrary.simpleMessage('Todo Details'),
-    'todos': MessageLookupByLibrary.simpleMessage('Todos'),
-    'undo': MessageLookupByLibrary.simpleMessage('Undo')
+    'btnTitlePostJob': MessageLookupByLibrary.simpleMessage('POST JOB'),
+    'menuTitlePostJob': MessageLookupByLibrary.simpleMessage('Post Job'),
+    'titleLocation': MessageLookupByLibrary.simpleMessage('Location'),
+    'titleHome': MessageLookupByLibrary.simpleMessage('Home'),
+    'titleAreaName': MessageLookupByLibrary.simpleMessage('Area Name'),
+    'titleJobCategory': MessageLookupByLibrary.simpleMessage('Job Category'),
+    'titleJobDescription': MessageLookupByLibrary.simpleMessage('Job Description'),
+    'titleSuggestions': MessageLookupByLibrary.simpleMessage('Suggestions'),
+    'titleBudget': MessageLookupByLibrary.simpleMessage('Budget'),
+    'titleRequestedTimeframe': MessageLookupByLibrary.simpleMessage('Requested timeframe'),
+    'subTitleASAP': MessageLookupByLibrary.simpleMessage('ASAP'),
+    'subTitleThisWeek': MessageLookupByLibrary.simpleMessage('THIS WEEK'),
+    'subTitleSpecific': MessageLookupByLibrary.simpleMessage('SPECIFIC'),
+    'titleTimeToRespond': MessageLookupByLibrary.simpleMessage('Time to respond'),
+    //'todoDeleted': m0,
+    'subTitle24Hrs': MessageLookupByLibrary.simpleMessage('24Hrs'),
+    'subTitle48Hrs': MessageLookupByLibrary.simpleMessage('48Hrs'),
+    'titlePostEdits': MessageLookupByLibrary.simpleMessage('Post Edits'),
+    'titleDeleteJob': MessageLookupByLibrary.simpleMessage('Delete Job'),
+    'titleJobInfo': MessageLookupByLibrary.simpleMessage('Job Information'),
+    'titleDate': MessageLookupByLibrary.simpleMessage('Date'),
+    'titleTime': MessageLookupByLibrary.simpleMessage('Time'),
+    'titleJobBid': MessageLookupByLibrary.simpleMessage('Job Bid'),
+    'btnTitleCancel': MessageLookupByLibrary.simpleMessage('Cancel'),
+    'btnTitlePost': MessageLookupByLibrary.simpleMessage('Post'),
+    'btnTitleSave': MessageLookupByLibrary.simpleMessage('Save'),
+    'btnTitleSendMesssage': MessageLookupByLibrary.simpleMessage('Send Messsage'),
+    'btnTitleAwardJob': MessageLookupByLibrary.simpleMessage('Award Job'),
   };
 }

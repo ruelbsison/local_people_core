@@ -101,114 +101,191 @@ class LocalPeopleLocalizations {
     locale: locale.toString(),
   );
 
-  String get clearCompleted => Intl.message(
-    'Clear completed',
-    name: 'clearCompleted',
+  String get titleLocation => Intl.message(
+    'Location',
+    name: 'titleLocation',
     args: [],
     locale: locale.toString(),
   );
 
-  String get addTodo => Intl.message(
-    'Add Todo',
-    name: 'addTodo',
+  String get titleHome => Intl.message(
+    'Home',
+    name: 'titleHome',
     args: [],
     locale: locale.toString(),
   );
 
-  String get editTodo => Intl.message(
-    'Edit Todo',
-    name: 'editTodo',
+  String get titleAreaName => Intl.message(
+    'Area Name',
+    name: 'titleAreaName',
     args: [],
     locale: locale.toString(),
   );
 
-  String get saveChanges => Intl.message(
-    'Save changes',
-    name: 'saveChanges',
+  String get menuTitlePostJob => Intl.message(
+    'Post Job',
+    name: 'menuTitlePostJob',
     args: [],
     locale: locale.toString(),
   );
 
-  String get filterTodos => Intl.message(
-    'Filter Todos',
-    name: 'filterTodos',
+  String get titleJobCategory => Intl.message(
+    'Job Category',
+    name: 'titleJobCategory',
     args: [],
     locale: locale.toString(),
   );
 
-  String get deleteTodo => Intl.message(
-    'Delete Todo',
-    name: 'deleteTodo',
+  String get titleJobDescription => Intl.message(
+    'Job Description',
+    name: 'titleJobDescription',
     args: [],
     locale: locale.toString(),
   );
 
-  String get todoDetails => Intl.message(
-    'Todo Details',
-    name: 'todoDetails',
+  String get titleSuggestions => Intl.message(
+    'Suggestions',
+    name: 'titleSuggestions',
     args: [],
     locale: locale.toString(),
   );
 
-  String get emptyTodoError => Intl.message(
-    'Please enter some text',
-    name: 'emptyTodoError',
+  String get titleBudget => Intl.message(
+    'Budget',
+    name: 'titleBudget',
     args: [],
     locale: locale.toString(),
   );
 
-  String get notesHint => Intl.message(
-    'Additional Notes...',
-    name: 'notesHint',
+  String get titleRequestedTimeframe => Intl.message(
+    'Requested timeframe',
+    name: 'titleRequestedTimeframe',
     args: [],
     locale: locale.toString(),
   );
 
-  String get completedTodos => Intl.message(
-    'Completed Todos',
-    name: 'completedTodos',
+  String get subTitleASAP => Intl.message(
+    'ASAP',
+    name: 'subTitleASAP',
     args: [],
     locale: locale.toString(),
   );
 
-  String get activeTodos => Intl.message(
-    'Active Todos',
-    name: 'activeTodos',
+  String get subTitleThisWeek => Intl.message(
+    'THIS WEEK',
+    name: 'subTitleThisWeek',
     args: [],
     locale: locale.toString(),
   );
 
-  String todoDeleted(String task) => Intl.message(
+  String get subTitleSpecific => Intl.message(
+    'SPECIFIC',
+    name: 'subTitleSpecific',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  /*String todoDeleted(String task) => Intl.message(
     'Deleted "$task"',
     name: 'todoDeleted',
     args: [task],
     locale: locale.toString(),
-  );
+  );*/
 
-  String get undo => Intl.message(
-    'Undo',
-    name: 'undo',
+  String get titleTimeToRespond => Intl.message(
+    'Time to respond',
+    name: 'titleTimeToRespond',
     args: [],
     locale: locale.toString(),
   );
 
-  String get deleteTodoConfirmation => Intl.message(
-    'Delete this todo?',
-    name: 'deleteTodoConfirmation',
+  String get subTitle24Hrs => Intl.message(
+    '24Hrs',
+    name: 'subTitle24Hrs',
     args: [],
     locale: locale.toString(),
   );
 
-  String get delete => Intl.message(
-    'Delete',
-    name: 'delete',
+  String get subTitle48Hrs => Intl.message(
+    '48Hrs',
+    name: 'subTitle48Hrs',
     args: [],
     locale: locale.toString(),
   );
 
-  String get cancel => Intl.message(
+  String get titlePostEdits => Intl.message(
+    'Post Edits',
+    name: 'titlePostEdits',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleDeleteJob => Intl.message(
+    'Delete Job',
+    name: 'titleDeleteJob',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleJobInfo => Intl.message(
+    'Job Information',
+    name: 'titleJobInfo',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleDate => Intl.message(
+    'Date',
+    name: 'titleDate',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleTime => Intl.message(
+    'Time',
+    name: 'titleTime',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitleCancel => Intl.message(
     'Cancel',
-    name: 'cancel',
+    name: 'btnTitleCancel',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitlePost => Intl.message(
+    'Post',
+    name: 'btnTitlePost',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitleSave => Intl.message(
+    'Save',
+    name: 'btnTitleSave',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitleSendMesssage => Intl.message(
+    'Send Messsage',
+    name: 'btnTitleSendMesssage',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleJobBid => Intl.message(
+    'Job Bid',
+    name: 'titleJobBid',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitleAwardJob => Intl.message(
+    'Award Job',
+    name: 'btnTitleAwardJob',
     args: [],
     locale: locale.toString(),
   );
