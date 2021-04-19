@@ -46,6 +46,9 @@ dependencies:
   flutter_icons: ^1.1.0
   uuid: ^3.0.1
   cached_network_image: ^2.2.0+1
+  google_place: ^0.3.3
+  # image_picker: ^0.6.7+22
+  multi_image_picker: ^4.8.0
 
 dev_dependencies:
   flutter_test:

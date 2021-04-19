@@ -69,7 +69,7 @@ class PostActionsWidget extends StatelessWidget {
                       padding:
                       EdgeInsets.only(left: 12.0, right: 12.0),
                       child: ElevatedButton(
-                        onPressed: _saveJob,
+                        onPressed: () {_saveJob(context);},
                         child: Text(
                             LocalPeopleLocalizations.of(context)
                                 .btnTitleSave),
@@ -82,7 +82,7 @@ class PostActionsWidget extends StatelessWidget {
                       padding:
                       EdgeInsets.only(left: 12.0, right: 12.0),
                       child: ElevatedButton(
-                        onPressed: _postJob,
+                        onPressed: () {_postJob(context);},
                         child: Text(
                             LocalPeopleLocalizations.of(context)
                                 .btnTitlePost),
@@ -97,15 +97,11 @@ class PostActionsWidget extends StatelessWidget {
     );
   }
 
-  void _saveJob() {
-    // you can write your
-
-    // own code according to
-
-    // whatever you want to submit;
+  void _saveJob(BuildContext context) {
+    Navigator.of(context).popUntil(ModalRoute.withName('/'));
   }
 
-  void _postJob() {
-
+  void _postJob(BuildContext context) {
+    Navigator.of(context).popUntil(ModalRoute.withName('/'));
   }
 }

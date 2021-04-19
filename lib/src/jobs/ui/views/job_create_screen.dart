@@ -5,6 +5,8 @@ import '../../domain/entities/job.dart';
 import '../../domain/entities/profile.dart';
 import '../widgets/tags_view_widget.dart';
 import 'job_preview_screen.dart';
+import 'package:google_place/google_place.dart';
+import '../widgets/images_view_widget.dart';
 
 class JobCreateScreen extends StatefulWidget {
   @override
@@ -14,6 +16,28 @@ class JobCreateScreen extends StatefulWidget {
 class _JobCreateScreenState extends State<JobCreateScreen> {
   final GlobalKey<FormState> _formKey = GlobalKey();
   Job job;
+  GooglePlace googlePlace;
+  List<AutocompletePrediction> predictions = [];
+  final TextEditingController _locationTextController =
+  TextEditingController();
+
+  @override
+  void initState() {
+    String apiKey =
+        'AIzaSyDas3RPqegAcudGgkX4xlykHztH1nZCfvo'; //DotEnv().env['API_KEY'];
+    googlePlace = GooglePlace(apiKey);
+
+    super.initState();
+  }
+
+  void autoCompleteSearch(String value) async {
+    var result = await googlePlace.autocomplete.get(value);
+    if (result != null && result.predictions != null && mounted) {
+      setState(() {
+        predictions = result.predictions;
+      });
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -38,6 +62,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
               ),
               onPressed: () {
                 //AppRouter.pushPage(context, JobCreateScreen());
+                Navigator.pop(context);
               },
             ),
             alignment: Alignment.center,
@@ -63,7 +88,8 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
             children: <Widget>[
               Container(
                 padding: EdgeInsets.all(12.0),
-                margin: EdgeInsets.all(12.0),
+                  margin: EdgeInsets.only(left: 12, right: 12.0),
+                //margin: EdgeInsets.all(12.0),
                 child: Flex(
                   direction: Axis.vertical,
                   mainAxisSize: MainAxisSize.min,
@@ -78,26 +104,104 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                     SizedBox(height: 10.0),
                     Container(
                       color: Colors.white,
-                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                       child: TextFormField(
+                        controller: _locationTextController,
                         decoration: InputDecoration(
                             labelText: LocalPeopleLocalizations.of(context)
-                                .titleAreaName),
+                                .titleAreaName,
+                            /*focusedBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.blue,
+                              width: 2.0,
+                            ),
+                          ),
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide(
+                              color: Colors.black54,
+                              width: 2.0,
+                            ),
+                          ),*/
+                        ),
                         keyboardType: TextInputType.streetAddress,
+                        onChanged: (value) {
+                          if (value.isNotEmpty) {
+                            autoCompleteSearch(value);
+                          } else {
+                            if (predictions.length > 0 && mounted) {
+                              setState(() {
+                                predictions = [];
+                              });
+                            }
+                          }
+                        },
                         onFieldSubmitted: (value) {
                           setState(() {
-                            job.title = value;
+                            job.location = value;
                           });
                         },
                         validator: (value) {
                           if (value.isEmpty) {
                             return LocalPeopleLocalizations.of(context)
-                                    .titleLocation +
+                                .titleLocation +
                                 '!';
                           }
                         },
                       ),
                     ),
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Container (
+                      height: predictions.length > 0 ? 200 : 0,
+                      child: Card(
+                        elevation: 4,
+                        shape: RoundedRectangleBorder(
+                          borderRadius: BorderRadius.circular(10.0),
+                        ),
+                        child: ListView.builder(
+                        itemCount: predictions.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: CircleAvatar(
+                              child: Icon(
+                                Icons.pin_drop,
+                                color: Colors.white,
+                              ),
+                            ),
+                            title: Text(predictions[index].description),
+                            onTap: () {
+                              debugPrint(predictions[index].placeId);
+                              job.location = predictions[index].description;
+                              setState(() {
+                                _locationTextController.text = job.location;
+                                predictions = [];
+                              });
+                            },
+                          );
+                        },
+                      ),
+                      ),
+                    ),
+                    /*Expanded(
+                      child: ListView.builder(
+                        itemCount: predictions.length,
+                        itemBuilder: (context, index) {
+                          return ListTile(
+                            leading: CircleAvatar(
+                              child: Icon(
+                                Icons.pin_drop,
+                                color: Colors.white,
+                              ),
+                            ),
+                            title: Text(predictions[index].description),
+                            onTap: () {
+                              debugPrint(predictions[index].placeId);
+                            },
+                          );
+                        },
+                      ),
+                    ),*/
                     SizedBox(height: 10.0),
                     Text(
                       LocalPeopleLocalizations.of(context).titleJobCategory,
@@ -107,7 +211,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                     SizedBox(height: 10.0),
                     Container(
                       color: Colors.white,
-                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                       child: TextFormField(
                         decoration: InputDecoration(labelText: ''),
                         keyboardType: TextInputType.text,
@@ -156,7 +260,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                     SizedBox(height: 10.0),
                     Container(
                       color: Colors.white,
-                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                       child: TextFormField(
                         decoration: InputDecoration(labelText: ''),
                         keyboardType: TextInputType.text,
@@ -175,6 +279,11 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                         },
                       ),
                     ),
+                    // Container (
+                    //   child: ImagesViewWidget(images: ['https://media-exp1.licdn.com/dms/image/C4E0BAQGCMeC6rK_H0g/company-logo_200_200/0/1594223715044?e=1626912000&v=beta&t=S4tF6F2mgbv_Zt8nd-TaGql7dhWc4xFJbKmDy8oc9uY',
+                    //     'https://media-exp1.licdn.com/dms/image/C4E0BAQGCMeC6rK_H0g/company-logo_200_200/0/1594223715044?e=1626912000&v=beta&t=S4tF6F2mgbv_Zt8nd-TaGql7dhWc4xFJbKmDy8oc9uY',
+                    //     'https://media-exp1.licdn.com/dms/image/C4E0BAQGCMeC6rK_H0g/company-logo_200_200/0/1594223715044?e=1626912000&v=beta&t=S4tF6F2mgbv_Zt8nd-TaGql7dhWc4xFJbKmDy8oc9uY']),
+                    // ),
                     SizedBox(height: 10.0),
                     Flex(
                         direction: Axis.vertical,
@@ -189,7 +298,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                           SizedBox(height: 10.0),
                           Container(
                             color: Colors.white,
-                            padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                            //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                             width: size.width / 2,
                             child: TextFormField(
                               decoration: InputDecoration(labelText: ''),
@@ -221,13 +330,13 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                     SizedBox(height: 10.0),
                     Container(
                       color: Colors.white,
-                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                       height: 50,
                     ),
                     SizedBox(height: 30.0),
                     Container(
                       color: Colors.white,
-                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                       height: 50,
                     ),
                     SizedBox(height: 30.0),
@@ -239,7 +348,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                     SizedBox(height: 10.0),
                     Container(
                       color: Colors.white,
-                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                       height: 50,
                     ),
                     SizedBox(height: 30.0),
@@ -249,6 +358,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
               Container(
                 color: Colors.white,
                 padding: EdgeInsets.all(12.0),
+                margin: EdgeInsets.only(left: 12, right: 12.0),
                 //margin: EdgeInsets.all(12.0),
                 child: Flex(
                   direction: Axis.vertical,
@@ -256,7 +366,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: <Widget>[
                     Container(
-                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                       child: Text(
                         LocalPeopleLocalizations.of(context).titlePostEdits,
                         textAlign: TextAlign.left,
@@ -311,14 +421,15 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
   }
 
   void _cancelJob() {
-    // you can write your
-
-    // own code according to
-
-    // whatever you want to submit;
+    Navigator.pop(context);
   }
 
   void _postJob() {
-    AppRouter.pushPage(context, JobPreviewScreen(job: demeJobs[0], profile: Profile.demo,));
+    AppRouter.pushPage(
+        context,
+        JobPreviewScreen(
+          job: demeJobs[0],
+          profile: Profile.demo,
+        ));
   }
 }

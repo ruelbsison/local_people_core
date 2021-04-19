@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:local_people_core/core.dart';
+//import 'package:multi_image_picker/multi_image_picker.dart';
 
 class ImagesViewWidget extends StatefulWidget {
   List<String> images;
@@ -57,7 +58,7 @@ class _ImagesViewWidgetState extends State<ImagesViewWidget> {
         minHeight: widget.minTagViewHeight,
         maxHeight: widget.maxTagViewHeight,
       ),
-      /*child: Hero(
+      child: Hero(
       tag: ImagesViewWidget.uuid.v4(),
       child: CachedNetworkImage(
         imageUrl: imgUrl,
@@ -70,7 +71,7 @@ class _ImagesViewWidgetState extends State<ImagesViewWidget> {
         ),
         fit: BoxFit.cover,
       ),
-    ),*/
+    ),
     );
   }
 }
