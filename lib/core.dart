@@ -13,9 +13,11 @@ export './src/core/local/localization.dart';
 export './src/core/configs/app_config.dart';
 export './src/core/configs/auth_config.dart';
 export './src/core/configs/theme_config.dart';
+export './src/core/configs/constants.dart';
+
 export './src/core/enum/api_request_status.dart';
 export './src/core/enum/view_state.dart';
-export './src/core/configs/constants.dart';
+export './src/core/enum/app_type.dart';
 
 export './src/core/utils/router.dart';
 export './src/core/utils/dialogs.dart';
