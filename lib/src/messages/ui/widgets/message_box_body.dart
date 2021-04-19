@@ -12,7 +12,7 @@ class MessageBoxBody extends StatelessWidget {
     final theme = Theme.of(context);
     return Column(
       children: [
-        Container(
+        /*Container(
           padding: EdgeInsets.fromLTRB(
               kDefaultPadding, 0, kDefaultPadding, kDefaultPadding),
           color: theme.primaryColor,
@@ -27,7 +27,7 @@ class MessageBoxBody extends StatelessWidget {
               ),
             ],
           ),
-        ),
+        ),*/
         Expanded(
           child: ListView.builder(
             itemCount: messageBoxsData.length,

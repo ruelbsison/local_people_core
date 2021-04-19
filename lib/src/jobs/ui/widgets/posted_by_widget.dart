@@ -35,14 +35,26 @@ class _PostedByWidgetState extends State<PostedByWidget> {
       ),
       //height: 197,
       child: Flex (
-        direction: Axis.horizontal,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget> [
-          Expanded (
-            flex: 1,
-            child: CircleAvatar(
-              /*child: CachedNetworkImage(
+        direction: Axis.vertical,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
+        mainAxisAlignment: MainAxisAlignment.start,
+        children: <Widget>[
+          Text(
+            'Posted By',
+            textAlign: TextAlign.left,
+            style: textTheme.subtitle1,
+          ),
+          SizedBox(height: 20.0),
+          Flex (
+            direction: Axis.horizontal,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: <Widget> [
+              Expanded (
+                flex: 1,
+                child: CircleAvatar(
+                  child: FlutterLogo(size: 75),
+                  /*child: CachedNetworkImage(
                     imageUrl: widget.profile.photoUrl,
                     placeholder: (context, url) => LoadingWidget(
                       isImage: true,
@@ -53,61 +65,127 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                     ),
                     fit: BoxFit.cover,
                   ),*/
-            ),
-          ),
-          Expanded (
-              flex: 3,
-              child: Flex (
-                direction: Axis.vertical,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.max,
-                children: <Widget> [
-                  Text(
-                    widget.profile.fullName,
-                    textAlign: TextAlign.left,
-                    style: textTheme.subtitle1,
-                  ),
-                  Text(
-                    'Member since DD-MM-YYYY',
-                    textAlign: TextAlign.left,
-                    style: textTheme.bodyText1,
-                  ),
-                  SizedBox(height: 20.0),
-                  Container(
-                    height: 1.0,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      border: Border(
-                        bottom: BorderSide(
-                          color: Color.fromRGBO(186, 207, 216, 1),
+                ),
+              ),
+              Expanded (
+                  flex: 3,
+                  child: Flex (
+                    direction: Axis.vertical,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisSize: MainAxisSize.max,
+                    children: <Widget> [
+                      Text(
+                        widget.profile.fullName,
+                        textAlign: TextAlign.left,
+                        style: textTheme.subtitle1,
+                      ),
+                      Text(
+                        'Member since DD-MM-YYYY',
+                        textAlign: TextAlign.left,
+                        style: textTheme.bodyText1,
+                      ),
+                      SizedBox(height: 20.0),
+                      Container(
+                        height: 1.0,
+                        decoration: BoxDecoration(
+                          color: Colors.white,
+                          border: Border(
+                            bottom: BorderSide(
+                              color: Color.fromRGBO(186, 207, 216, 1),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(height: 20.0),
-                  Text(
-                    'Payment Method Verified',
-                    textAlign: TextAlign.left,
-                    style: textTheme.subtitle1,
-                  ),
-                  Text(
-                    'Member since DD-MM-YYYY',
-                    textAlign: TextAlign.left,
-                    style: textTheme.bodyText1,
-                  ),
-                  SizedBox(height: 20.0),
-                  Text(
-                    'XX Jobs Posted',
-                    textAlign: TextAlign.left,
-                    style: textTheme.subtitle1,
-                  ),
-                  Text(
-                    'YY Jobs commissioned',
-                    textAlign: TextAlign.left,
-                    style: textTheme.bodyText1,
-                  ),
-                ],
-              )
+                      SizedBox(height: 20.0),
+                      Flex (
+                        direction: Axis.horizontal,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: <Widget> [
+                          Expanded(
+                            flex: 1,
+                            child: CircleAvatar(
+                              //backgroundColor: Color(0xff0075ff),
+                              radius: 12,
+                              child: Center (
+                                  child: Image.asset(
+                                    'packages/local_people_core/assets/images/verified-icon.png',
+                                    fit: BoxFit.contain,
+                                    height: 23,
+                                    width: 23,
+                                  )
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                            flex: 6,
+                              child: Flex (
+                                direction: Axis.vertical,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget> [
+                                  Text(
+                                    'Payment Method Verified',
+                                    textAlign: TextAlign.left,
+                                    style: textTheme.subtitle1,
+                                  ),
+                                  Text(
+                                    'Member since DD-MM-YYYY',
+                                    textAlign: TextAlign.left,
+                                    style: textTheme.bodyText1,
+                                  ),
+                                ],
+                              )
+                          )
+                        ],
+                      ),
+                      SizedBox(height: 20.0),
+                      Flex (
+                        direction: Axis.horizontal,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget> [
+                          Expanded(
+                            flex: 1,
+                            child: CircleAvatar(
+                              //backgroundColor: Color(0xff0075ff),
+                              radius: 12,
+                              child: Center (
+                                  child: Image.asset(
+                                    'packages/local_people_core/assets/images/verified-icon.png',
+                                    fit: BoxFit.contain,
+                                    height: 23,
+                                    width: 23,
+                                  )
+                              ),
+                            ),
+                          ),
+                          Expanded(
+                              flex: 6,
+                              child: Flex (
+                                direction: Axis.vertical,
+                                crossAxisAlignment: CrossAxisAlignment.stretch,
+                                mainAxisAlignment: MainAxisAlignment.start,
+                                children: <Widget> [
+                                  Text(
+                                    'XX Jobs Posted',
+                                    textAlign: TextAlign.left,
+                                    style: textTheme.subtitle1,
+                                  ),
+                                  Text(
+                                    'YY Jobs commissioned',
+                                    textAlign: TextAlign.left,
+                                    style: textTheme.bodyText1,
+                                  ),
+                                ],
+                              )
+                          )
+                        ],
+                      ),
+                    ],
+                  )
+              ),
+            ],
           ),
         ],
       ),

@@ -17,14 +17,14 @@ class _JobScreenState extends State<JobScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final headline6Style = Theme.of(context).textTheme.headline6;
+    //final headline6Style = Theme.of(context).textTheme.headline6;
+    final appCType = AppConfig.of(context).appType;
     return Scaffold(
       appBar: AppBarWidget(
-        appBarPreferredSize: Size.fromHeight(70.0),
-        /*title: Text(
-            AppLocalizations.of(context).appTitle,
-          ),*/
-        subTitle: LocalPeopleLocalizations.of(context).menuTitleOpportunities,
+        appBarPreferredSize: Size.fromHeight(60.0),
+        subTitle: (appCType == AppType.TRADER
+            ? LocalPeopleLocalizations.of(context).menuTitleOpportunities
+            : LocalPeopleLocalizations.of(context).menuTitleYourJobs),
         appBar: AppBar(),
         bottom: PreferredSize(
           preferredSize: Size.fromHeight(1.0),
@@ -46,11 +46,13 @@ class _JobScreenState extends State<JobScreen> {
           ),
         ],
       ),
-      body: buildBody(context),
+      body: (appCType == AppType.TRADER
+          ? buildTraderBody(context)
+          : buildClientBody(context)),
     );
   }
 
-  Widget buildBody(BuildContext context) {
+  Widget buildTraderBody(BuildContext context) {
     return SafeArea (
       /*child: RefreshIndicator(
           onRefresh: () async{
@@ -75,6 +77,35 @@ class _JobScreenState extends State<JobScreen> {
         itemCount: demeJobs.length,
         itemBuilder: (context, index) =>
             JobCard(job: demeJobs[index]),
+      ),
+    );
+  }
+
+  Widget buildClientBody(BuildContext context) {
+    return SafeArea (
+      /*child: RefreshIndicator(
+          onRefresh: () async{
+        BlocProvider.of<HomeBloc>(context).add(RefreshHome());
+      },
+      child: ListView(
+        shrinkWrap: true,
+        physics: BouncingScrollPhysics(),
+        children: <Widget>[
+          //SizedBox(height: 10.0),
+          OpportunityCard(),
+          //SizedBox(height: 10.0),
+          OpportunityCard(),
+          //SizedBox(height: 10.0),
+          OpportunityCard(),
+          //SizedBox(height: 10.0),
+          OpportunityCard(),
+          //SizedBox(height: 10.0),
+        ],
+      )*/
+      child: ListView.builder(
+        itemCount: demeJobs.length,
+        itemBuilder: (context, index) =>
+            YourJobCard(job: demeJobs[index]),
       ),
     );
   }

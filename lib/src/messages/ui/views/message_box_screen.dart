@@ -16,7 +16,7 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
     return Scaffold(
       //appBar: buildAppBar(),
       appBar: AppBarWidget(
-        appBarPreferredSize: Size.fromHeight(70.0),
+        appBarPreferredSize: Size.fromHeight(60.0),
         /*title: Text(
             AppLocalizations.of(context).appTitle,
           ),*/

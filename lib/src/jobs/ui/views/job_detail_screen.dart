@@ -1,17 +1,12 @@
 import 'package:flutter/material.dart';
-import 'package:local_people_core/core.dart';
-
-//import 'package:split_view/split_view.dart';
-import '../widgets/tags_view_widget.dart';
-
-//import 'package:google_maps_flutter/google_maps_flutter.dart';
-import '../widgets/images_view_widget.dart';
-import '../widgets/posted_by_widget.dart';
-import '../../domain/entities/profile.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-
+import 'package:local_people_core/core.dart';
 import 'package:local_people_core/messages.dart';
-import 'package:local_people_core/jobs.dart';
+
+import '../widgets/posted_by_widget.dart';
+import '../../domain/entities/job.dart';
+import '../../domain/entities/profile.dart';
+import '../widgets/job_view_widget.dart';
 
 class JobDetailScreen extends StatefulWidget {
   JobDetailScreen({
@@ -27,11 +22,6 @@ class JobDetailScreen extends StatefulWidget {
   _JobDetailScreenState createState() =>
       _JobDetailScreenState();
 }
-
-// final CameraPosition _kGooglePlex = CameraPosition(
-//   target: LatLng(37.42796133580664, -122.085749655962),
-//   zoom: 14.4746,
-// );
 
 class _JobDetailScreenState extends State<JobDetailScreen>
     with TickerProviderStateMixin {
@@ -76,12 +66,15 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundColor: Color.fromRGBO(255, 166, 0, 1),
-                    child: Center(
-                      child: Icon(
-                        MaterialIcons.timer,
-                        size: 19.0,
-                      ),
+                    backgroundColor: Color.fromRGBO(255,166,0,1),
+                    radius: 15,
+                    child: Center (
+                        child: Image.asset(
+                          'packages/local_people_core/assets/images/package-icon.png',
+                          fit: BoxFit.contain,
+                          height: 19,
+                          width: 19,
+                        )
                     ),
                   ),
                   Text(
@@ -174,77 +167,19 @@ class _JobDetailScreenState extends State<JobDetailScreen>
             child: Flex(
               direction: Axis.vertical,
               mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
               children: <Widget>[
-                Text(
-                  'Job Information',
-                  style: theme.textTheme.subtitle1,
-                  textAlign: TextAlign.left,
-                ),
-                SizedBox(height: 5.0),
-                Text(
-                  widget.job.preview,
-                  style: theme.textTheme.bodyText2,
-                  textAlign: TextAlign.left,
-                ),
-                SizedBox(height: 20.0),
-                Text(
-                  'Budget: ' + widget.job.budget,
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.subtitle1,
-                ),
-                SizedBox(height: 5.0),
-                TagsViewWidget(
-                  tags: widget.job.tags,
-                ),
-                SizedBox(height: 20.0),
-                Container(
-                  height: 119.0,
-                  alignment: Alignment.centerLeft,
-                  //child: ImagesViewWidget(images: widget.job.images,),
-                ),
-                Text(
-                  'Location',
-                  textAlign: TextAlign.center,
-                  style: theme.textTheme.subtitle1,
-                ),
-                Container(
-                    color: theme.primaryColor,
-                    child: Flex(
-                      direction: Axis.vertical,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget>[
-                        SizedBox(height: 120.0),
-                        /*GoogleMap(
-                        myLocationEnabled: true,
-                        compassEnabled: true,
-                        tiltGesturesEnabled: false,
-                        //markers: _markers,
-                        //polylines: _polylines,
-                        mapType: MapType.normal,
-                        initialCameraPosition: _kGooglePlex,
-                      ),*/
-                        Text(
-                          'Cumberland & Grange, Guildford, GU2',
-                          textAlign: TextAlign.left,
-                          style: theme.textTheme.bodyText1,
-                        ),
-                        Text(
-                          'The complete address will be show once the job is confirmed',
-                          textAlign: TextAlign.left,
-                          style: theme.textTheme.bodyText2,
-                        ),
-                        SizedBox(height: 60.0),
-                      ],
-                    )),
-                Text(
-                  'Posted By',
-                  textAlign: TextAlign.left,
-                  style: theme.textTheme.subtitle1,
-                ),
+                JobViewWidget(job: widget.job),
                 SizedBox(height: 20.0),
                 PostedByWidget(profile: widget.profile),
+                SizedBox(height: 10.0),
+                ElevatedButton(
+                  onPressed: () {},
+                  child: Text (
+                      LocalPeopleLocalizations.of(context).btnTitleSendMesssage
+                  )
+                ),
+                SizedBox(height: 20.0),
               ],
             ),
           ),

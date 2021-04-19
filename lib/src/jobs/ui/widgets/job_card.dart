@@ -6,7 +6,8 @@ import 'tags_view_widget.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import '../views/job_detail_screen.dart';
 
-import 'package:local_people_core/jobs.dart';
+import '../../domain/entities/job.dart';
+import '../../domain/entities/profile.dart';
 
 typedef PressedOpportunity<T> = void Function(T item);
 
@@ -33,7 +34,7 @@ class _JobCardState extends State<JobCard> {
       onTap: (){
         //if (widget.onPressedOpportunity != null)
         //  widget.onPressedOpportunity(widget.opportunityItem);
-        AppRouter.pushPage(context, JobDetailScreen(job: widget.job));
+        AppRouter.pushPage(context, JobDetailScreen(job: widget.job, profile: Profile.demo,));
       },
       child:  Container(
         padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
@@ -60,11 +61,14 @@ class _JobCardState extends State<JobCard> {
                         children: <Widget> [
                           CircleAvatar(
                             backgroundColor: Color.fromRGBO(255,166,0,1),
+                            radius: 15,
                             child: Center (
-                              child: Icon (
-                                MaterialIcons.timer,
-                                size: 19.0,
-                              ),
+                                child: Image.asset(
+                                  'packages/local_people_core/assets/images/package-icon.png',
+                                  fit: BoxFit.contain,
+                                  height: 19,
+                                  width: 19,
+                                )
                             ),
                           ),
                           Text(
@@ -112,7 +116,7 @@ class _JobCardState extends State<JobCard> {
                   child: Column (
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: <Widget> [
-                        SizedBox(height: 10.0),
+                        SizedBox(height: 5.0),
                         Text (
                           widget.job.preview,
                           textAlign: TextAlign.left,

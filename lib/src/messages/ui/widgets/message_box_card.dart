@@ -18,7 +18,9 @@ class MessageBoxCard extends StatelessWidget {
     final theme = Theme.of(context);
     return InkWell(
       onTap: press,
-      child: Padding(
+      child: Padding (
+        //color: Colors.white,
+        //padding: EdgeInsets.all(kDefaultPadding),
         padding: const EdgeInsets.symmetric(
             horizontal: kDefaultPadding, vertical: kDefaultPadding * 0.75),
         child: Row(
