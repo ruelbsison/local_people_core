@@ -333,6 +333,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_webview_plugin:
+    dependency: "direct main"
+    description:
+      name: flutter_webview_plugin
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.11"
   formz:
     dependency: "direct main"
     description:
@@ -445,6 +452,20 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.12.10"
+  material_floating_search_bar:
+    dependency: "direct main"
+    description:
+      name: material_floating_search_bar
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.3.4"
+  material_segmented_control:
+    dependency: "direct main"
+    description:
+      name: material_segmented_control
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "3.1.2"
   meta:
     dependency: "direct main"
     description:
