@@ -1,5 +1,7 @@
-import 'package:retrofit/retrofit.dart';
+import 'dart:io';
 import 'package:dio/dio.dart';
+import 'package:retrofit/retrofit.dart';
+import 'package:http/http.dart';
 import '../models/job_model.dart';
 import '../../../core/configs/rest_api_config.dart';
 
@@ -22,7 +24,7 @@ abstract class JobRestApiClient {
   Future<List<JobModel>> listJobsForTrader(@Path("id") int id);
 
   @POST(RestAPIConfig.job)
-  Future<JobModel> createJob(@Body() JobModel user);
+  Future<JobModel> createJob(@Body() FormData formData);
 
   @GET(RestAPIConfig.jobWithId)
   //Future<Response> showUser(String id);
