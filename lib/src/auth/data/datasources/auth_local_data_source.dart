@@ -13,6 +13,8 @@ abstract class AuthLocalDataSource {
   Future<String> getUserName();
 
   Future<bool> deleteAuth();
+
+  Future<AuthLocalModel> getAuth();
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -104,5 +106,29 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     } on Exception catch (e, s) {
       return '';
     }
+  }
+
+  @override
+  Future<AuthLocalModel> getAuth() async {
+    AuthLocalModel authLocalModel;
+    try {
+      String userId = await secureStorage.read(key: authorizationConfig.authUserIdKey);
+      String userName = await secureStorage.read(key: authorizationConfig.authUserNameKey);
+      String email = await secureStorage.read(key: authorizationConfig.authUserEmailKey);
+      String refreshToken = await secureStorage.read(key: authorizationConfig.authUserTokenKey);
+      String expiredAt = await secureStorage.read(key: authorizationConfig.authUserTokenDateKey);
+
+      DateTime tokenExpirationDate = DateTime.fromMillisecondsSinceEpoch(int.parse(expiredAt));
+      authLocalModel = AuthLocalModel(
+        userId:  int.parse(userId),
+        userEmail: email,
+        userName: userName,
+        token: refreshToken,
+        tokenExpirationDate: tokenExpirationDate,
+      );
+    } on Exception {
+
+    }
+    return authLocalModel;
   }
 }

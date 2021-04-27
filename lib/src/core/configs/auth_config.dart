@@ -1,19 +1,24 @@
 //import 'package:flutter/material.dart';
 import 'package:meta/meta.dart';
-import 'package:flutter_appauth/flutter_appauth.dart';
+//import 'package:flutter_appauth/flutter_appauth.dart';
 
-const String AUTH0_DOMAIN_DEV = 'dev-pgi9e-14.eu.auth0.com'; // http://combinedotai.eu.auth0.com/
-const String AUTH0_CLIENT_CLIENT_ID_DEV = 'wFVbmSPRNiU4cvfoZa8j11BvoJ17zvRm'; // 80IzP0wmeQVlxzd5NHBNHKPgw3u8JV8Q
-// JiuRH46HtPqAsSmuDC6F4Tkw4z_3hGkmubKMhCZ-pS19Sfvmsd0LtbXqPBhVmd6V
-const String AUTH0_TRADER_CLIENT_ID_DEV = 'V9cNgmtlDesECyFrfip4FuR1SmcAQDQ4'; // F8QjgeMSDjPHU07Pf2floSuCWqQPCxf9
-// TTulYTi19jOvgJkQFR2cDHv8ntEN9w4duZtP9QT7Z_xpgi-Hmls9pq5v_Uffetsu
+const String AUTH0_DOMAIN_PROD = 'combinedotai.eu.auth0.com';
+const String AUTH0_DOMAIN_DEV = 'dev-pgi9e-14.eu.auth0.com';
+const String AUTH0_CLIENT_CLIENT_ID_DEV = 'wFVbmSPRNiU4cvfoZa8j11BvoJ17zvRm';
+const String AUTH0_CLIENT_CLIENT_ID_PROD = '80IzP0wmeQVlxzd5NHBNHKPgw3u8JV8Q';
+const String AUTH0_CLIENT_SECRET = 'JiuRH46HtPqAsSmuDC6F4Tkw4z_3hGkmubKMhCZ-pS19Sfvmsd0LtbXqPBhVmd6V';
+const String AUTH0_TRADER_CLIENT_ID_DEV = 'V9cNgmtlDesECyFrfip4FuR1SmcAQDQ4';
+const String AUTH0_TRADER_CLIENT_ID_PROD = 'F8QjgeMSDjPHU07Pf2floSuCWqQPCxf9';
+const String AUTH0_TRADER_SECRET = ' TTulYTi19jOvgJkQFR2cDHv8ntEN9w4duZtP9QT7Z_xpgi-Hmls9pq5v_Uffetsu';
 // https://combineai.localpeople:/login-callback
 // https://combineai.localpeople-test:/login-callback
 // https://combineai.localpeople-qa:/login-callback
-const String AUTH0_CLIENT_REDIRECT_URI_DEV = 'combineai.localpeople.client://login-callback';
-const String AUTH0_TRADER_REDIRECT_URI_DEV = 'combineai.localpeople.trader://login-callback';
+const String AUTH0_CLIENT_REDIRECT_URI_DEV = 'combineai.localpeople://login-callback';
+const String AUTH0_TRADER_REDIRECT_URI_DEV = 'ccombineai.localpeople://login-callback';
+const String AUTH0_CLIENT_REDIRECT_URI_PROD = 'combineai.localpeople.client://login-callback';
+const String AUTH0_TRADER_REDIRECT_URI_PROD = 'combineai.localpeople.trader://login-callback';
 const String AUTH0_CLIENT_TOKEN_KEY = 'client_token';
-const String AUTH0_PROVIDER_TOKEN_KEY = 'trader_token';
+const String AUTH0_TRADER_TOKEN_KEY = 'trader_token';
 final List<String> _scopes = <String>[
 'openid','profile','offline_access','name','given_name','family_name','nickname','email','email_verified','picture','created_at','identities','phone','address'
 ];
@@ -22,6 +27,7 @@ class AuthorizationConfig {
   AuthorizationConfig({
     @required this.authDomain,
     @required this.authClientId,
+    @required this.authSecret,
     @required this.authRedirectURI,
     @required this.authTokenKey,
     @required this.authDebugTag,
@@ -31,12 +37,10 @@ class AuthorizationConfig {
         authUserEmailKey = 'user_email_$authUserBaseKey',
         authUserTokenKey = 'user_token_$authUserBaseKey',
         authUserTokenDateKey = 'user_token_data_$authUserBaseKey',
-        authIssuer = 'https://$authDomain',
+        authIssuer = 'https://$authDomain/',
         authDiscoveryUrl = 'https://$authDomain/.well-known/openid-configuration',
-        authServiceConfiguration = AuthorizationServiceConfiguration(
-          'https://$authDomain/authorize',
-          'https://$authDomain/token'
-        );
+        authorizationEndpoint = 'https://$authDomain/authorize',
+        tokenEndpoint = 'https://$authDomain/oauth/token';
 
   final List<String> authScopes = <String>[
     'openid','profile','offline_access','name', 'email'
@@ -44,6 +48,7 @@ class AuthorizationConfig {
 
   final String authDomain;
   final String authClientId;
+  final String authSecret;
   final String authRedirectURI;
   final String authTokenKey;
   final bool authDebugTag;
@@ -58,25 +63,31 @@ class AuthorizationConfig {
   //preferEphemeralSession
   //final String _discoveryUrl =
   //       'https://dev-pgi9e-14.eu.auth0.com/.well-known/openid-configuration';
-  final AuthorizationServiceConfiguration authServiceConfiguration;
 
-  static AuthorizationConfig testClientAuthorizationConfig() {
+  //final AuthorizationServiceConfiguration authServiceConfiguration;
+  final String authorizationEndpoint;
+  final String tokenEndpoint;
+
+  static AuthorizationConfig prodClientAuthorizationConfig() {
     return AuthorizationConfig(
-        authDomain: AUTH0_DOMAIN_DEV,
-        authClientId: AUTH0_CLIENT_CLIENT_ID_DEV,
-        authRedirectURI: AUTH0_CLIENT_REDIRECT_URI_DEV,
+        authDomain: AUTH0_DOMAIN_PROD,
+        authClientId: AUTH0_CLIENT_CLIENT_ID_PROD,
+        authSecret: AUTH0_CLIENT_SECRET,
+        authRedirectURI: AUTH0_CLIENT_REDIRECT_URI_PROD,
         authTokenKey: AUTH0_CLIENT_TOKEN_KEY,
-        authDebugTag: true
+        authDebugTag: false,
+        authUserBaseKey: 'client',
     );
   }
 
-  static AuthorizationConfig testTraderAuthorizationConfig() {
+  static AuthorizationConfig prodTraderAuthorizationConfig() {
     return AuthorizationConfig(
-        authDomain: AUTH0_DOMAIN_DEV,
-        authClientId: AUTH0_TRADER_CLIENT_ID_DEV,
-        authRedirectURI: AUTH0_TRADER_REDIRECT_URI_DEV,
-        authTokenKey: AUTH0_PROVIDER_TOKEN_KEY,
-        authDebugTag: true,
+        authDomain: AUTH0_DOMAIN_PROD,
+        authClientId: AUTH0_TRADER_CLIENT_ID_PROD,
+        authSecret: AUTH0_TRADER_SECRET,
+        authRedirectURI: AUTH0_TRADER_REDIRECT_URI_PROD,
+        authTokenKey: AUTH0_TRADER_TOKEN_KEY,
+        authDebugTag: false,
         authUserBaseKey: 'trader',
     );
   }
@@ -97,8 +108,9 @@ class AuthorizationConfig {
         authDomain: AUTH0_DOMAIN_DEV,
         authClientId: AUTH0_TRADER_CLIENT_ID_DEV,
         authRedirectURI: AUTH0_TRADER_REDIRECT_URI_DEV,
-        authTokenKey: AUTH0_PROVIDER_TOKEN_KEY,
-        authDebugTag: true
+        authTokenKey: AUTH0_TRADER_TOKEN_KEY,
+        authDebugTag: true,
+        authUserBaseKey: 'trader',
     );
   }
 

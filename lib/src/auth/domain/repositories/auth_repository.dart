@@ -1,3 +1,4 @@
+import '../../data/models/auth_local_model.dart';
 
 abstract class AuthenticationRepository {
   Future<void> unAuthenticated();
@@ -5,4 +6,8 @@ abstract class AuthenticationRepository {
   Future<bool> isAuthenticated();
 
   Future<String> getUser();
+
+  Future<AuthLocalModel> requestUserAuthorization();
+
+  Future<AuthLocalModel> refreshUserAuthorization();
 }

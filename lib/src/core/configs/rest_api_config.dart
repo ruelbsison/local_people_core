@@ -18,4 +18,17 @@ class RestAPIConfig {
   static const String jobClient = '/clients/{id}/jobs';
 
   static const String jobTrader = '/trader/{id}/jobs';
+
+  static const String tag = '/tags';
+
+  static const String tagWithId = '/tags/{id}';
+
+  static const String jobTags = '/jobs/{id}/tags';
+
+  static const String location = '/locations';
+
+  static const String locationWithId = '/locations/{id}';
+
+  static const String jobLocations = '/jobs/{id}/location';
+
 }
