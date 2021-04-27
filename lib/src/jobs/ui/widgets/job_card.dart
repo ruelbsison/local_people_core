@@ -124,11 +124,11 @@ class _JobCardState extends State<JobCard> {
                         ),
                         SizedBox(height: 20.0),
                         LocationsViewWidget(
-                          location: widget.job.location,
+                          location: widget.job.location.name,
                         ),
                         SizedBox(height: 5.0),
                         TagsViewWidget (
-                          tags: widget.job.tags,
+                          tags: [], //widget.job.tags,
                         )
                       ]
                   ),

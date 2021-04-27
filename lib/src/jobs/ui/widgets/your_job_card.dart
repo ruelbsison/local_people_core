@@ -117,7 +117,7 @@ class _YourJobCardState extends State<YourJobCard> {
                         ),
                         SizedBox(height: 5.0),
                         TagsViewWidget (
-                          tags: widget.job.tags,
+                          tags: [], //widget.job.tags,
                         )
                       ]
                   ),

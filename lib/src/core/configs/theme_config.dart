@@ -1,6 +1,308 @@
 import 'package:flutter/material.dart';
 
 class AppThemeConfig {
+  final ThemeData kLocalPeopleClientTheme = _buildLightTheme();
+  final ThemeData kLocalPeopleTraderTheme = _buildDarkTheme();
+
+  static TextTheme _buildTraderTextTheme(TextTheme base) {
+    return base
+        .copyWith(
+          headline6: base.headline6.copyWith(
+              fontFamily: 'Merriweather', fontWeight: FontWeight.w900),
+          subtitle1: base.subtitle1.copyWith(fontFamily: 'RedHatDisplay'),
+          subtitle2: base.subtitle2.copyWith(fontFamily: 'RedHatDisplay'),
+          caption: base.caption.copyWith(fontFamily: 'RedHatDisplay'),
+          bodyText1: base.bodyText1.copyWith(
+            fontFamily: 'RedHatDisplay',
+            fontWeight: FontWeight.w700,
+          ),
+          bodyText2: base.bodyText2.copyWith(
+            fontFamily: 'RedHatDisplay',
+            fontWeight: FontWeight.w700,
+          ),
+          button: base.button.copyWith(
+            fontFamily: 'RedHatDisplay',
+          ),
+          overline: base.overline.copyWith(
+            fontFamily: 'RedHatDisplay',
+          ),
+        )
+        .apply(
+          displayColor: Color(0xFF003F5C),
+          bodyColor: Color(0xFF003F5C),
+        );
+  }
+
+  static TextTheme _buildClientTextTheme(TextTheme base) {
+    return base
+        .copyWith(
+          headline6: base.headline6
+              .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.w900),
+          subtitle1: base.subtitle1
+              .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.bold),
+          subtitle2: base.subtitle2.copyWith(fontFamily: 'Inter'),
+          caption: base.caption.copyWith(fontFamily: 'Inter'),
+          bodyText1: base.bodyText1
+              .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.bold),
+          bodyText2: base.bodyText2.copyWith(
+            fontFamily: 'Inter',
+          ),
+          button: base.button
+              .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.w700,),
+          overline: base.overline.copyWith(
+            fontFamily: 'Inter',
+          ),
+        )
+        .apply(
+          displayColor: Colors.black,
+          bodyColor: Colors.black,
+        );
+  }
+
+  static ThemeData _buildLightTheme() {
+    /*const Color primaryColor = Color(0xFFEFF4F6);
+    const Color secondaryColor = Color(0xFFFFFFFF);
+    final ColorScheme lightColorScheme = const ColorScheme.light().copyWith(
+      primary: Color(0xFFEFF4F6),
+      primaryVariant: Color(0xFFE4ECEF),
+      secondary: Color(0xFFFDFEFE),
+      secondaryVariant:  Color(0xFFE4ECEF),
+      surface: Color(0xFFFFFFFF),
+      background: Color(0xFFEFF4F6),
+      error: Color(0xFFB00020),
+      onPrimary: Color(0xFFE4ECEF),
+      onSecondary: Color(0xFFE4ECEF),
+      onSurface: Color(0xFFE4ECEF),
+      onBackground: Color(0xFFE4ECEF),
+      onError: Color(0xFFFFFFFF),
+      brightness: Brightness.light,
+    );*/
+    Color lightPrimary = Colors.white;
+    Color darkPrimary = Color(0xff1f1f1f);
+    Color lightAccent = Color(0xff2ca8e2);
+    Color darkAccent = Color(0xff2ca8e2);
+    Color lightBG = Color.fromRGBO(239, 244, 246,
+        1); //Color.fromRGBO(222, 232, 237, 0.5); //Color(0xe5e5e5);//Colors.white;
+    Color darkBG = Color(0xff121212);
+    final ColorScheme lightColorScheme = const ColorScheme.light().copyWith(
+      primary: lightPrimary,
+      primaryVariant: lightPrimary,
+      secondary: lightBG,
+      secondaryVariant:  lightBG,
+      surface: Color(0xFFFFFFFF),
+      background: lightBG,
+      error: Color(0xFFB00020),
+      onPrimary: darkBG,
+      onSecondary: lightAccent,
+      brightness: Brightness.light,
+    );
+    final ThemeData base = ThemeData.light();
+    return base.copyWith(
+      backgroundColor: lightBG,
+      primaryColor: lightPrimary,
+      accentColor: lightAccent,
+      cursorColor: lightAccent,
+      scaffoldBackgroundColor: lightBG,
+      colorScheme: lightColorScheme,
+      indicatorColor: Colors.white,
+      toggleableActiveColor: const Color(0xFF1E88E5),
+      splashColor: lightPrimary, //Colors.white24,
+      splashFactory: InkRipple.splashFactory,
+      canvasColor: Colors.white,
+      errorColor: const Color(0xFFB00020),
+      brightness: Brightness.light,
+      /*accentColorBrightness: Brightness.dark,
+      colorScheme: lightColorScheme,
+      primaryColor: primaryColor,
+      indicatorColor: Colors.white,
+      toggleableActiveColor: const Color(0xFF1E88E5),
+      splashColor: Colors.white24,
+      splashFactory: InkRipple.splashFactory,
+      accentColor: secondaryColor,
+      canvasColor: primaryColor, //Colors.white,
+      scaffoldBackgroundColor: primaryColor, //Colors.white,
+      backgroundColor: primaryColor, //Colors.white,
+      errorColor: const Color(0xFFB00020),
+      buttonTheme: ButtonThemeData(
+        colorScheme: base.buttonTheme.colorScheme,
+        textTheme: ButtonTextTheme.accent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+      ),*/
+      iconTheme: base.iconTheme.copyWith(color: Colors.black),
+      accentIconTheme: base.accentIconTheme.copyWith(color: Colors.black),
+      primaryIconTheme: base.primaryIconTheme.copyWith(color: Colors.black),
+      buttonTheme: base.buttonTheme.copyWith(
+        buttonColor: Color(0xffe5e5e5),
+        textTheme: ButtonTextTheme.primary,
+        colorScheme:
+        base.colorScheme.copyWith(secondary: Colors.black), // Text color
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          primary: Color(0xaabacd),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData (
+        style: ElevatedButton.styleFrom(
+          primary: Color(0xffe5e5e5),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData (
+        style: OutlinedButton.styleFrom(primary: Color(0xaabacd)),
+      ),
+      inputDecorationTheme: base.inputDecorationTheme.copyWith(
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+        ),
+        labelStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 12,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 0.4,
+        ),
+      ),
+      textTheme: _buildClientTextTheme(base.textTheme),
+      primaryTextTheme: _buildClientTextTheme(base.primaryTextTheme),
+      accentTextTheme: _buildClientTextTheme(base.accentTextTheme),
+      appBarTheme: AppBarTheme(
+        elevation: 0.0,
+        backgroundColor: lightPrimary,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+    );
+  }
+
+  static ThemeData _buildDarkTheme() {
+    /*const Color primaryColor = Color(0xFFEFF4F6);
+    const Color secondaryColor = Color(0xFFFFFFFF);
+    final ColorScheme darkColorScheme = const ColorScheme.dark().copyWith(
+      primary: Color(0xFFEFF4F6),
+      primaryVariant: Color(0xFFE4ECEF),
+      secondary: Color(0xFFFDFEFE),
+      secondaryVariant:  Color(0xFFE4ECEF),
+      surface: Color(0xFFFFFFFF),
+      background: Color(0xFFEFF4F6),
+      error: Color(0xFFB00020),
+      onPrimary: Color(0xFFE4ECEF),
+      onSecondary: Color(0xFFE4ECEF),
+      onSurface: Color(0xFFE4ECEF),
+      onBackground: Color(0xFFE4ECEF),
+      onError: Color(0xFFFFFFFF),
+      brightness: Brightness.dark,
+    );*/
+    Color lightPrimary = Colors.white;
+    Color darkPrimary = Color(0xff1f1f1f);
+    Color lightAccent = Color(0xff2ca8e2);
+    Color darkAccent = Color(0xff2ca8e2);
+    Color lightBG = Color.fromRGBO(239, 244, 246,
+        1); //Color.fromRGBO(222, 232, 237, 0.5); //Color(0xe5e5e5);//Colors.white;
+    Color darkBG = Color(0xff121212);
+    /*colorScheme: ColorScheme.light(
+      primary: lightPrimary,
+      primaryVariant: _lightPrimaryVariantColor,
+      secondary: _lightSecondaryColor,
+      onPrimary: _lightOnPrimaryColor,
+    ),*/
+    final ColorScheme lightColorScheme = const ColorScheme.light().copyWith(
+      primary: lightPrimary,
+      primaryVariant: lightPrimary,
+      secondary: lightBG,
+      secondaryVariant:  lightBG,
+      surface: Color(0xFFFFFFFF),
+      background: lightBG,
+      error: Color(0xFFB00020),
+      onPrimary: darkBG,
+      onSecondary: lightAccent,
+      brightness: Brightness.light,
+    );
+    final ThemeData base = ThemeData.light();
+    return base.copyWith(
+      backgroundColor: lightBG,
+      primaryColor: lightPrimary,
+      accentColor: lightAccent,
+      cursorColor: lightAccent,
+      scaffoldBackgroundColor: lightBG,
+      colorScheme: lightColorScheme,
+      indicatorColor: Colors.white,
+      toggleableActiveColor: const Color(0xFF1E88E5),
+      splashColor: lightPrimary, //Colors.white24,
+      splashFactory: InkRipple.splashFactory,
+      canvasColor: Colors.white,
+      errorColor: const Color(0xFFB00020),
+      brightness: Brightness.light,
+      /*accentColorBrightness: Brightness.dark,
+      colorScheme: darkColorScheme,
+      primaryColor: primaryColor,
+      indicatorColor: Colors.white,
+      toggleableActiveColor: const Color(0xFF1E88E5),
+      splashColor: Colors.white24,
+      splashFactory: InkRipple.splashFactory,
+      accentColor: secondaryColor,
+      canvasColor: primaryColor, //Colors.white,
+      scaffoldBackgroundColor: primaryColor, //Colors.white,
+      backgroundColor: primaryColor, //Colors.white,
+      errorColor: const Color(0xFFB00020),
+      buttonTheme: ButtonThemeData(
+        colorScheme: base.buttonTheme.colorScheme,
+        textTheme: ButtonTextTheme.accent,
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+      ),*/
+      iconTheme: base.iconTheme.copyWith(color: Colors.black,),
+      accentIconTheme: base.accentIconTheme.copyWith(color: Colors.black),
+      primaryIconTheme: base.primaryIconTheme.copyWith(color: Colors.black),
+      buttonTheme: base.buttonTheme.copyWith(
+        buttonColor: Color(0xffe5e5e5),
+        textTheme: ButtonTextTheme.primary,
+        colorScheme:
+        base.colorScheme.copyWith(secondary: Colors.black), // Text color
+        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+      ),
+      textButtonTheme: TextButtonThemeData(
+        style: TextButton.styleFrom(
+          primary: Color(0xaabacd),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+        ),
+      ),
+      elevatedButtonTheme: ElevatedButtonThemeData (
+        style: ElevatedButton.styleFrom(
+          primary: Color(0xffe5e5e5),
+          shape:
+          RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+        ),
+      ),
+      outlinedButtonTheme: OutlinedButtonThemeData (
+        style: OutlinedButton.styleFrom(primary: Color(0xaabacd)),
+      ),
+      inputDecorationTheme: base.inputDecorationTheme.copyWith(
+        border: OutlineInputBorder(
+          borderSide: BorderSide.none,
+        ),
+        labelStyle: TextStyle(
+          fontFamily: 'Inter',
+          fontSize: 12,
+          fontWeight: FontWeight.normal,
+          letterSpacing: 0.4,
+        ),
+      ),
+      textTheme: _buildTraderTextTheme(base.textTheme),
+      primaryTextTheme: _buildTraderTextTheme(base.primaryTextTheme),
+      accentTextTheme: _buildTraderTextTheme(base.accentTextTheme),
+      appBarTheme: AppBarTheme(
+        elevation: 0.0,
+        backgroundColor: lightPrimary,
+        iconTheme: IconThemeData(color: Colors.black),
+      ),
+    );
+  }
+}
+
+/*class AppThemeConfig {
   static Color lightPrimary = Colors.white;
   static Color darkPrimary = Color(0xff1f1f1f);
   static Color lightAccent = Color(0xff2ca8e2);
@@ -17,7 +319,57 @@ class AppThemeConfig {
     appBarTheme: AppBarTheme(
       elevation: 0.0,
     ),
+    // primaryTextTheme: TextTheme(
+    //
+    // ),
+    // accentTextTheme: TextTheme(
+    //
+    // ),
     textTheme: TextTheme(
+      headline6: TextStyle(
+          fontFamily: 'Merriweather',
+          color: Color.fromRGBO(0, 63, 92, 1),
+          fontSize: 22,
+          fontWeight: FontWeight.w900,
+          //height: 1.5
+      ),     // title
+      subtitle1: TextStyle(
+        fontFamily: 'RedHatDisplay',
+        color: Color.fromRGBO(0, 63, 92, 1),
+        fontSize: 18,
+        fontWeight: FontWeight.w700,
+      ),   // subhead
+      subtitle2: TextStyle(
+        fontFamily: 'RedHatDisplay',
+        color: Color.fromRGBO(1, 43, 58, 1),
+        fontSize: 12,
+        fontWeight: FontWeight.w500,
+      ), // subtitle
+      bodyText1: TextStyle (
+          color: Color(0xff012b3a), //Color.fromRGBO(87,106,129,1),
+          fontFamily: 'RedHatDisplay',
+          fontSize: 16,
+          fontWeight: FontWeight.w700,
+      ),    // body2
+      bodyText2: TextStyle(
+        fontFamily: 'RedHatDisplay',
+        color: Color(0xff012b3a), //Color.fromRGBO(1, 43, 58, 1),
+        fontSize: 14,
+        fontWeight: FontWeight.w700,
+      ),    // body1
+      caption: TextStyle(
+        fontFamily: 'RedHatDisplay',
+        color: Color.fromRGBO(1, 43, 58, 1),
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+      ),
+      overline: TextStyle(
+          color: Color(0xff012b3a), //Color.fromRGBO(87, 106, 128, 1),
+          fontFamily: 'RedHatDisplay',
+          fontSize: 10,
+          fontWeight: FontWeight.w500,
+          //height: 1.5 /*PERCENT not supported*/
+      ),
       button: TextStyle(
         // OpenSans is similar to NotoSans but the uppercases look a bit better IMO
         fontFamily: 'RedHatDisplay',
@@ -40,50 +392,6 @@ class AppThemeConfig {
       headline5: TextStyle(
           fontFamily: 'RedHatDisplay'
       ), // headline
-      headline6: TextStyle(
-          fontFamily: 'Merriweather',
-          color: Color.fromRGBO(0, 63, 92, 1),
-          fontSize: 22,
-          fontWeight: FontWeight.w900,
-          //height: 1.5
-      ),     // title
-      subtitle1: TextStyle(
-        fontFamily: 'RedHatDisplay',
-        color: Color.fromRGBO(0, 63, 92, 1),
-        fontSize: 18,
-        fontWeight: FontWeight.w700,
-      ),   // subhead
-      bodyText1: TextStyle (
-          color: Color(0xff012b3a), //Color.fromRGBO(87,106,129,1),
-          fontFamily: 'RedHatDisplay',
-          fontSize: 16,
-          fontWeight: FontWeight.w700,
-      ),    // body2
-      bodyText2: TextStyle(
-        fontFamily: 'RedHatDisplay',
-        color: Color(0xff012b3a), //Color.fromRGBO(1, 43, 58, 1),
-        fontSize: 14,
-        fontWeight: FontWeight.w700,
-      ),    // body1
-      subtitle2: TextStyle(
-        fontFamily: 'RedHatDisplay',
-        color: Color.fromRGBO(1, 43, 58, 1),
-        fontSize: 12,
-        fontWeight: FontWeight.w500,
-      ), // subtitle
-      caption: TextStyle(
-        fontFamily: 'RedHatDisplay',
-        color: Color.fromRGBO(1, 43, 58, 1),
-        fontSize: 12,
-        fontWeight: FontWeight.w700,
-      ),
-      overline: TextStyle(
-          color: Color(0xff012b3a), //Color.fromRGBO(87, 106, 128, 1),
-          fontFamily: 'RedHatDisplay',
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-          //height: 1.5 /*PERCENT not supported*/
-      ),
     ),
     textButtonTheme: TextButtonThemeData (
       style: TextButton.styleFrom(
@@ -94,19 +402,28 @@ class AppThemeConfig {
       style: ElevatedButton.styleFrom(
         primary: Color.fromRGBO(170, 186, 205, 1),
         onPrimary: Color.fromRGBO(255, 99, 95, 1),
-        /*textStyle: TextStyle(
-          fontFamily: 'RedHatDisplay',
-          color: Color(0xffffff),
-          fontSize: 16,
-          fontWeight: FontWeight.normal,
-        )*/
       ),
     ),
     outlinedButtonTheme: OutlinedButtonThemeData (
       style: OutlinedButton.styleFrom(
           primary: Color(0xaabacd)
       ),
-    )
+    ),
+    inputDecorationTheme: InputDecorationTheme (
+        //labelStyle: TextStyle(color: Colors.white),
+          labelStyle: TextStyle(
+            fontFamily: 'RedHatDisplay',
+            color: Color.fromRGBO(1, 43, 58, 1),
+            fontSize: 12,
+            fontWeight: FontWeight.w700,
+          ),
+          enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide.none,
+      ),
+      border: OutlineInputBorder(
+        borderSide: BorderSide.none,
+      ),
+    ),
   );
 
   static ThemeData clientTheme = ThemeData(
@@ -115,32 +432,11 @@ class AppThemeConfig {
       accentColor: lightAccent,
       cursorColor: lightAccent,
       scaffoldBackgroundColor: lightBG,
+
       appBarTheme: AppBarTheme(
         elevation: 0.0,
       ),
       textTheme: TextTheme(
-        button: TextStyle(
-          // OpenSans is similar to NotoSans but the uppercases look a bit better IMO
-          fontFamily: 'Inter',
-        ),
-        headline3: TextStyle(
-            fontFamily: 'Inter'
-        ), // display2
-        headline1: TextStyle(
-            fontFamily: 'Inter'
-        ), // display2
-        headline2: TextStyle(
-            fontFamily: 'RedHatDisplay'
-        ), // display2
-        headline4: TextStyle(
-          fontFamily: "Inter",
-          color: Color.fromRGBO(0, 63, 92, 1),
-          fontSize: 18,
-          fontWeight: FontWeight.w900,
-        ), // display2
-        headline5: TextStyle(
-            fontFamily: 'Inter'
-        ), // headline
         headline6: TextStyle(
           fontFamily: 'Merriweather',
           color: Color.fromRGBO(0, 63, 92, 1),
@@ -154,6 +450,12 @@ class AppThemeConfig {
           fontSize: 18,
           fontWeight: FontWeight.w700,
         ),   // subhead
+        subtitle2: TextStyle(
+          fontFamily: 'Inter',
+          color: Color.fromRGBO(1, 43, 58, 1),
+          fontSize: 12,
+          fontWeight: FontWeight.w500,
+        ), // subtitle
         bodyText1: TextStyle (
           color: Color(0xff012b3a), //Color.fromRGBO(87,106,129,1),
           fontFamily: 'Inter',
@@ -166,12 +468,6 @@ class AppThemeConfig {
           fontSize: 14,
           fontWeight: FontWeight.w700,
         ),    // body1
-        subtitle2: TextStyle(
-          fontFamily: 'Inter',
-          color: Color.fromRGBO(1, 43, 58, 1),
-          fontSize: 12,
-          fontWeight: FontWeight.w500,
-        ), // subtitle
         caption: TextStyle(
           fontFamily: 'Inter',
           color: Color.fromRGBO(1, 43, 58, 1),
@@ -184,6 +480,10 @@ class AppThemeConfig {
           fontSize: 10,
           fontWeight: FontWeight.w500,
           //height: 1.5 /*PERCENT not supported*/
+        ),
+        button: TextStyle(
+          // OpenSans is similar to NotoSans but the uppercases look a bit better IMO
+          fontFamily: 'Inter',
         ),
       ),
       textButtonTheme: TextButtonThemeData (
@@ -207,6 +507,21 @@ class AppThemeConfig {
         style: OutlinedButton.styleFrom(
             primary: Color(0xaabacd)
         ),
-      )
+      ),
+    inputDecorationTheme: InputDecorationTheme (
+      //labelStyle: TextStyle(color: Colors.white),
+      labelStyle: TextStyle(
+        fontFamily: 'Inter',
+        color: Color.fromRGBO(1, 43, 58, 1),
+        fontSize: 12,
+        fontWeight: FontWeight.w700,
+      ),
+      enabledBorder: OutlineInputBorder(
+        borderSide: BorderSide.none,
+      ),
+      border: OutlineInputBorder(
+        borderSide: BorderSide.none,
+      ),
+    ),
   );
-}
+}*/

@@ -49,20 +49,16 @@ class _TagWidgetState extends State<TagsViewWidget> {
   }
 
   Widget createTag(int index, String tagTitle) {
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: EdgeInsets.all(4.0),
       decoration: BoxDecoration(
-        color: (widget.tagBackgroundColor == null ? Color.fromRGBO(170, 186, 205, 1) : widget.tagBackgroundColor),
+        color: (widget.tagBackgroundColor == null ? Color.fromRGBO(196, 196, 196, 1) : widget.tagBackgroundColor),
         borderRadius: BorderRadius.circular(2.0),
       ),
       child: Text(
         tagTitle,
-        style: TextStyle(
-          color: Color.fromRGBO(255, 255, 255, 1),
-          fontSize: 10,
-          fontWeight: FontWeight.w500,
-          fontFamily: 'RedHatDisplay',
-        ),
+        style: textTheme.caption,
       ),
     );
   }

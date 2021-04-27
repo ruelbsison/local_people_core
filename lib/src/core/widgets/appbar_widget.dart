@@ -26,7 +26,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     return PreferredSize(
       preferredSize: appBarPreferredSize,
       child: AppBar(
-       // automaticallyImplyLeading: false, // Don't show the leading button
+        //automaticallyImplyLeading: false, // Don't show the leading button
         titleSpacing: 0,
         centerTitle: false,
         actions: actions,
