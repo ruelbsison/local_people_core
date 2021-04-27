@@ -6,6 +6,7 @@ import '../../domain/repositories/auth_repository.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import '../../data/models/auth_local_model.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
@@ -33,24 +34,20 @@ class AuthenticationBloc
       AuthenticationEvent event) async* {
     if (event is AppStarted) {
       yield* _mapAppStartedToState();
-    } else if (event is LoggedIn) {
-      yield* _mapLoggedInToState();
-    } else if (event is LoggedOut) {
-      yield* _mapLoggedOutToState();
+    } else if (event is AuthenticateUser) {
+      yield* _mapAuthenticateUserState();
+    } else if (event is ReAuthenticateUser) {
+      yield* _mapReAuthenticateUserState();
+    } else if (event is UnAuthenticateUser) {
+      yield* _mapUnAuthenticateUserState();
     }
   }
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
-      final isSignedIn = await _authenticationRepository.isAuthenticated();
+      final isAuthenticated = await _authenticationRepository.isAuthenticated();
 
-      //db
-      //await DbHelper.init();
-
-      //for display splash screen
-      await Future.delayed(Duration(seconds: 2));
-
-      if (isSignedIn) {
+      if (isAuthenticated) {
         final name = await _authenticationRepository.getUser();
         yield Authenticated(name);
       } else {
@@ -61,12 +58,24 @@ class AuthenticationBloc
     }
   }
 
-  Stream<AuthenticationState> _mapLoggedInToState() async* {
-    yield Authenticated(await _authenticationRepository.getUser());
+  Stream<AuthenticationState> _mapAuthenticateUserState() async* {
+    AuthLocalModel authLocalModel = await _authenticationRepository.requestUserAuthorization();
+    if (authLocalModel != null)
+      yield Authenticated(authLocalModel.userName);
+    else
+      yield AuthenticationError();
   }
 
-  Stream<AuthenticationState> _mapLoggedOutToState() async* {
-    yield Unauthenticated();
+  Stream<AuthenticationState> _mapReAuthenticateUserState() async* {
+    AuthLocalModel authLocalModel = await _authenticationRepository.requestUserAuthorization();
+    if (authLocalModel != null)
+      yield Authenticated(authLocalModel.userName);
+    else
+      yield AuthenticationError();
+  }
+
+  Stream<AuthenticationState> _mapUnAuthenticateUserState() async* {
     _authenticationRepository.unAuthenticated();
+    yield Unauthenticated();
   }
 }
