@@ -14,6 +14,7 @@ export './src/core/configs/app_config.dart';
 export './src/core/configs/auth_config.dart';
 export './src/core/configs/theme_config.dart';
 export './src/core/configs/constants.dart';
+export './src/core/configs/rest_api_config.dart';
 
 export './src/core/enum/api_request_status.dart';
 export './src/core/enum/view_state.dart';

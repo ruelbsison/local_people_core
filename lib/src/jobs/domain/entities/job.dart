@@ -1,5 +1,8 @@
 import 'dart:ui';
+import 'dart:io';
 import 'package:meta/meta.dart';
+import 'tag.dart';
+import 'location.dart';
 
 class Job extends Object {
   int id;
@@ -7,9 +10,9 @@ class Job extends Object {
   String description;
   String preview;
   String budget;
-  String location;
-  List<String> tags;
-  List<String> images;
+  Location location;
+  List<Tag> tags;
+  List<File> images;
   int minutesLeft;
   int client_id;
   DateTime date;
@@ -41,7 +44,7 @@ class Job extends Object {
         title: '',
         description: '',
         preview: '',
-        location: '',
+        location: Location.empty(),
         budget: '',
         tags: [],
         minutesLeft: 0,
@@ -65,9 +68,9 @@ List demeJobs = [
     title: 'Job request name or description',
     description: 'Short job description preview, job description preview, short job description preview, job description preview.',
     preview: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus nulla vel iaculis aliquet. Integer lacus nibh, elementum id feugiat vel, hendrerit in metus. Donec interdum imperdiet sem eu facilisis. Duis eu sapien in elit eleifend dictum. Nunc at odio tempus lacus pretium fermentum.',
-    location: 'Cumberland & Grange',
+    location: Location.empty(),
     budget: 'PXXX',
-    tags: ['Tag Numero Uno', 'Tag Numero Dos'],
+    tags: [],
     minutesLeft: 120,
     images: [],
     date: DateTime.now(),
@@ -78,15 +81,9 @@ List demeJobs = [
     title: 'Job request name or description',
     description: 'Short job description preview, job description preview, short job description preview, job description preview.',
     preview: 'Short job description preview, job description preview, short job description preview, job description preview.',
-    location: 'Cumberland & Grange',
+    location: Location.empty(),
     budget: 'PXXX',
-    tags: [
-      'Tag Numero 01',
-      'Tag Numero Eleventy',
-      'Tag Numero Eleventy',
-      'Tag Numero Eleventy',
-      'Tag Numero Eleventy'
-    ],
+    tags: [],
     minutesLeft: 120,
     images: [],
     date: DateTime.now(),

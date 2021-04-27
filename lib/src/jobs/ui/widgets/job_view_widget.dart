@@ -59,7 +59,7 @@ class _JobViewWidgetState extends State<JobViewWidget> {
         ),
         SizedBox(height: 5.0),
         TagsViewWidget(
-          tags: widget.job.tags,
+          tags: [], //widget.job.tags,
         ),
         SizedBox(height: 20.0),
         Container(
