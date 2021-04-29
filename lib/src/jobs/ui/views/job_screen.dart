@@ -3,6 +3,7 @@ import 'package:local_people_core/core.dart';
 import '../widgets/job_card.dart';
 //import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:local_people_core/jobs.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class JobScreen extends StatefulWidget {
   @override
@@ -46,67 +47,55 @@ class _JobScreenState extends State<JobScreen> {
           ),
         ],
       ),
-      body: (appCType == AppType.TRADER
-          ? buildTraderBody(context)
-          : buildClientBody(context)),
+      body: buildBody(context),
     );
   }
 
-  Widget buildTraderBody(BuildContext context) {
-    return SafeArea (
-      /*child: RefreshIndicator(
-          onRefresh: () async{
-        BlocProvider.of<HomeBloc>(context).add(RefreshHome());
+  Widget buildBody(BuildContext context) {
+    return BlocBuilder<JobBloc, JobState>(
+      builder: (context, state) {
+        return SafeArea (
+            child: buildBodyList(state),
+        );
       },
-      child: ListView(
-        shrinkWrap: true,
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
-          //SizedBox(height: 10.0),
-          OpportunityCard(),
-          //SizedBox(height: 10.0),
-          OpportunityCard(),
-          //SizedBox(height: 10.0),
-          OpportunityCard(),
-          //SizedBox(height: 10.0),
-          OpportunityCard(),
-          //SizedBox(height: 10.0),
-        ],
-      )*/
-      child: ListView.builder(
-        itemCount: demeJobs.length,
-        itemBuilder: (context, index) =>
-            JobCard(job: demeJobs[index]),
-      ),
     );
   }
 
-  Widget buildClientBody(BuildContext context) {
-    return SafeArea (
-      /*child: RefreshIndicator(
-          onRefresh: () async{
-        BlocProvider.of<HomeBloc>(context).add(RefreshHome());
-      },
-      child: ListView(
-        shrinkWrap: true,
-        physics: BouncingScrollPhysics(),
-        children: <Widget>[
-          //SizedBox(height: 10.0),
-          OpportunityCard(),
-          //SizedBox(height: 10.0),
-          OpportunityCard(),
-          //SizedBox(height: 10.0),
-          OpportunityCard(),
-          //SizedBox(height: 10.0),
-          OpportunityCard(),
-          //SizedBox(height: 10.0),
-        ],
-      )*/
-      child: ListView.builder(
-        itemCount: demeJobs.length,
-        itemBuilder: (context, index) =>
-            YourJobCard(job: demeJobs[index]),
-      ),
-    );
+  Widget buildBodyList(JobState state) {
+    final appCType = AppConfig.of(context).appType;
+    if (state is JobLoaded) {
+      return Expanded(
+        child: RefreshIndicator(
+            onRefresh: () async{
+            BlocProvider.of<JobBloc>(context).add(RefreshJobs());
+          },
+          child: ListView.builder(
+            itemCount: demeJobs.length,
+            itemBuilder: (context, index) =>
+            (appCType == AppType.TRADER
+                ? JobCard(job: state.jobs[index])
+                : YourJobCard(job: state.jobs[index])),
+          ),
+        ),
+      );
+    } else if (state is JobLoading) {
+      return Expanded(
+        child: Center(
+          child: CircularProgressIndicator(),
+        ),
+      );
+    } else if (state is JobNotLoaded) {
+      return Expanded(
+        child: Center(
+          child: Text('Cannot load data'),
+        ),
+      );
+    } else {
+      return Expanded(
+        child: Center(
+          child: Text('Unknown state'),
+        ),
+      );
+    }
   }
 }

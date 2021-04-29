@@ -1,11 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-
+import 'dart:async';
+import 'dart:typed_data';
 import '../widgets/posted_by_widget.dart';
 import '../widgets/post_actions_widget.dart';
 import '../../domain/entities/profile.dart';
 import '../../domain/entities/job.dart';
 import '../widgets/job_view_widget.dart';
+import 'package:google_place/google_place.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 class JobPreviewScreen extends StatefulWidget {
   JobPreviewScreen({
@@ -27,9 +30,18 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
   TabController _controller;
   int _tab = 0;
 
+  void requestPermission() async {
+    Map<Permission, PermissionStatus> statuses =
+    await [Permission.location].request();
+  }
+
   @override
   void initState() {
+    super.initState();
+
     _controller = TabController(length: 2, vsync: this);
+
+    requestPermission();
   }
 
   @override
@@ -164,18 +176,18 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
       controller: _controller,
       children: <Widget>[
         SingleChildScrollView(
-          padding: EdgeInsets.all(16.0),
+          physics: BouncingScrollPhysics(),
           child: Flex(
             direction: Axis.vertical,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              JobViewWidget(job: widget.job),
-              SizedBox(height: 20.0),
+              JobViewWidget(job: widget.job,),
+              //SizedBox(height: 10.0),
               PostedByWidget(profile: widget.profile),
-              SizedBox(height: 50.0),
+              //SizedBox(height: 10.0),
               PostActionsWidget(),
-              SizedBox(height: 10.0),
+              //SizedBox(height: 10.0),
             ],
           ),
         ),

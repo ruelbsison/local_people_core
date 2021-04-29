@@ -1,13 +1,14 @@
+import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:local_people_core/core.dart';
-//import 'package:image_picker/image_picker.dart';
+import 'dart:typed_data';
+import 'package:flutter/foundation.dart';
 
 class ImagesViewWidget extends StatefulWidget {
-  List<String> images;
+  List<File> images;
   double maxTagViewHeight;
-  double  minTagViewHeight;
+  double minTagViewHeight;
   Color tagBackgroundColor;
 
   static final uuid = Uuid();
@@ -15,12 +16,13 @@ class ImagesViewWidget extends StatefulWidget {
 
   ImagesViewWidget(
       {@required this.images,
-        this.minTagViewHeight = 0,
-        this.maxTagViewHeight = 80,
-        this.tagBackgroundColor})
-      : assert(images != null,
-  'Tags can\'t be empty\n'
-      'Provide the list of tags');
+      this.minTagViewHeight = 80,
+      this.maxTagViewHeight = 120,
+      this.tagBackgroundColor})
+      : assert(
+            images != null,
+            'Tags can\'t be empty\n'
+            'Provide the list of tags');
 
   @override
   _ImagesViewWidgetState createState() => _ImagesViewWidgetState();
@@ -41,8 +43,7 @@ class _ImagesViewWidgetState extends State<ImagesViewWidget> {
                   child: createImage(widget.images[index]),
                   onTap: () {
                     // TODO 15: Call Add To Cart
-                  }
-              ),
+                  }),
               padding: EdgeInsets.all(10.0),
             ),
           ],
@@ -52,15 +53,24 @@ class _ImagesViewWidgetState extends State<ImagesViewWidget> {
     );
   }
 
-  Widget createImage(String imgUrl) {
+  Widget createImage(dynamic imgUrl) {
     return ConstrainedBox(
-      constraints:BoxConstraints(
+      constraints: BoxConstraints(
         minHeight: widget.minTagViewHeight,
         maxHeight: widget.maxTagViewHeight,
       ),
       child: Hero(
-      tag: ImagesViewWidget.uuid.v4(),
-      child: CachedNetworkImage(
+        tag: ImagesViewWidget.uuid.v4(),
+        child: kIsWeb
+            ? Image.memory(imgUrl as Uint8List, fit: BoxFit.cover)
+            : imgUrl is String
+                ? Image.network(imgUrl, fit: BoxFit.cover)
+                : Image.file(imgUrl as File, fit: BoxFit.cover),
+      ),
+    );
+
+    /*
+    CachedNetworkImage(
         imageUrl: imgUrl,
         placeholder: (context, url) => LoadingWidget(
           isImage: true,
@@ -71,105 +81,7 @@ class _ImagesViewWidgetState extends State<ImagesViewWidget> {
         ),
         fit: BoxFit.cover,
       ),
-    ),
-    );
+     */
   }
 
-  _imgFromCamera() async {
-    /*File image = await ImagePicker.pickImage(
-        source: ImageSource.camera, imageQuality: 50
-    );
-
-    setState(() {
-      _image = image;
-    });*/
-  }
-
-  _imgFromGallery() async {
-    /*File image = await  ImagePicker.pickImage(
-        source: ImageSource.gallery, imageQuality: 50
-    );
-
-    setState(() {
-      _image = image;
-    });*/
-  }
-
-  void _showPicker(context) {
-    showModalBottomSheet(
-        context: context,
-        builder: (BuildContext bc) {
-          return SafeArea(
-            child: Container(
-              child: new Wrap(
-                children: <Widget>[
-                  new ListTile(
-                      leading: new Icon(Icons.photo_library),
-                      title: new Text('Photo Library'),
-                      onTap: () {
-                        _imgFromGallery();
-                        Navigator.of(context).pop();
-                      }),
-                  new ListTile(
-                    leading: new Icon(Icons.photo_camera),
-                    title: new Text('Camera'),
-                    onTap: () {
-                      _imgFromCamera();
-                      Navigator.of(context).pop();
-                    },
-                  ),
-                ],
-              ),
-            ),
-          );
-        }
-    );
-  }
-
-  /*
-  @override
-  Widget build(BuildContext context) {
-    return Scaffold(
-      appBar: AppBar(),
-      body: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 32,
-          ),
-          Center(
-            child: GestureDetector(
-              onTap: () {
-                _showPicker(context);
-              },
-              child: CircleAvatar(
-                radius: 55,
-                backgroundColor: Color(0xffFDCF09),
-                child: _image != null
-                    ? ClipRRect(
-                  borderRadius: BorderRadius.circular(50),
-                  child: Image.file(
-                    _image,
-                    width: 100,
-                    height: 100,
-                    fit: BoxFit.fitHeight,
-                  ),
-                )
-                    : Container(
-                  decoration: BoxDecoration(
-                      color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(50)),
-                  width: 100,
-                  height: 100,
-                  child: Icon(
-                    Icons.camera_alt,
-                    color: Colors.grey[800],
-                  ),
-                ),
-              ),
-            ),
-          )
-        ],
-      ),
-    );
-  }*/
 }

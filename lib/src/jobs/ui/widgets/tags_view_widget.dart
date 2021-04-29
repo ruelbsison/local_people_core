@@ -1,7 +1,8 @@
 import 'package:flutter/material.dart';
+import '../../domain/entities/tag.dart';
 
 class TagsViewWidget extends StatefulWidget {
-  List<String> tags;
+  List<Tag> tags;
   double maxTagViewHeight;
   double  minTagViewHeight;
   Color tagBackgroundColor;
@@ -43,7 +44,7 @@ class _TagWidgetState extends State<TagsViewWidget> {
   List<Widget> buildTags() {
     List<Widget> tags = <Widget>[];
     for(int i = 0; i < widget.tags.length; i++) {
-      tags.add(createTag(i, widget.tags[i]));
+      tags.add(createTag(i, widget.tags[i].name));
     }
     return tags;
   }

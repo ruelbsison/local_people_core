@@ -5,6 +5,8 @@ class Location extends Object {
   Location({
     @required this.id,
     @required this.name,
+    this.address,
+    this.photoUrl,
   })  : assert(id != null);
 
   /// The current Location's email address.
@@ -12,6 +14,10 @@ class Location extends Object {
 
   /// The current Location's id.
   int id;
+
+  String address;
+
+  String photoUrl;
 
   @override
   bool operator ==(Object other) =>
@@ -23,7 +29,9 @@ class Location extends Object {
   static empty() {
     return Location(
         id: 0,
-        name: ''
+        name: '',
+      address: '',
+        photoUrl: '',
     );
   }
 }

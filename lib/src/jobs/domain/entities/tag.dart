@@ -3,6 +3,9 @@ import 'dart:io';
 import 'package:meta/meta.dart';
 
 class Tag extends Object {
+  //const Tag.pure([int id, String name = '']) : super.pure(id, name);
+  //const Tag.dirty([int id, String name = '']) : super.dirty(id, name);
+
   int id;
   String name;
 

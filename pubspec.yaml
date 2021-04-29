@@ -23,7 +23,6 @@ dependencies:
   formz: ^0.3.0
   # rxdart: ^0.23.0
   # UI
-  # flutter_svg: ^0.18.1
   http: ^0.12.1
   # Auth0
   flutter_appauth: ^0.9.1
@@ -52,7 +51,7 @@ dependencies:
   material_segmented_control: ^3.1.2
   material_floating_search_bar: ^0.3.4
   # flutter_webview_plugin: ^0.3.11
-  webview_flutter: ^2.0.4
+  # webview_flutter: ^2.0.4
   oauth2: ^1.5.0
   # numberpicker: ^2.1.1
   # flutter_typeahead: ^2.0.0
@@ -62,6 +61,11 @@ dependencies:
   flutter_screenutil: ^5.0.0
   flutter_tags: ^0.4.9+1
   mime: ^1.0.0
+  progressive_image: ^1.0.1
+  flutter_svg: ^0.19.0
+  flutter_svg_provider: ^0.1.8
+  flutter_inappwebview: ^5.3.2
+  permission_handler: ^5.0.1
 
 dev_dependencies:
   flutter_test:
@@ -101,6 +105,8 @@ flutter:
     - packages/local_people_core/assets/images/verified-icon.png
     - packages/local_people_core/assets/images/delete-job-icon.png
     - packages/local_people_core/assets/images/package-icon.png
+    - packages/local_people_core/assets/images/rectangle.svg
+    - packages/local_people_core/assets/images/add-photo-icon.svg
   # To add custom fonts to your package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

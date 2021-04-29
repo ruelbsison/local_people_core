@@ -27,12 +27,12 @@ class _PostedByWidgetState extends State<PostedByWidget> {
   Widget build(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
     return  Container(
-      padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
-      margin: EdgeInsets.all(12.0),
-      decoration: BoxDecoration(
-        color: Color.fromRGBO(255, 255, 255, 1),
-        borderRadius: BorderRadius.circular(5.0),
-      ),
+      color: Colors.white,
+      padding: EdgeInsets.all(12.0),
+      // decoration: BoxDecoration(
+      //   color: Color.fromRGBO(255, 255, 255, 1),
+      //   borderRadius: BorderRadius.circular(5.0),
+      // ),
       //height: 197,
       child: Flex (
         direction: Axis.vertical,
