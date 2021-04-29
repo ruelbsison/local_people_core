@@ -13,8 +13,8 @@ const String AUTH0_TRADER_SECRET = ' TTulYTi19jOvgJkQFR2cDHv8ntEN9w4duZtP9QT7Z_x
 // https://combineai.localpeople:/login-callback
 // https://combineai.localpeople-test:/login-callback
 // https://combineai.localpeople-qa:/login-callback
-const String AUTH0_CLIENT_REDIRECT_URI_DEV = 'combineai.localpeople://login-callback';
-const String AUTH0_TRADER_REDIRECT_URI_DEV = 'ccombineai.localpeople://login-callback';
+const String AUTH0_CLIENT_REDIRECT_URI_DEV = 'combineai.localpeople.client-dev://login-callback';
+const String AUTH0_TRADER_REDIRECT_URI_DEV = 'combineai.localpeople.trader-dev://login-callback';
 const String AUTH0_CLIENT_REDIRECT_URI_PROD = 'combineai.localpeople.client://login-callback';
 const String AUTH0_TRADER_REDIRECT_URI_PROD = 'combineai.localpeople.trader://login-callback';
 const String AUTH0_CLIENT_TOKEN_KEY = 'client_token';

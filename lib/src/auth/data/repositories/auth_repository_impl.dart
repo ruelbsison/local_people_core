@@ -62,7 +62,6 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
   @override
   Future<AuthLocalModel> requestUserAuthorization() async {
     AuthLocalModel authLocal;
-
     try {
       AuthSessionModel session = await authenticationDataSource.createSession();
       AuthProfileModel profile = await authenticationDataSource.geSessionProfile(session.accessToken);
