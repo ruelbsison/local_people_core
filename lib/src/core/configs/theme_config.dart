@@ -8,23 +8,44 @@ class AppThemeConfig {
     return base
         .copyWith(
           headline6: base.headline6.copyWith(
-              fontFamily: 'Merriweather', fontWeight: FontWeight.w900),
-          subtitle1: base.subtitle1.copyWith(fontFamily: 'RedHatDisplay'),
-          subtitle2: base.subtitle2.copyWith(fontFamily: 'RedHatDisplay'),
-          caption: base.caption.copyWith(fontFamily: 'RedHatDisplay'),
+              fontFamily: 'Merriweather',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+          subtitle1: base.subtitle1.copyWith(
+              fontFamily: 'RedHatDisplay',
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          subtitle2: base.subtitle2.copyWith(
+              fontFamily: 'RedHatDisplay',
+              fontWeight: FontWeight.w500,
+            fontSize: 14,
+          ),
+          caption: base.caption.copyWith(
+              fontFamily: 'RedHatDisplay',
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+          ),
           bodyText1: base.bodyText1.copyWith(
             fontFamily: 'RedHatDisplay',
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
           ),
           bodyText2: base.bodyText2.copyWith(
             fontFamily: 'RedHatDisplay',
-            fontWeight: FontWeight.w700,
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
           ),
           button: base.button.copyWith(
             fontFamily: 'RedHatDisplay',
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
           ),
           overline: base.overline.copyWith(
             fontFamily: 'RedHatDisplay',
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
           ),
         )
         .apply(
@@ -36,21 +57,45 @@ class AppThemeConfig {
   static TextTheme _buildClientTextTheme(TextTheme base) {
     return base
         .copyWith(
-          headline6: base.headline6
-              .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.w900),
-          subtitle1: base.subtitle1
-              .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.bold),
-          subtitle2: base.subtitle2.copyWith(fontFamily: 'Inter'),
-          caption: base.caption.copyWith(fontFamily: 'Inter'),
-          bodyText1: base.bodyText1
-              .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.bold),
+          headline6: base.headline6.copyWith(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.bold,
+            fontSize: 20,
+          ),
+          subtitle1: base.subtitle1.copyWith(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
+          subtitle2: base.subtitle2.copyWith(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w500,
+            fontSize: 14,
+          ),
+          caption: base.caption.copyWith(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+            fontSize: 12,
+          ),
+          bodyText1: base.bodyText1.copyWith(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.bold,
+            fontSize: 16,
+          ),
           bodyText2: base.bodyText2.copyWith(
             fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
           ),
-          button: base.button
-              .copyWith(fontFamily: 'Inter', fontWeight: FontWeight.w700,),
+          button: base.button.copyWith(
+            fontFamily: 'Inter',
+            fontWeight: FontWeight.bold,
+            fontSize: 14,
+          ),
           overline: base.overline.copyWith(
             fontFamily: 'Inter',
+            fontWeight: FontWeight.w400,
+            fontSize: 14,
           ),
         )
         .apply(
