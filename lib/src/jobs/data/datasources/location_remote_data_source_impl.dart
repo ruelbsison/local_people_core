@@ -14,7 +14,7 @@ class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
   LocationRemoteDataSourceImpl(
       @required this.baseUrl
       )  : assert(baseUrl != null) {
-    locationRestApiClient = LocationRestApiClient(Dio(BaseOptions(contentType: "application/json")),
+    locationRestApiClient = LocationRestApiClient(RestAPIConfig.getDioOptions(),
         baseUrl: baseUrl);
   }
 

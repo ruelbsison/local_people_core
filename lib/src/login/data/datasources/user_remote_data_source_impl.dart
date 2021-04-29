@@ -8,11 +8,15 @@ import '../models/user_model.dart';
 
 class UserRemoteDataSourceImpl implements UserRemoteDataSource {
   final logger = Logger("UserRemoteDataSourceImpl");
-  final UserRestApiClient userRestApiClient;
+  final String baseUrl;
+  UserRestApiClient userRestApiClient;
 
   UserRemoteDataSourceImpl({
-    @required this.userRestApiClient
-  })  : assert(userRestApiClient != null);
+    @required this.baseUrl
+  })  : assert(baseUrl != null) {
+    userRestApiClient = UserRestApiClient(RestAPIConfig.getDioOptions(),
+        baseUrl: baseUrl);
+  }
 
   @override
   Future<UserModel> createUser(UserModel user) async {

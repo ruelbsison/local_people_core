@@ -20,7 +20,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
   JobRemoteDataSourceImpl(
     @required this.baseUrl
   )  : assert(baseUrl != null) {
-    jobRestApiClient = JobRestApiClient(Dio(BaseOptions(contentType: "application/json")),
+    jobRestApiClient = JobRestApiClient(RestAPIConfig.getDioOptions(),
         baseUrl: baseUrl);
   }
 

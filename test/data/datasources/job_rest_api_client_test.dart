@@ -1,6 +1,7 @@
 import 'package:intl/intl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
+import 'package:local_people_core/core.dart';
 import 'package:local_people_core/login.dart';
 import 'package:local_people_core/src/jobs/data/models/job_model.dart';
 import 'package:local_people_core/src/jobs/data/datasources/job_remote_data_source.dart';
@@ -19,7 +20,7 @@ void main() {
     jobRemoteDataSource = JobRemoteDataSourceImpl(RestAPIConfig().baseURL);
   });
 
-  group('Given Job Models, Create The Job Data', () {
+  /*group('Given Job Models, Create The Job Data', () {
     test('Job Should Be Created Successfully', () async {
 
       List<JobModel> jobList = await jobRemoteDataSource.listJobs();
@@ -89,7 +90,7 @@ void main() {
       }
 
     });
-  });
+  });*/
 
   group('List Job, Show Job Data', () {
     test('Job Should Be Shown Successfully', () async {
@@ -116,7 +117,7 @@ void main() {
     });
   });
 
-  group('Delete Last And First Job Data', () {
+  /*group('Delete Last And First Job Data', () {
     test('Job Should Be Deleted Successfully', () async {
 
       List<JobModel> userList = await jobRemoteDataSource.listJobs();
@@ -140,6 +141,6 @@ void main() {
       //responseDataModel = await jobRemoteDataSource.deleteUser(cur.id);
       //expect(responseDataModel.code, 204);
     });
-  });
+  });*/
 
 }

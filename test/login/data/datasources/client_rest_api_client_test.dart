@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
+import 'package:local_people_core/core.dart';
 import 'package:local_people_core/login.dart';
 import 'package:local_people_core/src/login/data/datasources/client_rest_api_client.dart';
 import 'package:mockito/mockito.dart';
@@ -13,10 +14,10 @@ void main() {
 
   setUp(() {
     mockUserRestApiClient = MockUserRestApiClient();
-    userRestApiClient = ClientRestApiClient(Dio(BaseOptions(contentType: "application/json")));
+    userRestApiClient = ClientRestApiClient(RestAPIConfig.getDioOptions());
   });
 
-  group('Given User Models, Create The User Data', () {
+  /*group('Given User Models, Create The User Data', () {
     test('User Should Be Created Successfully', () async {
 
       List<UserModel> userList = await userRestApiClient.listUsers();
@@ -56,7 +57,7 @@ void main() {
     });
   });
 
-  /*group('List User, Update User Token Data', () {
+  group('List User, Update User Token Data', () {
     test('User Should Be Updated Successfully', () async {
 
       List<UserModel> userList = await userRestApiClient.listUsers();

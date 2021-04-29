@@ -8,11 +8,15 @@ import 'user_remote_data_source.dart';
 
 class TraderRemoteDataSourceImpl implements UserRemoteDataSource {
   final logger = Logger("TraderRemoteDataSourceImpl");
-  final TraderRestApiClient traderRestApiClient;
+  final String baseUrl;
+  TraderRestApiClient traderRestApiClient;
 
   TraderRemoteDataSourceImpl({
-    @required this.traderRestApiClient
-  })  : assert(traderRestApiClient != null);
+    @required this.baseUrl
+  })  : assert(baseUrl != null) {
+    traderRestApiClient = TraderRestApiClient(RestAPIConfig.getDioOptions(),
+        baseUrl: baseUrl);
+  }
 
   @override
   Future<UserModel> createUser(UserModel user) async {

@@ -19,7 +19,7 @@ class TagRemoteDataSourceImpl implements TagRemoteDataSource {
   TagRemoteDataSourceImpl(
       @required this.baseUrl
       )  : assert(baseUrl != null) {
-    tagRestApiClient = TagRestApiClient(Dio(BaseOptions(contentType: "application/json")),
+    tagRestApiClient = TagRestApiClient(RestAPIConfig.getDioOptions(),
         baseUrl: baseUrl);
   }
 

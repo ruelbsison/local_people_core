@@ -1,6 +1,7 @@
 import 'dart:math';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
+import 'package:local_people_core/core.dart';
 import 'package:local_people_core/login.dart';
 //import 'package:local_people_core/src/login/data/datasources/user_rest_api_client.dart';
 import 'package:local_people_core/src/login/data/datasources/client_rest_api_client.dart';
@@ -15,7 +16,7 @@ void main() {
 
   setUp(() {
     mockUserRestApiClient = MockUserRestApiClient();
-    userRestApiClient = ClientRestApiClient(Dio(BaseOptions(contentType: "application/json")));
+    userRestApiClient = ClientRestApiClient(RestAPIConfig.getDioOptions());
   });
 
   group('Given User Models, Create The User Data', () {
