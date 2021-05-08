@@ -27,7 +27,13 @@ class AuthSessionModel extends Equatable {
   final DateTime expiredAt;
 
   /// Empty user which represents an unauthenticated user.
-  static const empty = AuthSessionModel(tokenId: '', refreshToken: '', accessToken: '', expiredAt: null);
+  static empty() => AuthSessionModel(tokenId: '',
+      refreshToken: '',
+      accessToken: '', expiredAt: DateTime.now().add(Duration(days: 1)));
+
+  static defaultAuth() => AuthSessionModel(tokenId: 'tokenid',
+    refreshToken: 'eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ii0zMndiMC15aEQ1U2FyM01CTm82QyJ9',
+    accessToken: '', expiredAt: DateTime.now().add(Duration(days: 1)));
 
   @override
   List<Object> get props => [tokenId, refreshToken, accessToken, expiredAt];

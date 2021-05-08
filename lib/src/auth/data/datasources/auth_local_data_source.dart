@@ -32,7 +32,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       await secureStorage.read(key: authorizationConfig.authUserIdKey);
       if (storedUserIdK == null) return false;
     } on Exception catch (e, s) {
-      return false;
+      throw e;
     }
     return true;
   }
@@ -59,7 +59,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
           key: authorizationConfig.authUserTokenDateKey,
           value: authLocal.tokenExpirationDate.millisecondsSinceEpoch.toString());
     } on Exception catch (e, s) {
-      return false;
+      throw e;
     }
     return true;
   }
@@ -74,7 +74,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       DateTime currentDateTime = DateTime.now();
       return currentDateTime.isAfter(tokenExpirationDate);
     } on Exception catch (e, s) {
-      return true;
+      throw e;
     }
   }
 
@@ -89,8 +89,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       await secureStorage.delete(key: authorizationConfig.authUserTokenKey);
 
       await secureStorage.delete(key: authorizationConfig.authUserTokenDateKey);
-    } on Exception {
-      return false;
+    } on Exception catch (e, s) {
+      throw e;
     }
 
     return true;
@@ -104,7 +104,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
       return storedUserName;
     } on Exception catch (e, s) {
-      return '';
+      throw e;
     }
   }
 
@@ -126,8 +126,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
         token: refreshToken,
         tokenExpirationDate: tokenExpirationDate,
       );
-    } on Exception {
-
+    } on Exception catch (e, s) {
+      throw e;
     }
     return authLocalModel;
   }

@@ -26,7 +26,9 @@ class AuthProfileModel extends Equatable {
   final String photo;
 
   /// Empty user which represents an unauthenticated user.
-  static const empty = AuthProfileModel(name: '', email: '', email_verified: false, photo: null);
+  static empty() => AuthProfileModel(name: '', email: '', email_verified: false, photo: null);
+  static clientDefault() => AuthProfileModel(name: 'Ruel Sison', email: 'rsjudge17@gmil.com', email_verified: true, photo: 'packages/local_people_core/assets/images/company-logo.png');
+  static traderDefault() => AuthProfileModel(name: 'Ruel Sison', email: 'rsjudge17@hotmail.com', email_verified: true, photo: 'packages/local_people_core/assets/images/company-logo.png');
 
   @override
   List<Object> get props => [name, email, email_verified, photo];
