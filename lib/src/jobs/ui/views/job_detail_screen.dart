@@ -1,22 +1,18 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import 'package:local_people_core/core.dart';
 import 'package:local_people_core/messages.dart';
 
 import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
-import '../../domain/entities/profile.dart';
 import '../widgets/job_view_widget.dart';
 
 class JobDetailScreen extends StatefulWidget {
   JobDetailScreen({
     Key key,
     @required this.job,
-    this.profile = Profile.demo,
   }) : super(key: key);
 
   final Job job;
-  final Profile profile;
 
   @override
   _JobDetailScreenState createState() =>
@@ -171,7 +167,8 @@ class _JobDetailScreenState extends State<JobDetailScreen>
               children: <Widget>[
                 JobViewWidget(job: widget.job),
                 SizedBox(height: 20.0),
-                PostedByWidget(profile: widget.profile),
+                //PostedByWidget(profile: widget.profile),
+                PostedByWidget(),
                 SizedBox(height: 10.0),
                 ElevatedButton(
                   onPressed: () {},

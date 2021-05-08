@@ -5,8 +5,9 @@ import 'package:local_people_core/core.dart';
 import '../widgets/tags_view_widget.dart';
 import '../widgets/images_view_widget.dart';
 import '../../domain/entities/job.dart';
-import 'dart:typed_data';
-import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+//import 'dart:typed_data';
+//import 'package:flutter_inappwebview/flutter_inappwebview.dart';
+import 'package:google_maps_flutter/google_maps_flutter.dart';
 
 class JobViewWidget extends StatefulWidget {
   JobViewWidget({
@@ -94,9 +95,13 @@ class _JobViewWidgetState extends State<JobViewWidget> {
                 Container(
                     width: size.width,
                     height: 220,
+                    child: GoogleMap (
+                      initialCameraPosition: CameraPosition(target: LatLng(widget.job.location.lat, widget.job.location.long), zoom: 11.0),
+                      liteModeEnabled: true,
+                    ),
                     //margin: 8.0,
                     //child: Image.network(widget.job.location.photoUrl, fit: BoxFit.cover)
-                    child: InAppWebView(
+                    /*child: InAppWebView(
                       initialUrlRequest: URLRequest(url: Uri.parse(widget.job.location.photoUrl)),
                       initialOptions: InAppWebViewGroupOptions(
                           crossPlatform: InAppWebViewOptions(
@@ -145,7 +150,7 @@ class _JobViewWidgetState extends State<JobViewWidget> {
                               origin: origin, allow: false, retain: false));
                         }
                       },
-                      /*onWebViewCreated: (InAppWebViewController controller) {
+                      onWebViewCreated: (InAppWebViewController controller) {
                         _webViewController = controller;
                       },
                       onLoadStart: (InAppWebViewController controller, String url) {
@@ -162,8 +167,8 @@ class _JobViewWidgetState extends State<JobViewWidget> {
                         setState(() {
                           this.progress = progress / 100;
                         });
-                      },*/
-                    ),
+                      },
+                    ),*/
                 ),
                 Text(
                   widget.job.location.name,

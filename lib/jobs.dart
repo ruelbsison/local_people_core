@@ -14,7 +14,7 @@ export './src/jobs/data/datasources/job_remote_data_source.dart';
 export './src/jobs/data/datasources/job_remote_data_source_impl.dart';
 
 export './src/jobs/domain/entities/job.dart';
-export './src/jobs/domain/entities/profile.dart';
+//export './src/jobs/domain/entities/profile.dart';
 export './src/jobs/domain/entities/tag.dart';
 export './src/jobs/domain/repositories/job_repository.dart';
 export './src/jobs/data/repositories/job_repository_impl.dart';
@@ -33,6 +33,9 @@ export './src/jobs/ui/widgets/job_view_widget.dart';
 export './src/jobs/ui/blocs/job_state.dart';
 export './src/jobs/ui/blocs/job_event.dart';
 export './src/jobs/ui/blocs/job_bloc.dart';
+//export './src/jobs/ui/blocs/job_form_state.dart';
+//export './src/jobs/ui/blocs/job_form_event.dart';
+export './src/jobs/ui/blocs/job_form_bloc.dart';
 
 export './src/jobs/ui/views/job_screen.dart';
 export './src/jobs/ui/views/job_create_screen.dart';

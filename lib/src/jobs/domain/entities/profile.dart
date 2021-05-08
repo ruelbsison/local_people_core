@@ -1,6 +1,6 @@
 import 'dart:ui';
 
-class Profile extends Object {
+class Profile1 extends Object {
   final int userId;
   final String fullName;
   final String photoUrl;
@@ -8,7 +8,7 @@ class Profile extends Object {
   final String email;
   final int jobsPosted;
 
-  const Profile({
+  const Profile1({
     this.userId,
     this.fullName,
     this.photoUrl,
@@ -24,9 +24,9 @@ class Profile extends Object {
   @override
   int get hashCode => userId;
 
-  static const empty = Profile(userId: 0, fullName: '', photoUrl: '', memberSince: null,
+  static const empty = Profile1(userId: 0, fullName: '', photoUrl: '', memberSince: null,
       email: '', jobsPosted: 0);
 
-  static const demo = Profile(userId: 1, fullName: 'Client Name', photoUrl: '', memberSince: null,
+  static const demo = Profile1(userId: 1, fullName: 'Client Name', photoUrl: '', memberSince: null,
       email: '', jobsPosted: 0);
 }

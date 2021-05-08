@@ -34,7 +34,7 @@ class _JobCardState extends State<JobCard> {
       onTap: (){
         //if (widget.onPressedOpportunity != null)
         //  widget.onPressedOpportunity(widget.opportunityItem);
-        AppRouter.pushPage(context, JobDetailScreen(job: widget.job, profile: Profile.demo,));
+        AppRouter.pushPage(context, JobDetailScreen(job: widget.job,));
       },
       child:  Container(
         padding: EdgeInsets.only(top: 12.0, bottom: 12.0),

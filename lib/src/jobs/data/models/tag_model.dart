@@ -30,11 +30,18 @@ class TagModel extends Equatable {
   String updated_at;
 
   /// Empty TagModel which represents an unauthenticated TagModel.
-  //static empty = TagModel(id: -1, title: '', description: '', date: '', budget: '', awarded: false, created_at: '', updated_at: '', client_id: 0, trader_id: 0);
+  static empty() {
+    return TagModel(
+        id: 0,
+        name: '',
+        created_at: '',
+        updated_at: '',
+    );
+  }
 
-  @override
-  List<Object> get props => [id, name, created_at, updated_at];
+    @override
+    List<Object> get props => [id, name, created_at, updated_at];
 
-  factory TagModel.fromJson(Map<String, dynamic> json) => _$TagModelFromJson(json);
-  Map<String, dynamic> toJson() => _$TagModelToJson(this);
-}
+    factory TagModel.fromJson(Map<String, dynamic> json) => _$TagModelFromJson(json);
+    Map<String, dynamic> toJson() => _$TagModelToJson(this);
+  }

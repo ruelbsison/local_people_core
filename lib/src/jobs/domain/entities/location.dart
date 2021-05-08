@@ -5,6 +5,8 @@ class Location extends Object {
   Location({
     @required this.id,
     @required this.name,
+    this.lat,
+    this.long,
     this.address,
     this.photoUrl,
   })  : assert(id != null);
@@ -19,6 +21,10 @@ class Location extends Object {
 
   String photoUrl;
 
+  double lat;
+
+  double long;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) || this.hashCode == other.hashCode;
@@ -30,6 +36,8 @@ class Location extends Object {
     return Location(
         id: 0,
         name: '',
+      lat: 0.0,
+      long: 0.0,
       address: '',
         photoUrl: '',
     );

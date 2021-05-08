@@ -49,7 +49,20 @@ class LocationModel extends Equatable {
   int job_id;
 
   /// Empty LocationModel which represents an unauthenticated LocationModel.
-  //static empty = LocationModel(id: -1, title: '', description: '', date: '', budget: '', awarded: false, created_at: '', updated_at: '', client_id: 0, trader_id: 0);
+  static empty() {
+    return LocationModel(
+        id: -1,
+        name: '',
+        address: '',
+        latitude: 9,
+        longitude: 0,
+        created_at: '',
+        updated_at: '',
+        client_id: 0,
+        trader_id: 0,
+      job_id: 0,
+    );
+  }
 
   @override
   List<Object> get props => [id, name, address, created_at, updated_at, client_id, trader_id, latitude, longitude, job_id];

@@ -5,7 +5,6 @@ import 'package:local_people_core/messages.dart';
 
 import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
-import '../../domain/entities/profile.dart';
 import '../widgets/job_view_widget.dart';
 import '../widgets/job_actions_widget.dart';
 
@@ -13,11 +12,9 @@ class JobAwardScreen extends StatefulWidget {
   JobAwardScreen({
     Key key,
     @required this.job,
-    this.profile = Profile.demo,
   }) : super(key: key);
 
   final Job job;
-  final Profile profile;
 
   @override
   _JobAwardScreenState createState() =>
@@ -172,7 +169,8 @@ class _JobAwardScreenState extends State<JobAwardScreen>
               children: <Widget>[
                 JobViewWidget(job: widget.job),
                 SizedBox(height: 20.0),
-                PostedByWidget(profile: widget.profile),
+                //PostedByWidget(profile: widget.profile),
+                PostedByWidget(),
                 SizedBox(height: 10.0),
                 JobActionsWidget(),
                 SizedBox(height: 20.0),

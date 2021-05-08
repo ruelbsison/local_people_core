@@ -20,6 +20,8 @@ import '../blocs/job_form_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:path/path.dart';
+import 'package:path_provider/path_provider.dart';
 
 class JobCreateScreen extends StatefulWidget {
   @override
@@ -71,6 +73,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
 
   void requestPermission() async {
     Map<Permission, PermissionStatus> statuses = await [
+      Permission.storage,
       Permission.accessMediaLocation,
       Permission.photos,
       Permission.camera,
@@ -262,7 +265,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
     );
   }
 
-  Widget _buildSegmentedTab(String title) {
+  Widget _buildSegmentedTab(BuildContext context, String title) {
     final size = MediaQuery.of(context).size;
     final theme = Theme.of(context);
     return Container(
@@ -279,28 +282,6 @@ class _JobCreateScreenState extends State<JobCreateScreen>
     );
   }
 
-  Widget _buildBody(BuildContext context) {
-    return BlocListener<JobFormBloc, JobFormState>(
-      listener: (context, state) {
-        if (state.status.isSubmissionSuccess) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          showDialog<void>(
-            context: context,
-            builder: (_) => SuccessDialog(),
-          );
-        }
-        if (state.status.isSubmissionInProgress) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(content: Text('Submitting...')),
-            );
-        }
-      },
-      child: _buildFormBody(context),
-    );
-  }
-
   Widget _buildFormBody(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
@@ -310,16 +291,16 @@ class _JobCreateScreenState extends State<JobCreateScreen>
       LocalPeopleLocalizations.of(context).subTitleThisWeek,
     ];
     Map<int, Widget> _timeToRespondChildren = {
-      0: _buildSegmentedTab(LocalPeopleLocalizations.of(context).subTitle24Hrs),
-      1: _buildSegmentedTab(LocalPeopleLocalizations.of(context).subTitle48Hrs),
-      2: _buildSegmentedTab(
+      0: _buildSegmentedTab(context, LocalPeopleLocalizations.of(context).subTitle24Hrs),
+      1: _buildSegmentedTab(context, LocalPeopleLocalizations.of(context).subTitle48Hrs),
+      2: _buildSegmentedTab(context,
           LocalPeopleLocalizations.of(context).subTitleThisWeek),
     };
     Map<int, Widget> _requestedTimeframeChildren = {
-      0: _buildSegmentedTab(LocalPeopleLocalizations.of(context).subTitleASAP),
-      1: _buildSegmentedTab(
+      0: _buildSegmentedTab(context, LocalPeopleLocalizations.of(context).subTitleASAP),
+      1: _buildSegmentedTab(context,
           LocalPeopleLocalizations.of(context).subTitleThisWeek),
-      2: _buildSegmentedTab(
+      2: _buildSegmentedTab(context,
           LocalPeopleLocalizations.of(context).subTitleSpecific),
     };
 
@@ -653,7 +634,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
               onSaved: (val) {
                 print('onSaved');
                 print(val);
-                job.images = val != null ? val.cast<File>() : [];
+                //job.images = val != null ? val.cast<File>() : [];
                 //print(job.images);
               },
               onReset: () {},
@@ -1068,7 +1049,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
                           child: Container(
                             padding: EdgeInsets.only(left: 12.0, right: 12.0),
                             child: ElevatedButton(
-                              onPressed: _cancelJob,
+                              onPressed: () => _cancelJob(context),
                               child: Text(
                                 LocalPeopleLocalizations.of(context)
                                     .btnTitleCancel,
@@ -1082,7 +1063,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
                           child: Container(
                             padding: EdgeInsets.only(left: 12.0, right: 12.0),
                             child: ElevatedButton(
-                              onPressed: _postJob,
+                              onPressed: () => _postJob(context),
                               child: Text(
                                 LocalPeopleLocalizations.of(context)
                                     .btnTitlePost,
@@ -1127,14 +1108,29 @@ class _JobCreateScreenState extends State<JobCreateScreen>
     );
   }
 
-  void _cancelJob() {
+  void _cancelJob(BuildContext context) {
     Navigator.pop(context);
   }
 
-  void _postJob() async {
+  void _postJob(BuildContext context) async {
     _formKey.currentState.save();
     if (_formKey.currentState.validate()) {
       print(_formKey.currentState.value);
+
+      job.images = [];
+      final appDir = await getTemporaryDirectory(); //getApplicationDocumentsDirectory();
+      await _formKey.currentState.value['images'].forEach((imageFile) async {
+        final fileName = basename(imageFile.path);
+        final attachFileName = '${appDir.path}/$fileName';
+        job.images.add(attachFileName);
+        //if (await io.File(attachFileName).exists() == false) {
+          try {
+            final savedImage = await imageFile.copy(attachFileName);
+          } on Exception catch( e, s ) {
+          }
+        //}
+
+      });
 
       String url = '';
       var urls = selectedLocation.photos[0].htmlAttributions.where((attr) => attr.toLowerCase().contains('http'.toLowerCase()));
@@ -1146,6 +1142,8 @@ class _JobCreateScreenState extends State<JobCreateScreen>
       job.location = loc.Location(
         id: 0,
         name: _formKey.currentState.value['location'],
+        lat: selectedLocation.geometry.location.lat,
+        long: selectedLocation.geometry.location.lng,
         address: selectedLocation.formattedAddress,
         photoUrl: url.length > 0 ? url : '',
       );
@@ -1165,10 +1163,10 @@ class _JobCreateScreenState extends State<JobCreateScreen>
       }
       job.minutesLeft = 120;
       job.preview = _formKey.currentState.value['description'];
-      job.images = _formKey.currentState.value['images'].cast<File>();
+      //job.images = _formKey.currentState.value['images'].cast<File>();
       job.client_id = 1;
 
-      print(job.toString());
+      //print(job.toString());
       //ScaffoldMessenger.of(context)
       //    .showSnackBar(SnackBar(content: Text('Processing Data')));
 
@@ -1178,7 +1176,6 @@ class _JobCreateScreenState extends State<JobCreateScreen>
           context,
           JobPreviewScreen(
             job: job,
-            profile: Profile.demo,
           ));
     } else {
       print(_formKey.currentState.value);
@@ -1186,83 +1183,4 @@ class _JobCreateScreenState extends State<JobCreateScreen>
   }
 }
 
-class JobCancelButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return BlocBuilder<JobFormBloc, JobFormState>(
-      buildWhen: (previous, current) => previous.status != current.status,
-      builder: (context, state) {
-        return ElevatedButton(
-          onPressed: state.status.isValidated
-              ? () => context.read<JobFormBloc>().add(JobFormSave())
-              : null,
-          child: Text(
-            LocalPeopleLocalizations.of(context)
-                .btnTitleCancel,
-            style: theme.textTheme.button,
-          ),
-        );
-      },
-    );
-  }
-}
 
-class JobPostButton extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    final theme = Theme.of(context);
-    return BlocBuilder<JobFormBloc, JobFormState>(
-      buildWhen: (previous, current) => previous.status != current.status,
-      builder: (context, state) {
-        return ElevatedButton(
-          onPressed: state.status.isValidated
-              ? () => context.read<JobFormBloc>().add(JobFormPost())
-              : null,
-          child: Text(
-            LocalPeopleLocalizations.of(context).btnTitlePost,
-            style: theme.textTheme.button,
-          ),
-        );
-      },
-    );
-  }
-}
-
-class SuccessDialog extends StatelessWidget {
-  @override
-  Widget build(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                const Icon(Icons.info),
-                const Flexible(
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      'Job Posted Successfully!',
-                      softWrap: true,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            ElevatedButton(
-              child: const Text('OK'),
-              onPressed: () => Navigator.of(context).pop(),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
-}

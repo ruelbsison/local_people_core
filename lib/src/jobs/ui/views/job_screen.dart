@@ -11,9 +11,19 @@ class JobScreen extends StatefulWidget {
 }
 
 class _JobScreenState extends State<JobScreen> {
+  //Completer<void> _refreshCompleter;
+  final _scrollController = ScrollController();
+  JobBloc _jobBloc;
+  
   @override
   void initState() {
     super.initState();
+
+    //_refreshCompleter = Completer<void>();
+    _scrollController.addListener(_onScroll);
+    _jobBloc = context.read<JobBloc>();
+    _jobBloc.add(LoadJobs());
+    //BlocProvider.of<JobBloc>(context).add(LoadJobs());
   }
 
   @override
@@ -52,50 +62,45 @@ class _JobScreenState extends State<JobScreen> {
   }
 
   Widget buildBody(BuildContext context) {
+    final appCType = AppConfig.of(context).appType;
     return BlocBuilder<JobBloc, JobState>(
       builder: (context, state) {
-        return SafeArea (
-            child: buildBodyList(state),
-        );
+        if (state is JobLoaded) {
+          return RefreshIndicator(
+            onRefresh: () async {
+              BlocProvider.of<JobBloc>(context).add(RefreshJobs());
+            },
+            child: ListView.builder(
+              itemCount: state.jobs.length,
+              itemBuilder: (context, index) =>
+              (appCType == AppType.TRADER
+                  ? JobCard(job: state.jobs[index])
+                  : YourJobCard(job: state.jobs[index])),
+            ),
+          );
+        } if  (state is JobNotLoaded) {
+          return const Center(child: Text(''));
+        } else {
+          return const Center(child: CircularProgressIndicator());
+        }
       },
     );
   }
 
-  Widget buildBodyList(JobState state) {
-    final appCType = AppConfig.of(context).appType;
-    if (state is JobLoaded) {
-      return Expanded(
-        child: RefreshIndicator(
-            onRefresh: () async{
-            BlocProvider.of<JobBloc>(context).add(RefreshJobs());
-          },
-          child: ListView.builder(
-            itemCount: demeJobs.length,
-            itemBuilder: (context, index) =>
-            (appCType == AppType.TRADER
-                ? JobCard(job: state.jobs[index])
-                : YourJobCard(job: state.jobs[index])),
-          ),
-        ),
-      );
-    } else if (state is JobLoading) {
-      return Expanded(
-        child: Center(
-          child: CircularProgressIndicator(),
-        ),
-      );
-    } else if (state is JobNotLoaded) {
-      return Expanded(
-        child: Center(
-          child: Text('Cannot load data'),
-        ),
-      );
-    } else {
-      return Expanded(
-        child: Center(
-          child: Text('Unknown state'),
-        ),
-      );
-    }
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
+  }
+
+  void _onScroll() {
+    //if (_isBottom) _jobBloc.add(JobFetched());
+  }
+
+  bool get _isBottom {
+    if (!_scrollController.hasClients) return false;
+    final maxScroll = _scrollController.position.maxScrollExtent;
+    final currentScroll = _scrollController.offset;
+    return currentScroll >= (maxScroll * 0.9);
   }
 }

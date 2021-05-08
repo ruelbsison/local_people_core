@@ -25,6 +25,7 @@ class JobModel extends Equatable {
     this.client_id,
     this.trader_id,
     this.location,
+    this.tags,
   })  : assert(id != null);
 
   /// The current JobModel's email address.
@@ -56,7 +57,21 @@ class JobModel extends Equatable {
   List<TagModel> tags;
 
   /// Empty JobModel which represents an unauthenticated JobModel.
-  //static empty = JobModel(id: -1, title: '', description: '', date: '', budget: '', awarded: false, created_at: '', updated_at: '', client_id: 0, trader_id: 0);
+  static empty() {
+    new JobModel(id: -1,
+        title: '',
+        description: '',
+        date: '',
+        budget: '',
+        awarded: false,
+        created_at: '',
+        updated_at: '',
+        client_id: 0,
+        trader_id: 0,
+      tags: [TagModel.empty()],
+      location: LocationModel.empty(),
+    );
+  }
 
   @override
   List<Object> get props => [id, title, description, date, budget, created_at, updated_at, client_id, trader_id, location, tags];

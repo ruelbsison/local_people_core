@@ -1,5 +1,6 @@
 import 'dart:ui';
 import 'dart:io';
+import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'tag.dart';
 import 'location.dart';
@@ -12,7 +13,7 @@ class Job extends Object {
   String budget;
   Location location;
   List<Tag> tags;
-  List<File> images;
+  List<String> images;
   int minutesLeft;
   int client_id;
   DateTime date;

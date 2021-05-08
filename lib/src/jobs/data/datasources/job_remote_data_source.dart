@@ -1,18 +1,21 @@
-import 'dart:io';
+import '../models/job_list_response.dart';
+import '../models/job_response.dart';
 import '../models/job_model.dart';
 
 abstract class JobRemoteDataSource {
-  Future<List<JobModel>> listJobs();
+  Future<JobListResponse> listJobs();
 
-  Future<List<JobModel>> listJobsForClient(int client_id);
+  Future<JobListResponse> listJobsForClient(int client_id);
 
-  Future<List<JobModel>> listJobsForTrader(int trader_id);
+  Future<JobListResponse> listJobsForTrader(int trader_id);
 
-  Future<JobModel> createJob(JobModel job, [List<File> files]);
+  Future<JobResponse> createJob(JobModel job, [List<String> files]);
 
-  Future<JobModel> showJob(int id);
+  Future<JobResponse> showJob(int id);
 
-  Future<JobModel> updateJob(JobModel job);
+  Future<JobResponse> updateJob(JobModel job);
 
   Future<void> deleteJob(int id);
+
+  Future<String> createJob2(JobModel job, [List<String> files]);
 }

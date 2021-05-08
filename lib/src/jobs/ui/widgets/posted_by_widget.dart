@@ -1,21 +1,14 @@
 import 'package:flutter/material.dart';
-//import 'package:flutter_svg/flutter_svg.dart';
-import 'package:local_people_core/core.dart';
-import 'locations_view_widget.dart';
-import 'tags_view_widget.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import '../views/job_detail_screen.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import  '../../domain/entities/profile.dart';
+import  'package:local_people_core/profile.dart';
 
 
 class PostedByWidget extends StatefulWidget {
   PostedByWidget({
     Key key,
-    @required this.profile,
   }) : super(key: key);
 
-  final Profile profile;
+  // TODO: Ruel
+  final ClientProfile profile = ClientProfile.empty;
 
   @override
   _PostedByWidgetState createState() => _PostedByWidgetState();

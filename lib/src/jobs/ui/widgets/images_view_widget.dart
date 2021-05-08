@@ -6,7 +6,7 @@ import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
 
 class ImagesViewWidget extends StatefulWidget {
-  List<File> images;
+  List<String> images;
   double maxTagViewHeight;
   double minTagViewHeight;
   Color tagBackgroundColor;
@@ -64,8 +64,8 @@ class _ImagesViewWidgetState extends State<ImagesViewWidget> {
         child: kIsWeb
             ? Image.memory(imgUrl as Uint8List, fit: BoxFit.cover)
             : imgUrl is String
-                ? Image.network(imgUrl, fit: BoxFit.cover)
-                : Image.file(imgUrl as File, fit: BoxFit.cover),
+                ? Image.file(File(imgUrl), fit: BoxFit.cover)
+                : Image.network(imgUrl, fit: BoxFit.cover),
       ),
     );
 
