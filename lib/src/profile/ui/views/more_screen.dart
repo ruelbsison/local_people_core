@@ -4,6 +4,8 @@ import '../../domain/entities/profile_item.dart';
 import '../../domain/entities/more_item.dart';
 import '../../ui/widgets/profile_card.dart';
 import '../../ui/widgets/more_item_card.dart';
+import 'profile_screen.dart';
+
 class MoreScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,10 @@ class MoreScreen extends StatelessWidget {
           Expanded (
             flex: 1,
             child: ProfileCard(profileItem: (appType == AppType.CLIENT
-                ? clieantProfileItem : traderProfileItem), press: () {},),
+                ? clieantProfileItem : traderProfileItem), press: () {
+                AppRouter.pushPage(context, ProfileScreen());
+              },
+            ),
           ),
         Expanded (
           flex: 4,

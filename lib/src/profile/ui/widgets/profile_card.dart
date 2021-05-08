@@ -69,34 +69,34 @@ class ProfileCard extends StatelessWidget {
                       maxLines: 1,
                       overflow: TextOverflow.ellipsis,
                     ),
-                    SizedBox(height: 12),
+                    //SizedBox(height: 4),
                     Row (
                       children: [
                         Expanded(
                           flex: 1,
                           child: Text(
                             profileItem.totalJobs.toString(),
-                            style:theme.textTheme.headline6,
+                            style:theme.textTheme.bodyText1,
                             //textAlign: TextAlign.center,
                           ),
                         ),
                         Expanded(
                           flex: 2,
                           child: Text(profileItem.totalAmountPaid.toString(),
-                            style:theme.textTheme.headline6,
+                            style:theme.textTheme.bodyText1,
                             //textAlign: TextAlign.center,
                           ),
                         ),
                       ],
                     ),
-                    SizedBox(height: 4),
+                    //SizedBox(height: 2),
                     Row (
                       children: [
                         Expanded(
                           flex: 1,
                           child: Text(
                             'Jobs',
-                            style:theme.textTheme.bodyText2,
+                            style:theme.textTheme.overline,
                             //textAlign: TextAlign.center,
                           ),
                         ),
@@ -104,7 +104,7 @@ class ProfileCard extends StatelessWidget {
                             flex: 2,
                             child: Text(
                               'Total Paid',
-                              style:theme.textTheme.bodyText2,
+                              style:theme.textTheme.overline,
                               //textAlign: TextAlign.center,
                             ),
                         ),
