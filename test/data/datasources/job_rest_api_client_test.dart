@@ -2,10 +2,11 @@ import 'package:intl/intl.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:dio/dio.dart';
 import 'package:local_people_core/core.dart';
+import 'package:local_people_core/jobs.dart';
 import 'package:local_people_core/login.dart';
-import 'package:local_people_core/src/jobs/data/models/job_model.dart';
-import 'package:local_people_core/src/jobs/data/datasources/job_remote_data_source.dart';
-import 'package:local_people_core/src/jobs/data/datasources/job_remote_data_source_impl.dart';
+//import 'package:local_people_core/src/jobs/data/models/job_model.dart';
+//import 'package:local_people_core/src/jobs/data/datasources/job_remote_data_source.dart';
+//import 'package:local_people_core/src/jobs/data/datasources/job_remote_data_source_impl.dart';
 import 'package:mockito/mockito.dart';
 import 'package:local_people_core/core.dart';
 
@@ -20,26 +21,33 @@ void main() {
     jobRemoteDataSource = JobRemoteDataSourceImpl(RestAPIConfig().baseURL);
   });
 
-  /*group('Given Job Models, Create The Job Data', () {
+  group('Given Job Models, Create The Job Data', () {
     test('Job Should Be Created Successfully', () async {
 
-      List<JobModel> jobList = await jobRemoteDataSource.listJobs();
+      //List<JobModel> jobList = await jobRemoteDataSource.listJobs();
       JobModel jobModel1 = JobModel(
         id: 0,
-        title: "Job Title 1",
-        description: "Job description 1",
+        title: "Landayan",
+        description: "Job description",
         budget: '100',
         awarded: false,
         //date: DateFormat('yyyyy-MM-ddThh:mm.sssZ').format(DateTime.now()),
-        date: DateTime.now().toString(),
-        client_id: 5,
+        date: '2021-05-07T08:30:36.222Z', //DateTime.now().toString(),
+        //location: LocationModel.empty(),
+        client_id: 1,
+        //tags: [TagModel.empty()],
       );
+      List<String> images = List<String>();
+      //images.add('/Users/ruelsison/Library/Developer/CoreSimulator/Devices/72B25B60-50C1-4DBF-8D3B-4047745A5B09/data/Containers/Data/Application/157882FD-D41D-40DA-A414-98F227C42D69/tmp/image_picker_90D8C03A-41C4-42B6-9496-D3606D8690E0-12167-000006A1BD199B9F.jpg');
       print(jobModel1.toJson());
 
+      Map<String, dynamic> map =  jobModel1.toJson();
+      map.forEach((k,v) => (v != null ? print('job[$k] = $v'): print(k)));
       // 1
-      jobModel1 = await jobRemoteDataSource.createJob(jobModel1);
+      JobResponse response = await jobRemoteDataSource.createJob(jobModel1, images);
       // 2
-      expect((jobModel1.id > 0), true);
+      expect((response.job != null), true);
+      /*expect((jobModel1.id > 0), true);
       // 3
       expect(jobModel1.created_at.length, 24);
       expect(jobModel1.updated_at.length, 24);
@@ -67,11 +75,11 @@ void main() {
       expect(jobModel2.updated_at.length, 24);
 
       userListWithNew = await jobRemoteDataSource.listJobs();
-      expect(userListWithNew.length, jobList.length + 2);
+      expect(userListWithNew.length, jobList.length + 2);*/
     });
   });
 
-  group('List Jobs, Update Job Budget Data', () {
+  /*group('List Jobs, Update Job Budget Data', () {
     test('Job Should Be Updated Successfully', () async {
 
       List<JobModel> jobList = await jobRemoteDataSource.listJobs();
@@ -95,15 +103,15 @@ void main() {
   group('List Job, Show Job Data', () {
     test('Job Should Be Shown Successfully', () async {
 
-      List<JobModel> userList = await jobRemoteDataSource.listJobs();
-      var userListIter = userList.iterator;
+      JobListResponse response = await jobRemoteDataSource.listJobsForClient(1);
+      var userListIter = response.jobs.iterator;
       while( userListIter.moveNext() ) {
-        JobModel cur = userListIter.current;
-        print(cur.toJson());
+        Job cur = userListIter.current;
+        print(cur.toString());
 
-        JobModel showJobModel = await jobRemoteDataSource.showJob(cur.id);
-        print(showJobModel.toJson());
-        expect(showJobModel.id, cur.id);
+        //JobModel showJobModel = await jobRemoteDataSource.showJob(cur.id);
+        //print(showJobModel.toJson());
+        //expect(showJobModel.id, cur.id);
         /*expect(showJobModel.name , cur.name);
         expect(showJobModel.email , cur.email);
         expect(showJobModel.token , cur.token);

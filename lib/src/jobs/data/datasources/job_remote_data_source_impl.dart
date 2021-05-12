@@ -1,4 +1,4 @@
-import 'package:dio/dio.dart' hide MultipartFile;
+import 'package:dio/dio.dart';
 import 'package:http/http.dart' as http;
 import 'package:retrofit/retrofit.dart';
 //import 'package:http/http.dart';
@@ -17,8 +17,8 @@ import 'dart:convert';
 import 'package:mime/mime.dart';
 import 'dart:typed_data';
 import 'package:intl/intl.dart';
-import '../models/job_list_response.dart';
-import '../models/job_response.dart';
+import '../../domain/entities/job_list_response.dart';
+import '../../domain/entities/job_response.dart';
 
 class JobRemoteDataSourceImpl implements JobRemoteDataSource {
   final logger = Logger("TraderRemoteDataSourceImpl");
@@ -81,141 +81,113 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     return reponse;
   }
 
+  // @override
+  // Future<JobResponse> createJob(JobModel job, List<String> files) async {
+  //   JobResponse reponse = JobResponse();
+  //
+  //   JobModel ressult;
+  //   try {
+  //     //var formData = new FormData();
+  //     List<Map<String, String>> formFields = List<Map<String, String>>();
+  //     List<File> formFiles = List<File>();
+  //
+  //     if (job != null) {
+  //       job.id = null;
+  //       Map<String, dynamic> map = job.toJson();
+  //       map.forEach((k,v) => formFields.add(<String, String>{'job[$k]' : v}));
+  //     }
+  //
+  //     if (files != null) {
+  //       //int idx = 0;
+  //       var fileListIter = files.iterator;
+  //       while( fileListIter.moveNext() ) {
+  //         String filePath = fileListIter.current;
+  //         File file = File(filePath);
+  //
+  //         formFiles.add(file);
+  //
+  //         // //final bytes = await file.readAsBytes();
+  //         // //String imgEncoded = base64.encode(bytes);
+  //         //
+  //         // //Map<String, String> charset = Map<String, String> ('charset','base64');
+  //         // final mimeType = lookupMimeType(filePath);
+  //         // List<String> typeSubTypes = mimeType.split('/');
+  //         // //var multipartFile = MultipartFile.fromString(imgEncoded,
+  //         // //var multipartFile = MultipartFile.fromBytes(bytes,
+  //         // var multipartFile = await MultipartFile.fromFile(filePath,
+  //         //     filename: filePath.split(Platform.pathSeparator).last,
+  //         //     contentType: MediaType(typeSubTypes[0], typeSubTypes[1]));
+  //         //
+  //         // formData.files.add(MapEntry('job[images]', multipartFile));
+  //         // //idx++;
+  //       }
+  //     }
+  //
+  //     //ressult = await jobRestApiClient.createJob(formData);
+  //     ressult = await jobRestApiClient.createJob(job, formFiles);
+  //     reponse.jobFromModel(ressult);
+  //   } catch (error, stacktrace) {
+  //     logger.severe("Exception occured in createJob $error $stacktrace", error,
+  //         stacktrace);
+  //     //reponse.exception = ServerException.withError(error: error);
+  //   }
+  //
+  //   return reponse;
+  // }
+
   @override
   Future<JobResponse> createJob(JobModel job, [List<String> files]) async {
     JobResponse reponse = JobResponse();
 
-    JobModel ressult;
+    String result;
     try {
-      //List<File> formDataFiles = List<File>();
-      //List<Map<String, dynamic>> formDataFiles = List<Map<String, dynamic>>();
-      //MapEntry('job', jsonEncode(job));
-      //var formData = new FormData();
-      //var multipart = MultiPart();
-      //List<MultipartFile> multipartBody = List<MultipartFile>();
-      //formData.boundary = 'boundary=---------------------------9051914041544843365972754266';
-      //MultipartRequest request = MultipartRequest(method, url)
-      //Uint8List jsonbBytes;
-      //List<File> formDataFiles = List<File>();
+      //String json = jsonEncode(job);
+      //Uint8List jsonbBytes = Utf8Encoder().convert(json);
 
-      /*if (job != null) {
-        job.id = null;
-        String json = jsonEncode(job);
-        //jsonbBytes = Utf8Encoder().convert(json);
+      var request =
+          http.MultipartRequest('POST', Uri.parse(this.baseUrl + '/jobs'));
+          Dio dio = RestAPIConfig.getDioOptions();
+          request.headers.addAll(<String, String>{
+            "Content-Type" : "multipart/form-data",
+          });
+      // Map<String, String> headers = Map<String, String>();
+      // String auhtStr = dio.options.headers['Authorization'].toString();
+      // headers['Authorization'] = auhtStr;
+      // request.headers.addAll(headers);
 
-        //job.date = DateFormat('yyyyy-MM-ddThh:mm.sssZ').format(DateTime.now()); //DateTime.now().toString();
-        //job.tags.add();
-        formData.fields.add(MapEntry('job', jsonEncode(job)));
-        //formData.fields.add(job.toJson());
+      if (job != null) {
+        Map<String, dynamic> map =  job.toJson();
+        map.forEach((k,v) => (v != null ? request.fields.addAll(<String, String>{'job[$k]' : v.toString()}) : print(k)));
+      }
 
-        //formData.files.add( MapEntry('job', MultipartFile.fromBytes(
-        //multipartBody.add(MultipartFile.fromString(
-        */ /*formData.files.add(MapEntry('job', MultipartFile.fromString(
-            jsonEncode(job),
-            //base64.encode(Utf8Encoder().convert(jsonEncode(job))),
-            //Utf8Encoder().convert(jsonEncode(job)),
-            filename: 'job.json',
-            contentType: MediaType('application', 'json'))));*/ /*
-
-
-
-        */ /*formDataFiles.add(Map<String, dynamic>(
-          'job',
-          MultipartFile.fr(
-            jsonEncode(job),
-            filename: 'job.json',
-              contentType: MediaType('application', 'json'))));*/ /*
-      }*/
-
-      /*formDataFiles.addAll(files?.map((i) => MapEntry(
-          'files',
-          MultipartFile.fromFileSync(
-            i.path,
-            filename: i.path.split(Platform.pathSeparator).last,
-          ))));*/
-
-      /*if (files != null) {
-        //int idx = 0;
+      if (files != null && files.length > 0) {
         var fileListIter = files.iterator;
         while( fileListIter.moveNext() ) {
           String filePath = fileListIter.current;
           //File file = File(filePath);
 
-          //formDataFiles.add(file);
-
-          //final bytes = await file.readAsBytes();
-          //String imgEncoded = base64.encode(bytes);
-
-          //Map<String, String> charset = Map<String, String> ('charset','base64');
           final mimeType = lookupMimeType(filePath);
           List<String> typeSubTypes = mimeType.split('/');
-          //var multipartFile = MultipartFile.fromString(imgEncoded,
-          //var multipartFile = MultipartFile.fromBytes(bytes,
-          var multipartFile = MultipartFile.fromFileSync(filePath,
-              filename: filePath.split(Platform.pathSeparator).last,
-              contentType: MediaType(typeSubTypes[0], typeSubTypes[1]));
-
-          formData.files.add(MapEntry('images', multipartFile));
-          //idx++;
-        }
-      }*/
-
-      //ressult = await jobRestApiClient.createJob(multipartBody);
-      //print('FormData: ' + formData.toString());
-      //logger.info('FormData: ' + formData.toString());
-      //ressult = await jobRestApiClient.createJob(formData);
-      //ressult = await jobRestApiClient.createJob(jsonbBytes, formDataFiles);
-      reponse.jobFromModel(ressult);
-    } catch (error, stacktrace) {
-      logger.severe("Exception occured in createJob $error $stacktrace", error,
-          stacktrace);
-      reponse.exception = ServerException.withError(error: error);
-    }
-
-    return reponse;
-  }
-
-  @override
-  Future<String> createJob2(JobModel job, [List<String> files]) async {
-    String result;
-    try {
-      String json = jsonEncode(job);
-      Uint8List jsonbBytes = Utf8Encoder().convert(json);
-
-      var request =
-          http.MultipartRequest('POST', Uri.parse(this.baseUrl + '/jobs'));
-          Dio dio = RestAPIConfig.getDioOptions();
-          //request.headers.addAll(<String, String>{
-          //  "Content-Type" : "multipart/form-data",
-          //});
-      Map<String, String> headers = Map<String, String>();
-      String auhtStr = dio.options.headers['Authorization'].toString();
-      headers['Authorization'] = auhtStr;
-      request.headers.addAll(headers);
-
-      /*var mp = http.MultipartFile.fromBytes(
-          'job', jsonbBytes, //jsonEncode(job),
-          filename: 'job.json',
-          contentType: MediaType('application', 'json'));*/
 
           request.files.add(
-              http.MultipartFile.fromString(
-                  'job', jsonEncode(job),
-                  filename: 'job.json',
-                  contentType: MediaType('application', 'json'))
+              http.MultipartFile(
+                  'images',
+                  File(filePath).readAsBytes().asStream(),
+                  File(filePath).lengthSync(),
+                  filename: filePath.split("/").last
+              )
           );
-      //request.fields['job'] =  jsonEncode(job);
+        }
+      }
 
-      /*request.files.add(
-          http.MultipartFile(
-              'picture',
-              File(filename).readAsBytes().asStream(),
-              File(filename).lengthSync(),
-              filename: filename.split("/").last
-          )
-      );*/
-      //ressult = request.headers.toString();
-      var res = await request
+      // request.files.add(
+      //     http.MultipartFile.fromString(
+      //         'job', jsonEncode(job),
+      //         filename: 'job.json',
+      //         contentType: MediaType('application', 'json'))
+      // );
+
+      http.Response res = await request
           .send()
           .then((result) async {
             http.Response.fromStream(result).then((response) {
@@ -224,19 +196,18 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
                 print('response.body ' + response.body);
               }
               return response;
-              //ressult = JobModel.fromJson(jsonDecode(response.body));
             });
           })
           .catchError((err) => print('error : ' + err.toString()))
           .whenComplete(() {});
-      result = res.body;
+      reponse.jobFromModel(JobModel.fromJson(jsonDecode(res.body)));
     } catch (error, stacktrace) {
       logger.severe("Exception occured in createJob $error $stacktrace", error,
           stacktrace);
       throw ServerException.withError(error: error);
     }
 
-    return result;
+    return reponse;
   }
 
   @override

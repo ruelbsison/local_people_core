@@ -1,5 +1,5 @@
-import '../models/job_list_response.dart';
-import '../models/job_response.dart';
+import '../../domain/entities/job_list_response.dart';
+import '../../domain/entities/job_response.dart';
 import '../models/job_model.dart';
 
 abstract class JobRemoteDataSource {
@@ -9,7 +9,7 @@ abstract class JobRemoteDataSource {
 
   Future<JobListResponse> listJobsForTrader(int trader_id);
 
-  Future<JobResponse> createJob(JobModel job, [List<String> files]);
+  Future<JobResponse> createJob(JobModel job, List<String> files);
 
   Future<JobResponse> showJob(int id);
 
@@ -17,5 +17,5 @@ abstract class JobRemoteDataSource {
 
   Future<void> deleteJob(int id);
 
-  Future<String> createJob2(JobModel job, [List<String> files]);
+  //Future<String> createJob2(JobModel job, [List<String> files]);
 }

@@ -12,8 +12,8 @@ import '../../domain/entities/job.dart';
 import 'package:intl/intl.dart';
 import 'package:local_people_core/core.dart';
 import 'package:local_people_core/auth.dart';
-import '../models/job_list_response.dart';
-import '../models/job_response.dart';
+import '../../domain/entities/job_list_response.dart';
+import '../../domain/entities/job_response.dart';
 
 class JobRepositoryImpl implements JobRepository {
   final logger = Logger("JobRepositoryImpl");

@@ -16,6 +16,8 @@ export './src/jobs/data/datasources/job_remote_data_source_impl.dart';
 export './src/jobs/domain/entities/job.dart';
 //export './src/jobs/domain/entities/profile.dart';
 export './src/jobs/domain/entities/tag.dart';
+export './src/jobs/domain/entities/job_list_response.dart';
+export './src/jobs/domain/entities/job_response.dart';
 export './src/jobs/domain/repositories/job_repository.dart';
 export './src/jobs/data/repositories/job_repository_impl.dart';
 

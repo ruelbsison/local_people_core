@@ -17,7 +17,7 @@ void main() {
     userRestApiClient = ClientRestApiClient(RestAPIConfig.getDioOptions());
   });
 
-  /*group('Given User Models, Create The User Data', () {
+  group('Given User Models, Create The User Data', () {
     test('User Should Be Created Successfully', () async {
 
       List<UserModel> userList = await userRestApiClient.listUsers();
@@ -57,7 +57,7 @@ void main() {
     });
   });
 
-  group('List User, Update User Token Data', () {
+  /*group('List User, Update User Token Data', () {
     test('User Should Be Updated Successfully', () async {
 
       List<UserModel> userList = await userRestApiClient.listUsers();
