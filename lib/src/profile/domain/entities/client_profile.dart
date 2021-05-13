@@ -1,104 +1,64 @@
 import 'profile.dart';
 import 'package:local_people_core/jobs.dart';
 
-class ClientProfile extends Profile {
+class ClientProfile extends Object {
   ClientProfile({
-    paymentMethodVerified = false,
-    numOfJobsPosted = 0,
-    numOfJobsInProgress = 0,
-    amountSpent = 0.0,
-    numOfDisputes = 0,
-    recentJobs = const [],
-  }): super(fullName: 'Client Name Here')
-  {
-  // empty contructor body
-  }
+    this.id = 0,
+    this.userId = 0,
+    this.photo = 'packages/local_people_core/assets/images/company-logo.png',
+    this.fullName = 'Client Full Namme Here',
+    this.memberSince = null,
+    this.email = '',
+    this.description = '',
+    this.address = '',
+    this.intro = '',
+    this.paymentMethodVerified = false,
+    this.numOfJobsPosted = 0,
+    this.numOfJobsInProgress = 0,
+    this.amountSpent = 0.0,
+    this.numOfDisputes = 0,
+    this.recentJobs = const [],
+  }) {}
 
-  //ClientProfile.byId(int id): super(id: id);
+  int id;
 
-  //ClientProfile.byUserId(int userId): super(userId: userId);
-  ClientProfile.byFullName(String fullName): super(fullName: fullName);
+  int userId;
 
-  List<Job> _recentJobs;
-  List<Job> get recentJobs => _recentJobs;
-  set recentJobs(List<Job> value) {
-    this._recentJobs = value;
-  }
+  String description;
 
-  bool _paymentMethodVerified;
-  bool get paymentMethodVerified => _paymentMethodVerified;
-  set paymentMethodVerified(bool value) {
-    this._paymentMethodVerified = value;
-  }
+  String address;
 
-  int _numOfJobsPosted;
-  int get numOfJobsPosted => _numOfJobsPosted;
-  set numOfJobsPosted(int value) {
-    this._numOfJobsPosted = value;
-  }
+  String intro;
 
-  int _numOfJobsInProgress;
-  int get numOfJobsInProgress => _numOfJobsInProgress;
-  set numOfJobsInProgress(int value) {
-    this._numOfJobsInProgress = value;
-  }
+  String fullName;
 
-  double _amountSpent;
-  double get amountSpent => _amountSpent;
-  set amountSpent(double value) {
-    this._amountSpent = value;
-  }
+  String photo;
 
-  int _numOfDisputes;
-  int get numOfDisputes => _numOfDisputes;
-  set numOfDisputes(int value) {
-    this._numOfDisputes = value;
-  }
+  DateTime memberSince;
 
-  int get id => super.id;
-  set id(int value) {
-    super.id = value;
-  }
+  String email;
 
-  int get userId => super.userId;
-  set userId(int value) {
-    super.userId = value;
-  }
+  bool paymentMethodVerified;
 
-  String get description => super.description;
-  set description(String value) {
-    super.description = value;
-  }
+  int numOfJobsPosted;
 
-  String get address => super.address;
-  set address(String value) {
-    super.address = value;
-  }
+  int numOfJobsInProgress;
 
-  String get intro => super.intro;
-  set intro(String value) {
-    super.intro = value;
-  }
+  double amountSpent;
 
-  String get fullName => super.fullName;
-  set fullName(String value) {
-    super.fullName = value;
-  }
+  int numOfDisputes;
 
-  String get photo => super.photo;
-  set photo(String value) {
-    super.photo = value;
-  }
+  List<Job> recentJobs;
 
-  DateTime get memberSince => super.memberSince;
-  set memberSince(DateTime value) {
-    super.memberSince = value;
-  }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || this.hashCode == other.hashCode;
 
-  String get email => super.email;
-  set email(String value) {
-    super.email = value;
-  }
+  @override
+  int get hashCode => id;
 
   static get empty => ClientProfile();
+
+  // static get empty => ClientProfile(id: 0, userId: 0, fullName: '', photo: '', memberSince: null,
+  //     email: '', description: '', address: '', intro: '');
 }

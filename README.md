@@ -83,6 +83,14 @@ LocalPeople Core Flutter package.
 └── feature.dart
 ```
 
+## Building Local People Core Package
+
+1. flutter clean
+
+2. flutter pub get
+
+3. flutter pub run build_runner build [--delete-conflicting-outputs]
+
 ## Unit Testing
 
 1. Open a terminal

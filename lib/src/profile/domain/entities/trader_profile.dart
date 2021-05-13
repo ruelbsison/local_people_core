@@ -1,64 +1,45 @@
-import 'profile.dart';
 
-class TraderProfile extends Profile {
+
+class TraderProfile {
   TraderProfile({
-    rating = 0,
-  }): super(fullName: 'Trader Name Here')
-  {
-    // empty contructor body
-  }
+    this.id = 0,
+    this.userId = 0,
+    this.photo = 'packages/local_people_core/assets/images/company-logo.png',
+    this.fullName = 'Client Full Namme Here',
+    this.memberSince = null,
+    this.email = '',
+    this.description = '',
+    this.address = '',
+    this.intro = '',
+    this.ratingAvg = 0,
+  }) {}
 
-  //TraderProfile.byId(int id): super(id: id);
+  int id;
 
-  //TraderProfile.byUserId(int userId): super(userId: userId);
-  int _rating;
-  int get rating => _rating;
-  set rating(int value) {
-    this.rating = value;
-  }
+  int userId;
 
-  int get id => super.id;
-  set id(int value) {
-    super.id = value;
-  }
+  String description;
 
-  int get userId => super.userId;
-  set userId(int value) {
-    super.userId = value;
-  }
+  String address;
 
-  String get description => super.description;
-  set description(String value) {
-    super.description = value;
-  }
+  String intro;
 
-  String get address => super.address;
-  set address(String value) {
-    super.address = value;
-  }
+  String fullName;
 
-  String get intro => super.intro;
-  set intro(String value) {
-    super.intro = value;
-  }
+  String photo;
 
-  String get fullName => super.fullName;
-  set fullName(String value) {
-    super.fullName = value;
-  }
+  DateTime memberSince;
 
-  String get photo => super.photo;
-  set photo(String value) {
-    super.photo = value;
-  }
+  String email;
 
-  DateTime get memberSince => super.memberSince;
-  set memberSince(DateTime value) {
-    super.memberSince = value;
-  }
+  double ratingAvg;
 
-  String get email => super.email;
-  set email(String value) {
-    super.email = value;
-  }
+  @override
+  bool operator ==(Object other) =>
+      identical(this, other) || this.hashCode == other.hashCode;
+
+  @override
+  int get hashCode => id;
+
+  static get empty => TraderProfile();
 }
