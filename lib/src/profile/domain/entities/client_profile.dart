@@ -17,6 +17,7 @@ class ClientProfile extends Profile {
   //ClientProfile.byId(int id): super(id: id);
 
   //ClientProfile.byUserId(int userId): super(userId: userId);
+  ClientProfile.byFullName(String fullName): super(fullName: fullName);
 
   List<Job> _recentJobs;
   List<Job> get recentJobs => _recentJobs;

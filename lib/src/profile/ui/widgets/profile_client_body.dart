@@ -2,10 +2,8 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import '../../domain/entities/client_profile.dart';
 import 'package:flutter_icons/flutter_icons.dart';
-import 'package:google_maps_flutter/google_maps_flutter.dart';
-
-const CameraPosition _kInitialPosition =
-CameraPosition(target: LatLng(-33.852, 151.211), zoom: 11.0);
+import 'package:sliver_fab/sliver_fab.dart';
+import 'package:smooth_star_rating/smooth_star_rating.dart';
 
 class ProfileClientBody extends StatefulWidget {
   ProfileClientBody({@required this.profile});
@@ -17,146 +15,11 @@ class ProfileClientBody extends StatefulWidget {
 }
 
 class _ProfileClientBodyState extends State<ProfileClientBody> {
-  Completer<GoogleMapController> mapController = Completer();
-
-  //GoogleMapController mapController;
-  // LatLngBounds _visibleRegion = LatLngBounds(
-  //   southwest: const LatLng(0, 0),
-  //   northeast: const LatLng(0, 0),
-  // );
-  
-  // static final CameraPosition _kGooglePlex = CameraPosition(
-  //   target: LatLng(37.42796133580664, -122.085749655962),
-  //   zoom: 14.4746,
-  // );
-  //
-  // static final CameraPosition _kLake = CameraPosition(
-  //     bearing: 192.8334901395799,
-  //     target: LatLng(37.43296265331129, -122.08832357078792),
-  //     tilt: 59.440717697143555,
-  //     zoom: 19.151926040649414);
-
-  // Future<void> _goToTheLake() async {
-  //   final GoogleMapController controller = await _googleMapController.future;
-  //   controller.animateCamera(CameraUpdate.newCameraPosition(_kLake));
-  // }
-
-  /*Future<void> showVisibleBounds() async {
-    if (mapController == null) return;
-    final LatLngBounds visibleRegion =
-    await mapController.getVisibleRegion();
-    setState(() {
-      _visibleRegion = visibleRegion;
-    });
-  }*/
-
-  void onMapCreated(GoogleMapController controller) {
-    // setState(() {
-    //   mapController = controller;
-    // });
-    mapController.complete(controller);
-    /*final LatLngBounds visibleRegion = await controller.getVisibleRegion();
-    setState(() {
-      //mapController = controller;
-      _visibleRegion = visibleRegion;
-      mapController.complete(controller);
-    });*/
-  }
-
-  /*Widget _getVisibleRegionButton() {
-    return Padding(
-      padding: const EdgeInsets.all(8.0),
-      child: ElevatedButton(
-        child: const Text('Get Visible Region Bounds'),
-        onPressed: () async {
-          if (mapController == null) return;
-          final LatLngBounds visibleRegion =
-          await mapController.getVisibleRegion();
-          setState(() {
-            _visibleRegion = visibleRegion;
-          });
-        },
-      ),
-    );
-  }*/
-
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    final size = MediaQuery.of(context).size;
-
-    GoogleMap googleMap = GoogleMap(
-      onMapCreated: onMapCreated,
-      mapType: MapType.hybrid,
-      initialCameraPosition: _kInitialPosition,
-      compassEnabled: false,
-      mapToolbarEnabled: false,
-      myLocationEnabled: true,
-      zoomControlsEnabled: false,
-      //indoorViewEnabled: true,
-    );
-
-    final List<Widget> columnChildren = <Widget>[
-      Padding(
-        padding: const EdgeInsets.all(10.0),
-        child: Center(
-          child: SizedBox(
-            width: 300.0,
-            height: 200.0,
-            child: googleMap,
-          ),
-        ),
-      ),
-    ];
-
-    //if (mapController != null) {
-      //final String currentVisibleRegion = 'VisibleRegion:'
-      //    '\nnortheast: ${_visibleRegion.northeast},'
-      //    '\nsouthwest: ${_visibleRegion.southwest}';
-      columnChildren.add(
-        Center(
-          child: Text(
-            'Client Name goes here',
-            style: theme.textTheme.headline6,
-          ),
-        ),
-      );
-      //columnChildren.add(_getVisibleRegionButton());
-    //}
-
-    final indentidyContent = Column(
-      mainAxisAlignment: MainAxisAlignment.start,
-      crossAxisAlignment: CrossAxisAlignment.stretch,
-      children: columnChildren,
-    );
-
-    /*final indentidyContent = Container(
-        color: Colors.white,
-        child: Flex(
-          direction: Axis.vertical,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-        Container(
-          width: size.width,
-          height: 220,
-          child: GoogleMap (
-            initialCameraPosition: _kGooglePlex,
-            //initialCameraPosition: CameraPosition(target: _center, zoom: 11.0),
-            //liteModeEnabled: true,
-            mapType: MapType.hybrid,
-            onMapCreated: (GoogleMapController controller) {
-              _googleMapController.complete(controller);
-              _goToTheLake();
-            },
-          ),
-        ),
-      ],
-    ),
-    );*/
-
     final introductionActions = Container(
-      color: Colors.white,
+      color: theme.backgroundColor,
       padding: EdgeInsets.all(12.0),
       //margin: EdgeInsets.all(12.0),
       child: Row(
@@ -168,7 +31,7 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
             child: Text(
               'Introduction',
               textAlign: TextAlign.left,
-              style: theme.textTheme.subtitle1,
+              style: theme.textTheme.bodyText1,
             ),
           ),
           Expanded(
@@ -188,21 +51,21 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
     );
 
     final introduction = Container(
-      color: Colors.white,
+      color: theme.backgroundColor,
       padding: EdgeInsets.all(12.0),
       //margin: EdgeInsets.all(12.0),
       child: Text(
-        'This text is very very very very very very very very very very very very very very very very very very very very very very very very very long',
+        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus nulla vel iaculis aliquet. Integer lacus nibh, elementum id feugiat vel, hendrerit in metus. Donec interdum imperdiet sem eu facilisis. Duis eu sapien in elit eleifend dictum. Nunc at odio tempus lacus pretium fermentum. ',
         maxLines: 12,
         overflow: TextOverflow.ellipsis,
         textDirection: TextDirection.rtl,
         textAlign: TextAlign.left,
-        style: theme.textTheme.bodyText1,
+        style: theme.textTheme.bodyText2,
       ),
     );
 
     final aboutTheClient = Container(
-      color: Colors.white,
+      color: theme.backgroundColor,
       padding: EdgeInsets.all(12.0),
       //margin: EdgeInsets.all(12.0),
       child: Flex (
@@ -213,7 +76,7 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
           Text(
             'About The Client',
             textAlign: TextAlign.left,
-            style: theme.textTheme.subtitle1,
+            style: theme.textTheme.bodyText1,
           ),
           SizedBox(height: 10.0),
           Opacity (
@@ -221,7 +84,7 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
             child: Text(
               'Member since DD-MM-YYYY',
               textAlign: TextAlign.left,
-              style: theme.textTheme.bodyText1,
+              style: theme.textTheme.bodyText2,
             ),
           ),
           Flex (
@@ -275,7 +138,7 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
                               child: Text(
                                 'Payment Method Verified',
                                 textAlign: TextAlign.left,
-                                style: theme.textTheme.subtitle1,
+                                style: theme.textTheme.bodyText1,
                               ),
                           )
                         ],
@@ -310,57 +173,12 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
                                   Text(
                                     'XX Jobs Posted',
                                     textAlign: TextAlign.left,
-                                    style: theme.textTheme.subtitle1,
+                                    style: theme.textTheme.bodyText1,
                                   ),
                                   Opacity (
                                     opacity: 0.84,
                                     child: Text(
-                                      '5 jobs commissioned',
-                                      textAlign: TextAlign.left,
-                                      style: theme.textTheme.bodyText2,
-                                    ),
-                                  )
-                                ],
-                              )
-                          )
-                        ],
-                      ),
-                      SizedBox(height: 20.0),
-                      Flex (
-                        direction: Axis.horizontal,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget> [
-                          Expanded(
-                            flex: 1,
-                            child: CircleAvatar(
-                              //backgroundColor: Color(0xff0075ff),
-                              radius: 12,
-                              child: Center (
-                                  child: Image.asset(
-                                    'packages/local_people_core/assets/images/verified-icon.png',
-                                    fit: BoxFit.contain,
-                                    height: 23,
-                                    width: 23,
-                                  )
-                              ),
-                            ),
-                          ),
-                          Expanded(
-                              flex: 6,
-                              child: Flex (
-                                direction: Axis.vertical,
-                                crossAxisAlignment: CrossAxisAlignment.stretch,
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget> [
-                                  Text(
-                                    'XX Jobs Posted',
-                                    textAlign: TextAlign.left,
-                                    style: theme.textTheme.subtitle1,
-                                  ),
-                                  Opacity (
-                                    opacity: 0.84,
-                                    child: Text(
-                                      '5 Traders hired, 1 job in progress',
+                                      'YY jobs commissioned',
                                       textAlign: TextAlign.left,
                                       style: theme.textTheme.bodyText2,
                                     ),
@@ -400,16 +218,8 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
                                   Text(
                                     "\$" + 'XXX Spent',
                                     textAlign: TextAlign.left,
-                                    style: theme.textTheme.subtitle1,
+                                    style: theme.textTheme.bodyText1,
                                   ),
-                                  Opacity (
-                                    opacity: 0.84,
-                                    child: Text(
-                                      'No disputes',
-                                      textAlign: TextAlign.left,
-                                      style: theme.textTheme.bodyText2,
-                                    ),
-                                  )
                                 ],
                               )
                           ),
@@ -424,22 +234,104 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
       ),
     );
 
-    Widget bodyContent = SingleChildScrollView(
-        physics: BouncingScrollPhysics(),
-          child: Container(
-            margin: EdgeInsets.all(12.0),
-            //height: double.infinity,
-            child: Flex (
-              direction: Axis.vertical,
-              //mainAxisSize: MainAxisSize.max,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[indentidyContent, introductionActions, introduction, aboutTheClient],
-            ),
-          ),
-      );
+    final recentJobs = Container(
+      color: theme.backgroundColor,
+      padding: EdgeInsets.all(12.0),
+      child: Text(
+        'Recent Jobs',
+        textAlign: TextAlign.left,
+        style: theme.textTheme.bodyText1,
+      ),
+    );
+
+    final recentJobItems = Container(
+      color: Colors.white,
+      padding: EdgeInsets.all(12.0),
+      child: Container (
+        height: 400,
+      )
+    );
+
+    final reviewsGiven = Container(
+      color: theme.backgroundColor,
+      padding: EdgeInsets.all(12.0),
+      child: Text(
+        'Reviews Given',
+        textAlign: TextAlign.left,
+        style: theme.textTheme.bodyText1,
+      ),
+    );
+
+    final reviewsGivenItems = Container(
+        color: theme.backgroundColor,
+        padding: EdgeInsets.all(12.0),
+        child: SmoothStarRating (
+            allowHalfRating: false,
+            onRated: (v) {},
+            starCount: 5,
+            rating: 100,
+            size: 32.0,
+            isReadOnly:true,
+            //fullRatedIconData: Icons.blur_off,
+            //halfRatedIconData: Icons.blur_on,
+            color: Color.fromRGBO(255, 99, 97, 1),
+            borderColor: Color.fromRGBO(255, 99, 97, 1),
+            spacing:0.0
+        ),
+    );
+
+    final recommendations = Container(
+      color: theme.backgroundColor,
+      padding: EdgeInsets.all(12.0),
+      child: Text(
+        'Recommendations',
+        textAlign: TextAlign.left,
+        style: theme.textTheme.bodyText1,
+      ),
+    );
+
+    final recommendationItems = Container(
+        color: Colors.white,
+        padding: EdgeInsets.all(12.0),
+        child: Container (
+          height: 300,
+        )
+    );
+
+    // Widget bodyContent = SingleChildScrollView(
+    //     physics: BouncingScrollPhysics(),
+    //       child: Container(
+    //         margin: EdgeInsets.all(12.0),
+    //         //height: double.infinity,
+    //         child: Flex (
+    //           direction: Axis.vertical,
+    //           //mainAxisSize: MainAxisSize.max,
+    //           mainAxisAlignment: MainAxisAlignment.start,
+    //           crossAxisAlignment: CrossAxisAlignment.stretch,
+    //           children: <Widget>[introductionActions, introduction, aboutTheClient],
+    //         ),
+    //       ),
+    //   );
+    //
+    // return bodyContent;
+
+    final List<Widget> columnChildren = <Widget>[
+      introductionActions, introduction,
+      aboutTheClient,
+      recentJobs, recentJobItems,
+      reviewsGiven, reviewsGivenItems,
+      recommendations, recommendationItems
+    ];
+
+    Widget bodyContent = SliverList (
+        delegate: new SliverChildListDelegate(
+            columnChildren,
+        ),
+    );
+
 
     return bodyContent;
+
   }
   
 }
