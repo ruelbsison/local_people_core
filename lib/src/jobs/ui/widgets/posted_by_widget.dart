@@ -69,7 +69,7 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget> [
                       Text(
-                        widget.profile.fullName,
+                        (widget.profile.fullName != null ? widget.profile.fullName : 'Client Full Name'),
                         textAlign: TextAlign.left,
                         style: textTheme.subtitle1,
                       ),

@@ -30,13 +30,13 @@ class JobPreviewScreen extends StatefulWidget {
 }
 
 class _JobPreviewScreenState extends State<JobPreviewScreen>
-    with TickerProviderStateMixin {
+with TickerProviderStateMixin {
   TabController _controller;
   int _tab = 0;
 
   void requestPermission() async {
     Map<Permission, PermissionStatus> statuses =
-    await [Permission.location, Permission.locationAlways, Permission.locationWhenInUse].request();
+    await [Permission.location].request();
   }
 
   @override
@@ -51,14 +51,20 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      //appBar: buildAppBar(context),
       appBar: buildAppBar(),
-      body: buildBody(context),
+      //body: buildTabBody(context),
+      //body: buildBody(context),
+      body: BlocProvider.value(
+        value: BlocProvider.of<JobFormBloc>(context),
+        child: buildBody(),
+      ),
     );
 
     //return buildBody(context);
   }
 
-  AppBar buildAppBar() {
+  AppBar buildAppBar() { //}BuildContext context) {
     final theme = Theme.of(context);
     return AppBar(
       /*leading: Text(
@@ -175,7 +181,7 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
     );
   }
 
-  Widget buildBody(BuildContext context) {
+  Widget buildBody() { //BuildContext context) {
     return BlocListener<JobFormBloc, JobFormState>(
       listener: (context, state) {
         if (state is JobFormPostCompleted) {

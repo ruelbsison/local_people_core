@@ -23,9 +23,13 @@ class JobViewWidget extends StatefulWidget {
 }
 
 class _JobViewWidgetState extends State<JobViewWidget> {
-  //Completer<GoogleMapController> _googleMapController = Completer();
+  Completer<GoogleMapController> _googleMapController = Completer();
 
   //static const LatLng _center = const LatLng(45.521563, -122.677433);
+
+  void onMapCreated(GoogleMapController controller) {
+    _googleMapController.complete(controller);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -97,7 +101,13 @@ class _JobViewWidgetState extends State<JobViewWidget> {
                     height: 220,
                     child: GoogleMap (
                       initialCameraPosition: CameraPosition(target: LatLng(widget.job.location.lat, widget.job.location.long), zoom: 11.0),
-                      liteModeEnabled: true,
+                      onMapCreated: onMapCreated,
+                      mapType: MapType.hybrid,
+                      compassEnabled: false,
+                      mapToolbarEnabled: false,
+                      myLocationEnabled: true,
+                      zoomControlsEnabled: false,
+                      //indoorViewEnabled: true,
                     ),
                     //margin: 8.0,
                     //child: Image.network(widget.job.location.photoUrl, fit: BoxFit.cover)

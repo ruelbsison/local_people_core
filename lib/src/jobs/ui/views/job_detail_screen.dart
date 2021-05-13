@@ -26,6 +26,8 @@ class _JobDetailScreenState extends State<JobDetailScreen>
 
   @override
   void initState() {
+    super.initState();
+
     _controller = TabController(length: 2, vsync: this);
   }
 

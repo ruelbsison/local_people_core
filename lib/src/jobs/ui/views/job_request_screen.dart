@@ -8,14 +8,20 @@ class JobRequestScreen extends StatefulWidget {
   _JobRequestScreenState createState() => _JobRequestScreenState();
 }
 
-class _JobRequestScreenState extends State<JobRequestScreen> with TickerProviderStateMixin {
+class _JobRequestScreenState extends State<JobRequestScreen>
+    with TickerProviderStateMixin {
   TabController _controller;
   int _tab = 0;
 
   @override
   void initState() {
+    super.initState();
+
     _controller =  TabController(length: 2, vsync: this);
   }
+
+  //@override
+  //bool get wantKeepAlive => true;
 
   @override
   Widget build(BuildContext context) {

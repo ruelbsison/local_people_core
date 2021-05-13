@@ -86,7 +86,7 @@ class JobRepositoryImpl implements JobRepository {
       //  throw Exception('Authorization Not Found!');
 
       JobModel jobModel = JobModel(
-          id: 0,
+          //id: 0,
           title: job.title,
           description: job.description,
           date:  job.date.toString(), //DateFormat('yyyyy-MM-ddThh:mm.sssZ').format(DateTime.now()), //job.date),

@@ -200,11 +200,15 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
           })
           .catchError((err) => print('error : ' + err.toString()))
           .whenComplete(() {});
-      reponse.jobFromModel(JobModel.fromJson(jsonDecode(res.body)));
+      if (res != null && res.body != null) {
+        reponse.jobFromModel(JobModel.fromJson(jsonDecode(res.body)));
+      } else {
+
+      }
     } catch (error, stacktrace) {
       logger.severe("Exception occured in createJob $error $stacktrace", error,
           stacktrace);
-      throw ServerException.withError(error: error);
+      reponse.exception = ServerException.withError(error: error);
     }
 
     return reponse;

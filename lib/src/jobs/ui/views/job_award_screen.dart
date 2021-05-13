@@ -28,6 +28,8 @@ class _JobAwardScreenState extends State<JobAwardScreen>
 
   @override
   void initState() {
+    super.initState();
+
     _controller = TabController(length: 2, vsync: this);
   }
 

@@ -28,8 +28,8 @@ class JobCreateScreen extends StatefulWidget {
   _JobCreateScreenState createState() => _JobCreateScreenState();
 }
 
-class _JobCreateScreenState extends State<JobCreateScreen>
-    with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
+class _JobCreateScreenState extends State<JobCreateScreen> {
+    //with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
   Job job;
@@ -41,7 +41,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
   //List<AutocompletePrediction> predictions = [];
   List<SearchResult> googlePlaceSearchResults = [];
   SearchResult selectedLocation;
-  final TextEditingController _locationTextController = TextEditingController();
+  //final TextEditingController _locationTextController = TextEditingController();
 
   int _requestedTimeframeCurrentSelection = 0;
   int _timeToRespondCurrentSelection = 0;
@@ -78,11 +78,11 @@ class _JobCreateScreenState extends State<JobCreateScreen>
       Permission.photos,
       Permission.camera,
     ].request();
-    print(statuses[Permission.location]);
+    print(statuses[Permission.storage]);
   }
 
-  @override
-  bool get wantKeepAlive => true;
+  //@override
+  //bool get wantKeepAlive => true;
 
   @override
   void initState() {
@@ -107,7 +107,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
         //FocusScope.of(context).requestFocus(_focusNodeJobGategory);
       } else {
         setState(() {
-          _locationTextController.clear();
+          //_locationTextController.clear();
           stopGooglePlaceSearch = false;
         });
       }
@@ -232,7 +232,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
 
   @override
   Widget build(BuildContext context) {
-    super.build(context);
+    //super.build(context);
     return Scaffold(
       appBar: AppBarWidget(
         appBarPreferredSize: Size.fromHeight(60.0),
@@ -330,7 +330,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
                 autofocus: true,
                 focusNode: _focusNodeLocation,
                 style: theme.textTheme.bodyText2,
-                controller: _locationTextController,
+                //controller: _locationTextController,
                 decoration: InputDecoration(
                   labelText: LocalPeopleLocalizations.of(context).titleAreaName,
                 ),
@@ -407,17 +407,13 @@ class _JobCreateScreenState extends State<JobCreateScreen>
                     onTap: () {
                       setState(() {
                         stopGooglePlaceSearch = true;
-                        //selectedLocation = predictions[index];
-                        //_locationTextController.text =
-                        //    predictions[index].structuredFormatting.mainText;
-                        //predictions = [];
-
                         selectedLocation = googlePlaceSearchResults[index];
-                        _locationTextController.text =
-                            googlePlaceSearchResults[index].name;
+                        //_locationTextController.text =
+                        //    googlePlaceSearchResults[index].name;
+                        _formKey.currentState.fields['location'].didChange(selectedLocation.name);
                         googlePlaceSearchResults = [];
 
-                        FocusScope.of(context).requestFocus(_focusNodeJobGategory);
+                        //FocusScope.of(context).requestFocus(_focusNodeJobGategory);
                         //FocusScopeNode currentFocus = FocusScope.of(context);
                         //if (!currentFocus.hasPrimaryFocus) {
                         //  currentFocus.unfocus();
@@ -463,6 +459,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
                 textField: TagsTextField(
                     textStyle: theme.textTheme.bodyText2,
                     width: size.width,
+                    textCapitalization: TextCapitalization.words,
                     inputDecoration: InputDecoration(
                       labelText: 'Add Job Category',
                     ),
@@ -470,6 +467,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
                     constraintSuggestion: true,
                     suggestions: currentTags,
                     keyboardType: TextInputType.text,
+                    suggestionTextColor: theme.textTheme.bodyText1.color,
                     //textInputAction: TextInputAction.next,
                     //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
                     onSubmitted: (val) {
@@ -1117,7 +1115,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
     if (_formKey.currentState.validate()) {
       print(_formKey.currentState.value);
 
-      job.images = [];
+      job.images = List<String>();
       final appDir = await getTemporaryDirectory(); //getApplicationDocumentsDirectory();
       await _formKey.currentState.value['images'].forEach((imageFile) async {
         final fileName = basename(imageFile.path);
@@ -1127,6 +1125,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>
           try {
             final savedImage = await imageFile.copy(attachFileName);
           } on Exception catch( e, s ) {
+            print('imageFile.copy error $e, $s');
           }
         //}
 
@@ -1164,9 +1163,10 @@ class _JobCreateScreenState extends State<JobCreateScreen>
       job.minutesLeft = 120;
       job.preview = _formKey.currentState.value['description'];
       //job.images = _formKey.currentState.value['images'].cast<File>();
+      // TODO: Ruel
       job.client_id = 1;
 
-      //print(job.toString());
+      //print(job);
       //ScaffoldMessenger.of(context)
       //    .showSnackBar(SnackBar(content: Text('Processing Data')));
 

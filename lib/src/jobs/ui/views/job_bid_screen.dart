@@ -24,6 +24,8 @@ class _JobBidScreenState extends State<JobBidScreen>
 
   @override
   void initState() {
+    super.initState();
+
     _controller = TabController(length: 2, vsync: this);
   }
 
