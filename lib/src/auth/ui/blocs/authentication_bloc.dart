@@ -61,7 +61,7 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapAuthenticateUserState() async* {
     AuthLocalModel authLocalModel = await _authenticationRepository.requestUserAuthorization();
     if (authLocalModel != null)
-      yield Authenticated(authLocalModel.userName);
+      yield Authenticated(authLocalModel.userFullName);
     else
       yield AuthenticationError();
   }
@@ -69,7 +69,7 @@ class AuthenticationBloc
   Stream<AuthenticationState> _mapReAuthenticateUserState() async* {
     AuthLocalModel authLocalModel = await _authenticationRepository.requestUserAuthorization();
     if (authLocalModel != null)
-      yield Authenticated(authLocalModel.userName);
+      yield Authenticated(authLocalModel.userFullName);
     else
       yield AuthenticationError();
   }

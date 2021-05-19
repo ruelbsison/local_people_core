@@ -42,12 +42,13 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     try {
       AuthLocalModel auth  = await authLocalDataSource.getAuth();
       AuthSessionModel session = await authenticationDataSource.refreshSession(auth.token);
-      AuthProfileModel profile = await authenticationDataSource.geSessionProfile(session.accessToken);
+      AuthProfileModel profile = await authenticationDataSource.getSessionProfile(session.accessToken);
 
       authLocal = AuthLocalModel(
         userId: auth.userId,
         userEmail: profile.email,
-        userName: profile.name,
+        userFullName: profile.name,
+        userPhoto: profile.photo,
         token: session.refreshToken,
         tokenExpirationDate: session.expiredAt,
       );
@@ -64,12 +65,13 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     AuthLocalModel authLocal;
     try {
       AuthSessionModel session = await authenticationDataSource.createSession();
-      AuthProfileModel profile = await authenticationDataSource.geSessionProfile(session.accessToken);
+      AuthProfileModel profile = await authenticationDataSource.getSessionProfile(session.accessToken);
 
       authLocal = AuthLocalModel(
         userId: 0,
         userEmail: profile.email,
-        userName: profile.name,
+        userFullName: profile.name,
+        userPhoto: profile.photo,
         token: session.refreshToken,
         tokenExpirationDate: session.expiredAt,
       );

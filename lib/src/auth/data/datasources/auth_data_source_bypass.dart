@@ -8,6 +8,7 @@ import '../../../core/enum/auth_status.dart';
 import '../../../core/configs/auth_config.dart';
 import '../models/auth_session_model.dart';
 import '../models/auth_profile_model.dart';
+import '../../../core/enum/app_type.dart';
 
 import 'auth_data_source.dart';
 
@@ -16,9 +17,11 @@ class AuthenticationDataSourceByPass extends AuthenticationDataSource {
   final AuthorizationConfig authorizationConfig;
   final StreamController<AuthenticationStatus> _controller;
   final FlutterAppAuth _appAuth;
+  final AppType appType;
 
   AuthenticationDataSourceByPass({
-    @required this.authorizationConfig
+    @required this.authorizationConfig,
+    @required this.appType,
   })  : _controller = StreamController<AuthenticationStatus>(),
         _appAuth = FlutterAppAuth();
 
@@ -59,8 +62,8 @@ class AuthenticationDataSourceByPass extends AuthenticationDataSource {
   }
 
   @override
-  Future<AuthProfileModel> geSessionProfile(String idToken) async {
-    return AuthProfileModel.clientDefault();
+  Future<AuthProfileModel> getSessionProfile(String idToken) async {
+    return ( appType == AppType.CLIENT ? AuthProfileModel.clientDefault() : AuthProfileModel.traderDefault());
   }
 
   void dispose() => _controller.close();

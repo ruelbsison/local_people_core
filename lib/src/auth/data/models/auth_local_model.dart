@@ -8,30 +8,33 @@ import 'package:meta/meta.dart';
 /// {@endtemplate}
 class AuthLocalModel extends Equatable {
   /// {@macro AuthLocalModel}
-  const AuthLocalModel({
+  AuthLocalModel({
     @required this.userId,
-    @required this.userName,
+    @required this.userFullName,
     @required this.userEmail,
+    @required this.userPhoto,
     @required this.token,
     @required this.tokenExpirationDate,
   })  : assert(userId != null),
         assert(token != null);
 
   /// The current AuthLocalModel's id.
-  final int userId;
+  int userId;
 
-  final String userName;
+  String userFullName;
 
-  final String userEmail;
+  String userEmail;
 
   /// The current AuthLocalModel's name (display name).
-  final String token;
+  String token;
 
-  final DateTime tokenExpirationDate;
+  DateTime tokenExpirationDate;
+
+  String userPhoto;
 
   /// Empty AuthLocalModel which represents an unauthenticated AuthLocalModel.
-  static const empty = AuthLocalModel(userId: 0, userName: '', userEmail: '', token: '', tokenExpirationDate: null);
+  static empty() => AuthLocalModel(userId: 0, userFullName: '', userEmail: '', userPhoto: '', token: '', tokenExpirationDate: null);
 
   @override
-  List<Object> get props => [userId, userName, userEmail, token, tokenExpirationDate];
+  List<Object> get props => [userId, userFullName, userEmail, userPhoto, token, tokenExpirationDate];
 }

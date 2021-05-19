@@ -144,20 +144,21 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
   }
 
   @override
-  Future<AuthProfileModel> geSessionProfile(String idToken) async {
-    final Map<String, Object> profile = parseIdToken(idToken);
+  Future<AuthProfileModel> getSessionProfile(String accessToken) async {
+    //final Map<String, Object> profile = parseIdToken(idToken);
+    final Map<String, Object> profile = await getUserDetails(accessToken);
 
     return AuthProfileModel(
       name: profile['name'],
       email: profile['email'],
       email_verified: profile['email_verified'],
-      photo: profile['photo'],
+      photo: profile['picture'],
     );
   }
 
   Map<String, Object> parseIdToken(String idToken) {
     final List<String> parts = idToken.split('.');
-    assert(parts.length == 3);
+    if (parts.length < 3) return Map<String, Object>();
 
     return jsonDecode(
         utf8.decode(base64Url.decode(base64Url.normalize(parts[1]))));
