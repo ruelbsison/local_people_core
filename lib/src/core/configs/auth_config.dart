@@ -2,14 +2,14 @@
 import 'package:meta/meta.dart';
 //import 'package:flutter_appauth/flutter_appauth.dart';
 
-const String AUTH0_DOMAIN_PROD = 'combinedotai.eu.auth0.com';
+const String AUTH0_DOMAIN_PROD = 'local-people.eu.auth0.com';
 const String AUTH0_DOMAIN_DEV = 'dev-pgi9e-14.eu.auth0.com';
 const String AUTH0_CLIENT_CLIENT_ID_DEV = 'wFVbmSPRNiU4cvfoZa8j11BvoJ17zvRm';
-const String AUTH0_CLIENT_CLIENT_ID_PROD = '80IzP0wmeQVlxzd5NHBNHKPgw3u8JV8Q';
-const String AUTH0_CLIENT_SECRET = 'JiuRH46HtPqAsSmuDC6F4Tkw4z_3hGkmubKMhCZ-pS19Sfvmsd0LtbXqPBhVmd6V';
+const String AUTH0_CLIENT_CLIENT_ID_PROD = 'PJokfElKh44ct2AFkJ0XxVquHvt5ftw1';
+const String AUTH0_CLIENT_SECRET = 'aAtHBXH6KdZ3OZHKXDQsNMoYpNF36V420t3hQ67maI3bVGzdc9ELTmlMUgbLNyFY';
 const String AUTH0_TRADER_CLIENT_ID_DEV = 'V9cNgmtlDesECyFrfip4FuR1SmcAQDQ4';
-const String AUTH0_TRADER_CLIENT_ID_PROD = 'F8QjgeMSDjPHU07Pf2floSuCWqQPCxf9';
-const String AUTH0_TRADER_SECRET = ' TTulYTi19jOvgJkQFR2cDHv8ntEN9w4duZtP9QT7Z_xpgi-Hmls9pq5v_Uffetsu';
+const String AUTH0_TRADER_CLIENT_ID_PROD = 'nW82vRTOq7v2YXDQppUdZ50GeUDu93in';
+const String AUTH0_TRADER_SECRET = 'JxxFeSjUyf-nh7kgOIrlpWTW15_d3z7V7II9NITykdsBSBZNbowAhQAdbU6vo-Ym';
 // https://combineai.localpeople:/login-callback
 // https://combineai.localpeople-test:/login-callback
 // https://combineai.localpeople-qa:/login-callback
@@ -35,9 +35,10 @@ class AuthorizationConfig {
   }) :  authUserIdKey = 'user_id_$authUserBaseKey',
         authUserNameKey = 'user_name_$authUserBaseKey',
         authUserEmailKey = 'user_email_$authUserBaseKey',
+        authUserPhotoKey = 'user_proto_$authUserBaseKey',
         authUserTokenKey = 'user_token_$authUserBaseKey',
         authUserTokenDateKey = 'user_token_data_$authUserBaseKey',
-        authIssuer = 'https://$authDomain/',
+        authIssuer = 'https://$authDomain',
         authDiscoveryUrl = 'https://$authDomain/.well-known/openid-configuration',
         authorizationEndpoint = 'https://$authDomain/authorize',
         tokenEndpoint = 'https://$authDomain/oauth/token';
@@ -55,6 +56,7 @@ class AuthorizationConfig {
   final String authUserBaseKey;
   final String authUserIdKey;
   final String authUserNameKey;
+  final String authUserPhotoKey;
   final String authUserEmailKey;
   final String authUserTokenKey;
   final String authUserTokenDateKey;
