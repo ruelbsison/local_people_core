@@ -17,6 +17,7 @@ class ServerException implements Exception {
   }
 
   _handleError(DioError error) {
+    _errorCode = error.response.statusCode;
     switch (error.type) {
       case DioErrorType.CANCEL:
         _errorMessage = "Request was cancelled";
@@ -33,7 +34,7 @@ class ServerException implements Exception {
         break;
       case DioErrorType.RESPONSE:
         _errorMessage =
-        "Received invalid status code: ${error.response.statusCode}";
+        "Received invalid status code: ${error.response.statusCode} : ${error.response.statusMessage}";
         break;
       case DioErrorType.SEND_TIMEOUT:
         _errorMessage = "Receive timeout in send request";

@@ -2,15 +2,21 @@ import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 
 class RestAPIConfig {
-  String get baseURL => 'http://192.168.1.4:3001/api/v1/'; //'http://localhost:3001/api/v1/';
+  String get baseURL => 'http://cbf2a9ad9f05.ngrok.io/api/v1/'; //'http://192.168.1.5:3001/api/v1/'; //'http://localhost:3001/api/v1/';
 
   static const String client = '/clients';
 
   static const String clientWithId = '/clients/{id}';
 
+  static const String clientWithEmail = '/client_by_email?email={email}';
+
   static const String trader = '/traders';
 
+  static const String traderTopRated = '/traders/top_rated';
+
   static const String traderWithId = '/traders/{id}';
+
+  static const String traderWithEmail = '/trader_by_email?email={email}';
 
   static const String job = '/jobs';
 
