@@ -29,6 +29,7 @@ export './src/core/utils/date_format.dart';
 export './src/core/utils/date_text_input_formatter.dart';
 export './src/core/utils/ensure_visible_when_focused.dart';
 export './src/core/network/network_info.dart';
+export './src/core/network/rest_client_interceptor.dart';
 
 export './src/core/exceptions/server_exception.dart';
 /*export './src/data/models/user_model.dart';

@@ -8,11 +8,12 @@ import '../../../core/enum/auth_status.dart';
 import '../../../core/configs/auth_config.dart';
 import '../models/auth_session_model.dart';
 import '../models/auth_profile_model.dart';
+import 'package:logging/logging.dart';
 
 import 'auth_data_source.dart';
 
 class AuthenticationDataSourceImpl extends AuthenticationDataSource {
-
+  final logger = Logger("AuthenticationDataSourceImpl");
   final AuthorizationConfig authorizationConfig;
   final StreamController<AuthenticationStatus> _controller;
   final FlutterAppAuth _appAuth;
@@ -31,6 +32,8 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
 
   @override
   Future<AuthSessionModel> createSession() async {
+    logger.info('createSession');
+
     try {
       // use the discovery endpoint to find the configuration
       final AuthorizationResponse authResponse = await _appAuth.authorize(
@@ -99,6 +102,8 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
 
   @override
   Future<AuthSessionModel> refreshSession(String refreshToken) async {
+    logger.info('refreshSession: ' + refreshToken);
+
     try {
       /*final TokenResponse tokenResponse = await _appAuth.token(TokenRequest(
         authorizationConfig.authClientId,
@@ -145,6 +150,7 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
 
   @override
   Future<AuthProfileModel> getSessionProfile(String accessToken) async {
+    logger.info('getSessionProfile: ' + accessToken);
     //final Map<String, Object> profile = parseIdToken(idToken);
     final Map<String, Object> profile = await getUserDetails(accessToken);
 

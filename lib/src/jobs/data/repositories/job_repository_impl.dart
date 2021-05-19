@@ -51,6 +51,11 @@ class JobRepositoryImpl implements JobRepository {
   Future<List<Job>> getPostedJobs() async {
     JobListResponse response;
     try {
+      await authLocalDataSource.hasAuth();
+      String token = await authLocalDataSource.getToken();
+      if (token != null) {
+        logger.info('toke: ' + token);
+      }
       int userId = await authLocalDataSource.getUserId();
       response = await jobRemoteDataSource.listJobsForClient(userId);
       if (response.exception != null) {

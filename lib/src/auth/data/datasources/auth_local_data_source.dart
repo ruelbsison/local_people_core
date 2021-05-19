@@ -2,6 +2,8 @@ import 'package:meta/meta.dart';
 import 'package:flutter_secure_storage/flutter_secure_storage.dart';
 import '../../../core/configs/auth_config.dart';
 import '../models/auth_local_model.dart';
+import 'package:logging/logging.dart';
+//import 'package:shared_preferences/shared_preferences.dart';
 
 abstract class AuthLocalDataSource {
   Future<bool> didAuthExpired();
@@ -25,9 +27,9 @@ abstract class AuthLocalDataSource {
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
+  final logger = Logger("AuthLocalDataSourceImpl");
   final FlutterSecureStorage secureStorage = FlutterSecureStorage();
   final AuthorizationConfig authorizationConfig;
-
 
   AuthLocalDataSourceImpl({
     @required this.authorizationConfig
@@ -35,9 +37,17 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   Future<bool> hasAuth() async {
     try {
-      final String storedUserIdK =
-      await secureStorage.read(key: authorizationConfig.authUserIdKey);
-      if (storedUserIdK == null) return false;
+      logger.info('hasAuth:');
+
+      //SharedPreferences prefs = await SharedPreferences.getInstance();
+      //String storedUserToken = await prefs.getString(authorizationConfig.authUserTokenKey);
+      final String storedUserToken = await secureStorage.read(key: authorizationConfig.authUserTokenKey);
+      if (storedUserToken == null) {
+        logger.info('hasAuth: storedUserToken is null');
+      } else {
+        logger.info('hasAuth: storedUserToken: ' + storedUserToken);
+      }
+      if (storedUserToken == null) return false;
     } on Exception catch (e, s) {
       throw e;
     }
@@ -45,56 +55,104 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   Future<bool> saveAuth(AuthLocalModel authLocal) async {
-    try {
+      //SharedPreferences prefs = await SharedPreferences.getInstance();
       if (authLocal.userId != null) {
-        await secureStorage.write(
-            key: authorizationConfig.authUserIdKey,
-            value: authLocal.userId.toString());
+        try {
+          await secureStorage.write(
+              key: authorizationConfig.authUserIdKey,
+              value: authLocal.userId.toString(),
+          );
+          // await prefs.setInt(
+          //   authorizationConfig.authUserIdKey,
+          //   authLocal.userId,
+          // );
+        } on Exception catch (error, stacktrace) {
+          logger.severe("Exception occured in saveAuth $error $stacktrace", error, stacktrace);
+        }
       }
 
       if (authLocal.userFullName != null) {
-        await secureStorage.write(
-            key: authorizationConfig.authUserNameKey,
-            value: authLocal.userFullName);
+        try {
+          await secureStorage.write(
+              key: authorizationConfig.authUserNameKey,
+              value: authLocal.userFullName);
+          // await prefs.setString(
+          //     authorizationConfig.authUserNameKey,
+          //     authLocal.userFullName);
+        } on Exception catch (error, stacktrace) {
+          logger.severe("Exception occured in saveAuth $error $stacktrace", error, stacktrace);
+        }
       }
 
       if (authLocal.userEmail != null) {
-        await secureStorage.write(
-            key: authorizationConfig.authUserEmailKey,
-            value: authLocal.userEmail);
+        try {
+          await secureStorage.write(
+              key: authorizationConfig.authUserEmailKey,
+              value: authLocal.userEmail);
+          // await prefs.setString(
+          //     authorizationConfig.authUserEmailKey,
+          //     authLocal.userEmail);
+        } on Exception catch (error, stacktrace) {
+          logger.severe("Exception occured in saveAuth $error $stacktrace", error, stacktrace);
+        }
       }
 
 
       if (authLocal.userPhoto != null) {
-        await secureStorage.write(
-            key: authorizationConfig.authUserPhotoKey,
-            value: authLocal.userPhoto);
+        try {
+          await secureStorage.write(
+              key: authorizationConfig.authUserPhotoKey,
+              value: authLocal.userPhoto);
+          // await prefs.setString(
+          //     authorizationConfig.authUserPhotoKey,
+          //     authLocal.userPhoto);
+        } on Exception catch (error, stacktrace) {
+          logger.severe("Exception occured in saveAuth $error $stacktrace", error, stacktrace);
+        }
       }
 
 
       if (authLocal.token != null) {
-        await secureStorage.write(
-            key: authorizationConfig.authUserTokenKey,
-            value: authLocal.token);
+        try {
+          logger.info('Writing token: ' + authLocal.token);
+
+          await secureStorage.write(
+              key: authorizationConfig.authUserTokenKey,
+              value: authLocal.token);
+          // await prefs.setString(
+          //     authorizationConfig.authUserTokenKey,
+          //     authLocal.token);
+          logger.info('Writing token ok: ' + authLocal.token);
+        } on Exception catch (error, stacktrace) {
+          logger.severe("Exception occured in saveAuth $error $stacktrace", error, stacktrace);
+        }
       }
 
 
       if (authLocal.tokenExpirationDate != null) {
-        await secureStorage.write(
-            key: authorizationConfig.authUserTokenDateKey,
-            value: authLocal.tokenExpirationDate.millisecondsSinceEpoch.toString());
+        try {
+          await secureStorage.write(
+              key: authorizationConfig.authUserTokenDateKey,
+              value: authLocal.tokenExpirationDate.millisecondsSinceEpoch.toString());
+          // await prefs.setString(
+          //     authorizationConfig.authUserTokenDateKey,
+          //     authLocal.tokenExpirationDate.millisecondsSinceEpoch.toString());
+        } on Exception catch (error, stacktrace) {
+          logger.severe("Exception occured in saveAuth $error $stacktrace", error, stacktrace);
+        }
       }
 
-    } on Exception catch (e, s) {
-      throw e;
-    }
+      //prefs.commit();
     return true;
   }
 
   Future<bool> didAuthExpired() async {
     try {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // final String storedUserTokenDate =
+      // await prefs.getString(authorizationConfig.authUserTokenDateKey);
       final String storedUserTokenDate =
-      await secureStorage.read(key: authorizationConfig.authUserTokenDateKey);
+        await secureStorage.read(key: authorizationConfig.authUserTokenDateKey);
       if (storedUserTokenDate == null) return true;
 
       DateTime tokenExpirationDate = DateTime.fromMillisecondsSinceEpoch(int.parse(storedUserTokenDate));
@@ -106,7 +164,22 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   }
 
   Future<bool> deleteAuth() async {
+    logger.info('deleteAuth');
+
     try {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // await prefs.remove(authorizationConfig.authUserIdKey);
+      //
+      // await prefs.remove(authorizationConfig.authUserNameKey);
+      //
+      // await prefs.remove(authorizationConfig.authUserEmailKey);
+      //
+      // await prefs.remove(authorizationConfig.authUserPhotoKey);
+      //
+      // await prefs.remove(authorizationConfig.authUserTokenKey);
+      //
+      // await prefs.remove(authorizationConfig.authUserTokenDateKey);
+
       await secureStorage.delete(key: authorizationConfig.authUserIdKey);
 
       await secureStorage.delete(key: authorizationConfig.authUserNameKey);
@@ -128,7 +201,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<String> getUserName() async {
     try {
       final String storedUserName =
-      await secureStorage.read(key: authorizationConfig.authUserNameKey);
+        await secureStorage.read(key: authorizationConfig.authUserNameKey);
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // final String storedUserName =
+      //   await prefs.getString(authorizationConfig.authUserNameKey);
       if (storedUserName == null) return '';
 
       return storedUserName;
@@ -141,6 +217,14 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<AuthLocalModel> getAuth() async {
     AuthLocalModel authLocalModel;
     try {
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // int userId = await prefs.getInt(authorizationConfig.authUserIdKey);
+      // String userFullName = await prefs.getString(authorizationConfig.authUserNameKey);
+      // String email = await prefs.getString(authorizationConfig.authUserEmailKey);
+      // String userPhoto = await prefs.getString(authorizationConfig.authUserPhotoKey);
+      // String refreshToken = await prefs.getString(authorizationConfig.authUserTokenKey);
+      // String expiredAt = await prefs.getString(authorizationConfig.authUserTokenDateKey);
+
       String userId = await secureStorage.read(key: authorizationConfig.authUserIdKey);
       String userFullName = await secureStorage.read(key: authorizationConfig.authUserNameKey);
       String email = await secureStorage.read(key: authorizationConfig.authUserEmailKey);
@@ -168,6 +252,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     try {
       final String storedEmail =
           await secureStorage.read(key: authorizationConfig.authUserEmailKey);
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // final String storedEmail =
+      //   await prefs.getString(authorizationConfig.authUserEmailKey);
       if (storedEmail == null) return '';
 
       return storedEmail;
@@ -181,6 +268,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
     try {
       final String storedUserId =
           await secureStorage.read(key: authorizationConfig.authUserIdKey);
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // final int storedUserId =
+      //   await prefs.getInt(authorizationConfig.authUserIdKey);
+      //return storedUserId;
       if (storedUserId == null) return 0;
 
       return int.parse(storedUserId);
@@ -193,7 +284,10 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   Future<String> getToken() async {
     try {
       final String storedToken =
-          await secureStorage.read(key: authorizationConfig.authTokenKey);
+         await secureStorage.read(key: authorizationConfig.authUserTokenKey);
+      // SharedPreferences prefs = await SharedPreferences.getInstance();
+      // final String storedToken =
+      //   await prefs.getString(authorizationConfig.authUserTokenKey);
       if (storedToken == null) return '';
 
       return storedToken;

@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 
 class RestAPIConfig {
-  String get baseURL => 'http://cbf2a9ad9f05.ngrok.io/api/v1/'; //'http://192.168.1.5:3001/api/v1/'; //'http://localhost:3001/api/v1/';
+  String get baseURL => 'http://418a6067cc9c.ngrok.io/api/v1/'; //'http://192.168.1.5:3001/api/v1/'; //'http://localhost:3001/api/v1/';
 
   static const String client = '/clients';
 

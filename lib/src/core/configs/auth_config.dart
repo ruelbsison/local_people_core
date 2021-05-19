@@ -2,11 +2,17 @@
 import 'package:meta/meta.dart';
 //import 'package:flutter_appauth/flutter_appauth.dart';
 
+const String AUTH0_CLIENT_DOMAIN = 'local-people-client.eu.auth0.com';
+const String AUTH0_CLIENT_CLIENT_ID = '320GqfRM747tQd6WJV7BxngjJtmWxVzS';
+const String AUTH0_CLIENT_SECRET = '7rGOwiCMYOLbNZJO-n0bNiYdR7LRiM3_i0nmEjLrzGmN5hRlx6tzaXpKFv1JV8mT';
+const String AUTH0_CLIENT_REDIRECT_URI = 'combineai.localpeople.client://login-callback';
+
 const String AUTH0_DOMAIN_PROD = 'local-people.eu.auth0.com';
 const String AUTH0_DOMAIN_DEV = 'dev-pgi9e-14.eu.auth0.com';
+
 const String AUTH0_CLIENT_CLIENT_ID_DEV = 'wFVbmSPRNiU4cvfoZa8j11BvoJ17zvRm';
 const String AUTH0_CLIENT_CLIENT_ID_PROD = 'PJokfElKh44ct2AFkJ0XxVquHvt5ftw1';
-const String AUTH0_CLIENT_SECRET = 'aAtHBXH6KdZ3OZHKXDQsNMoYpNF36V420t3hQ67maI3bVGzdc9ELTmlMUgbLNyFY';
+//const String AUTH0_CLIENT_SECRET = 'aAtHBXH6KdZ3OZHKXDQsNMoYpNF36V420t3hQ67maI3bVGzdc9ELTmlMUgbLNyFY';
 const String AUTH0_TRADER_CLIENT_ID_DEV = 'V9cNgmtlDesECyFrfip4FuR1SmcAQDQ4';
 const String AUTH0_TRADER_CLIENT_ID_PROD = 'nW82vRTOq7v2YXDQppUdZ50GeUDu93in';
 const String AUTH0_TRADER_SECRET = 'JxxFeSjUyf-nh7kgOIrlpWTW15_d3z7V7II9NITykdsBSBZNbowAhQAdbU6vo-Ym';
@@ -29,7 +35,7 @@ class AuthorizationConfig {
     @required this.authClientId,
     @required this.authSecret,
     @required this.authRedirectURI,
-    @required this.authTokenKey,
+    //@required this.authTokenKey,
     @required this.authDebugTag,
     @required this.authUserBaseKey,
   }) :  authUserIdKey = 'user_id_$authUserBaseKey',
@@ -51,7 +57,7 @@ class AuthorizationConfig {
   final String authClientId;
   final String authSecret;
   final String authRedirectURI;
-  final String authTokenKey;
+  //final String authTokenKey;
   final bool authDebugTag;
   final String authUserBaseKey;
   final String authUserIdKey;
@@ -72,11 +78,11 @@ class AuthorizationConfig {
 
   static AuthorizationConfig prodClientAuthorizationConfig() {
     return AuthorizationConfig(
-        authDomain: AUTH0_DOMAIN_PROD,
-        authClientId: AUTH0_CLIENT_CLIENT_ID_PROD,
+        authDomain: AUTH0_CLIENT_DOMAIN,
+        authClientId: AUTH0_CLIENT_CLIENT_ID,
         authSecret: AUTH0_CLIENT_SECRET,
-        authRedirectURI: AUTH0_CLIENT_REDIRECT_URI_PROD,
-        authTokenKey: AUTH0_CLIENT_TOKEN_KEY,
+        authRedirectURI: AUTH0_CLIENT_REDIRECT_URI,
+        //authTokenKey: AUTH0_CLIENT_TOKEN_KEY,
         authDebugTag: false,
         authUserBaseKey: 'client',
     );
@@ -88,7 +94,7 @@ class AuthorizationConfig {
         authClientId: AUTH0_TRADER_CLIENT_ID_PROD,
         authSecret: AUTH0_TRADER_SECRET,
         authRedirectURI: AUTH0_TRADER_REDIRECT_URI_PROD,
-        authTokenKey: AUTH0_TRADER_TOKEN_KEY,
+        //authTokenKey: AUTH0_TRADER_TOKEN_KEY,
         authDebugTag: false,
         authUserBaseKey: 'trader',
     );
@@ -99,7 +105,7 @@ class AuthorizationConfig {
         authDomain: AUTH0_DOMAIN_DEV,
         authClientId: AUTH0_CLIENT_CLIENT_ID_DEV,
         authRedirectURI: AUTH0_CLIENT_REDIRECT_URI_DEV,
-        authTokenKey: AUTH0_CLIENT_TOKEN_KEY,
+        //authTokenKey: AUTH0_CLIENT_TOKEN_KEY,
         authDebugTag: true,
         authUserBaseKey: 'client',
     );
@@ -110,7 +116,7 @@ class AuthorizationConfig {
         authDomain: AUTH0_DOMAIN_DEV,
         authClientId: AUTH0_TRADER_CLIENT_ID_DEV,
         authRedirectURI: AUTH0_TRADER_REDIRECT_URI_DEV,
-        authTokenKey: AUTH0_TRADER_TOKEN_KEY,
+        //authTokenKey: AUTH0_TRADER_TOKEN_KEY,
         authDebugTag: true,
         authUserBaseKey: 'trader',
     );

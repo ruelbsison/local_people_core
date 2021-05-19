@@ -3,7 +3,7 @@ import 'package:local_people_core/src/profile/domain/entities/client_list_respon
 import 'package:local_people_core/src/profile/domain/entities/client_response.dart';
 import 'package:meta/meta.dart';
 import 'package:logging/logging.dart';
-
+import 'package:dio/dio.dart';
 import '../../../../core.dart';
 import 'client_rest_api_client.dart';
 import 'client_remote_data_source.dart';
@@ -13,10 +13,10 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
   final String baseUrl;
   ClientRestApiClient clientRestApiClient;
 
-  ClientRemoteDataSourceImpl({@required this.baseUrl})
+  ClientRemoteDataSourceImpl({Dio dio, @required this.baseUrl})
       : assert(baseUrl != null) {
     clientRestApiClient =
-        ClientRestApiClient(RestAPIConfig.getDioOptions(), baseUrl: baseUrl);
+        ClientRestApiClient(dio, baseUrl: baseUrl);
   }
 
   @override
