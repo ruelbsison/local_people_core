@@ -13,7 +13,7 @@ class ClientResponse {
       fullName: model.name,
       email: model.email,
       intro: model.intro,
-      memberSince: DateTime.parse(model.createdAt),
+      memberSince: DateTime.now(),
     );
   }
 }

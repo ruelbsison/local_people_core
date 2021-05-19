@@ -13,8 +13,12 @@ abstract class TraderRestApiClient {
   //Future<Response> listTraders();
   Future<List<TraderModel>> listTraders();
 
+  @GET(RestAPIConfig.traderTopRated)
+  //Future<Response> listTraders();
+  Future<List<TraderModel>> listTopRatedTraders();
+
   @POST(RestAPIConfig.trader)
-  Future<TraderModel> createTrader(@Path("id") int id, @Body() TraderModel trader);
+  Future<TraderModel> createTrader(@Body() TraderModel trader);
 
   @GET(RestAPIConfig.traderWithId)
   //Future<Response> showTrader(String id);
@@ -23,8 +27,8 @@ abstract class TraderRestApiClient {
   @PATCH(RestAPIConfig.traderWithId)
   Future<TraderModel> updateTrader(@Path("id") int id, @Body() TraderModel trader);
 
-  @PATCH(RestAPIConfig.traderWithEmail)
-  Future<TraderModel> findTraderWithEmail(@Path("id") String email);
+  @GET(RestAPIConfig.traderWithEmail)
+  Future<TraderModel> findTraderWithEmail(@Path("email") String email);
 
   @DELETE(RestAPIConfig.traderWithId)
   Future<void> deleteTrader(@Path("id") int id);

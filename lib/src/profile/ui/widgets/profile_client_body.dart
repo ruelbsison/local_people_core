@@ -195,18 +195,32 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
                         children: <Widget> [
                           Expanded(
                             flex: 1,
-                            child: CircleAvatar(
-                              //backgroundColor: Color(0xff0075ff),
-                              radius: 12,
-                              child: Center (
-                                  child: Image.asset(
-                                    'packages/local_people_core/assets/images/verified-icon.png',
-                                    fit: BoxFit.contain,
-                                    height: 23,
-                                    width: 23,
-                                  )
+                            child: Container(
+                              width: 15,
+                              height: 14.97,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                color: Color(0xff0075ff),
+                              ),
+                              child: Image.asset(
+                                'packages/local_people_core/assets/images/verified-icon.png',
+                                fit: BoxFit.contain,
+                                height: 23,
+                                width: 23,
                               ),
                             ),
+                            // child: CircleAvatar(
+                            //   //backgroundColor: Color(0xff0075ff),
+                            //   radius: 12,
+                            //   child: Center (
+                            //       child: Image.asset(
+                            //         'packages/local_people_core/assets/images/verified-icon.png',
+                            //         fit: BoxFit.contain,
+                            //         height: 23,
+                            //         width: 23,
+                            //       )
+                            //   ),
+                            // ),
                           ),
                           Expanded(
                               flex: 6,

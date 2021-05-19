@@ -22,6 +22,10 @@ export './src/profile/data/datasources/trader_rest_api_client.dart';
 export './src/profile/data/datasources/trader_remote_data_source.dart';
 export './src/profile/data/datasources/trader_remote_data_source_impl.dart';
 
+export './src/profile/ui/blocs/profile_state.dart';
+export './src/profile/ui/blocs/profile_event.dart';
+export './src/profile/ui/blocs/profile_bloc.dart';
 export './src/profile/ui/widgets/more_item_card.dart';
 export './src/profile/ui/widgets/profile_card.dart';
 export './src/profile/ui/views/more_screen.dart';
+export './src/profile/ui/views/profile_screen.dart';

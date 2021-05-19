@@ -14,7 +14,7 @@ abstract class ClientRestApiClient {
   Future<List<ClientModel>> listClients();
 
   @POST(RestAPIConfig.client)
-  Future<ClientModel> createClient(@Path("id") int id, @Body() ClientModel client);
+  Future<ClientModel> createClient(@Body() Map<String, Map<String, dynamic>> client);
 
   @GET(RestAPIConfig.clientWithId)
   //Future<Response> showClient(String id);
@@ -23,8 +23,8 @@ abstract class ClientRestApiClient {
   @PATCH(RestAPIConfig.clientWithId)
   Future<ClientModel> updateClient(@Path("id") int id, @Body() ClientModel client);
 
-  @PATCH(RestAPIConfig.clientWithEmail)
-  Future<ClientModel> findClientWithEmail(@Path("id") String email);
+  @GET(RestAPIConfig.clientWithEmail)
+  Future<ClientModel> findClientWithEmail(@Path("email") String email);
 
   @DELETE(RestAPIConfig.clientWithId)
   Future<void> deleteClient(@Path("id") int id);

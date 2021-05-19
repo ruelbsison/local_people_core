@@ -1,7 +1,7 @@
-import 'profile.dart';
+import 'package:equatable/equatable.dart';
 import 'package:local_people_core/jobs.dart';
 
-class ClientProfile extends Object {
+class ClientProfile extends Equatable {
   ClientProfile({
     this.id = 0,
     this.userId = 0,
@@ -58,6 +58,11 @@ class ClientProfile extends Object {
   int get hashCode => id;
 
   static get empty => ClientProfile();
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [id, userId, description, address, intro, fullName, photo, memberSince, email, paymentMethodVerified, numOfJobsPosted,
+    numOfJobsInProgress, amountSpent, numOfDisputes, recentJobs];
 
   // static get empty => ClientProfile(id: 0, userId: 0, fullName: '', photo: '', memberSince: null,
   //     email: '', description: '', address: '', intro: '');

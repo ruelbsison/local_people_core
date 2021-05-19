@@ -13,7 +13,7 @@ class TraderResponse {
       fullName: model.name,
       email: model.email,
       intro: model.intro,
-      memberSince: DateTime.parse(model.createdAt),
+      memberSince: DateTime.parse(model.created_at),
     );
   }
 }

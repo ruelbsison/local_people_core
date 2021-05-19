@@ -21,11 +21,13 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
 
   @override
   Future<ClientResponse> createClient(ClientModel client) async {
-    ClientResponse response;
+    ClientResponse response = ClientResponse();
 
     try {
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['client'] = client.toJson();
       ClientModel data =
-          await clientRestApiClient.createClient(client.id, client);
+          await clientRestApiClient.createClient(param);
       if (data != null) {
         response.fromModel(data);
       }
@@ -55,11 +57,11 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
 
   @override
   Future<ClientResponse> findClientWithEmail(String email_address) async {
-    ClientResponse response;
+    ClientResponse response = ClientResponse();
 
     try {
       ClientModel data =
-          await clientRestApiClient.findClientWithEmail(email_address);
+          await clientRestApiClient.findClientWithEmail(Uri.encodeQueryComponent(email_address));
       if (data != null) {
         response.fromModel(data);
       }
@@ -76,7 +78,7 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
 
   @override
   Future<ClientListResponse> listClients() async {
-    ClientListResponse response;
+    ClientListResponse response = ClientListResponse();
 
     try {
       List<ClientModel> data = await clientRestApiClient.listClients();
@@ -94,7 +96,7 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
 
   @override
   Future<ClientResponse> showClient(int id) async {
-    ClientResponse response;
+    ClientResponse response = ClientResponse();
 
     try {
       ClientModel data = await clientRestApiClient.showClient(id);
@@ -112,7 +114,7 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
 
   @override
   Future<ClientResponse> updateClient(ClientModel client) async {
-    ClientResponse response;
+    ClientResponse response = ClientResponse();
 
     try {
       ClientModel data =

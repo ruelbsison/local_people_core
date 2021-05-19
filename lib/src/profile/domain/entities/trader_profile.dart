@@ -1,6 +1,6 @@
+import 'package:equatable/equatable.dart';
 
-
-class TraderProfile {
+class TraderProfile extends Equatable {
   TraderProfile({
     this.id = 0,
     this.userId = 0,
@@ -42,4 +42,8 @@ class TraderProfile {
   int get hashCode => id;
 
   static get empty => TraderProfile();
+
+  @override
+  // TODO: implement props
+  List<Object> get props => [id, userId, description, address, intro, fullName, photo, memberSince, email, ratingAvg];
 }

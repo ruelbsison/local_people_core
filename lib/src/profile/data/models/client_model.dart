@@ -1,6 +1,9 @@
 import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../../domain/entities/client_profile.dart';
+import 'package:local_people_core/auth.dart';
+
 part 'client_model.g.dart';
 
 /// {@template ClientModel}
@@ -15,9 +18,9 @@ class ClientModel extends Equatable {
   String email;
   String intro;
   String token;
-  String tokenExpirationDate;
-  String createdAt;
-  String updatedAt;
+  String token_expiration_date;
+  String created_at;
+  String updated_at;
 
   ClientModel(
       {this.id,
@@ -25,19 +28,40 @@ class ClientModel extends Equatable {
         this.email,
         this.intro,
         this.token,
-        this.tokenExpirationDate,
-        this.createdAt,
-        this.updatedAt});
+        this.token_expiration_date,
+        this.created_at,
+        this.updated_at});
 
+  static ClientModel fromClientProfile(ClientProfile profile) {
+    return ClientModel(
+      id: profile.id,
+      name: profile.fullName,
+      email: profile.email,
+      intro: profile.intro,
+      created_at: profile.memberSince.toString(),
+    );
+  }
+
+  static ClientModel fromClientProfileAndAuth(ClientProfile profile, AuthLocalModel authLocalModel) {
+    return ClientModel(
+      id: authLocalModel.userId,
+      name: profile.fullName,
+      email: profile.email,
+      intro: profile.intro,
+      created_at: profile.memberSince.toString(),
+      token: authLocalModel.token,
+      token_expiration_date: DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(authLocalModel.tokenExpirationDate),
+    );
+  }
   // ClientModel.fromJson(Map<String, dynamic> json) {
   //   id = json['id'];
   //   name = json['name'];
   //   email = json['email'];
   //   intro = json['intro'];
   //   token = json['token'];
-  //   tokenExpirationDate = json['token_expiration_date'];
-  //   createdAt = json['created_at'];
-  //   updatedAt = json['updated_at'];
+  //   token_expiration_date = json['token_expiration_date'];
+  //   created_at = json['created_at'];
+  //   updated_at = json['updated_at'];
   // }
   //
   // Map<String, dynamic> toJson() {
@@ -47,9 +71,9 @@ class ClientModel extends Equatable {
   //   data['email'] = this.email;
   //   data['intro'] = this.intro;
   //   data['token'] = this.token;
-  //   data['token_expiration_date'] = this.tokenExpirationDate;
-  //   data['created_at'] = this.createdAt;
-  //   data['updated_at'] = this.updatedAt;
+  //   data['token_expiration_date'] = this.token_expiration_date;
+  //   data['created_at'] = this.created_at;
+  //   data['updated_at'] = this.updated_at;
   //   return data;
   // }
 
@@ -61,14 +85,14 @@ class ClientModel extends Equatable {
       email: '',
       intro: '',
       token: '',
-      tokenExpirationDate: '',
-      createdAt: '',
-      updatedAt: '',
+      token_expiration_date: '',
+      created_at: '',
+      updated_at: '',
     );
   }
 
   @override
-  List<Object> get props => [id, name, email, intro, token, tokenExpirationDate, createdAt, updatedAt];
+  List<Object> get props => [id, name, email, intro, token, token_expiration_date, created_at, updated_at];
 
   factory ClientModel.fromJson(Map<String, dynamic> json) => _$ClientModelFromJson(json);
   Map<String, dynamic> toJson() => _$ClientModelToJson(this);

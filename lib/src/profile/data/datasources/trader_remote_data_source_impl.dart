@@ -20,12 +20,12 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
   }
 
   @override
-  Future<TraderResponse> createTrader(TraderModel Trader) async {
-    TraderResponse response;
+  Future<TraderResponse> createTrader(TraderModel trader) async {
+    TraderResponse response = TraderResponse();
 
     try {
       TraderModel data =
-      await traderRestApiClient.createTrader(Trader.id, Trader);
+      await traderRestApiClient.createTrader(trader);
       if (data != null) {
         response.fromModel(data);
       }
@@ -55,11 +55,11 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
 
   @override
   Future<TraderResponse> findTraderWithEmail(String email_address) async {
-    TraderResponse response;
+    TraderResponse response = TraderResponse();
 
     try {
       TraderModel data =
-      await traderRestApiClient.findTraderWithEmail(email_address);
+      await traderRestApiClient.findTraderWithEmail(Uri.encodeQueryComponent(email_address));
       if (data != null) {
         response.fromModel(data);
       }
@@ -76,7 +76,7 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
 
   @override
   Future<TraderListResponse> listTraders() async {
-    TraderListResponse response;
+    TraderListResponse response = TraderListResponse();
 
     try {
       List<TraderModel> data = await traderRestApiClient.listTraders();
@@ -94,7 +94,7 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
 
   @override
   Future<TraderResponse> showTrader(int id) async {
-    TraderResponse response;
+    TraderResponse response = TraderResponse();
 
     try {
       TraderModel data = await traderRestApiClient.showTrader(id);
@@ -111,17 +111,35 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
   }
 
   @override
-  Future<TraderResponse> updateTrader(TraderModel Trader) async {
-    TraderResponse response;
+  Future<TraderResponse> updateTrader(TraderModel trader) async {
+    TraderResponse response = TraderResponse();
 
     try {
       TraderModel data =
-      await traderRestApiClient.updateTrader(Trader.id, Trader);
+      await traderRestApiClient.updateTrader(trader.id, trader);
       if (data != null) {
         response.fromModel(data);
       }
     } catch (error, stacktrace) {
       logger.severe("Exception occured in updateTrader $error $stacktrace",
+          error, stacktrace);
+      response.exception = ServerException.withError(error: error);
+    }
+
+    return response;
+  }
+
+  @override
+  Future<TraderListResponse> listTopRatedTraders() async {
+    TraderListResponse response = TraderListResponse();
+
+    try {
+      List<TraderModel> data = await traderRestApiClient.listTopRatedTraders();
+      if (data != null) {
+        response.fromModel(data);
+      }
+    } catch (error, stacktrace) {
+      logger.severe("Exception occured in listTopRatedTraders $error $stacktrace",
           error, stacktrace);
       response.exception = ServerException.withError(error: error);
     }

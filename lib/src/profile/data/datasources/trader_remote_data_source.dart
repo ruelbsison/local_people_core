@@ -6,6 +6,8 @@ import '../../../core/exceptions/server_exception.dart';
 abstract class TraderRemoteDataSource {
   Future<TraderListResponse> listTraders();
 
+  Future<TraderListResponse> listTopRatedTraders();
+
   Future<TraderResponse> createTrader(TraderModel Trader);
 
   Future<TraderResponse> showTrader(int id);

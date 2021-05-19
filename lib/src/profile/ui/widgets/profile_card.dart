@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
 import '../../domain/entities/profile_item.dart';
 import 'package:flutter_icons/flutter_icons.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 typedef void MoreProfileCallback();
 
@@ -33,9 +34,23 @@ class ProfileCard extends StatelessWidget {
           children: [
             Stack(
               children: [
-                CircleAvatar(
-                  radius: 24,
-                  backgroundImage: AssetImage(profileItem.image),
+                // CircleAvatar(
+                //   radius: 24,
+                //   backgroundImage: AssetImage(profileItem.image),
+                  ClipOval (
+                    child: CachedNetworkImage(
+                    imageUrl: profileItem.image,
+                    width: 60,
+                    height: 60,
+                    placeholder: (context, url) => LoadingWidget(
+                      isImage: true,
+                    ),
+                    errorWidget: (context, url, error) => Image.asset(
+                      'packages/local_people_core/assets/images/trader-profile-photo.png',
+                      fit: BoxFit.cover,
+                    ),
+                    fit: BoxFit.cover,
+                  ),
                 ),
                 /*if (messageBox.isActive)
                   Positioned(
