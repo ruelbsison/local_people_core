@@ -1,19 +1,18 @@
 import 'package:local_people_core/auth.dart';
 import 'package:meta/meta.dart';
 import '../../domain/repositories/auth_repository.dart';
-import '../datasources/auth_local_data_source.dart';
 import '../datasources/auth_data_source.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
-  final AuthLocalDataSource authLocalDataSource;
+  //final AuthLocalDataSource authLocalDataSource;
   final AuthenticationDataSource authenticationDataSource;
 
   AuthenticationRepositoryImpl({
-    @required this.authLocalDataSource,
+    //@required this.authLocalDataSource,
     @required this.authenticationDataSource
-  }) : assert(authLocalDataSource != null), assert(authenticationDataSource != null);
+  }) : assert(authenticationDataSource != null); //assert(authLocalDataSource != null), assert(authenticationDataSource != null);
 
-  @override
+  /*@override
   Future<bool> isAuthenticated() async {
     bool hasAuth = await authLocalDataSource.hasAuth();
     if (hasAuth == false) return false;
@@ -22,37 +21,37 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
     if (didExpired == true) return false;
 
     return true;
-  }
+  }*/
 
   @override
   Future<void> unAuthenticated() async {
-    await authLocalDataSource.deleteAuth();
+    //await authLocalDataSource.deleteAuth();
   }
 
   @override
   Future<String> getUser() async {
-    String name = await authLocalDataSource.getUserName();
+    //String name = await authLocalDataSource.getUserName();
 
-    return name;
+    //return name;
   }
 
   @override
-  Future<AuthLocalModel> refreshUserAuthorization() async {
+  Future<AuthLocalModel> refreshUserAuthorization(String token) async {
     AuthLocalModel authLocal;
     try {
-      AuthLocalModel auth  = await authLocalDataSource.getAuth();
-      AuthSessionModel session = await authenticationDataSource.refreshSession(auth.token);
+      //AuthLocalModel auth  = await authLocalDataSource.getAuth();
+      AuthSessionModel session = await authenticationDataSource.refreshSession(token);
       AuthProfileModel profile = await authenticationDataSource.getSessionProfile(session.accessToken);
 
       authLocal = AuthLocalModel(
-        userId: auth.userId,
+        //userId: auth.userId,
         userEmail: profile.email,
         userFullName: profile.name,
         userPhoto: profile.photo,
         token: session.refreshToken,
         tokenExpirationDate: session.expiredAt,
       );
-      authLocalDataSource.saveAuth(authLocal);
+      //authLocalDataSource.saveAuth(authLocal);
     } on RefreshSessionFailure catch(f, s) {
 
     }
@@ -68,14 +67,14 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
       AuthProfileModel profile = await authenticationDataSource.getSessionProfile(session.accessToken);
 
       authLocal = AuthLocalModel(
-        userId: 0,
+        //userId: 0,
         userEmail: profile.email,
         userFullName: profile.name,
         userPhoto: profile.photo,
         token: session.refreshToken,
         tokenExpirationDate: session.expiredAt,
       );
-      authLocalDataSource.saveAuth(authLocal);
+      //authLocalDataSource.saveAuth(authLocal);
     } on CreateSessionFailure catch(f, s) {
 
     }

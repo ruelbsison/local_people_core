@@ -15,8 +15,8 @@ class AuthLocalModel extends Equatable {
     @required this.userPhoto,
     @required this.token,
     @required this.tokenExpirationDate,
-  })  : assert(userId != null),
-        assert(token != null);
+  });//  : assert(userId != null),
+     //   assert(token != null);
 
   /// The current AuthLocalModel's id.
   int userId;

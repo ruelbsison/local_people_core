@@ -46,29 +46,45 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   Future<bool> saveAuth(AuthLocalModel authLocal) async {
     try {
-      await secureStorage.write(
-          key: authorizationConfig.authUserIdKey,
-          value: authLocal.userId.toString());
+      if (authLocal.userId != null) {
+        await secureStorage.write(
+            key: authorizationConfig.authUserIdKey,
+            value: authLocal.userId.toString());
+      }
 
-      await secureStorage.write(
-          key: authorizationConfig.authUserNameKey,
-          value: authLocal.userFullName);
+      if (authLocal.userFullName != null) {
+        await secureStorage.write(
+            key: authorizationConfig.authUserNameKey,
+            value: authLocal.userFullName);
+      }
 
-      await secureStorage.write(
-          key: authorizationConfig.authUserEmailKey,
-          value: authLocal.userEmail);
+      if (authLocal.userEmail != null) {
+        await secureStorage.write(
+            key: authorizationConfig.authUserEmailKey,
+            value: authLocal.userEmail);
+      }
 
-      await secureStorage.write(
-          key: authorizationConfig.authUserPhotoKey,
-          value: authLocal.userPhoto);
 
-      await secureStorage.write(
-          key: authorizationConfig.authUserTokenKey,
-          value: authLocal.token);
+      if (authLocal.userPhoto != null) {
+        await secureStorage.write(
+            key: authorizationConfig.authUserPhotoKey,
+            value: authLocal.userPhoto);
+      }
 
-      await secureStorage.write(
-          key: authorizationConfig.authUserTokenDateKey,
-          value: authLocal.tokenExpirationDate.millisecondsSinceEpoch.toString());
+
+      if (authLocal.token != null) {
+        await secureStorage.write(
+            key: authorizationConfig.authUserTokenKey,
+            value: authLocal.token);
+      }
+
+
+      if (authLocal.tokenExpirationDate != null) {
+        await secureStorage.write(
+            key: authorizationConfig.authUserTokenDateKey,
+            value: authLocal.tokenExpirationDate.millisecondsSinceEpoch.toString());
+      }
+
     } on Exception catch (e, s) {
       throw e;
     }

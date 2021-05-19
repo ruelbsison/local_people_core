@@ -1,24 +1,24 @@
 import 'dart:async';
 
-//import 'package:local_people_core/src/domain/entities/user.dart';
 import '../../domain/repositories/auth_repository.dart';
-//import '../../../core/enum/auth_status.dart';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import '../../data/models/auth_local_model.dart';
+import '../../data/datasources/auth_local_data_source.dart';
 
 part 'authentication_event.dart';
 part 'authentication_state.dart';
 
 class AuthenticationBloc
     extends Bloc<AuthenticationEvent, AuthenticationState> {
-  final AuthenticationRepository _authenticationRepository;
+  final AuthLocalDataSource authLocalDataSource;
+  final AuthenticationRepository authenticationRepository;
   
   AuthenticationBloc({
-    @required AuthenticationRepository authenticationRepository,
-  })  : assert(authenticationRepository != null),
-        _authenticationRepository = authenticationRepository,
+    @required this.authLocalDataSource,
+    @required this.authenticationRepository,
+  })  : assert(authLocalDataSource != null), assert(authenticationRepository != null),
         super(Uninitialized()) {
     //_userSubscription = _authenticationRepository.user.listen(
     //  (user) => add(AuthenticationUserChanged(user)),
@@ -45,11 +45,14 @@ class AuthenticationBloc
 
   Stream<AuthenticationState> _mapAppStartedToState() async* {
     try {
-      final isAuthenticated = await _authenticationRepository.isAuthenticated();
+      final isAuthenticated = await authLocalDataSource.hasAuth();
 
       if (isAuthenticated) {
-        final name = await _authenticationRepository.getUser();
-        yield Authenticated(name);
+        final expired = await authLocalDataSource.didAuthExpired();
+        if (expired == true)
+          yield ReAuthenticate();
+        else
+          yield Authenticated();
       } else {
         yield Unauthenticated();
       }
@@ -59,23 +62,29 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapAuthenticateUserState() async* {
-    AuthLocalModel authLocalModel = await _authenticationRepository.requestUserAuthorization();
-    if (authLocalModel != null)
-      yield Authenticated(authLocalModel.userFullName);
-    else
+    AuthLocalModel authLocalModel = await authenticationRepository
+        .requestUserAuthorization();
+    if (authLocalModel != null) {
+      await authLocalDataSource.saveAuth(authLocalModel);
+      yield Authenticated(); //authLocalModel.userFullName);
+    } else {
       yield AuthenticationError();
+    }
   }
 
   Stream<AuthenticationState> _mapReAuthenticateUserState() async* {
-    AuthLocalModel authLocalModel = await _authenticationRepository.requestUserAuthorization();
-    if (authLocalModel != null)
-      yield Authenticated(authLocalModel.userFullName);
-    else
+    String token = await authLocalDataSource.getToken();
+    AuthLocalModel authLocalModel = await authenticationRepository.refreshUserAuthorization(token);
+    if (authLocalModel != null) {
+      await authLocalDataSource.saveAuth(authLocalModel);
+      yield Authenticated(); //authLocalModel.userFullName);
+    } else {
       yield AuthenticationError();
+    }
   }
 
   Stream<AuthenticationState> _mapUnAuthenticateUserState() async* {
-    _authenticationRepository.unAuthenticated();
+    await authenticationRepository.unAuthenticated();
     yield Unauthenticated();
   }
 }
