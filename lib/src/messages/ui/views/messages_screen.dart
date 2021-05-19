@@ -50,4 +50,11 @@ class MessagesScreen extends StatelessWidget {
       ],
     );
   }
+
+  /*void updateBadger() {
+    FlutterAppBadger.isAppBadgeSupported().then((isSupported) {
+      if (isSupported) FlutterAppBadger.removeBadge();
+      // FlutterAppBadger.updateBadgeCount(1);
+    });
+  }*/
 }

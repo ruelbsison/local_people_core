@@ -7,104 +7,106 @@ class AppThemeConfig {
   static TextTheme _buildTraderTextTheme(TextTheme base) {
     return base
         .copyWith(
-          headline6: base.headline6.copyWith(
-              fontFamily: 'Merriweather',
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-          subtitle1: base.subtitle1.copyWith(
-              fontFamily: 'RedHatDisplay',
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-          subtitle2: base.subtitle2.copyWith(
-              fontFamily: 'RedHatDisplay',
-              fontWeight: FontWeight.w500,
-            fontSize: 14,
-          ),
-          caption: base.caption.copyWith(
-              fontFamily: 'RedHatDisplay',
-            fontWeight: FontWeight.w400,
-            fontSize: 12,
-          ),
-          bodyText1: base.bodyText1.copyWith(
-            fontFamily: 'RedHatDisplay',
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-          bodyText2: base.bodyText2.copyWith(
-            fontFamily: 'RedHatDisplay',
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-          ),
-          button: base.button.copyWith(
-            fontFamily: 'RedHatDisplay',
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
-          overline: base.overline.copyWith(
-            fontFamily: 'RedHatDisplay',
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-          ),
-        )
+      headline6: base.headline6.copyWith(
+        fontFamily: 'Merriweather',
+        fontWeight: FontWeight.w900,
+        fontSize: 18,
+      ),
+      subtitle1: base.subtitle1.copyWith(
+        fontFamily: 'RedHatDisplay',
+        fontWeight: FontWeight.w700,
+        fontSize: 16,
+      ),
+      subtitle2: base.subtitle2.copyWith(
+        fontFamily: 'RedHatDisplay',
+        fontWeight: FontWeight.w700,
+        fontSize: 14,
+      ),
+      caption: base.caption.copyWith(
+        fontFamily: 'RedHatDisplay',
+        fontWeight: FontWeight.w400,
+        fontSize: 12,
+      ),
+      bodyText1: base.bodyText1.copyWith(
+        fontFamily: 'RedHatDisplay',
+        fontWeight: FontWeight.w700,
+        fontSize: 16,
+      ),
+      bodyText2: base.bodyText2.copyWith(
+        fontFamily: 'RedHatDisplay',
+        fontWeight: FontWeight.w500,
+        fontSize: 14,
+      ),
+      button: base.button.copyWith(
+        fontFamily: 'RedHatDisplay',
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      ),
+      overline: base.overline.copyWith(
+        fontFamily: 'RedHatDisplay',
+        fontWeight: FontWeight.w700,
+        fontSize: 10,
+      ),
+    )
         .apply(
-          displayColor: Color(0xFF003F5C),
-          bodyColor: Color(0xFF003F5C),
-        );
+      displayColor: Color(0xFF012B3A),
+      bodyColor: Color(0xFF012B3A),
+    );
   }
 
   static TextTheme _buildClientTextTheme(TextTheme base) {
     return base
         .copyWith(
-          headline6: base.headline6.copyWith(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.bold,
-            fontSize: 20,
-          ),
-          subtitle1: base.subtitle1.copyWith(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-          subtitle2: base.subtitle2.copyWith(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w500,
-            fontSize: 14,
-          ),
-          caption: base.caption.copyWith(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
-            fontSize: 12,
-          ),
-          bodyText1: base.bodyText1.copyWith(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.bold,
-            fontSize: 16,
-          ),
-          bodyText2: base.bodyText2.copyWith(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-          ),
-          button: base.button.copyWith(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.bold,
-            fontSize: 14,
-          ),
-          overline: base.overline.copyWith(
-            fontFamily: 'Inter',
-            fontWeight: FontWeight.w400,
-            fontSize: 14,
-          ),
-        )
+      headline6: base.headline6.copyWith(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.bold,
+        fontSize: 20,
+      ),
+      subtitle1: base.subtitle1.copyWith(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+      subtitle2: base.subtitle2.copyWith(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w500,
+        fontSize: 14,
+      ),
+      caption: base.caption.copyWith(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w400,
+        fontSize: 12,
+      ),
+      bodyText1: base.bodyText1.copyWith(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.bold,
+        fontSize: 16,
+      ),
+      bodyText2: base.bodyText2.copyWith(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w400,
+        fontSize: 14,
+      ),
+      button: base.button.copyWith(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
+      ),
+      overline: base.overline.copyWith(
+        fontFamily: 'Inter',
+        fontWeight: FontWeight.w400,
+        fontSize: 14,
+      ),
+    )
         .apply(
-          displayColor: Colors.black,
-          bodyColor: Colors.black,
-        );
+      displayColor: Colors.black,
+      bodyColor: Colors.black,
+    );
   }
 
   static ThemeData _buildLightTheme() {
+    final MaterialColor themeMaterialColor =
+    createMaterialColor(const Color.fromRGBO(48, 49, 60, 1));
     /*const Color primaryColor = Color(0xFFEFF4F6);
     const Color secondaryColor = Color(0xFFFFFFFF);
     final ColorScheme lightColorScheme = const ColorScheme.light().copyWith(
@@ -124,10 +126,9 @@ class AppThemeConfig {
     );*/
     Color lightPrimary = Colors.white;
     Color darkPrimary = Color(0xff1f1f1f);
-    Color lightAccent = Color(0xff2ca8e2);
-    Color darkAccent = Color(0xff2ca8e2);
-    Color lightBG = Color.fromRGBO(239, 244, 246,
-        1); //Color.fromRGBO(222, 232, 237, 0.5); //Color(0xe5e5e5);//Colors.white;
+    Color lightAccent = Color(0xff2ca8e2); //Color(0x7fdee8ec); //
+    Color darkAccent = Color(0xff2ca8e2); //Color(0x7fdee8ec);
+    Color lightBG = Color.fromRGBO(239, 244, 246, 1); //Color.fromRGBO(222, 232, 237, 0.5); //Color(0xe5e5e5);//Colors.white;
     Color darkBG = Color(0xff121212);
     final ColorScheme lightColorScheme = const ColorScheme.light().copyWith(
       primary: lightPrimary,
@@ -140,6 +141,15 @@ class AppThemeConfig {
       onPrimary: darkBG,
       onSecondary: lightAccent,
       brightness: Brightness.light,
+    );
+    final ButtonStyle raisedButtonStyle = ElevatedButton.styleFrom(
+      onPrimary: Colors.black87,
+      primary: Colors.grey[300],
+      minimumSize: Size(88, 36),
+      padding: EdgeInsets.symmetric(horizontal: 16),
+      shape: const RoundedRectangleBorder(
+        borderRadius: BorderRadius.all(Radius.circular(2)),
+      ),
     );
     final ThemeData base = ThemeData.light();
     return base.copyWith(
@@ -176,12 +186,18 @@ class AppThemeConfig {
       iconTheme: base.iconTheme.copyWith(color: Colors.black),
       accentIconTheme: base.accentIconTheme.copyWith(color: Colors.black),
       primaryIconTheme: base.primaryIconTheme.copyWith(color: Colors.black),
-      buttonTheme: base.buttonTheme.copyWith(
-        buttonColor: Color(0xffe5e5e5),
+      // buttonTheme: base.buttonTheme.copyWith(
+      //   buttonColor: Color(0xffe5e5e5),
+      //   textTheme: ButtonTextTheme.primary,
+      //   colorScheme:
+      //   base.colorScheme.copyWith(secondary: Colors.black), // Text color
+      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+      // ),
+      buttonTheme: ButtonThemeData(
+        buttonColor: themeMaterialColor.shade500,
+        disabledColor: themeMaterialColor.withRed(200),
+        splashColor: themeMaterialColor.shade50,
         textTheme: ButtonTextTheme.primary,
-        colorScheme:
-        base.colorScheme.copyWith(secondary: Colors.black), // Text color
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
@@ -192,7 +208,7 @@ class AppThemeConfig {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData (
         style: ElevatedButton.styleFrom(
-          primary: Color(0xffe5e5e5),
+          primary: Color.fromRGBO(170, 186, 205, 1),
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
         ),
@@ -200,6 +216,7 @@ class AppThemeConfig {
       outlinedButtonTheme: OutlinedButtonThemeData (
         style: OutlinedButton.styleFrom(primary: Color(0xaabacd)),
       ),
+      visualDensity: VisualDensity.adaptivePlatformDensity,
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
@@ -222,7 +239,30 @@ class AppThemeConfig {
     );
   }
 
+  /// Creates a [MaterialColor] based on the supplied [Color]
+  static MaterialColor createMaterialColor(Color color) {
+    List strengths = <double>[.05];
+    Map swatch = <int, Color>{};
+    final r = color.red, g = color.green, b = color.blue;
+
+    for (var i = 1; i < 10; i++) {
+      strengths.add(0.1 * i);
+    }
+    for (var strength in strengths) {
+      final ds = 0.5 - strength;
+      swatch[(strength * 1000).round()] = Color.fromRGBO(
+        r + ((ds < 0 ? r : (255 - r)) * ds).round(),
+        g + ((ds < 0 ? g : (255 - g)) * ds).round(),
+        b + ((ds < 0 ? b : (255 - b)) * ds).round(),
+        1,
+      );
+    }
+    return MaterialColor(color.value, swatch as Map<int, Color>);
+  }
+
   static ThemeData _buildDarkTheme() {
+    final MaterialColor themeMaterialColor =
+    createMaterialColor(const Color.fromRGBO(170, 186, 205, 1),);
     /*const Color primaryColor = Color(0xFFEFF4F6);
     const Color secondaryColor = Color(0xFFFFFFFF);
     final ColorScheme darkColorScheme = const ColorScheme.dark().copyWith(
@@ -244,8 +284,7 @@ class AppThemeConfig {
     Color darkPrimary = Color(0xff1f1f1f);
     Color lightAccent = Color(0xff2ca8e2);
     Color darkAccent = Color(0xff2ca8e2);
-    Color lightBG = Color.fromRGBO(239, 244, 246,
-        1); //Color.fromRGBO(222, 232, 237, 0.5); //Color(0xe5e5e5);//Colors.white;
+    Color lightBG = Color(0x7fdee8ec); //Color.fromRGBO(239, 244, 246, 1); //Color.fromRGBO(222, 232, 237, 0.5); //Color(0xe5e5e5);//Colors.white;
     Color darkBG = Color(0xff121212);
     /*colorScheme: ColorScheme.light(
       primary: lightPrimary,
@@ -272,7 +311,9 @@ class AppThemeConfig {
       accentColor: lightAccent,
       cursorColor: lightAccent,
       scaffoldBackgroundColor: lightBG,
-      colorScheme: lightColorScheme,
+      //colorScheme: ColorScheme.fromSwatch(
+
+      //),
       indicatorColor: Colors.white,
       toggleableActiveColor: const Color(0xFF1E88E5),
       splashColor: lightPrimary, //Colors.white24,
@@ -300,12 +341,18 @@ class AppThemeConfig {
       iconTheme: base.iconTheme.copyWith(color: Colors.black,),
       accentIconTheme: base.accentIconTheme.copyWith(color: Colors.black),
       primaryIconTheme: base.primaryIconTheme.copyWith(color: Colors.black),
-      buttonTheme: base.buttonTheme.copyWith(
-        buttonColor: Color(0xffe5e5e5),
+      // buttonTheme: base.buttonTheme.copyWith(
+      //   buttonColor: Color(0xffe5e5e5),
+      //   textTheme: ButtonTextTheme.primary,
+      //   colorScheme:
+      //   base.colorScheme.copyWith(secondary: Colors.black), // Text color
+      //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
+      // ),
+      buttonTheme: ButtonThemeData(
+        buttonColor: themeMaterialColor.shade500,
+        disabledColor: themeMaterialColor.withRed(200),
+        splashColor: themeMaterialColor.shade50,
         textTheme: ButtonTextTheme.primary,
-        colorScheme:
-        base.colorScheme.copyWith(secondary: Colors.black), // Text color
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
@@ -316,7 +363,7 @@ class AppThemeConfig {
       ),
       elevatedButtonTheme: ElevatedButtonThemeData (
         style: ElevatedButton.styleFrom(
-          primary: Color(0xffe5e5e5),
+          primary: Color.fromRGBO(170, 186, 205, 1),
           shape:
           RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
         ),
@@ -324,6 +371,7 @@ class AppThemeConfig {
       outlinedButtonTheme: OutlinedButtonThemeData (
         style: OutlinedButton.styleFrom(primary: Color(0xaabacd)),
       ),
+      visualDensity: VisualDensity.adaptivePlatformDensity,
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
