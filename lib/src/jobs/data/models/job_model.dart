@@ -1,8 +1,11 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 import 'location_model.dart';
 import 'tag_model.dart';
+import '../../domain/entities/job.dart';
+
 part 'job_model.g.dart';
 
 /// {@template JobModel}
@@ -70,6 +73,18 @@ class JobModel extends Equatable {
         trader_id: 0,
       tags: [TagModel.empty()],
       location: LocationModel.empty(),
+    );
+  }
+
+  static JobModel fromJob(Job job) {
+    return JobModel(
+      id: job.id,
+      title: job.title,
+      description: job.description,
+      date:  DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(job.date), //DateFormat('yyyyy-MM-ddThh:mm.sssZ').format(DateTime.now()), //job.date),
+      budget: job.budget,
+      awarded: false,
+      client_id: job.client_id, //authLocalModel.userId,
     );
   }
 

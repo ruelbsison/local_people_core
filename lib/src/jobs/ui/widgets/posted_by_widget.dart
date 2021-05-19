@@ -1,14 +1,17 @@
 import 'package:flutter/material.dart';
 import  'package:local_people_core/profile.dart';
-
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_people_core/profile.dart';
+import 'package:local_people_core/core.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:intl/intl.dart';
 
 class PostedByWidget extends StatefulWidget {
   PostedByWidget({
     Key key,
   }) : super(key: key);
 
-  // TODO: Ruel
-  final ClientProfile profile = ClientProfile.empty;
+  //final ClientProfile profile = ClientProfile.empty;
 
   @override
   _PostedByWidgetState createState() => _PostedByWidgetState();
@@ -18,6 +21,19 @@ class _PostedByWidgetState extends State<PostedByWidget> {
 
   @override
   Widget build(BuildContext context) {
+    BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
+    return BlocBuilder<ProfileBloc, ProfileState>(
+        builder: (context, state) {
+          if (state is ClientProfileLoaded) {
+            return buildContent(state.profile);
+          } else {
+            return LoadingWidget();
+          }
+        }
+    );
+  }
+
+  Widget buildContent(ClientProfile profile) {
     final textTheme = Theme.of(context).textTheme;
     return  Container(
       color: Colors.white,
@@ -46,9 +62,10 @@ class _PostedByWidgetState extends State<PostedByWidget> {
               Expanded (
                 flex: 1,
                 child: CircleAvatar(
-                  child: FlutterLogo(size: 75),
-                  /*child: CachedNetworkImage(
-                    imageUrl: widget.profile.photoUrl,
+                  //child: FlutterLogo(size: 75),
+                  radius: 24,
+                  child: CachedNetworkImage(
+                    imageUrl: profile.photo,
                     placeholder: (context, url) => LoadingWidget(
                       isImage: true,
                     ),
@@ -57,7 +74,7 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                       fit: BoxFit.cover,
                     ),
                     fit: BoxFit.cover,
-                  ),*/
+                  ),
                 ),
               ),
               Expanded (
@@ -69,7 +86,7 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget> [
                       Text(
-                        (widget.profile.fullName != null ? widget.profile.fullName : 'Client Full Name'),
+                        (profile.fullName != null ? profile.fullName : 'Client Full Name'),
                         textAlign: TextAlign.left,
                         style: textTheme.subtitle1,
                       ),
@@ -112,19 +129,19 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                             ),
                           ),
                           Expanded(
-                            flex: 6,
+                              flex: 6,
                               child: Flex (
                                 direction: Axis.vertical,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget> [
                                   Text(
-                                    'Payment Method Verified',
+                                    'Payment Method ' + (profile.paymentMethodVerified == true ? 'Verified' : 'Not Verified'),
                                     textAlign: TextAlign.left,
                                     style: textTheme.subtitle1,
                                   ),
                                   Text(
-                                    'Member since DD-MM-YYYY',
+                                    'Member since ' + DateFormat('dd-MM-yyyy').format(profile.memberSince),
                                     textAlign: TextAlign.left,
                                     style: textTheme.bodyText1,
                                   ),
@@ -161,12 +178,12 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 children: <Widget> [
                                   Text(
-                                    'XX Jobs Posted',
+                                    profile.numOfJobsPosted.toString() + ' Jobs Posted',
                                     textAlign: TextAlign.left,
                                     style: textTheme.subtitle1,
                                   ),
                                   Text(
-                                    'YY Jobs commissioned',
+                                    profile.amountSpent.toString() + ' Jobs commissioned',
                                     textAlign: TextAlign.left,
                                     style: textTheme.bodyText1,
                                   ),
