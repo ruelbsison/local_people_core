@@ -75,8 +75,8 @@ class ProfileCard extends StatelessWidget {
                 padding:
                 const EdgeInsets.symmetric(horizontal: kDefaultPadding),
                 child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  //mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                   children: [
                     Text(
                       profileItem.name,

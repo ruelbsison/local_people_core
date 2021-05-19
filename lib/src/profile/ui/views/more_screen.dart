@@ -26,7 +26,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
   AppBarWidget buildAppBar() {
     return AppBarWidget(
-      appBarPreferredSize: Size.fromHeight(80.0),
+      //appBarPreferredSize: Size.fromHeight(80.0),
       title: Text(
         AppLocalizations.of(context).appTitle,
       ),
@@ -59,7 +59,7 @@ class _MoreScreenState extends State<MoreScreen> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           Expanded (
-            flex: 1,
+            flex: 2,
             child: BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {
                 if (state is ClientProfileLoaded) {
@@ -85,7 +85,7 @@ class _MoreScreenState extends State<MoreScreen> {
             ),
           ),
         Expanded (
-          flex: 4,
+          flex: 5,
           child: ListView.builder(
             physics: BouncingScrollPhysics(),
             primary: true,

@@ -235,7 +235,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
     //super.build(context);
     return Scaffold(
       appBar: AppBarWidget(
-        appBarPreferredSize: Size.fromHeight(60.0),
+        //appBarPreferredSize: Size.fromHeight(60.0),
         title: Text(
           AppLocalizations.of(context).appTitle,
         ),

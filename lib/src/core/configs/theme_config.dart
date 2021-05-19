@@ -10,7 +10,7 @@ class AppThemeConfig {
       headline6: base.headline6.copyWith(
         fontFamily: 'Merriweather',
         fontWeight: FontWeight.w900,
-        fontSize: 18,
+        fontSize: 30,
       ),
       subtitle1: base.subtitle1.copyWith(
         fontFamily: 'RedHatDisplay',
@@ -24,7 +24,7 @@ class AppThemeConfig {
       ),
       caption: base.caption.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.w400,
+        fontWeight: FontWeight.w700,
         fontSize: 12,
       ),
       bodyText1: base.bodyText1.copyWith(
@@ -44,7 +44,7 @@ class AppThemeConfig {
       ),
       overline: base.overline.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w500,
         fontSize: 10,
       ),
     )
@@ -284,7 +284,7 @@ class AppThemeConfig {
     Color darkPrimary = Color(0xff1f1f1f);
     Color lightAccent = Color(0xff2ca8e2);
     Color darkAccent = Color(0xff2ca8e2);
-    Color lightBG = Color(0x7fdee8ec); //Color.fromRGBO(239, 244, 246, 1); //Color.fromRGBO(222, 232, 237, 0.5); //Color(0xe5e5e5);//Colors.white;
+    Color lightBG = Color.fromRGBO(239, 244, 246, 1); // Color.fromRGBO(222, 232, 237, 1.0); //Color(0x7fdee8ec); //Color(0xe5e5e5);//Colors.white;
     Color darkBG = Color(0xff121212);
     /*colorScheme: ColorScheme.light(
       primary: lightPrimary,

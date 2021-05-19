@@ -28,7 +28,7 @@ class _JobRequestScreenState extends State<JobRequestScreen>
     final theme = Theme.of(context);
     return Scaffold(
       appBar: AppBarWidget (
-        appBarPreferredSize: Size.fromHeight(120.0),
+        //appBarPreferredSize: Size.fromHeight(120.0),
         //automaticallyImplyLeading: false,
         //toolbarHeight: 120.0,
         //centerTitle: false,

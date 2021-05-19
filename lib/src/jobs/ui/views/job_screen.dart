@@ -32,7 +32,7 @@ class _JobScreenState extends State<JobScreen> {
     final appCType = AppConfig.of(context).appType;
     return Scaffold(
       appBar: AppBarWidget(
-        appBarPreferredSize: Size.fromHeight(60.0),
+        //appBarPreferredSize: Size.fromHeight(60.0),
         subTitle: (appCType == AppType.TRADER
             ? LocalPeopleLocalizations.of(context).menuTitleOpportunities
             : LocalPeopleLocalizations.of(context).menuTitleYourJobs),

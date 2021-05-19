@@ -19,6 +19,7 @@ class LogoWidget extends StatelessWidget {
       width: width,
       //color: Colors.green,
       //color: backgroundColor,
+      alignment: Alignment.centerLeft,
     );
   }
 }

@@ -15,7 +15,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   const AppBarWidget({Key key, 
     this.title, this.appBar, this.actions,
-    this.subTitle, this.bottom, this.appBarPreferredSize})
+    this.subTitle, this.bottom, this.appBarPreferredSize = const Size.fromHeight(188.0)})
       : super(key: key);
 
   @override
@@ -30,35 +30,68 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         titleSpacing: 0,
         centerTitle: false,
         actions: actions,
-        title: Flex (
-          direction: Axis.vertical,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget> [
-            Container (
-              padding: EdgeInsets.only(left: 10),
-              //padding: EdgeInsets.only(left: 12, top: 40),
-              child: LogoWidget(
+        bottom: PreferredSize (
+          preferredSize: Size(size.width, 108.0),
+          child: Flex (
+            direction: Axis.vertical,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: <Widget> [
+              Container (
+                padding: EdgeInsets.only(left: 10),
+                //padding: EdgeInsets.only(left: 12, top: 40),
+                child: LogoWidget(
                   fit: BoxFit.contain,
-                  height: 22,
-                //width: 105 * mediaQueryData.devicePixelRatio,
+                  height: 52,
+                  //width: 105 * mediaQueryData.devicePixelRatio,
+                ),
+                //color: Colors.green,
               ),
-              //color: Colors.green,
-            ),
-            Container (
-              padding: EdgeInsets.only(left: 12),
-              child: Text(
-                subTitle,
-                textAlign: TextAlign.left,
-                style: headline6Style,
+              SizedBox(height: 10),
+              Container (
+                padding: EdgeInsets.only(left: 12),
+                child: Text(
+                  subTitle,
+                  textAlign: TextAlign.left,
+                  style: headline6Style,
+                ),
+                //color: Colors.yellow,
               ),
-              //color: Colors.yellow,
-            )
-          ],
+              SizedBox(height: 20),
+            ],
+          ),
         ),
+        //bottom: bottom,
+        // title: Flex (
+        //   direction: Axis.vertical,
+        //   mainAxisSize: MainAxisSize.max,
+        //   mainAxisAlignment: MainAxisAlignment.start,
+        //   crossAxisAlignment: CrossAxisAlignment.start,
+        //   children: <Widget> [
+        //     Container (
+        //       padding: EdgeInsets.only(left: 10),
+        //       //padding: EdgeInsets.only(left: 12, top: 40),
+        //       child: LogoWidget(
+        //           fit: BoxFit.contain,
+        //           height: 22,
+        //         //width: 105 * mediaQueryData.devicePixelRatio,
+        //       ),
+        //       //color: Colors.green,
+        //     ),
+        //     Container (
+        //       padding: EdgeInsets.only(left: 12),
+        //       child: Text(
+        //         subTitle,
+        //         textAlign: TextAlign.left,
+        //         style: headline6Style,
+        //       ),
+        //       //color: Colors.yellow,
+        //     )
+        //   ],
+        // ),
         elevation: 0.0,
-        bottom: bottom,
+        //bottom: bottom,
       ),
     );
   }
