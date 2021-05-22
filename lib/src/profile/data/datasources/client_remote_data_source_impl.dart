@@ -10,14 +10,11 @@ import 'client_remote_data_source.dart';
 
 class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
   final logger = Logger("ClientRemoteDataSourceImpl");
-  final String baseUrl;
-  ClientRestApiClient clientRestApiClient;
+  final ClientRestApiClient clientRestApiClient;
 
-  ClientRemoteDataSourceImpl({Dio dio, @required this.baseUrl})
-      : assert(baseUrl != null) {
-    clientRestApiClient =
-        ClientRestApiClient(dio, baseUrl: baseUrl);
-  }
+  ClientRemoteDataSourceImpl({
+      @required this.clientRestApiClient}
+      ) : assert(clientRestApiClient != null);
 
   @override
   Future<ClientResponse> createClient(ClientModel client) async {

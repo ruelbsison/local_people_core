@@ -1,10 +1,9 @@
 
-import '../../../core/exceptions/server_exception.dart';
 import 'client_profile.dart';
 import '../../data/models/client_model.dart';
 
 class ClientListResponse {
-  ServerException exception;
+  Exception exception;
   List<ClientProfile> profiles;
 
   void fromModel(List<ClientModel>  models) {

@@ -2,13 +2,15 @@ import 'package:local_people_core/auth.dart';
 import 'package:meta/meta.dart';
 import '../../domain/repositories/auth_repository.dart';
 import '../datasources/auth_data_source.dart';
+import 'package:local_people_core/core.dart';
 
 class AuthenticationRepositoryImpl implements AuthenticationRepository {
   //final AuthLocalDataSource authLocalDataSource;
+  final NetworkInfo networkInfo;
   final AuthenticationDataSource authenticationDataSource;
 
   AuthenticationRepositoryImpl({
-    //@required this.authLocalDataSource,
+    @required this.networkInfo,
     @required this.authenticationDataSource
   }) : assert(authenticationDataSource != null); //assert(authLocalDataSource != null), assert(authenticationDataSource != null);
 
@@ -37,49 +39,59 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
 
   @override
   Future<AuthLocalModel> refreshUserAuthorization(String token) async {
-    AuthLocalModel authLocal;
-    try {
-      //AuthLocalModel auth  = await authLocalDataSource.getAuth();
-      AuthSessionModel session = await authenticationDataSource.refreshSession(token);
-      AuthProfileModel profile = await authenticationDataSource.getSessionProfile(session.accessToken);
+    if (await networkInfo.isConnected) {
+      AuthLocalModel authLocal;
+      try {
+        //AuthLocalModel auth  = await authLocalDataSource.getAuth();
+        AuthSessionModel session = await authenticationDataSource
+            .refreshSession(token);
+        AuthProfileModel profile = await authenticationDataSource
+            .getSessionProfile(session.accessToken);
 
-      authLocal = AuthLocalModel(
-        //userId: auth.userId,
-        userEmail: profile.email,
-        userFullName: profile.name,
-        userPhoto: profile.photo,
-        token: session.refreshToken,
-        tokenExpirationDate: session.expiredAt,
-      );
-      //authLocalDataSource.saveAuth(authLocal);
-    } on RefreshSessionFailure catch(f, s) {
+        authLocal = AuthLocalModel(
+          //userId: auth.userId,
+          userEmail: profile.email,
+          userFullName: profile.name,
+          userPhoto: profile.photo,
+          token: session.refreshToken,
+          tokenExpirationDate: session.expiredAt,
+        );
+        //authLocalDataSource.saveAuth(authLocal);
+      } on RefreshSessionFailure catch (f, s) {
 
+      }
+
+      return authLocal;
+    } else {
+      throw InternetConnectionException();
     }
-
-    return authLocal;
   }
 
   @override
   Future<AuthLocalModel> requestUserAuthorization() async {
-    AuthLocalModel authLocal;
-    try {
-      AuthSessionModel session = await authenticationDataSource.createSession();
-      AuthProfileModel profile = await authenticationDataSource.getSessionProfile(session.accessToken);
+    if (await networkInfo.isConnected) {
+      AuthLocalModel authLocal;
+      try {
+        AuthSessionModel session = await authenticationDataSource.createSession();
+        AuthProfileModel profile = await authenticationDataSource.getSessionProfile(session.accessToken);
 
-      authLocal = AuthLocalModel(
-        //userId: 0,
-        userEmail: profile.email,
-        userFullName: profile.name,
-        userPhoto: profile.photo,
-        token: session.refreshToken,
-        tokenExpirationDate: session.expiredAt,
-      );
-      //authLocalDataSource.saveAuth(authLocal);
-    } on CreateSessionFailure catch(f, s) {
+        authLocal = AuthLocalModel(
+          //userId: 0,
+          userEmail: profile.email,
+          userFullName: profile.name,
+          userPhoto: profile.photo,
+          token: session.refreshToken,
+          tokenExpirationDate: session.expiredAt,
+        );
+        //authLocalDataSource.saveAuth(authLocal);
+      } on CreateSessionFailure catch(f, s) {
 
+      }
+
+      return authLocal;
+    } else {
+      throw InternetConnectionException();
     }
-
-    return authLocal;
   }
 
 }

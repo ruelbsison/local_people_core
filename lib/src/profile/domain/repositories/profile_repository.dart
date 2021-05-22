@@ -10,17 +10,17 @@ abstract class ProfileRepository {
 
   Future<ClientResponse> getClientProfile(int id);
 
-  Future<ClientResponse> createClientProfile(ClientModel model);
+  Future<ClientResponse> createClientProfile(ClientProfile profile);
 
-  Future<ClientResponse> updateClientProfile(ClientModel model);
+  Future<ClientResponse> updateClientProfile(ClientProfile profile);
 
   Future<TraderResponse> findTraderProfileWithEmail(String email);
 
   Future<TraderResponse> getTraderProfile(int id);
 
-  Future<TraderResponse> createTraderProfile(TraderModel model);
+  Future<TraderResponse> createTraderProfile(TraderProfile profile);
 
-  Future<TraderResponse> updateTraderProfile(TraderModel model);
+  Future<TraderResponse> updateTraderProfile(TraderProfile profile);
 
   Future<TraderListResponse> getTopRatedTrader();
 

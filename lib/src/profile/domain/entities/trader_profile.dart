@@ -12,6 +12,8 @@ class TraderProfile extends Equatable {
     this.address = '',
     this.intro = '',
     this.ratingAvg = 0,
+    this.token,
+    this.tokenExpirationDate,
   }) {}
 
   int id;
@@ -34,6 +36,9 @@ class TraderProfile extends Equatable {
 
   double ratingAvg;
 
+  String token;
+  String tokenExpirationDate;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) || this.hashCode == other.hashCode;
@@ -45,5 +50,5 @@ class TraderProfile extends Equatable {
 
   @override
   // TODO: implement props
-  List<Object> get props => [id, userId, description, address, intro, fullName, photo, memberSince, email, ratingAvg];
+  List<Object> get props => [id, userId, description, address, intro, fullName, photo, memberSince, email, ratingAvg, token, tokenExpirationDate];
 }

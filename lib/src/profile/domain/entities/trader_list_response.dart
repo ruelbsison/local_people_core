@@ -1,10 +1,9 @@
 
-import '../../../core/exceptions/server_exception.dart';
 import 'trader_profile.dart';
 import '../../data/models/trader_model.dart';
 
 class TraderListResponse {
-  ServerException exception;
+  Exception exception;
   List<TraderProfile> profiles;
 
   void fromModel(List<TraderModel>  models) {

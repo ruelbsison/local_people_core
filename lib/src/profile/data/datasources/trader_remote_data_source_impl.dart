@@ -1,7 +1,8 @@
-import 'package:local_people_core/src/profile/data/models/trader_model.dart';
-import 'package:local_people_core/src/profile/domain/entities/trader_list_response.dart';
-import 'package:local_people_core/src/profile/domain/entities/trader_response.dart';
+import '../models/trader_model.dart';
+import '../../domain/entities/trader_list_response.dart';
+import '../../domain/entities/trader_response.dart';
 import 'package:meta/meta.dart';
+import 'package:dio/dio.dart';
 import 'package:logging/logging.dart';
 
 import '../../../../core.dart';
@@ -10,14 +11,10 @@ import 'trader_remote_data_source.dart';
 
 class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
   final logger = Logger("TraderRemoteDataSourceImpl");
-  final String baseUrl;
-  TraderRestApiClient traderRestApiClient;
+  final TraderRestApiClient traderRestApiClient;
 
-  TraderRemoteDataSourceImpl({@required this.baseUrl})
-      : assert(baseUrl != null) {
-    traderRestApiClient =
-        TraderRestApiClient(RestAPIConfig.getDioOptions(), baseUrl: baseUrl);
-  }
+  TraderRemoteDataSourceImpl({@required this.traderRestApiClient})
+      : assert(traderRestApiClient != null);
 
   @override
   Future<TraderResponse> createTrader(TraderModel trader) async {

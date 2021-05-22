@@ -38,6 +38,8 @@ class ClientModel extends Equatable {
       name: profile.fullName,
       email: profile.email,
       intro: profile.intro,
+      token: profile.token,
+      token_expiration_date: profile.tokenExpirationDate,
       created_at: profile.memberSince.toString(),
     );
   }

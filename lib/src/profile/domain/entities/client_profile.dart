@@ -12,6 +12,8 @@ class ClientProfile extends Equatable {
     this.description = '',
     this.address = '',
     this.intro = '',
+    this.token,
+    this.tokenExpirationDate,
     this.paymentMethodVerified = false,
     this.numOfJobsPosted = 0,
     this.numOfJobsInProgress = 0,
@@ -50,6 +52,9 @@ class ClientProfile extends Equatable {
 
   List<Job> recentJobs;
 
+  String token;
+  String tokenExpirationDate;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) || this.hashCode == other.hashCode;
@@ -62,7 +67,7 @@ class ClientProfile extends Equatable {
   @override
   // TODO: implement props
   List<Object> get props => [id, userId, description, address, intro, fullName, photo, memberSince, email, paymentMethodVerified, numOfJobsPosted,
-    numOfJobsInProgress, amountSpent, numOfDisputes, recentJobs];
+    numOfJobsInProgress, amountSpent, numOfDisputes, recentJobs, token, tokenExpirationDate];
 
   // static get empty => ClientProfile(id: 0, userId: 0, fullName: '', photo: '', memberSince: null,
   //     email: '', description: '', address: '', intro: '');
