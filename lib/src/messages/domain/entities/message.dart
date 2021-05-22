@@ -4,16 +4,24 @@ enum MessageType { text, audio, image, video }
 enum MessageStatus { not_sent, not_view, viewed }
 
 class Message {
+  final int id;
+  final int userId;
   final String text;
   final MessageType messageType;
   final MessageStatus messageStatus;
   final bool isSender;
+  final String subject;
+  final DateTime createdAt;
 
   Message({
-    this.text,
+    @required this.id,
+    @required this.userId,
+    @required this.subject,
+    @required this.text,
+    @required this.createdAt,
     @required this.messageType,
     @required this.messageStatus,
-    @required this.isSender,
+    @required this.isSender = false,
   });
 }
 
