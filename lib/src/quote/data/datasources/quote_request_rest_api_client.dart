@@ -1,10 +1,10 @@
-//import 'package:http/http.dart';
+import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../models/quote_request_model.dart';
 import '../../../core/configs/rest_api_config.dart';
 import 'package:retrofit/http.dart';
 
-part 'quote_rest_api_client.g.dart';
+part 'quote_request_rest_api_client.g.dart';
 
 @RestApi(baseUrl: "http://localhost:3001/api/v1/")
 abstract class QuoteRequestRestApiClient {

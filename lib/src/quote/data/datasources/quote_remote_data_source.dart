@@ -11,7 +11,7 @@ abstract class QuoteRemoteDataSource {
 
   Future<QuoteResponse> showQuote(int id);
 
-  Future<QuoteResponse> updateQuote(QuoteModel job);
+  Future<QuoteResponse> updateQuote(QuoteModel quote);
 
-  Future<void> deleteQuote(int id);
+  Future<Exception> deleteQuote(int id);
 }
