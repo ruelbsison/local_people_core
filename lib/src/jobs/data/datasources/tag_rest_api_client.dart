@@ -19,7 +19,7 @@ abstract class TagRestApiClient {
   Future<List<TagModel>> listJobTags(@Path("id") int id);
 
   @POST(RestAPIConfig.tag)
-  Future<TagModel> createTag(@Body() String name);
+  Future<TagModel> createTag(@Body() TagModel tag);
 
   @GET(RestAPIConfig.tagWithId)
   //Future<Response> showUser(String id);

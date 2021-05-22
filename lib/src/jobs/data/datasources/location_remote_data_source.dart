@@ -1,16 +1,19 @@
-import 'dart:io';
 import '../models/location_model.dart';
+import '../../domain/entities/location_response.dart';
+import '../../domain/entities/location_list_response.dart';
 
 abstract class LocationRemoteDataSource {
-  Future<List<LocationModel>> listLocations();
+  Future<LocationListResponse> listJobLocations(int job_id);
 
-  Future<List<LocationModel>> listJobLocations(int job_id);
+  Future<LocationListResponse> listClientLocations(int client_id);
 
-  Future<LocationModel> createLocation(LocationModel job);
+  Future<LocationListResponse> listTraderLocations(int trader_id);
 
-  Future<LocationModel> showLocation(int id);
+  Future<LocationResponse> createLocation(LocationModel location);
 
-  Future<LocationModel> updateLocation(LocationModel job);
+  Future<LocationResponse> showLocation(int id);
 
-  Future<void> deleteLocation(int id);
+  Future<LocationResponse> updateLocation(LocationModel location);
+
+  Future<Exception> deleteLocation(int id);
 }

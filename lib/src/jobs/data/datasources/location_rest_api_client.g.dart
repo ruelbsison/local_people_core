@@ -56,6 +56,48 @@ class _LocationRestApiClient implements LocationRestApiClient {
   }
 
   @override
+  Future<List<LocationModel>> listClientLocations(client_id) async {
+    ArgumentError.checkNotNull(client_id, 'client_id');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<List<dynamic>>(
+        '/clients/$client_id/location',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    var value = _result.data
+        .map((dynamic i) => LocationModel.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
+  Future<List<LocationModel>> listTraderLocations(trader_id) async {
+    ArgumentError.checkNotNull(trader_id, 'trader_id');
+    const _extra = <String, dynamic>{};
+    final queryParameters = <String, dynamic>{};
+    final _data = <String, dynamic>{};
+    final _result = await _dio.request<List<dynamic>>(
+        '/traders/$trader_id/location',
+        queryParameters: queryParameters,
+        options: RequestOptions(
+            method: 'GET',
+            headers: <String, dynamic>{},
+            extra: _extra,
+            baseUrl: baseUrl),
+        data: _data);
+    var value = _result.data
+        .map((dynamic i) => LocationModel.fromJson(i as Map<String, dynamic>))
+        .toList();
+    return value;
+  }
+
+  @override
   Future<LocationModel> createLocation(location) async {
     ArgumentError.checkNotNull(location, 'location');
     const _extra = <String, dynamic>{};

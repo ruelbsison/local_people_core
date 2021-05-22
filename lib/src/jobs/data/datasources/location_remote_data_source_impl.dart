@@ -1,4 +1,6 @@
 import 'package:dio/dio.dart';
+import 'package:local_people_core/src/jobs/domain/entities/location_list_response.dart';
+import 'package:local_people_core/src/jobs/domain/entities/location_response.dart';
 import 'package:meta/meta.dart';
 import 'package:logging/logging.dart';
 import '../models/location_model.dart';
@@ -7,90 +9,135 @@ import 'location_remote_data_source.dart';
 import '../../../../core.dart';
 
 class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
-  final logger = Logger("TraderRemoteDataSourceImpl");
-  final String baseUrl;
-  LocationRestApiClient locationRestApiClient;
+  final logger = Logger("LocationRemoteDataSourceImpl");
+  final LocationRestApiClient locationRestApiClient;
 
-  LocationRemoteDataSourceImpl(
-      @required this.baseUrl
-      )  : assert(baseUrl != null) {
-    locationRestApiClient = LocationRestApiClient(RestAPIConfig.getDioOptions(),
-        baseUrl: baseUrl);
-  }
+  LocationRemoteDataSourceImpl({@required this.locationRestApiClient})
+      : assert(locationRestApiClient != null);
 
   @override
-  Future<List<LocationModel>> listLocations() async {
-    List<LocationModel> result;
+  Future<LocationResponse> createLocation(LocationModel location) async {
+    LocationResponse reponse = LocationResponse();
+
     try {
-      result = await locationRestApiClient.listLocations();
+      LocationModel data = await locationRestApiClient.createLocation(location);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
     } catch (error, stacktrace) {
-      logger.severe("Exception occured in listLocations", error, stacktrace);
-      throw ServerException.withError(error: error);
+      logger.severe(
+          "Exception occured in createLocation $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
     }
 
-    return result;
+    return reponse;
   }
 
   @override
-  Future<List<LocationModel>> listJobLocations(int job_id) async {
-    List<LocationModel> data;
-    try {
-      data = await locationRestApiClient.listJobLocations(job_id);
-    } catch (error, stacktrace) {
-      logger.severe("Exception occured in listJobLocations", error, stacktrace);
-      throw ServerException.withError(error: error);
-    }
+  Future<Exception> deleteLocation(int id) async {
+    Exception reponse;
 
-    return data;
-  }
-
-  @override
-  Future<LocationModel> createLocation(LocationModel location) async {
-    LocationModel ressult;
-    try {
-      ressult = await locationRestApiClient.createLocation(location);
-    } catch (error, stacktrace) {
-      logger.severe("Exception occured in createLocation", error, stacktrace);
-      throw ServerException.withError(error: error);
-    }
-
-    return ressult;
-  }
-
-  @override
-  Future<void> deleteLocation(int id) async {
     try {
       await locationRestApiClient.deleteLocation(id);
     } catch (error, stacktrace) {
-      logger.severe("Exception occured in deleteLocation", error, stacktrace);
-      throw ServerException.withError(error: error);
+      logger.severe(
+          "Exception occured in createLocation $error $stacktrace", error, stacktrace);
+      reponse = Exception(error.toString());
     }
+
+    return reponse;
   }
 
   @override
-  Future<LocationModel> showLocation(int id) async {
-    LocationModel ressult;
+  Future<LocationListResponse> listJobLocations(int job_id) async {
+    LocationListResponse reponse = LocationListResponse();
+
     try {
-      ressult = await locationRestApiClient.showLocation(id);
+      List<LocationModel> data = await locationRestApiClient.listJobLocations(job_id);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
     } catch (error, stacktrace) {
-      logger.severe("Exception occured in showLocation", error, stacktrace);
-      throw ServerException.withError(error: error);
+      logger.severe(
+          "Exception occured in listJobLocations $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
     }
 
-    return ressult;
+    return reponse;
   }
 
   @override
-  Future<LocationModel> updateLocation(LocationModel job) async {
-    LocationModel ressult;
+  Future<LocationResponse> showLocation(int id) async {
+    LocationResponse reponse = LocationResponse();
+
     try {
-      ressult = await locationRestApiClient.updateLocation(job.id, job);
+      LocationModel data = await locationRestApiClient.showLocation(id);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
     } catch (error, stacktrace) {
-      logger.severe("Exception occured in updateLocation", error, stacktrace);
-      throw ServerException.withError(error: error);
+      logger.severe(
+          "Exception occured in showLocation $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
     }
 
-    return ressult;
+    return reponse;
   }
+
+  @override
+  Future<LocationResponse> updateLocation(LocationModel location) async {
+    LocationResponse reponse = LocationResponse();
+
+    try {
+      LocationModel data = await locationRestApiClient.updateLocation(location.id, location);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
+    } catch (error, stacktrace) {
+      logger.severe(
+          "Exception occured in updateLocation $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
+    }
+
+    return reponse;
+  }
+
+  @override
+  Future<LocationListResponse> listClientLocations(int client_id) async {
+    LocationListResponse reponse = LocationListResponse();
+
+    try {
+      List<LocationModel> data = await locationRestApiClient.listClientLocations(client_id);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
+    } catch (error, stacktrace) {
+      logger.severe(
+          "Exception occured in listClientLocations $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
+    }
+
+    return reponse;
+  }
+
+  @override
+  Future<LocationListResponse> listTraderLocations(int trader_id) async {
+    LocationListResponse reponse = LocationListResponse();
+
+    try {
+      List<LocationModel> data = await locationRestApiClient.listTraderLocations(trader_id);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
+    } catch (error, stacktrace) {
+      logger.severe(
+          "Exception occured in listTraderLocations $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
+    }
+
+    return reponse;
+  }
+
+  
 
 }

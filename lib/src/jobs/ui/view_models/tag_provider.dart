@@ -1,11 +1,12 @@
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import '../../../core/enum/api_request_status.dart';
-import '../../data/models/tag_model.dart';
+import '../../data/datasources/tag_rest_api_client.dart';
 import '../../domain/entities/tag.dart';
 import '../../data/datasources/tag_remote_data_source.dart';
 import '../../data/datasources/tag_remote_data_source_impl.dart';
 import '../../../core/configs/rest_api_config.dart';
+import '../../domain/entities/tag_list_response.dart';
 
 class TagProvider with ChangeNotifier {
   List<Tag> _objTags = [];
@@ -13,27 +14,33 @@ class TagProvider with ChangeNotifier {
   List<Tag> _objJobTags = [];
   List<String> _currentJobTags = [];
   APIRequestStatus apiRequestStatus = APIRequestStatus.loading;
-  TagRemoteDataSource api = TagRemoteDataSourceImpl(RestAPIConfig().baseURL);
+  final TagRestApiClient tagRestApiClient = TagRestApiClient(
+      RestAPIConfig.getDioOptions(),
+    baseUrl: RestAPIConfig().baseURL,
+  );
+
   bool loading = true;
 
   getTags() async {
+    TagRemoteDataSource api = TagRemoteDataSourceImpl(tagRestApiClient: tagRestApiClient);
     setLoading(true);
     setApiRequestStatus(APIRequestStatus.loading);
     try {
       List<Tag> objTags = [];
       List<String> currentTags = [];
-      List<TagModel> allTags = await api.listTags();
-      var tagsListIter = allTags.iterator;
-      while( tagsListIter.moveNext() ) {
-        TagModel model = tagsListIter.current;
-        currentTags.add(model.name);
-        objTags.add(Tag(
-            id: model.id,
-            name: model.name)
-        );
-      }
-      setCurrentTags(currentTags);
-      setObjTags(objTags);
+      TagListResponse response = await api.listTags();
+      List<Tag> allTags = response.tags;
+      // var tagsListIter = allTags.iterator;
+      // while( tagsListIter.moveNext() ) {
+      //   TagModel model = tagsListIter.current;
+      //   currentTags.add(model.name);
+      //   objTags.add(Tag(
+      //       id: model.id,
+      //       name: model.name)
+      //   );
+      // }
+      setCurrentTags(allTags);
+      setObjTags(allTags);
       setApiRequestStatus(APIRequestStatus.loaded);
       setLoading(false);
     } catch (e) {
@@ -42,24 +49,26 @@ class TagProvider with ChangeNotifier {
   }
 
   getJobTags(int job_id) async {
+    TagRemoteDataSource api = TagRemoteDataSourceImpl(tagRestApiClient: tagRestApiClient);
     setLoading(true);
     setApiRequestStatus(APIRequestStatus.loading);
     try {
 
       List<Tag> objJobTags = [];
       List<String> currentJobTags = [];
-      List<TagModel> allTags = await api.listJobTags(job_id);
-      var tagsListIter = allTags.iterator;
-      while( tagsListIter.moveNext() ) {
-        TagModel model = tagsListIter.current;
-        currentJobTags.add(model.name);
-        objJobTags.add(Tag(
-            id: model.id,
-            name: model.name)
-        );
-      }
-      setCurrentJobTags(currentJobTags);
-      setObjJobTags(objJobTags);
+      TagListResponse response = await api.listJobTags(job_id);
+      List<Tag> allTags = response.tags;
+      // var tagsListIter = allTags.iterator;
+      // while( tagsListIter.moveNext() ) {
+      //   TagModel model = tagsListIter.current;
+      //   currentJobTags.add(model.name);
+      //   objJobTags.add(Tag(
+      //       id: model.id,
+      //       name: model.name)
+      //   );
+      // }
+      setCurrentJobTags(allTags);
+      setObjJobTags(allTags);
       setApiRequestStatus(APIRequestStatus.loaded);
       setLoading(false);
     } catch (e) {

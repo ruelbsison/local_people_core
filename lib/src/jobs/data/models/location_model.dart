@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../../domain/entities/location.dart';
 
 part 'location_model.g.dart';
 
@@ -61,6 +62,17 @@ class LocationModel extends Equatable {
         client_id: 0,
         trader_id: 0,
       job_id: 0,
+    );
+  }
+
+  static LocationModel fromLocation(Location location) {
+    return LocationModel(
+      id: location.id,
+      name: location.name,
+      address: location.address,
+      latitude: location.lat.toInt(),
+      longitude: location.long.toInt(),
+      job_id: location.jobId,
     );
   }
 

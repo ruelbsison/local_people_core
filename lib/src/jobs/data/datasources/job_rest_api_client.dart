@@ -1,12 +1,9 @@
 import 'dart:io';
 import 'dart:convert';
 import 'package:dio/dio.dart' hide Headers;
-//import 'package:http/http.dart';
 import 'package:retrofit/retrofit.dart';
-//import 'package:http/http.dart';
 import '../models/job_model.dart';
 import '../../../core/configs/rest_api_config.dart';
-import 'package:http_parser/http_parser.dart';
 import 'package:retrofit/http.dart';
 
 part 'job_rest_api_client.g.dart';

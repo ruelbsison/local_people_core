@@ -56,11 +56,12 @@ class _TagRestApiClient implements TagRestApiClient {
   }
 
   @override
-  Future<TagModel> createTag(name) async {
-    ArgumentError.checkNotNull(name, 'name');
+  Future<TagModel> createTag(tag) async {
+    ArgumentError.checkNotNull(tag, 'tag');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = name;
+    final _data = <String, dynamic>{};
+    _data.addAll(tag?.toJson() ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/tags',
         queryParameters: queryParameters,
         options: RequestOptions(

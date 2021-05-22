@@ -9,6 +9,7 @@ class Location extends Object {
     this.long,
     this.address,
     this.photoUrl,
+    this.jobId,
   })  : assert(id != null);
 
   /// The current Location's email address.
@@ -24,6 +25,8 @@ class Location extends Object {
   double lat;
 
   double long;
+
+  int jobId;
 
   @override
   bool operator ==(Object other) =>

@@ -1,4 +1,3 @@
-import 'dart:io';
 import 'package:dio/dio.dart';
 import 'package:retrofit/retrofit.dart';
 import '../models/location_model.dart';
@@ -17,6 +16,14 @@ abstract class LocationRestApiClient {
   @GET(RestAPIConfig.jobLocations)
   //Future<Response> listUsers();
   Future<List<LocationModel>> listJobLocations(@Path("id") int id);
+
+  @GET(RestAPIConfig.clientLocations)
+  //Future<Response> listUsers();
+  Future<List<LocationModel>> listClientLocations(@Path("id") int client_id);
+
+  @GET(RestAPIConfig.traderLocations)
+  //Future<Response> listUsers();
+  Future<List<LocationModel>> listTraderLocations(@Path("id") int trader_id);
 
   @POST(RestAPIConfig.location)
   Future<LocationModel> createLocation(@Body() LocationModel location);

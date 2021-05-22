@@ -1,5 +1,4 @@
 
-import '../../../core/exceptions/server_exception.dart';
 import 'job.dart';
 import 'location.dart';
 import '../../data/models/job_model.dart';
@@ -8,7 +7,7 @@ import '../../data/models/tag_model.dart';
 import 'tag.dart';
 
 class JobListResponse {
-  ServerException exception;
+  Exception exception;
   List<Job> _jobs;
   List<Job> get jobs => _jobs;
 

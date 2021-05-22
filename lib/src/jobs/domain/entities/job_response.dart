@@ -1,11 +1,10 @@
-import '../../../core/exceptions/server_exception.dart';
 import 'job.dart';
 import 'location.dart';
 import '../../data/models/job_model.dart';
 import '../../data/models/location_model.dart';
 
 class JobResponse {
-  ServerException exception;
+  Exception exception;
   Job _job;
   Job get job => _job;
 

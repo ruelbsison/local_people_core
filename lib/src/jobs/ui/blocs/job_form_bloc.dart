@@ -46,7 +46,7 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
       if (response == null) {
         yield JobFormPostFailed('');
       } else {
-        yield JobFormPostCompleted(response);
+        yield JobFormPostCompleted(response.job);
       }
     } catch (e) {
       yield JobFormPostFailed(e.toString());
@@ -59,7 +59,7 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
       if (response == null) {
         yield JobFormSaveToDraftFailed('');
       } else {
-        yield JobFormSaveToDraftCompleted(response);
+        yield JobFormSaveToDraftCompleted(response.job);
       }
     } catch (e) {
       yield JobFormSaveToDraftFailed(e.toString());

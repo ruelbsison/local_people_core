@@ -22,40 +22,41 @@ class JobBloc extends Bloc<JobEvent, JobState> {
   @override
   Stream<JobState> mapEventToState(JobEvent event) async* {
     if (event is LoadJobs) {
+      yield JobLoading();
       if (appType == AppType.CLIENT)
-        yield* _mapLoadClientJobToState();
+        yield* _mapLoadClientJobToState(event.userId);
       else
-        yield* _mapLoadTraderJobToState();
+        yield* _mapLoadTraderJobToState(event.userId);
     } else if (event is RefreshJobs) {
       yield JobLoading();
       if (appType == AppType.CLIENT)
-        yield* _mapLoadClientJobToState();
+        yield* _mapLoadClientJobToState(event.userId);
       else
-        yield* _mapLoadTraderJobToState();
+        yield* _mapLoadTraderJobToState(event.userId);
     }
   }
 
-  Stream<JobState> _mapLoadClientJobToState() async* {
+  Stream<JobState> _mapLoadClientJobToState(int client_id) async* {
 
     try {
-      final response = await jobRepository.getPostedJobs();
+      final response = await jobRepository.listClientJobs(client_id);
       if (response == null) {
         yield JobNotLoaded('');
       } else {
-        yield JobLoaded(response);
+        yield JobLoaded(response.jobs);
       }
     } catch (e) {
       yield JobNotLoaded(e.toString());
     }
   }
 
-  Stream<JobState> _mapLoadTraderJobToState() async* {
+  Stream<JobState> _mapLoadTraderJobToState(int trader_id) async* {
     try {
-      final response = await jobRepository.getRequestedJobs();
+      final response = await jobRepository.listTraderJobs(trader_id);
       if (response == null) {
         yield JobNotLoaded('');
       } else {
-        yield JobLoaded(response);
+        yield JobLoaded(response.jobs);
       }
     } catch (e) {
       yield JobNotLoaded(e.toString());

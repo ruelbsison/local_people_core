@@ -1,101 +1,123 @@
-import 'package:dio/dio.dart';
+import 'package:local_people_core/src/jobs/domain/entities/tag_list_response.dart';
+import 'package:local_people_core/src/jobs/domain/entities/tag_response.dart';
 import 'package:meta/meta.dart';
 import 'package:logging/logging.dart';
 import '../models/tag_model.dart';
 import 'tag_rest_api_client.dart';
 import 'tag_remote_data_source.dart';
-import '../../../../core.dart';
-import 'dart:convert';
-import 'package:http_parser/http_parser.dart';
-import 'package:path/path.dart';
-import 'dart:io';
-import 'package:mime/mime.dart';
 
 class TagRemoteDataSourceImpl implements TagRemoteDataSource {
-  final logger = Logger("TraderRemoteDataSourceImpl");
-  final String baseUrl;
-  TagRestApiClient tagRestApiClient;
+  final logger = Logger("TagRemoteDataSourceImpl");
+  final TagRestApiClient tagRestApiClient;
 
-  TagRemoteDataSourceImpl(
-      @required this.baseUrl
-      )  : assert(baseUrl != null) {
-    tagRestApiClient = TagRestApiClient(RestAPIConfig.getDioOptions(),
-        baseUrl: baseUrl);
-  }
+  TagRemoteDataSourceImpl({@required this.tagRestApiClient})
+      : assert(tagRestApiClient != null);
 
   @override
-  Future<List<TagModel>> listTags() async {
-    List<TagModel> result;
+  Future<TagResponse> createTag(TagModel model) async {
+    TagResponse reponse = TagResponse();
+
     try {
-      result = await tagRestApiClient.listTags();
+      TagModel data = await tagRestApiClient.createTag(model);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
     } catch (error, stacktrace) {
-      logger.severe("Exception occured in listTags", error, stacktrace);
-      throw ServerException.withError(error: error);
+      logger.severe(
+          "Exception occured in createTag $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
     }
 
-    return result;
+    return reponse;
   }
 
   @override
-  Future<List<TagModel>> listJobTags(int job_id) async {
-    List<TagModel> data;
-    try {
-      data = await tagRestApiClient.listJobTags(job_id);
-    } catch (error, stacktrace) {
-      logger.severe("Exception occured in listJobTags", error, stacktrace);
-      throw ServerException.withError(error: error);
-    }
+  Future<Exception> deleteTag(int id) async {
+    Exception reponse = Exception();
 
-    return data;
-  }
-
-  @override
-  Future<TagModel> createTag(TagModel job) async {
-    TagModel ressult;
-    try {
-      ressult = await tagRestApiClient.createTag(job.name);
-    } catch (error, stacktrace) {
-      logger.severe("Exception occured in createTag", error, stacktrace);
-      throw ServerException.withError(error: error);
-    }
-
-    return ressult;
-  }
-
-  @override
-  Future<void> deleteTag(int id) async {
     try {
       await tagRestApiClient.deleteTag(id);
     } catch (error, stacktrace) {
-      logger.severe("Exception occured in deleteTag", error, stacktrace);
-      throw ServerException.withError(error: error);
+      logger.severe(
+          "Exception occured in deleteTag $error $stacktrace", error, stacktrace);
+      reponse = Exception(error.toString());
     }
+
+    return reponse;
   }
 
   @override
-  Future<TagModel> showTag(int id) async {
-    TagModel ressult;
+  Future<TagListResponse> listJobTags(int job_id) async {
+    TagListResponse reponse = TagListResponse();
+
     try {
-      ressult = await tagRestApiClient.showTag(id);
+      List<TagModel> data = await tagRestApiClient.listJobTags(job_id);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
     } catch (error, stacktrace) {
-      logger.severe("Exception occured in showTag", error, stacktrace);
-      throw ServerException.withError(error: error);
+      logger.severe(
+          "Exception occured in listJobTags $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
     }
 
-    return ressult;
+    return reponse;
   }
 
   @override
-  Future<TagModel> updateTag(TagModel job) async {
-    TagModel ressult;
+  Future<TagListResponse> listTags() async {
+    TagListResponse reponse = TagListResponse();
+
     try {
-      ressult = await tagRestApiClient.updateTag(job.id, job);
+      List<TagModel> data = await tagRestApiClient.listTags();
+      if (data != null) {
+        reponse.fromModel(data);
+      }
     } catch (error, stacktrace) {
-      logger.severe("Exception occured in updateTag", error, stacktrace);
-      throw ServerException.withError(error: error);
+      logger.severe(
+          "Exception occured in listTags $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
     }
 
-    return ressult;
+    return reponse;
   }
+
+  @override
+  Future<TagResponse> showTag(int id) async {
+    TagResponse reponse = TagResponse();
+
+    try {
+      TagModel data = await tagRestApiClient.showTag(id);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
+    } catch (error, stacktrace) {
+      logger.severe(
+          "Exception occured in showTag $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
+    }
+
+    return reponse;
+  }
+
+  @override
+  Future<TagResponse> updateTag(TagModel tag) async {
+    TagResponse reponse = TagResponse();
+
+    try {
+      TagModel data = await tagRestApiClient.updateTag(tag.id, tag);
+      if (data != null) {
+        reponse.fromModel(data);
+      }
+    } catch (error, stacktrace) {
+      logger.severe(
+          "Exception occured in updateTag $error $stacktrace", error, stacktrace);
+      reponse.exception = Exception(error.toString());
+    }
+
+    return reponse;
+  }
+
+  
 
 }
