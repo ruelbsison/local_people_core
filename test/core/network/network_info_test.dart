@@ -1,3 +1,4 @@
+import 'dart:ui';
 import 'package:data_connection_checker/data_connection_checker.dart';
 import 'package:flutter_test/flutter_test.dart';
 import 'package:local_people_core/src/core/network/network_info.dart';

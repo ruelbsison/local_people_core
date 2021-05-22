@@ -1,5 +1,7 @@
 import 'package:dio/dio.dart' hide Headers;
 
+class InternetConnectionException implements Exception{}
+
 class ServerException implements Exception {
   int _errorCode;
   String _errorMessage = "";

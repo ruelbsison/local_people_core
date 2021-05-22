@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 
 class RestAPIConfig {
-  String get baseURL => 'http://418a6067cc9c.ngrok.io/api/v1/'; //'http://192.168.1.5:3001/api/v1/'; //'http://localhost:3001/api/v1/';
+  String get baseURL => 'http://7596eca62aa9.ngrok.io/api/v1/'; //'http://192.168.1.5:3001/api/v1/'; //'http://localhost:3001/api/v1/';
 
   static const String client = '/clients';
 
@@ -38,6 +38,35 @@ class RestAPIConfig {
 
   static const String jobLocations = '/jobs/{id}/location';
 
+  static const String clientLocations = '/clients/{id}/location';
+
+  static const String traderLocations = '/traders/{id}/location';
+
+  static const String quote = '/quotes';
+
+  static const String quoteWithId = '/quotes/{id}';
+
+  static const String quoteWithTraderId = '/traders/{id}/quotes';
+
+  static const String quoteWithJobId = '/jobs/{id}/quotes';
+
+  static const String quoteRequest = '/quote_requests';
+
+  static const String quoteRequestWithId = '/quote_requests/{id}';
+
+  static const String quoteRequestWithTraderId = '/traders/{id}/quote_requests';
+
+  static const String quoteRequestWithJobId = '/jobs/{id}/quote_requests';
+
+  static const String message = '/messages';
+
+  static const String messageWithId = '/messages/{id}';
+
+  static const String messageWithClientId = '/clients/{id}/messages';
+
+  static const String messageWithTraderId = '/traders/{id}/messages';
+
+  static const String messageWithJobId = '/jobs/{id}/messages';
 
   static Dio getDioOptions() {
     final dio = Dio();   // Provide a dio instance

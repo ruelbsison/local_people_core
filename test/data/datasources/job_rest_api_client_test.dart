@@ -18,7 +18,11 @@ void main() {
 
   setUp(() {
     mockjobRemoteDataSource = MockjobRemoteDataSource();
-    jobRemoteDataSource = JobRemoteDataSourceImpl(RestAPIConfig().baseURL);
+    JobRestApiClient jobRestApiClient = JobRestApiClient(
+      RestAPIConfig.getDioOptions(),
+      baseUrl: RestAPIConfig().baseURL,
+    );
+    jobRemoteDataSource = JobRemoteDataSourceImpl(jobRestApiClient: jobRestApiClient);
   });
 
   group('Given Job Models, Create The Job Data', () {
@@ -103,7 +107,7 @@ void main() {
   group('List Job, Show Job Data', () {
     test('Job Should Be Shown Successfully', () async {
 
-      JobListResponse response = await jobRemoteDataSource.listJobsForClient(1);
+      JobListResponse response = await jobRemoteDataSource.listClientJobs(1);
       var userListIter = response.jobs.iterator;
       while( userListIter.moveNext() ) {
         Job cur = userListIter.current;
