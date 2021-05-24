@@ -67,7 +67,7 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
           "Exception occured in findClientWithEmail $error $stacktrace",
           error,
           stacktrace);
-      response.exception = ServerException.withError(error: error);
+      response.exception = Exception(error.toString());
     }
 
     return response;
@@ -110,12 +110,14 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
   }
 
   @override
-  Future<ClientResponse> updateClient(ClientModel client) async {
+  Future<ClientResponse> updateClient(ClientModel model) async {
     ClientResponse response = ClientResponse();
 
     try {
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['client'] = model.toJson();
       ClientModel data =
-          await clientRestApiClient.updateClient(client.id, client);
+          await clientRestApiClient.updateClient(model.id, param);
       if (data != null) {
         response.fromModel(data);
       }

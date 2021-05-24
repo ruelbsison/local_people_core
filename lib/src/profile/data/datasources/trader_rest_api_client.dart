@@ -18,14 +18,14 @@ abstract class TraderRestApiClient {
   Future<List<TraderModel>> listTopRatedTraders();
 
   @POST(RestAPIConfig.trader)
-  Future<TraderModel> createTrader(@Body() TraderModel trader);
+  Future<TraderModel> createTrader(@Body() Map<String, Map<String, dynamic>> model);
 
   @GET(RestAPIConfig.traderWithId)
   //Future<Response> showTrader(String id);
   Future<TraderModel> showTrader(@Path("id") int id);
 
   @PATCH(RestAPIConfig.traderWithId)
-  Future<TraderModel> updateTrader(@Path("id") int id, @Body() TraderModel trader);
+  Future<TraderModel> updateTrader(@Path("id") int id, @Body() Map<String, Map<String, dynamic>> model);
 
   @GET(RestAPIConfig.traderWithEmail)
   Future<TraderModel> findTraderWithEmail(@Path("email") String email);

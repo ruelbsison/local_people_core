@@ -79,7 +79,7 @@ class _ClientRestApiClient implements ClientRestApiClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(client?.toJson() ?? <String, dynamic>{});
+    _data.addAll(client ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/clients/$id',
         queryParameters: queryParameters,
         options: RequestOptions(

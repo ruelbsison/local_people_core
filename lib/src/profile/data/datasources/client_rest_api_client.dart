@@ -21,7 +21,7 @@ abstract class ClientRestApiClient {
   Future<ClientModel> showClient(@Path("id") int id);
 
   @PATCH(RestAPIConfig.clientWithId)
-  Future<ClientModel> updateClient(@Path("id") int id, @Body() ClientModel client);
+  Future<ClientModel> updateClient(@Path("id") int id, @Body() Map<String, Map<String, dynamic>> client);
 
   @GET(RestAPIConfig.clientWithEmail)
   Future<ClientModel> findClientWithEmail(@Path("email") String email);

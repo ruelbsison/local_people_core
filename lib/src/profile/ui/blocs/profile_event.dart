@@ -11,12 +11,12 @@ class ProfileEvent extends Equatable {
 class ProfileGetEvent extends ProfileEvent {}
 
 class ProfileCreateEvent extends ProfileEvent {
-  const ProfileCreateEvent({@required this.profile});
-
-  final dynamic profile;
-
-  @override
-  List<Object> get props => [profile];
+  // const ProfileCreateEvent({@required this.profile});
+  //
+  // final dynamic profile;
+  //
+  // @override
+  // List<Object> get props => [profile];
 }
 
 class ProfileGetTraderTopRatedEvent extends ProfileEvent {}

@@ -17,12 +17,14 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
       : assert(traderRestApiClient != null);
 
   @override
-  Future<TraderResponse> createTrader(TraderModel trader) async {
+  Future<TraderResponse> createTrader(TraderModel model) async {
     TraderResponse response = TraderResponse();
 
     try {
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['trader'] = model.toJson();
       TraderModel data =
-      await traderRestApiClient.createTrader(trader);
+      await traderRestApiClient.createTrader(param);
       if (data != null) {
         response.fromModel(data);
       }
@@ -108,12 +110,14 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
   }
 
   @override
-  Future<TraderResponse> updateTrader(TraderModel trader) async {
+  Future<TraderResponse> updateTrader(TraderModel model) async {
     TraderResponse response = TraderResponse();
 
     try {
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['trader'] = model.toJson();
       TraderModel data =
-      await traderRestApiClient.updateTrader(trader.id, trader);
+      await traderRestApiClient.updateTrader(model.id, param);
       if (data != null) {
         response.fromModel(data);
       }

@@ -25,7 +25,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     if (event is ProfileGetEvent) {
-      yield ProfileLoading();
+      //yield ProfileLoading();
       if (appType == AppType.CLIENT)
         yield* _mapClientProfileGetToState();
       else
@@ -33,9 +33,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } else if (event is ProfileCreateEvent) {
       yield ProfileCreating();
       if (appType == AppType.CLIENT)
-        yield* _mapClientProfileCreateToState(event.profile);
+        yield* _mapClientProfileCreateToState();
       else
-        yield* _mapTraderProfileCreateToState(event.profile);
+        yield* _mapTraderProfileCreateToState();
     }
   }
 
@@ -44,15 +44,25 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       final email = await authLocalDataSource.getEmail();
       final response = await profileRepository.findClientProfileWithEmail(email);
       if (response != null && response.exception != null) {
-        yield ProfileNotLoaded(response.exception.toString());
+        if (response.exception.toString().contains('NoSuchMethodError') == true) {
+          //AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
+          // ClientProfile profile = ClientProfile(
+          //   fullName: authLocalModel.userFullName,
+          //   photo: authLocalModel.userPhoto,
+          //   email: authLocalModel.userEmail,
+          // );
+          yield  ProfileDoesNotExists();
+        } else {
+          yield ProfileNotLoaded(response.exception.toString());
+        }
       } else if (response != null && response.profile == null) {
-        AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
-        ClientProfile profile = ClientProfile(
-          fullName: authLocalModel.userFullName,
-          photo: authLocalModel.userPhoto,
-          email: authLocalModel.userEmail,
-        );
-        yield  ProfileDoesNotExists(profile);
+        // AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
+        // ClientProfile profile = ClientProfile(
+        //   fullName: authLocalModel.userFullName,
+        //   photo: authLocalModel.userPhoto,
+        //   email: authLocalModel.userEmail,
+        // );
+        yield  ProfileDoesNotExists();
       } else if (response != null && response.profile != null) {
         AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
         authLocalModel.userId = response.profile.id;
@@ -73,13 +83,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       if (response != null && response.exception != null) {
         yield ProfileNotLoaded(response.exception.toString());
       } else if (response != null && response.profile == null) {
-        AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
-        TraderProfile profile = TraderProfile(
-          fullName: authLocalModel.userFullName,
-          photo: authLocalModel.userPhoto,
-          email: authLocalModel.userEmail,
-        );
-        yield  ProfileDoesNotExists(profile);
+        // AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
+        // TraderProfile profile = TraderProfile(
+        //   fullName: authLocalModel.userFullName,
+        //   photo: authLocalModel.userPhoto,
+        //   email: authLocalModel.userEmail,
+        // );
+        yield  ProfileDoesNotExists();
       } else if (response != null && response.profile != null) {
         AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
         authLocalModel.userId = response.profile.id;
@@ -93,13 +103,20 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  Stream<ProfileState> _mapClientProfileCreateToState(ClientProfile profile) async* {
+  Stream<ProfileState> _mapClientProfileCreateToState() async* {
     try {
       AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
       //ClientModel model = ClientModel.fromClientProfileAndAuth(profile, authLocalModel);
       //.model.id = null;
-      profile.token = authLocalModel.token;
-      profile.tokenExpirationDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(authLocalModel.tokenExpirationDate);
+      ClientProfile profile = ClientProfile(
+        fullName: authLocalModel.userFullName,
+        photo: authLocalModel.userPhoto,
+        email: authLocalModel.userEmail,
+        token: authLocalModel.token,
+        tokenExpirationDate : DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(authLocalModel.tokenExpirationDate),
+      );
+      //profile.token = authLocalModel.token;
+      //profile.tokenExpirationDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(authLocalModel.tokenExpirationDate);
       final response = await profileRepository.createClientProfile(profile);
       if (response == null) {
         yield ProfileCreateFailed('');
@@ -110,6 +127,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         await authLocalDataSource.saveAuth(authLocalModel);
 
         response.profile.photo = authLocalModel.userPhoto;
+        //profile = response.profile;
         yield ProfileCreated(response.profile);
       }
     } catch (e) {
@@ -117,12 +135,19 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  Stream<ProfileState> _mapTraderProfileCreateToState(TraderProfile profile) async* {
+  Stream<ProfileState> _mapTraderProfileCreateToState() async* {
     try {
       AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
       //TraderModel model = TraderModel.fromTraderProfileAndAuth(profile, authLocalModel);
-      profile.token = authLocalModel.token;
-      profile.tokenExpirationDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(authLocalModel.tokenExpirationDate);
+      //profile.token = authLocalModel.token;
+      //profile.tokenExpirationDate = DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(authLocalModel.tokenExpirationDate);
+      TraderProfile profile = TraderProfile(
+        fullName: authLocalModel.userFullName,
+        photo: authLocalModel.userPhoto,
+        email: authLocalModel.userEmail,
+        token: authLocalModel.token,
+        tokenExpirationDate : DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(authLocalModel.tokenExpirationDate),
+      );
       final response = await profileRepository.createTraderProfile(profile);
       if (response == null) {
         yield ProfileCreateFailed('');
@@ -133,6 +158,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         await authLocalDataSource.saveAuth(authLocalModel);
 
         response.profile.photo = authLocalModel.userPhoto;
+        //profile = response.profile;
         yield ProfileCreated(response.profile);
       }
     } catch (e) {

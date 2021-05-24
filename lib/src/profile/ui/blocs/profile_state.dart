@@ -47,14 +47,14 @@ class ProfileNotLoaded extends ProfileState {
 }
 
 class ProfileDoesNotExists extends ProfileState {
-  final dynamic profile;
-
-  const ProfileDoesNotExists(this.profile);
-
-  @override
-  String toString() {
-    return 'ProfileDoesNotExists{e: $profile}';
-  }
+  // final dynamic profile;
+  //
+  // const ProfileDoesNotExists(this.profile);
+  //
+  // @override
+  // String toString() {
+  //   return 'ProfileDoesNotExists{e: $profile}';
+  // }
 }
 
 class ProfileCreating extends ProfileState {}

@@ -55,12 +55,12 @@ class _TraderRestApiClient implements TraderRestApiClient {
   }
 
   @override
-  Future<TraderModel> createTrader(trader) async {
-    ArgumentError.checkNotNull(trader, 'trader');
+  Future<TraderModel> createTrader(model) async {
+    ArgumentError.checkNotNull(model, 'model');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(trader?.toJson() ?? <String, dynamic>{});
+    _data.addAll(model ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/traders',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -92,13 +92,13 @@ class _TraderRestApiClient implements TraderRestApiClient {
   }
 
   @override
-  Future<TraderModel> updateTrader(id, trader) async {
+  Future<TraderModel> updateTrader(id, model) async {
     ArgumentError.checkNotNull(id, 'id');
-    ArgumentError.checkNotNull(trader, 'trader');
+    ArgumentError.checkNotNull(model, 'model');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(trader?.toJson() ?? <String, dynamic>{});
+    _data.addAll(model ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/traders/$id',
         queryParameters: queryParameters,
         options: RequestOptions(
