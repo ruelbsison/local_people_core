@@ -215,7 +215,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
   @override
   Future<AuthLocalModel> getAuth() async {
-    AuthLocalModel authLocalModel;
+    AuthLocalModel authLocalModel = AuthLocalModel();
     try {
       // SharedPreferences prefs = await SharedPreferences.getInstance();
       // int userId = await prefs.getInt(authorizationConfig.authUserIdKey);
@@ -225,22 +225,61 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       // String refreshToken = await prefs.getString(authorizationConfig.authUserTokenKey);
       // String expiredAt = await prefs.getString(authorizationConfig.authUserTokenDateKey);
 
-      String userId = await secureStorage.read(key: authorizationConfig.authUserIdKey);
-      String userFullName = await secureStorage.read(key: authorizationConfig.authUserNameKey);
-      String email = await secureStorage.read(key: authorizationConfig.authUserEmailKey);
-      String userPhoto = await secureStorage.read(key: authorizationConfig.authUserPhotoKey);
-      String refreshToken = await secureStorage.read(key: authorizationConfig.authUserTokenKey);
-      String expiredAt = await secureStorage.read(key: authorizationConfig.authUserTokenDateKey);
+      String userId;
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserIdKey) == true) {
+        userId = await secureStorage.read(key: authorizationConfig.authUserIdKey);
+        if (userId != null) {
+          authLocalModel.userId = int.parse(userId);
+        }
+      }
 
-      DateTime tokenExpirationDate = DateTime.fromMillisecondsSinceEpoch(int.parse(expiredAt));
-      authLocalModel = AuthLocalModel(
-        userId:  int.parse(userId),
-        userEmail: email,
-        userFullName: userFullName,
-        userPhoto: userPhoto,
-        token: refreshToken,
-        tokenExpirationDate: tokenExpirationDate,
-      );
+      String userFullName;
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserNameKey) == true) {
+        userFullName = await secureStorage.read(key: authorizationConfig.authUserNameKey);
+        if (userFullName != null) {
+          authLocalModel.userFullName = userFullName;
+        }
+      }
+
+      String email;
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserEmailKey) == true) {
+        email = await secureStorage.read(key: authorizationConfig.authUserEmailKey);
+        if (email != null) {
+          authLocalModel.userEmail = email;
+        }
+      }
+
+      String userPhoto;
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserEmailKey) == true) {
+        userPhoto = await secureStorage.read(key: authorizationConfig.authUserPhotoKey);
+        if (userPhoto != null) {
+          authLocalModel.userPhoto = userPhoto;
+        }
+      }
+
+      String refreshToken;
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserTokenKey) == true) {
+        refreshToken = await secureStorage.read(key: authorizationConfig.authUserTokenKey);
+        if (refreshToken != null) {
+          authLocalModel.token = refreshToken;
+        }
+      }
+
+      String expiredAt;
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserTokenDateKey) == true) {
+        expiredAt = await secureStorage.read(key: authorizationConfig.authUserTokenDateKey);
+        if (expiredAt != null) {
+          authLocalModel.tokenExpirationDate = DateTime.fromMillisecondsSinceEpoch(int.parse(expiredAt));
+        }
+      }
+      // authLocalModel = AuthLocalModel(
+      //   userId:  int.parse(userId),
+      //   userEmail: email,
+      //   userFullName: userFullName,
+      //   userPhoto: userPhoto,
+      //   token: refreshToken,
+      //   tokenExpirationDate: tokenExpirationDate,
+      // );
     } on Exception catch (e, s) {
       throw e;
     }
@@ -250,6 +289,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<String> getEmail() async {
     try {
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserEmailKey) == false) {
+        return'';
+      }
       final String storedEmail =
           await secureStorage.read(key: authorizationConfig.authUserEmailKey);
       // SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -266,6 +308,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<int> getUserId() async {
     try {
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserIdKey) == false) {
+        return -1;
+      }
       final String storedUserId =
           await secureStorage.read(key: authorizationConfig.authUserIdKey);
       // SharedPreferences prefs = await SharedPreferences.getInstance();
@@ -283,6 +328,9 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
   @override
   Future<String> getToken() async {
     try {
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserTokenKey) == false) {
+        return null;
+      }
       final String storedToken =
          await secureStorage.read(key: authorizationConfig.authUserTokenKey);
       // SharedPreferences prefs = await SharedPreferences.getInstance();
