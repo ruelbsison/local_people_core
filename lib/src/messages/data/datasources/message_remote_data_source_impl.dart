@@ -17,10 +17,18 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
       : assert(messageRestApiClient != null);
 
   @override
-  Future<MessageResponse> createMessage(MessageModel message) async {
+  Future<MessageResponse> createMessage(MessageModel model) async {
     MessageResponse response = MessageResponse();
     try {
-      MessageModel data = await messageRestApiClient.createMessage(message);
+      var temp = model.toJson();
+      //temp.removeWhere((key, value) => value == null);
+      temp.keys
+          .where((k) => temp[k] == null) // filter keys
+          .toList() // create a copy to avoid concurrent modifications
+          .forEach(temp.remove); // remove selected keys
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['message'] = temp;
+      MessageModel data = await messageRestApiClient.createMessage(param);
       if (data != null) {
         response.fromModel(data);
       }
@@ -82,10 +90,12 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
   }
 
   @override
-  Future<MessageResponse> updateMessage(MessageModel message) async {
+  Future<MessageResponse> updateMessage(MessageModel model) async {
     MessageResponse response = MessageResponse();
     try {
-      MessageModel data = await messageRestApiClient.updateMessage(message.id, message);
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['message'] = model.toJson();
+      MessageModel data = await messageRestApiClient.updateMessage(model.id, param);
       if (data != null) {
         response.fromModel(data);
       }

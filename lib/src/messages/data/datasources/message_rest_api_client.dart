@@ -20,13 +20,13 @@ abstract class MessageRestApiClient {
   Future<List<MessageModel>> listJobMessages(@Path("id") int job_id);
 
   @POST(RestAPIConfig.message)
-  Future<MessageModel> createMessage(@Body() MessageModel message);
+  Future<MessageModel> createMessage(@Body() Map<String, Map<String, dynamic>> model);
 
   @GET(RestAPIConfig.messageWithId)
   Future<MessageModel> showMessage(@Path("id") int id);
 
   @PATCH(RestAPIConfig.messageWithId)
-  Future<MessageModel> updateMessage(@Path("id") int id, @Body() MessageModel job);
+  Future<MessageModel> updateMessage(@Path("id") int id, @Body() Map<String, Map<String, dynamic>> model);
 
   @DELETE(RestAPIConfig.messageWithId)
   Future<void> deleteMessage(@Path("id") int id);

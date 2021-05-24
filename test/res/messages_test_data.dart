@@ -1,35 +1,6 @@
-import 'package:flutter/material.dart';
+import 'package:local_people_core/messages.dart';
 
-enum MessageType { text, audio, image, video }
-enum MessageStatus { not_sent, not_view, viewed }
-
-class Message {
-  final int id;
-  final int clientId;
-  final String text;
-  final MessageType messageType;
-  final MessageStatus messageStatus;
-  final bool isSender;
-  final String subject;
-  final DateTime createdAt;
-  final int jobId;
-  final int traderId;
-
-  Message({
-    @required this.id,
-    @required this.clientId,
-    @required this.traderId,
-    @required this.subject,
-    @required this.text,
-    @required this.createdAt,
-    @required this.messageType,
-    @required this.messageStatus,
-    @required this.jobId,
-    @required this.isSender = false,
-  });
-}
-
-List<Message> demoMessages = [
+List<Message> testMessages = [
   Message(
     subject: 'Sender Name',
     text: "Hi Sajol,",

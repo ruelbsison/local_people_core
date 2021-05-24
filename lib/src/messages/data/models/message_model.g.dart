@@ -11,12 +11,13 @@ MessageModel _$MessageModelFromJson(Map<String, dynamic> json) {
     id: json['id'] as int,
     subject: json['subject'] as String,
     body: json['body'] as String,
-    read: json['read'] as bool,
     client_id: json['client_id'] as int,
     trader_id: json['trader_id'] as int,
+    job_id: json['job_id'] as int,
+    read: json['read'] as bool,
     created_at: json['created_at'] as String,
     updated_at: json['updated_at'] as String,
-  )..job_id = json['job_id'] as int;
+  );
 }
 
 Map<String, dynamic> _$MessageModelToJson(MessageModel instance) =>

@@ -8,11 +8,14 @@ class MessageResponse {
   void fromModel(MessageModel model) {
     message = Message(
       id: model.id,
-      userId: (model.client_id != null ? model.client_id : model.trader_id),
+      clientId: model.client_id,
+      traderId: model.trader_id,
       subject: model.subject,
       text: model.body,
-      //read: model.read,
+      messageStatus: model.read == true ? MessageStatus.viewed : MessageStatus.not_view,
       createdAt: DateTime.parse(model.created_at),
+      jobId: model.job_id,
+      messageType: MessageType.text,
       );
   }
 }

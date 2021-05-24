@@ -14,9 +14,9 @@ class MessageBody extends StatelessWidget {
           child: Padding(
             padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
             child: ListView.builder(
-              itemCount: demeMessages.length,
+              itemCount: demoMessages.length,
               itemBuilder: (context, index) =>
-                  MessageWidget(message: demeMessages[index]),
+                  MessageWidget(message: demoMessages[index]),
             ),
           ),
         ),

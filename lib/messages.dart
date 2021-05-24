@@ -6,6 +6,7 @@ export './src/messages/domain/entities/message_response.dart';
 export './src/messages/domain/entities/message_list_response.dart';
 
 export './src/messages/domain/repositories/message_repository.dart';
+export './src/messages/data/models/message_model.dart';
 export './src/messages/data/datasources/message_rest_api_client.dart';
 export './src/messages/data/datasources/message_remote_data_source.dart';
 export './src/messages/data/datasources/message_remote_data_source_impl.dart';

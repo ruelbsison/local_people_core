@@ -14,15 +14,18 @@ part 'message_model.g.dart';
 class MessageModel extends Equatable {
   /// {@macro MessageModel}
   MessageModel({
-    @required this.id,
+    this.id,
     @required this.subject,
     @required this.body,
+    @required this.client_id,
+    @required this.trader_id,
+    @required this.job_id,
     this.read,
-    this.client_id,
-    this.trader_id,
     this.created_at,
     this.updated_at,
-  })  : assert(id != null);
+  }): assert(subject == null), assert(body == null),
+        assert(client_id == null), assert(trader_id == null),
+        assert(job_id == null);
 
   int id;
   /// The current MessageModel's email address.
@@ -45,13 +48,15 @@ class MessageModel extends Equatable {
 
   static MessageModel fromMessage(Message message) {
     return MessageModel (
-    id: message.id,
+    //id: message.id,
     subject: message.subject,
     body: message.text.toString(),
-    read: false,
-    client_id: message.userId,
-    trader_id: message.userId,
-    created_at: DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(message.createdAt),
+    //read: message.messageStatus == MessageStatus.viewed ? true : false,
+    client_id: message.clientId,
+    trader_id: message.traderId,
+    //created_at: DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(message.createdAt),
+      //updated_at: DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(message.createdAt),
+    job_id: message.jobId,
     );
   }
 
