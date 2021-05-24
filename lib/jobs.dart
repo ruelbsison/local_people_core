@@ -1,5 +1,15 @@
 library local_people_core;
 
+export './src/jobs/domain/entities/package.dart';
+export './src/jobs/domain/entities/package_list_response.dart';
+export './src/jobs/domain/entities/package_response.dart';
+export './src/jobs/domain/repositories/package_repository.dart';
+export './src/jobs/data/models/package_model.dart';
+export './src/jobs/data/repositories/package_repository_impl.dart';
+export './src/jobs/data/datasources/package_rest_api_client.dart';
+export './src/jobs/data/datasources/package_remote_data_source.dart';
+export './src/jobs/data/datasources/package_remote_data_source_impl.dart';
+
 export './src/jobs/domain/entities/booking.dart';
 export './src/jobs/domain/entities/booking_list_response.dart';
 export './src/jobs/domain/entities/booking_response.dart';
