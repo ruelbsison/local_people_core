@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 
 class RestAPIConfig {
-  String get baseURL => 'http://7596eca62aa9.ngrok.io/api/v1/'; //'http://192.168.1.5:3001/api/v1/'; //'http://localhost:3001/api/v1/';
+  String get baseURL => 'http://localhost:3001/api/v1';  //'http://f6e024014659.ngrok.io/api/v1';  //'http://192.168.1.5:3001/api/v1/'; //'http://localhost:3001/api/v1/';
 
   static const String client = '/clients';
 
@@ -67,6 +67,44 @@ class RestAPIConfig {
   static const String messageWithTraderId = '/traders/{id}/messages';
 
   static const String messageWithJobId = '/jobs/{id}/messages';
+
+  static const String booking = '/bookings';
+
+  static const String bookingWithId = '/booking/{id}';
+
+  static const String bookingWithTraderId = '/traders/{id}/booking';
+
+  static const String bookingWithJobId = '/jobs/{id}/booking';
+
+  static const String changeRequest = '/change_requests';
+
+  static const String changeRequestWithId = '/change_requests/{id}';
+
+  static const String changeRequestWithTraderId = '/traders/{id}/change_requests';
+
+  static const String changeRequestWithJobId = '/jobs/{id}/change_requests';
+
+  static const String package = '/packages';
+
+  static const String packageWithId = '/packages/{id}';
+
+  static const String packageWithTraderId = '/traders/{id}/packages';
+
+  static const String packageWithJobId = '/jobs/{id}/packages';
+
+  static const String updates = '/updates';
+
+  static const String updatesWithId = '/updates/{id}';
+
+  static const String updatesWithJobId = '/jobs/{id}/updates';
+
+  static const String requirement = '/requirements';
+
+  static const String requirementWithId = '/requirements/{id}';
+
+  static const String requirementWithJobId = '/jobs/{id}/requirements';
+
+  static const String requirementWithPackageId = '/packages/{id}/requirements';
 
   static Dio getDioOptions() {
     final dio = Dio();   // Provide a dio instance

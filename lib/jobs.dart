@@ -1,5 +1,15 @@
 library local_people_core;
 
+export './src/jobs/domain/entities/booking.dart';
+export './src/jobs/domain/entities/booking_list_response.dart';
+export './src/jobs/domain/entities/booking_response.dart';
+export './src/jobs/domain/repositories/booking_repository.dart';
+export './src/jobs/data/models/booking_model.dart';
+export './src/jobs/data/repositories/booking_repository_impl.dart';
+export './src/jobs/data/datasources/booking_rest_api_client.dart';
+export './src/jobs/data/datasources/booking_remote_data_source.dart';
+export './src/jobs/data/datasources/booking_remote_data_source_impl.dart';
+
 export './src/jobs/data/models/tag_model.dart';
 export './src/jobs/data/datasources/tag_rest_api_client.dart';
 export './src/jobs/data/datasources/tag_remote_data_source.dart';
@@ -23,7 +33,7 @@ export './src/jobs/domain/entities/tag.dart';
 export './src/jobs/domain/entities/tag_list_response.dart';
 export './src/jobs/domain/entities/tag_response.dart';
 export './src/jobs/domain/repositories/tag_repository.dart';
-export './src/jobs/data/repositories/TAG_repository_impl.dart';
+export './src/jobs/data/repositories/tag_repository_impl.dart';
 
 export './src/jobs/domain/entities/location.dart';
 export './src/jobs/domain/entities/location_list_response.dart';
