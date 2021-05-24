@@ -14,12 +14,22 @@ export './src/jobs/data/datasources/job_remote_data_source.dart';
 export './src/jobs/data/datasources/job_remote_data_source_impl.dart';
 
 export './src/jobs/domain/entities/job.dart';
-//export './src/jobs/domain/entities/profile.dart';
-export './src/jobs/domain/entities/tag.dart';
 export './src/jobs/domain/entities/job_list_response.dart';
 export './src/jobs/domain/entities/job_response.dart';
 export './src/jobs/domain/repositories/job_repository.dart';
 export './src/jobs/data/repositories/job_repository_impl.dart';
+
+export './src/jobs/domain/entities/tag.dart';
+export './src/jobs/domain/entities/tag_list_response.dart';
+export './src/jobs/domain/entities/tag_response.dart';
+export './src/jobs/domain/repositories/tag_repository.dart';
+export './src/jobs/data/repositories/TAG_repository_impl.dart';
+
+export './src/jobs/domain/entities/location.dart';
+export './src/jobs/domain/entities/location_list_response.dart';
+export './src/jobs/domain/entities/location_response.dart';
+export './src/jobs/domain/repositories/location_repository.dart';
+export './src/jobs/data/repositories/location_repository_impl.dart';
 
 export './src/jobs/ui/view_models/tag_provider.dart';
 export './src/jobs/ui/widgets/images_view_widget.dart';

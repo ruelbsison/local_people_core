@@ -26,14 +26,14 @@ abstract class LocationRestApiClient {
   Future<List<LocationModel>> listTraderLocations(@Path("id") int trader_id);
 
   @POST(RestAPIConfig.location)
-  Future<LocationModel> createLocation(@Body() LocationModel location);
+  Future<LocationModel> createLocation(@Body() Map<String, Map<String, dynamic>>location);
 
   @GET(RestAPIConfig.locationWithId)
   //Future<Response> showUser(String id);
   Future<LocationModel> showLocation(@Path("id") int id);
 
   @PATCH(RestAPIConfig.locationWithId)
-  Future<LocationModel> updateLocation(@Path("id") int id, @Body() LocationModel location);
+  Future<LocationModel> updateLocation(@Path("id") int id, @Body() Map<String, Map<String, dynamic>> location);
 
   @DELETE(RestAPIConfig.locationWithId)
   Future<void> deleteLocation(@Path("id") int id);

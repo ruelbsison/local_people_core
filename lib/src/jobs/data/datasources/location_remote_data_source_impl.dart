@@ -16,11 +16,19 @@ class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
       : assert(locationRestApiClient != null);
 
   @override
-  Future<LocationResponse> createLocation(LocationModel location) async {
+  Future<LocationResponse> createLocation(LocationModel model) async {
     LocationResponse reponse = LocationResponse();
 
     try {
-      LocationModel data = await locationRestApiClient.createLocation(location);
+      var temp = model.toJson();
+      //temp.removeWhere((key, value) => value == null);
+      temp.keys
+          .where((k) => temp[k] == null) // filter keys
+          .toList() // create a copy to avoid concurrent modifications
+          .forEach(temp.remove); // remove selected keys
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['location'] = temp;
+      LocationModel data = await locationRestApiClient.createLocation(param);
       if (data != null) {
         reponse.fromModel(data);
       }
@@ -85,11 +93,13 @@ class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
   }
 
   @override
-  Future<LocationResponse> updateLocation(LocationModel location) async {
+  Future<LocationResponse> updateLocation(LocationModel model) async {
     LocationResponse reponse = LocationResponse();
 
     try {
-      LocationModel data = await locationRestApiClient.updateLocation(location.id, location);
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['location'] = model.toJson();
+      LocationModel data = await locationRestApiClient.updateLocation(model.id, param);
       if (data != null) {
         reponse.fromModel(data);
       }

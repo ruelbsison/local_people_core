@@ -4,7 +4,8 @@ import 'package:bloc/bloc.dart';
 import 'package:meta/meta.dart';
 import '../../domain/repositories/job_repository.dart';
 import '../../../core/enum/app_type.dart';
-import '../../domain/entities/job.dart';
+//import '../../domain/entities/job.dart';
+import 'package:local_people_core/auth.dart';
 
 import 'job_event.dart';
 import 'job_state.dart';
@@ -12,8 +13,9 @@ import 'job_state.dart';
 class JobBloc extends Bloc<JobEvent, JobState> {
   final JobRepository jobRepository;
   final AppType appType;
+  final AuthLocalDataSource authLocalDataSource;
 
-  JobBloc({@required this.jobRepository, @required this.appType}):
+  JobBloc({@required this.jobRepository, @required this.appType, @required this.authLocalDataSource}):
         super(JobLoading());
 
   @override
@@ -24,22 +26,23 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     if (event is LoadJobs) {
       yield JobLoading();
       if (appType == AppType.CLIENT)
-        yield* _mapLoadClientJobToState(event.userId);
+        yield* _mapLoadClientJobToState();
       else
-        yield* _mapLoadTraderJobToState(event.userId);
+        yield* _mapLoadTraderJobToState();
     } else if (event is RefreshJobs) {
       yield JobLoading();
       if (appType == AppType.CLIENT)
-        yield* _mapLoadClientJobToState(event.userId);
+        yield* _mapLoadClientJobToState();
       else
-        yield* _mapLoadTraderJobToState(event.userId);
+        yield* _mapLoadTraderJobToState();
     }
   }
 
-  Stream<JobState> _mapLoadClientJobToState(int client_id) async* {
+  Stream<JobState> _mapLoadClientJobToState() async* {
 
     try {
-      final response = await jobRepository.listClientJobs(client_id);
+      int clientId = await authLocalDataSource.getUserId();
+      final response = await jobRepository.listClientJobs(clientId);
       if (response == null) {
         yield JobNotLoaded('');
       } else {
@@ -50,9 +53,10 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     }
   }
 
-  Stream<JobState> _mapLoadTraderJobToState(int trader_id) async* {
+  Stream<JobState> _mapLoadTraderJobToState() async* {
     try {
-      final response = await jobRepository.listTraderJobs(trader_id);
+      int traderId = await authLocalDataSource.getUserId();
+      final response = await jobRepository.listTraderJobs(traderId);
       if (response == null) {
         yield JobNotLoaded('');
       } else {

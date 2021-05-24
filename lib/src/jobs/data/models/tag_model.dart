@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import 'package:json_annotation/json_annotation.dart';
+import '../../domain/entities/tag.dart';
 
 part 'tag_model.g.dart';
 
@@ -36,6 +37,13 @@ class TagModel extends Equatable {
         name: '',
         created_at: '',
         updated_at: '',
+    );
+  }
+
+  static TagModel fromTag(Tag tag) {
+    return TagModel(
+      id: tag.id,
+      name: tag.name,
     );
   }
 

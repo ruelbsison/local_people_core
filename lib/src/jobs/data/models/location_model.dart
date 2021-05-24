@@ -14,17 +14,15 @@ part 'location_model.g.dart';
 class LocationModel extends Equatable {
   /// {@macro LocationModel}
   LocationModel({
-    @required this.id,
+    this.id,
     @required this.name,
     @required this.address,
+    @required this.client_id,
+    @required this.trader_id,
+    this.job_id,
     this.created_at,
     this.updated_at,
-    this.client_id,
-    this.trader_id,
-    this.latitude,
-    this.longitude,
-    this.job_id,
-  })  : assert(id != null);
+  }) : assert(name == null), assert(address == null);
 
   /// The current LocationModel's email address.
   String name;
@@ -39,9 +37,9 @@ class LocationModel extends Equatable {
 
   String updated_at;
 
-  int latitude;
-
-  int longitude;
+  // int latitude;
+  //
+  // int longitude;
 
   int client_id;
 
@@ -55,8 +53,8 @@ class LocationModel extends Equatable {
         id: -1,
         name: '',
         address: '',
-        latitude: 9,
-        longitude: 0,
+        // latitude: 9,
+        // longitude: 0,
         created_at: '',
         updated_at: '',
         client_id: 0,
@@ -70,14 +68,16 @@ class LocationModel extends Equatable {
       id: location.id,
       name: location.name,
       address: location.address,
-      latitude: location.lat.toInt(),
-      longitude: location.long.toInt(),
+      // latitude: location.lat.toInt(),
+      // longitude: location.long.toInt(),
       job_id: location.jobId,
+      client_id: location.clientId,
+      trader_id: location.traderId,
     );
   }
 
   @override
-  List<Object> get props => [id, name, address, created_at, updated_at, client_id, trader_id, latitude, longitude, job_id];
+  List<Object> get props => [id, name, address, created_at, updated_at, client_id, trader_id, job_id];
 
   factory LocationModel.fromJson(Map<String, dynamic> json) => _$LocationModelFromJson(json);
   Map<String, dynamic> toJson() => _$LocationModelToJson(this);

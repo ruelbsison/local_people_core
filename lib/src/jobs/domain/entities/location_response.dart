@@ -10,9 +10,9 @@ class LocationResponse {
       id: model.id,
       name: model.name,
       address: model.address,
-      lat: model.latitude.toDouble(),
-      long: model.longitude.toDouble(),
       jobId: model.job_id,
+      clientId: model.client_id,
+      traderId: model.trader_id,
       );
   }
 }

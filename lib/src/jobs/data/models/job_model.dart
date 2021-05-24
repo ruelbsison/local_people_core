@@ -84,7 +84,8 @@ class JobModel extends Equatable {
       date:  DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(job.date), //DateFormat('yyyyy-MM-ddThh:mm.sssZ').format(DateTime.now()), //job.date),
       budget: job.budget,
       awarded: false,
-      client_id: job.client_id, //authLocalModel.userId,
+      client_id: job.clientId, //authLocalModel.userId,
+      trader_id: job.traderId,
     );
   }
 

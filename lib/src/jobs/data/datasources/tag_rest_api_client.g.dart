@@ -61,7 +61,7 @@ class _TagRestApiClient implements TagRestApiClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(tag?.toJson() ?? <String, dynamic>{});
+    _data.addAll(tag ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/tags',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -99,7 +99,7 @@ class _TagRestApiClient implements TagRestApiClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(tag?.toJson() ?? <String, dynamic>{});
+    _data.addAll(tag ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/tags/$id',
         queryParameters: queryParameters,
         options: RequestOptions(

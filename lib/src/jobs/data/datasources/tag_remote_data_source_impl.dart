@@ -18,7 +18,9 @@ class TagRemoteDataSourceImpl implements TagRemoteDataSource {
     TagResponse reponse = TagResponse();
 
     try {
-      TagModel data = await tagRestApiClient.createTag(model);
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['tag'] = model.toJson();
+      TagModel data = await tagRestApiClient.createTag(param);
       if (data != null) {
         reponse.fromModel(data);
       }
@@ -101,11 +103,13 @@ class TagRemoteDataSourceImpl implements TagRemoteDataSource {
   }
 
   @override
-  Future<TagResponse> updateTag(TagModel tag) async {
+  Future<TagResponse> updateTag(TagModel model) async {
     TagResponse reponse = TagResponse();
 
     try {
-      TagModel data = await tagRestApiClient.updateTag(tag.id, tag);
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['tag'] = model.toJson();
+      TagModel data = await tagRestApiClient.updateTag(model.id, param);
       if (data != null) {
         reponse.fromModel(data);
       }

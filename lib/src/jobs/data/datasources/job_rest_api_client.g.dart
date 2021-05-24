@@ -126,7 +126,7 @@ class _JobRestApiClient implements JobRestApiClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(job?.toJson() ?? <String, dynamic>{});
+    _data.addAll(job ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/jobs/$id',
         queryParameters: queryParameters,
         options: RequestOptions(

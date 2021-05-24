@@ -7,11 +7,16 @@ class JobResponse {
   Exception exception;
   Job _job;
   Job get job => _job;
+  set job(Job value) {
+    _job = value;
+  }
 
   void jobFromModel(JobModel model) {
-      _job = Job(
+    print('-jobFromModel ->');
+    this.job = Job(
         id: model.id,
-        client_id: model.client_id,
+        clientId : model.client_id,
+        traderId : model.trader_id,
         title: model.title,
         description: model.description,
         preview: model.description,
@@ -27,9 +32,9 @@ class JobResponse {
           id: model.location.id,
           name: model.location.name,
           address: model.location.address,
-          long: model.location.longitude.toDouble(),
-          lat: model.location.latitude.toDouble(),
         );
       }
+
+    print('-jobFromModel <-');
     }
 }

@@ -19,7 +19,8 @@ class JobListResponse {
       JobModel model = listIter.current;
       Job job = Job(
         id: model.id,
-        client_id: model.client_id,
+        clientId : model.client_id,
+        traderId : model.trader_id,
         title: model.title,
         description: model.description,
         preview: model.description,
@@ -34,8 +35,6 @@ class JobListResponse {
           id: model.location.id,
           name: model.location.name,
           address: model.location.address,
-          long: model.location.longitude.toDouble(),
-          lat: model.location.latitude.toDouble(),
         );
       }
 

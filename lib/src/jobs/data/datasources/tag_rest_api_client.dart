@@ -19,14 +19,14 @@ abstract class TagRestApiClient {
   Future<List<TagModel>> listJobTags(@Path("id") int id);
 
   @POST(RestAPIConfig.tag)
-  Future<TagModel> createTag(@Body() TagModel tag);
+  Future<TagModel> createTag(@Body() Map<String, Map<String, dynamic>> tag);
 
   @GET(RestAPIConfig.tagWithId)
   //Future<Response> showUser(String id);
   Future<TagModel> showTag(@Path("id") int id);
 
   @PATCH(RestAPIConfig.tagWithId)
-  Future<TagModel> updateTag(@Path("id") int id, @Body() TagModel tag);
+  Future<TagModel> updateTag(@Path("id") int id, @Body() Map<String, Map<String, dynamic>> tag);
 
   @DELETE(RestAPIConfig.tagWithId)
   Future<void> deleteTag(@Path("id") int id);

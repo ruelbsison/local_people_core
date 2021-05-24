@@ -39,7 +39,8 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     JobListResponse reponse = JobListResponse();
     try {
       List<JobModel> data = await jobRestApiClient.listJobsForClient(client_id);
-      reponse.jobsFromModel(data);
+      if (data != null)
+        reponse.jobsFromModel(data);
     } catch (error, stacktrace) {
       logger.severe("Exception occured in listJobsForClient $error $stacktrace",
           error, stacktrace);
@@ -67,7 +68,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
 
   @override
   Future<JobResponse> createJob(JobModel job, [List<String> files]) async {
-    JobResponse reponse = JobResponse();
+    JobResponse response = JobResponse();
     try {
       var request =
           http.MultipartRequest('POST', Uri.parse(RestAPIConfig().baseURL + '/jobs'));
@@ -100,32 +101,64 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
           );
         }
       }
-
-      http.Response res = await request
-          .send()
-          .then((result) async {
-            http.Response.fromStream(result).then((response) {
-              if (response.statusCode == 200) {
-                print("Uploaded! ");
-                print('response.body ' + response.body);
-              }
-              return response;
-            });
-          })
-          .catchError((err) => print('error : ' + err.toString()))
-          .whenComplete(() {});
-      if (res != null && res.body != null) {
-        reponse.jobFromModel(JobModel.fromJson(jsonDecode(res.body)));
-      } else {
-
+      http.Response httpResponse = await http.Response.fromStream(await request.send());
+      print("Result: ${httpResponse.statusCode}");
+      if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
+        print("Uploaded! ");
+        if (httpResponse.body != null) {
+          print('response.body ' + httpResponse.body);
+          Map<String, dynamic> map = jsonDecode(httpResponse.body);
+          print('map ' + map.toString());
+          JobModel model = JobModel.fromJson(map);
+          print('model ' + model.toJson().toString());
+          response.jobFromModel(model);
+        }
       }
+      //return response.body;
+
+      // JobModel jobModel = await request
+      //     .send()
+      //     .then((result) async {
+      //       http.Response.fromStream(result).then((res) {
+      //         JobModel model;
+      //         if (res.statusCode >= 200 && res.statusCode <= 299) {
+      //           print("Uploaded! ");
+      //           if (res.body != null) {
+      //             print('response.body ' + res.body);
+      //             Map<String, dynamic> map = jsonDecode(res.body);
+      //             print('map ' + map.toString());
+      //             model = JobModel.fromJson(map);
+      //             print('model ' + model.toJson().toString());
+      //             //response.jobFromModel(model);
+      //           }
+      //         }
+      //         return model;
+      //       });
+      //     })
+      //     .catchError((err) => print('error : ' + err.toString()))
+      //     .whenComplete(() {
+      //
+      // });
+      // if (jobModel != null)
+      //   response.jobFromModel(jobModel);
+      // if (httpResponse.body == null) {
+      //   print('httpResponse.body is null');
+      // } else {
+      //   print('httpResponse.body is not null');
+      //   print('httpResponse.body ' + httpResponse.body);
+      //   Map<String, dynamic> map = jsonDecode(httpResponse.body);
+      //   print('map ' + map.toString());
+      //   JobModel model = JobModel.fromJson(map);
+      //   print('model ' + model.toJson().toString());
+      //   response.jobFromModel(model);
+      // }
     } catch (error, stacktrace) {
       logger.severe("Exception occured in createJob $error $stacktrace", error,
           stacktrace);
-      reponse.exception = Exception(error.toString());
+      response.exception = Exception(error.toString());
     }
 
-    return reponse;
+    return response;
   }
 
   @override
@@ -160,12 +193,14 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
   }
 
   @override
-  Future<JobResponse> updateJob(JobModel job) async {
+  Future<JobResponse> updateJob(JobModel model) async {
     JobResponse reponse = JobResponse();
 
     JobModel result;
     try {
-      result = await jobRestApiClient.updateJob(job.id, job);
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['job'] = model.toJson();
+      result = await jobRestApiClient.updateJob(model.id, param);
       reponse.jobFromModel(result);
     } catch (error, stacktrace) {
       logger.severe(

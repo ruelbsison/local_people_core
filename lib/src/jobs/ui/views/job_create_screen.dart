@@ -1164,7 +1164,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
       job.preview = _formKey.currentState.value['description'];
       //job.images = _formKey.currentState.value['images'].cast<File>();
       // TODO: Ruel
-      job.client_id = 1;
+      job.clientId = 1;
 
       //print(job);
       //ScaffoldMessenger.of(context)

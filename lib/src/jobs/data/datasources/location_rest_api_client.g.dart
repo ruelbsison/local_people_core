@@ -103,7 +103,7 @@ class _LocationRestApiClient implements LocationRestApiClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(location?.toJson() ?? <String, dynamic>{});
+    _data.addAll(location ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/locations',
         queryParameters: queryParameters,
         options: RequestOptions(
@@ -141,7 +141,7 @@ class _LocationRestApiClient implements LocationRestApiClient {
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
     final _data = <String, dynamic>{};
-    _data.addAll(location?.toJson() ?? <String, dynamic>{});
+    _data.addAll(location ?? <String, dynamic>{});
     final _result = await _dio.request<Map<String, dynamic>>('/locations/$id',
         queryParameters: queryParameters,
         options: RequestOptions(

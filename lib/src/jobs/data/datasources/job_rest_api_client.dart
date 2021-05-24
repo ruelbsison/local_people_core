@@ -41,7 +41,7 @@ abstract class JobRestApiClient {
   Future<JobModel> showJob(@Path("id") int id);
 
   @PATCH(RestAPIConfig.jobWithId)
-  Future<JobModel> updateJob(@Path("id") int id, @Body() JobModel job);
+  Future<JobModel> updateJob(@Path("id") int id, @Body() Map<String, Map<String, dynamic>> job);
 
   @DELETE(RestAPIConfig.jobWithId)
   Future<void> deleteJob(@Path("id") int id);

@@ -19,20 +19,20 @@ class JobPostEvent extends JobEvent {
 }
 
 class LoadJobs extends JobEvent {
-  const LoadJobs({@required this.userId});
-
-  final int userId;
-
-  @override
-  List<Object> get props => [userId];
+  // const LoadJobs({@required this.userId});
+  //
+  // final int userId;
+  //
+  // @override
+  // List<Object> get props => [userId];
 }
 class RefreshJobs extends JobEvent {
-  const RefreshJobs({@required this.userId});
-
-  final int userId;
-
-  @override
-  List<Object> get props => [userId];
+  // const RefreshJobs({@required this.userId});
+  //
+  // final int userId;
+  //
+  // @override
+  // List<Object> get props => [userId];
 }
 
 

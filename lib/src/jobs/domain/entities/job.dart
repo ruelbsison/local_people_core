@@ -15,12 +15,14 @@ class Job extends Object {
   List<Tag> tags;
   List<String> images;
   int minutesLeft;
-  int client_id;
+  int clientId;
+  int traderId;
   DateTime date;
 
   Job({
     @required this.id,
-    @required this.client_id,
+    @required this.clientId,
+    this.traderId,
     this.title,
     this.description,
     this.preview,
@@ -41,7 +43,8 @@ class Job extends Object {
 
   static empty() {
     return Job(id: 0,
-        client_id: 0,
+        clientId: 0,
+        traderId: 0,
         title: '',
         description: '',
         preview: '',
@@ -65,7 +68,7 @@ List yourJobs = [
 List demeJobs = [
   Job(
     id: 1,
-    client_id: 1,
+    clientId: 1,
     title: 'Job request name or description',
     description: 'Short job description preview, job description preview, short job description preview, job description preview.',
     preview: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus nulla vel iaculis aliquet. Integer lacus nibh, elementum id feugiat vel, hendrerit in metus. Donec interdum imperdiet sem eu facilisis. Duis eu sapien in elit eleifend dictum. Nunc at odio tempus lacus pretium fermentum.',
@@ -82,7 +85,7 @@ List demeJobs = [
   ),
   Job(
     id: 2,
-    client_id: 1,
+    clientId: 1,
     title: 'Job request name or description',
     description: 'Short job description preview, job description preview, short job description preview, job description preview.',
     preview: 'Short job description preview, job description preview, short job description preview, job description preview.',

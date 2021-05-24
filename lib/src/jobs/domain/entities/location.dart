@@ -5,12 +5,14 @@ class Location extends Object {
   Location({
     @required this.id,
     @required this.name,
+    @required this.clientId,
+    @required this.traderId,
     this.lat,
     this.long,
     this.address,
     this.photoUrl,
     this.jobId,
-  })  : assert(id != null);
+  });
 
   /// The current Location's email address.
   String name;
@@ -28,6 +30,10 @@ class Location extends Object {
 
   int jobId;
 
+  int clientId;
+
+  int traderId;
+
   @override
   bool operator ==(Object other) =>
       identical(this, other) || this.hashCode == other.hashCode;
@@ -43,6 +49,8 @@ class Location extends Object {
       long: 0.0,
       address: '',
         photoUrl: '',
+      clientId: 0,
+      traderId: 0,
     );
   }
 }

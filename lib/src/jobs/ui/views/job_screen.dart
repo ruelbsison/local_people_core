@@ -4,6 +4,7 @@ import '../widgets/job_card.dart';
 //import 'package:flutter_search_bar/flutter_search_bar.dart';
 import 'package:local_people_core/jobs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_people_core/profile.dart';
 
 class JobScreen extends StatefulWidget {
   @override
@@ -22,6 +23,7 @@ class _JobScreenState extends State<JobScreen> {
     //_refreshCompleter = Completer<void>();
     _scrollController.addListener(_onScroll);
     _jobBloc = context.read<JobBloc>();
+    //int userId = BlocProvider.of<ProfileBloc>(context).profile.id;
     _jobBloc.add(LoadJobs());
     //BlocProvider.of<JobBloc>(context).add(LoadJobs());
   }
@@ -68,7 +70,7 @@ class _JobScreenState extends State<JobScreen> {
         if (state is JobLoaded) {
           return RefreshIndicator(
             onRefresh: () async {
-              BlocProvider.of<JobBloc>(context).add(RefreshJobs());
+              _jobBloc.add(RefreshJobs());
             },
             child: ListView.builder(
               itemCount: state.jobs.length,

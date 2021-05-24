@@ -11,13 +11,11 @@ LocationModel _$LocationModelFromJson(Map<String, dynamic> json) {
     id: json['id'] as int,
     name: json['name'] as String,
     address: json['address'] as String,
-    created_at: json['created_at'] as String,
-    updated_at: json['updated_at'] as String,
     client_id: json['client_id'] as int,
     trader_id: json['trader_id'] as int,
-    latitude: json['latitude'] as int,
-    longitude: json['longitude'] as int,
     job_id: json['job_id'] as int,
+    created_at: json['created_at'] as String,
+    updated_at: json['updated_at'] as String,
   );
 }
 
@@ -28,8 +26,6 @@ Map<String, dynamic> _$LocationModelToJson(LocationModel instance) =>
       'address': instance.address,
       'created_at': instance.created_at,
       'updated_at': instance.updated_at,
-      'latitude': instance.latitude,
-      'longitude': instance.longitude,
       'client_id': instance.client_id,
       'trader_id': instance.trader_id,
       'job_id': instance.job_id,
