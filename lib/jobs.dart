@@ -1,5 +1,15 @@
 library local_people_core;
 
+export './src/jobs/domain/entities/requirement.dart';
+export './src/jobs/domain/entities/requirement_list_response.dart';
+export './src/jobs/domain/entities/requirement_response.dart';
+export './src/jobs/domain/repositories/requirement_repository.dart';
+export './src/jobs/data/models/requirement_model.dart';
+export './src/jobs/data/repositories/requirement_repository_impl.dart';
+export './src/jobs/data/datasources/requirement_rest_api_client.dart';
+export './src/jobs/data/datasources/requirement_remote_data_source.dart';
+export './src/jobs/data/datasources/requirement_remote_data_source_impl.dart';
+
 export './src/jobs/domain/entities/change_request.dart';
 export './src/jobs/domain/entities/change_request_list_response.dart';
 export './src/jobs/domain/entities/change_request_response.dart';
