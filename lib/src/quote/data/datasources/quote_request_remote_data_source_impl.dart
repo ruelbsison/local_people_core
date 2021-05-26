@@ -17,10 +17,17 @@ class QuoteRequestRemoteDataSourceImpl implements QuoteRequestRemoteDataSource {
       : assert(quoteRequestRestApiClient != null);
 
   @override
-  Future<QuoteRequestResponse> createQuoteRequest(QuoteRequestModel quote) async {
+  Future<QuoteRequestResponse> createQuoteRequest(QuoteRequestModel model) async {
     QuoteRequestResponse response = QuoteRequestResponse();
     try {
-      QuoteRequestModel data = await quoteRequestRestApiClient.createQuoteRequest(quote);
+      var paramData = model.toJson();
+      paramData.keys
+          .where((k) => paramData[k] == null) // filter keys
+          .toList() // create a copy to avoid concurrent modifications
+          .forEach(paramData.remove); // remove selected keys
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['quote_request'] = paramData;
+      QuoteRequestModel data = await quoteRequestRestApiClient.createQuoteRequest(param);
       if (data != null) {
         response.fromModel(data);
       }
@@ -102,7 +109,14 @@ class QuoteRequestRemoteDataSourceImpl implements QuoteRequestRemoteDataSource {
   Future<QuoteRequestResponse> updateQuoteRequest(QuoteRequestModel model) async {
     QuoteRequestResponse response = QuoteRequestResponse();
     try {
-      QuoteRequestModel data = await quoteRequestRestApiClient.updateQuoteRequest(model.id, model);
+      var paramData = model.toJson();
+      paramData.keys
+          .where((k) => paramData[k] == null) // filter keys
+          .toList() // create a copy to avoid concurrent modifications
+          .forEach(paramData.remove); // remove selected keys
+      Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
+      param['quote_request'] = paramData;
+      QuoteRequestModel data = await quoteRequestRestApiClient.updateQuoteRequest(model.id, param);
       if (data != null) {
         response.fromModel(data);
       }

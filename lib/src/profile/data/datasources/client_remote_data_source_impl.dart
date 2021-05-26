@@ -17,12 +17,17 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
       ) : assert(clientRestApiClient != null);
 
   @override
-  Future<ClientResponse> createClient(ClientModel client) async {
+  Future<ClientResponse> createClient(ClientModel model) async {
     ClientResponse response = ClientResponse();
 
     try {
+      var paramData = model.toJson();
+      paramData.keys
+          .where((k) => paramData[k] == null) // filter keys
+          .toList() // create a copy to avoid concurrent modifications
+          .forEach(paramData.remove); // remove selected keys
       Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
-      param['client'] = client.toJson();
+      param['client'] = paramData;
       ClientModel data =
           await clientRestApiClient.createClient(param);
       if (data != null) {
@@ -114,8 +119,13 @@ class ClientRemoteDataSourceImpl implements ClientRemoteDataSource {
     ClientResponse response = ClientResponse();
 
     try {
+      var paramData = model.toJson();
+      paramData.keys
+          .where((k) => paramData[k] == null) // filter keys
+          .toList() // create a copy to avoid concurrent modifications
+          .forEach(paramData.remove); // remove selected keys
       Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
-      param['client'] = model.toJson();
+      param['client'] = paramData;
       ClientModel data =
           await clientRestApiClient.updateClient(model.id, param);
       if (data != null) {

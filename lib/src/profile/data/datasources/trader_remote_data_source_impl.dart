@@ -21,8 +21,13 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
     TraderResponse response = TraderResponse();
 
     try {
+      var paramData = model.toJson();
+      paramData.keys
+          .where((k) => paramData[k] == null) // filter keys
+          .toList() // create a copy to avoid concurrent modifications
+          .forEach(paramData.remove); // remove selected keys
       Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
-      param['trader'] = model.toJson();
+      param['tarder'] = paramData;
       TraderModel data =
       await traderRestApiClient.createTrader(param);
       if (data != null) {
@@ -114,8 +119,13 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
     TraderResponse response = TraderResponse();
 
     try {
+      var paramData = model.toJson();
+      paramData.keys
+          .where((k) => paramData[k] == null) // filter keys
+          .toList() // create a copy to avoid concurrent modifications
+          .forEach(paramData.remove); // remove selected keys
       Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
-      param['trader'] = model.toJson();
+      param['tarder'] = paramData;
       TraderModel data =
       await traderRestApiClient.updateTrader(model.id, param);
       if (data != null) {

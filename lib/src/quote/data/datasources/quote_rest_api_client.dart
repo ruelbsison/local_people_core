@@ -17,13 +17,13 @@ abstract class QuoteRestApiClient {
   Future<List<QuoteModel>> listJobQuotes(@Path("id") int job_id);
 
   @POST(RestAPIConfig.quote)
-  Future<QuoteModel> createQuote(@Body() QuoteModel quote);
+  Future<QuoteModel> createQuote(@Body() Map<String, Map<String, dynamic>> model);
 
   @GET(RestAPIConfig.quoteWithId)
   Future<QuoteModel> showQuote(@Path("id") int id);
 
   @PATCH(RestAPIConfig.quoteWithId)
-  Future<QuoteModel> updateQuote(@Path("id") int id, @Body() QuoteModel job);
+  Future<QuoteModel> updateQuote(@Path("id") int id, @Body() Map<String, Map<String, dynamic>> model);
 
   @DELETE(RestAPIConfig.quoteWithId)
   Future<void> deleteQuote(@Path("id") int id);
