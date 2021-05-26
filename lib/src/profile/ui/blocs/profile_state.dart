@@ -83,15 +83,16 @@ class ProfileCreateFailed extends ProfileState {
 
 class ProfileTraderTopRatedLoading extends ProfileState {}
 class ProfileTraderTopRatedCompleted extends ProfileState {
-  final List<TraderProfile> traders;
+  final List<TraderProfile> topRatedTraders;
 
-  const ProfileTraderTopRatedCompleted(this.traders);
+  const ProfileTraderTopRatedCompleted(this.topRatedTraders);
 
   @override
   String toString() {
-  return 'ProfileCreated{e: $traders}';
+  return 'ProfileCreated{e: $topRatedTraders}';
   }
 }
+
 class ProfileTraderTopRatedFailed extends ProfileState {
   final String e;
 
@@ -100,5 +101,53 @@ class ProfileTraderTopRatedFailed extends ProfileState {
   @override
   String toString() {
     return 'ProfileTraderTopRatedFailed{e: $e}';
+  }
+}
+
+class ClientProfileUpdating extends ProfileState {}
+
+class ClientProfileUpdated extends ProfileState {
+  final ClientProfile profile;
+
+  const ClientProfileUpdated(this.profile);
+
+  @override
+  String toString() {
+    return 'ClientProfile{e: $profile}';
+  }
+}
+
+class ClientProfileUpdateFailed extends ProfileState {
+  final String e;
+
+  const ClientProfileUpdateFailed(this.e);
+
+  @override
+  String toString() {
+    return 'ClientProfileUpdateFailed{e: $e}';
+  }
+}
+
+class TraderProfileUpdating extends ProfileState {}
+
+class TraderProfileUpdated extends ProfileState {
+  final TraderProfile profile;
+
+  const TraderProfileUpdated(this.profile);
+
+  @override
+  String toString() {
+    return 'TraderProfile{e: $profile}';
+  }
+}
+
+class TraderProfileUpdateFailed extends ProfileState {
+  final String e;
+
+  const TraderProfileUpdateFailed(this.e);
+
+  @override
+  String toString() {
+    return 'TraderProfileUpdateFailed{e: $e}';
   }
 }

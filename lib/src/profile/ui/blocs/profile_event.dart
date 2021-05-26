@@ -1,5 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import '../../domain/entities/client_profile.dart';
+import '../../domain/entities/trader_profile.dart';
 
 class ProfileEvent extends Equatable {
   const ProfileEvent();
@@ -20,6 +22,24 @@ class ProfileCreateEvent extends ProfileEvent {
 }
 
 class ProfileGetTraderTopRatedEvent extends ProfileEvent {}
+
+class ClientProfileUpdateEvent extends ProfileEvent {
+  const ClientProfileUpdateEvent({@required this.profile});
+
+  final ClientProfile profile;
+
+  @override
+  List<Object> get props => [profile];
+}
+
+class TraderProfileUpdateEvent extends ProfileEvent {
+  const TraderProfileUpdateEvent({@required this.profile});
+
+  final TraderProfile profile;
+
+  @override
+  List<Object> get props => [profile];
+}
 
 
 
