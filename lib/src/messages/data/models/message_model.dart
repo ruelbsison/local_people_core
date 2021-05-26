@@ -23,9 +23,9 @@ class MessageModel extends Equatable {
     this.read,
     this.created_at,
     this.updated_at,
-  }): assert(subject == null), assert(body == null),
-        assert(client_id == null), assert(trader_id == null),
-        assert(job_id == null);
+  }): assert(subject != null), assert(body != null);
+        //assert(client_id == null), assert(trader_id == null),
+        //assert(job_id == null);
 
   int id;
   /// The current MessageModel's email address.
