@@ -25,56 +25,56 @@ class _JobRequestScreenState extends State<JobRequestScreen>
 
   @override
   Widget build(BuildContext context) {
-    final theme = Theme.of(context);
     return Scaffold(
-      appBar: AppBarWidget (
-        //appBarPreferredSize: Size.fromHeight(120.0),
-        //automaticallyImplyLeading: false,
-        //toolbarHeight: 120.0,
-        //centerTitle: false,
-        //titleSpacing: 0,
-        // title: Text(
-        //   LocalPeopleLocalizations.of(context).menuTitleOpportunities,
-        //   textAlign: TextAlign.left,
-        //   style: theme.textTheme.headline6,
-        // ),
-        subTitle: LocalPeopleLocalizations.of(context).menuTitleOpportunities,
-        appBar: AppBar(),
-        bottom: TabBar(
-          controller: _controller,
-          unselectedLabelColor: theme.primaryColor,
-          indicatorSize: TabBarIndicatorSize.tab,
-          indicator: BoxDecoration(
-              borderRadius: BorderRadius.circular(5),
-              color: Color.fromRGBO(239, 244, 246, 1)),
-          tabs: [
-            Tab(
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "REQUESTED JOB",
-                  style: theme.textTheme.bodyText2,
-                ),
-              ),
-            ),
-            Tab(
-              child: Align(
-                alignment: Alignment.center,
-                child: Text(
-                  "OPPORTUNITIES",
-                  style: theme.textTheme.bodyText2,
-                ),
-              ),
-            ),
-          ],
-        ),
-      ),
+      appBar: buildAppBar(),
       body: buildBody(context),
     );
   }
 
-  AppBar buildAppBar() {
-
+  AppBarWidget buildAppBar() {
+    final theme = Theme.of(context);
+    return AppBarWidget (
+      //appBarPreferredSize: Size.fromHeight(120.0),
+      //automaticallyImplyLeading: false,
+      //toolbarHeight: 120.0,
+      //centerTitle: false,
+      //titleSpacing: 0,
+      // title: Text(
+      //   LocalPeopleLocalizations.of(context).menuTitleOpportunities,
+      //   textAlign: TextAlign.left,
+      //   style: theme.textTheme.headline6,
+      // ),
+      subTitle: LocalPeopleLocalizations.of(context).menuTitleOpportunities,
+      appBar: AppBar(),
+      bottom: TabBar(
+        controller: _controller,
+        unselectedLabelColor: theme.primaryColor,
+        indicatorSize: TabBarIndicatorSize.tab,
+        indicator: BoxDecoration(
+            borderRadius: BorderRadius.circular(5),
+            color: Color.fromRGBO(239, 244, 246, 1)),
+        tabs: [
+          Tab(
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                "REQUESTED JOB",
+                style: theme.textTheme.bodyText2,
+              ),
+            ),
+          ),
+          Tab(
+            child: Align(
+              alignment: Alignment.center,
+              child: Text(
+                "OPPORTUNITIES",
+                style: theme.textTheme.bodyText2,
+              ),
+            ),
+          ),
+        ],
+      ),
+    );
   }
 
   Widget buildBody(BuildContext context) {

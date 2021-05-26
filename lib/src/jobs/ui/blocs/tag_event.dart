@@ -4,15 +4,15 @@ abstract class TagEvent extends Equatable {
   const TagEvent();
 }
 
-class LoadTags extends TagEvent {
+class LoadTagsEvent extends TagEvent {
   @override
   List<Object> get props => [];
 }
 
-class LoadJobTags extends TagEvent {
+class LoadJobTagsEvent extends TagEvent {
   final int jobId;
 
-  LoadJobTags({@required this.jobId});
+  LoadJobTagsEvent({@required this.jobId});
 
   @override
   List<Object> get props => [jobId];

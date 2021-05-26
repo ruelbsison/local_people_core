@@ -20,10 +20,10 @@ class TagBloc extends Bloc<TagEvent, TagState> {
   Stream<TagState> mapEventToState(
     TagEvent event,
   ) async* {
-    if (event is LoadTags) {
+    if (event is LoadTagsEvent) {
       yield TagsLoading();
       yield* _mapLoadTagsToState();
-    } else if (event is LoadJobTags) {
+    } else if (event is LoadJobTagsEvent) {
       yield JobTagsLoading();
       yield* _mapLoadJobTagsToState(event.jobId);
     }

@@ -5,6 +5,7 @@ import 'package:local_people_core/messages.dart';
 import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
 import '../widgets/job_view_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class JobDetailScreen extends StatefulWidget {
   JobDetailScreen({
@@ -29,6 +30,13 @@ class _JobDetailScreenState extends State<JobDetailScreen>
     super.initState();
 
     _controller = TabController(length: 2, vsync: this);
+    _controller.addListener(() {
+      setState(() {
+        if (_controller.index == 1) {
+          context.read<MessageBloc>().add(LoadJobMessagesEvent(jobId: widget.job.id));
+        }
+      });
+    });
   }
 
   @override
@@ -183,7 +191,21 @@ class _JobDetailScreenState extends State<JobDetailScreen>
             ),
           ),
         ),
-        MessageBody(),
+        BlocProvider.value(
+          value: context.read<MessageBloc>(),
+          child: BlocBuilder<MessageBloc, MessageState>(
+            builder: (context, state) {
+              if (state is JobMessageLoading) {
+                return LoadingWidget();
+              } else if (state is LoadJobMessageFailed) {
+                return ErrorWidget('Unhandle State $state');
+              } else if (state is JobMessageLoaded) {
+                return MessageBody(messages: state.messages,);
+              }
+              return ErrorWidget('Unhandle State $state');
+            },
+          ),
+        ),
       ],
     );
   }

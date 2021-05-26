@@ -50,11 +50,6 @@ export './src/jobs/data/datasources/booking_rest_api_client.dart';
 export './src/jobs/data/datasources/booking_remote_data_source.dart';
 export './src/jobs/data/datasources/booking_remote_data_source_impl.dart';
 
-export './src/jobs/data/models/location_model.dart';
-export './src/jobs/data/datasources/location_rest_api_client.dart';
-export './src/jobs/data/datasources/location_remote_data_source.dart';
-export './src/jobs/data/datasources/location_remote_data_source_impl.dart';
-export './src/jobs/data/models/job_model.dart';
 export './src/jobs/data/datasources/job_rest_api_client.dart';
 export './src/jobs/data/datasources/job_remote_data_source.dart';
 export './src/jobs/data/datasources/job_remote_data_source_impl.dart';
@@ -76,11 +71,17 @@ export './src/jobs/data/datasources/tag_remote_data_source.dart';
 export './src/jobs/data/datasources/tag_remote_data_source_impl.dart';
 export './src/jobs/ui/blocs/tag_bloc.dart';
 
+export './src/jobs/data/models/location_model.dart';
+export './src/jobs/data/datasources/location_rest_api_client.dart';
+export './src/jobs/data/datasources/location_remote_data_source.dart';
+export './src/jobs/data/datasources/location_remote_data_source_impl.dart';
+export './src/jobs/data/models/job_model.dart';
 export './src/jobs/domain/entities/location.dart';
 export './src/jobs/domain/entities/location_list_response.dart';
 export './src/jobs/domain/entities/location_response.dart';
 export './src/jobs/domain/repositories/location_repository.dart';
 export './src/jobs/data/repositories/location_repository_impl.dart';
+export './src/jobs/ui/blocs/location_bloc.dart';
 
 export './src/jobs/ui/view_models/tag_provider.dart';
 export './src/jobs/ui/widgets/images_view_widget.dart';

@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 import 'package:local_people_core/core.dart';
+import 'package:local_people_core/jobs.dart';
 import '../../domain/entities/job.dart';
 import '../../domain/entities/profile.dart';
 import '../widgets/tags_view_widget.dart';
@@ -16,7 +17,7 @@ import '../widgets/form_builder_image_picker.dart';
 import '../../domain/entities/tag.dart';
 import '../../domain/entities/location.dart' as loc;
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
-import '../blocs/job_form_bloc.dart';
+import '../blocs/tag_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:formz/formz.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -234,36 +235,176 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
   Widget build(BuildContext context) {
     //super.build(context);
     return Scaffold(
-      appBar: AppBarWidget(
-        //appBarPreferredSize: Size.fromHeight(60.0),
-        title: Text(
-          AppLocalizations.of(context).appTitle,
-        ),
-        appBar: AppBar(),
-        subTitle: LocalPeopleLocalizations.of(context).menuTitlePostJob,
-        actions: <Widget>[
-          Container(
-            padding: EdgeInsets.only(right: 14.0),
-            child: ElevatedButton(
-              child: Text(
-                LocalPeopleLocalizations.of(context).btnTitleCancel,
-                style: TextStyle(
-                  fontSize: 14,
-                  fontWeight: FontWeight.normal,
-                ),
-              ),
-              onPressed: () {
-                //AppRouter.pushPage(context, JobCreateScreen());
-                Navigator.pop(context);
-              },
-            ),
-            alignment: Alignment.center,
-          )
-        ],
+      appBar: buildAppBar(context),
+      body: BlocProvider.value(
+        value: BlocProvider.of<TagBloc>(context),
+        child: buildFormBody(context),
       ),
-      body: _buildFormBody(context),
     );
   }
+
+  AppBarWidget buildAppBar(BuildContext context) {
+    return AppBarWidget(
+      //appBarPreferredSize: Size.fromHeight(60.0),
+      title: Text(
+        AppLocalizations.of(context).appTitle,
+      ),
+      appBar: AppBar(),
+      subTitle: LocalPeopleLocalizations.of(context).menuTitlePostJob,
+      actions: <Widget>[
+        Container(
+          padding: EdgeInsets.only(right: 14.0),
+          child: ElevatedButton(
+            child: Text(
+              LocalPeopleLocalizations.of(context).btnTitleCancel,
+              style: TextStyle(
+                fontSize: 14,
+                fontWeight: FontWeight.normal,
+              ),
+            ),
+            onPressed: () {
+              //AppRouter.pushPage(context, JobCreateScreen());
+              Navigator.pop(context);
+            },
+          ),
+          alignment: Alignment.center,
+        )
+      ],
+    );
+  }
+
+  Widget buildJobCategoryFormEntry(BuildContext context,TagsLoaded state) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+    context.read<TagBloc>().add(LoadTagsEvent());
+    return Container(
+      padding: EdgeInsets.only(left: 20, right: 20.0),
+      child: Flex(
+        direction: Axis.vertical,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 30.0),
+          Text(
+            LocalPeopleLocalizations.of(context).titleJobCategory,
+            textAlign: TextAlign.left,
+            style: theme.textTheme.subtitle1,
+          ),
+          SizedBox(height: 10.0),
+          Container(
+            color: Colors.white,
+            //padding: EdgeInsets.only(left: 12.0, right: 12.0),
+            child: EnsureVisibleWhenFocused(
+              focusNode: _focusNodeJobGategory,
+              child: Tags(
+                key: _tagStateKey,
+                //symmetry: false,
+                //columns: 0,
+                //horizontalScroll: true,
+                alignment: WrapAlignment.start,
+                textField: TagsTextField(
+                    textStyle: theme.textTheme.bodyText2,
+                    width: size.width,
+                    textCapitalization: TextCapitalization.words,
+                    inputDecoration: InputDecoration(
+                      labelText: 'Add Job Category',
+                    ),
+                    hintText: '',
+                    constraintSuggestion: true,
+                    suggestions: List.generate(state.tags.length, (index) => job.tags[index].name), //currentTags,
+                    keyboardType: TextInputType.text,
+                    suggestionTextColor: theme.textTheme.bodyText1.color,
+                    //textInputAction: TextInputAction.next,
+                    //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
+                    onSubmitted: (val) {
+                      // Add item to the data source.
+                      setState(() {
+                        // required
+                        var result = state.tags.where((tag) =>
+                            tag.name.toLowerCase().contains(val.toLowerCase()));
+                        if (result.length > 0) job.tags.add(result.first);
+                      });
+                    },
+                    onChanged: (val) {}
+                  // validator: FormBuilderValidators.compose([
+                  //   FormBuilderValidators.required(context),
+                  // ]),
+                ),
+                itemCount: job.tags.length,
+                // required
+                itemBuilder: (int index) {
+                  final item = job.tags[index];
+                  return ItemTags(
+                    // Each ItemTags must contain a Key. Keys allow Flutter to
+                    // uniquely identify widgets.
+                    key: Key(index.toString()),
+                    index: index,
+                    // required
+                    title: item.name,
+                    //active: item.active,
+                    //customData: item.customData,
+                    pressEnabled: true,
+                    color: Color.fromRGBO(196, 196, 196, 1),
+                    activeColor: Colors.blueGrey[600],
+                    singleItem: true,
+                    splashColor: Colors.green,
+                    textStyle: theme.inputDecorationTheme.labelStyle,
+                    combine: ItemTagsCombine.withTextAfter,
+                    /*image: ItemTagsImage(
+                                  image: AssetImage("img.jpg") // OR NetworkImage("https://...image.png")
+                              ), // OR null,
+                              icon: ItemTagsIcon(
+                                icon: Icons.add,
+                              ),*/
+                    // OR null,
+                    removeButton: ItemTagsRemoveButton(
+                      onRemoved: () {
+                        // Remove the item from the data source.
+                        setState(() {
+                          // required
+                          job.tags.removeAt(index);
+                        });
+                        //required
+                        return true;
+                      },
+                    ),
+                    // OR null,
+                    onPressed: (item) => print(item),
+                    onLongPressed: (item) => print(item),
+                  );
+                },
+              ),
+            ),
+          ),
+          SizedBox(height: 20.0),
+          Text(
+            LocalPeopleLocalizations.of(context).titleSuggestions,
+            textAlign: TextAlign.left,
+            style: theme.textTheme.caption,
+          ),
+          SizedBox(height: 10.0),
+          TagsViewWidget(
+            tags: state.tags,
+          ),
+        ],
+      ),
+    );
+  }
+
+  Widget buildJobCategory(BuildContext context) {
+    return BlocBuilder<TagBloc, TagState>(
+      builder: (context, state) {
+        if (state is TagsLoading) {
+          return LoadingWidget();
+        } else if (state is LoadTagsFailed) {
+          return LoadingWidget();
+        } else if (state is TagsLoaded) {
+          return buildJobCategoryFormEntry(context, state);
+        }
+      },
+    );
+;  }
 
   Widget _buildSegmentedTab(BuildContext context, String title) {
     final size = MediaQuery.of(context).size;
@@ -282,7 +423,11 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
     );
   }
 
-  Widget _buildFormBody(BuildContext context) {
+  Widget _buildLocationEntry(BuildContext context) {
+
+  }
+
+  Widget buildFormBody(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     List<String> _timeToRespondOptions = [
@@ -430,119 +575,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
       ),
     );
 
-    final jobCategoryFormEntry = Container(
-      padding: EdgeInsets.only(left: 20, right: 20.0),
-      child: Flex(
-        direction: Axis.vertical,
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: <Widget>[
-          SizedBox(height: 30.0),
-          Text(
-            LocalPeopleLocalizations.of(context).titleJobCategory,
-            textAlign: TextAlign.left,
-            style: theme.textTheme.subtitle1,
-          ),
-          SizedBox(height: 10.0),
-          Container(
-            color: Colors.white,
-            //padding: EdgeInsets.only(left: 12.0, right: 12.0),
-            child: EnsureVisibleWhenFocused(
-              focusNode: _focusNodeJobGategory,
-              child: Tags(
-                key: _tagStateKey,
-                //symmetry: false,
-                //columns: 0,
-                //horizontalScroll: true,
-                alignment: WrapAlignment.start,
-                textField: TagsTextField(
-                    textStyle: theme.textTheme.bodyText2,
-                    width: size.width,
-                    textCapitalization: TextCapitalization.words,
-                    inputDecoration: InputDecoration(
-                      labelText: 'Add Job Category',
-                    ),
-                    hintText: '',
-                    constraintSuggestion: true,
-                    suggestions: currentTags,
-                    keyboardType: TextInputType.text,
-                    suggestionTextColor: theme.textTheme.bodyText1.color,
-                    //textInputAction: TextInputAction.next,
-                    //width: double.infinity, padding: EdgeInsets.symmetric(horizontal: 10),
-                    onSubmitted: (val) {
-                      // Add item to the data source.
-                      setState(() {
-                        // required
-                        var result = objTags.where((tag) =>
-                            tag.name.toLowerCase().contains(val.toLowerCase()));
-                        if (result.length > 0) job.tags.add(result.first);
-                      });
-                    },
-                    onChanged: (val) {}
-                    // validator: FormBuilderValidators.compose([
-                    //   FormBuilderValidators.required(context),
-                    // ]),
-                    ),
-                itemCount: job.tags.length,
-                // required
-                itemBuilder: (int index) {
-                  final item = job.tags[index];
-                  return ItemTags(
-                    // Each ItemTags must contain a Key. Keys allow Flutter to
-                    // uniquely identify widgets.
-                    key: Key(index.toString()),
-                    index: index,
-                    // required
-                    title: item.name,
-                    //active: item.active,
-                    //customData: item.customData,
-                    pressEnabled: true,
-                    color: Color.fromRGBO(196, 196, 196, 1),
-                    activeColor: Colors.blueGrey[600],
-                    singleItem: true,
-                    splashColor: Colors.green,
-                    textStyle: theme.inputDecorationTheme.labelStyle,
-                    combine: ItemTagsCombine.withTextAfter,
-                    /*image: ItemTagsImage(
-                                  image: AssetImage("img.jpg") // OR NetworkImage("https://...image.png")
-                              ), // OR null,
-                              icon: ItemTagsIcon(
-                                icon: Icons.add,
-                              ),*/
-                    // OR null,
-                    removeButton: ItemTagsRemoveButton(
-                      onRemoved: () {
-                        // Remove the item from the data source.
-                        setState(() {
-                          // required
-                          job.tags.removeAt(index);
-                        });
-                        //required
-                        return true;
-                      },
-                    ),
-                    // OR null,
-                    onPressed: (item) => print(item),
-                    onLongPressed: (item) => print(item),
-                  );
-                },
-              ),
-            ),
-          ),
-          SizedBox(height: 20.0),
-          Text(
-            LocalPeopleLocalizations.of(context).titleSuggestions,
-            textAlign: TextAlign.left,
-            style: theme.textTheme.caption,
-          ),
-          SizedBox(height: 10.0),
-          TagsViewWidget(
-            tags: [],
-          ),
-        ],
-      ),
-    );
+    final jobCategoryFormEntry = buildJobCategory(context);
 
     final jobDescriptionFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
@@ -1079,6 +1112,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
         ],
       ),
     );
+
 
     return SafeArea(
       child: SingleChildScrollView(

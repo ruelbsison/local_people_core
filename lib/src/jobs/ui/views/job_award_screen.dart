@@ -7,6 +7,7 @@ import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
 import '../widgets/job_view_widget.dart';
 import '../widgets/job_actions_widget.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class JobAwardScreen extends StatefulWidget {
   JobAwardScreen({
@@ -17,8 +18,7 @@ class JobAwardScreen extends StatefulWidget {
   final Job job;
 
   @override
-  _JobAwardScreenState createState() =>
-      _JobAwardScreenState();
+  _JobAwardScreenState createState() => _JobAwardScreenState();
 }
 
 class _JobAwardScreenState extends State<JobAwardScreen>
@@ -31,6 +31,13 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     super.initState();
 
     _controller = TabController(length: 2, vsync: this);
+    _controller.addListener(() {
+      setState(() {
+        if (_controller.index == 1) {
+          context.read<MessageBloc>().add(LoadJobMessagesEvent(jobId: widget.job.id));
+        }
+      });
+    });
   }
 
   @override
@@ -50,7 +57,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
       toolbarHeight: 220.0,
       centerTitle: false,
       titleSpacing: 0,
-      title: Container (
+      title: Container(
         padding: EdgeInsets.only(bottom: 12.0),
         child: Flex(
           direction: Axis.horizontal,
@@ -66,16 +73,15 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundColor: Color.fromRGBO(255,166,0,1),
+                    backgroundColor: Color.fromRGBO(255, 166, 0, 1),
                     radius: 15,
-                    child: Center (
+                    child: Center(
                         child: Image.asset(
-                          'packages/local_people_core/assets/images/package-icon.png',
-                          fit: BoxFit.contain,
-                          height: 19,
-                          width: 19,
-                        )
-                    ),
+                      'packages/local_people_core/assets/images/package-icon.png',
+                      fit: BoxFit.contain,
+                      height: 19,
+                      width: 19,
+                    )),
                   ),
                   Text(
                     // (widget.job.minutesLeft / 60).toString() + ' hrs left',
@@ -101,7 +107,9 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                   //  flex: 2,
                   //child: Text(
                   Text(
-                    widget.job.title != null ? widget.job.title : widget.job.description,
+                    widget.job.title != null
+                        ? widget.job.title
+                        : widget.job.description,
                     textAlign: TextAlign.left,
                     style: theme.textTheme.headline6,
                   ),
@@ -180,7 +188,21 @@ class _JobAwardScreenState extends State<JobAwardScreen>
             ),
           ),
         ),
-        MessageBody(),
+        BlocProvider.value(
+          value: context.read<MessageBloc>(), // BlocProvider.of<MessageBloc>(context),
+          child: BlocBuilder<MessageBloc, MessageState>(
+            builder: (context, state) {
+              if (state is JobMessageLoading) {
+                return LoadingWidget();
+              } else if (state is LoadJobMessageFailed) {
+                return ErrorWidget('Unhandle State $state');
+              } else if (state is JobMessageLoaded) {
+                return MessageBody(messages: state.messages,);
+              }
+              return ErrorWidget('Unhandle State $state');
+            },
+          ),
+        ),
       ],
     );
   }

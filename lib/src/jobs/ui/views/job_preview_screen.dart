@@ -44,6 +44,13 @@ with TickerProviderStateMixin {
     super.initState();
 
     _controller = TabController(length: 2, vsync: this);
+    _controller.addListener(() {
+      setState(() {
+        //if (_controller.index == 1) {
+          //context.read<JobBloc>().add(LoadJobs());
+        //}
+      });
+    });
 
     requestPermission();
   }
