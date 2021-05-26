@@ -3,10 +3,19 @@ import 'package:local_people_core/core.dart';
 import '../../domain/entities/message_box.dart';
 import '../views/messages_screen.dart';
 import 'package:flutter/material.dart';
+import '../blocs/message_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'message_box_card.dart';
 
 class MessageBoxBody extends StatelessWidget {
+  const MessageBoxBody({
+    Key key,
+    @required this.messages,
+  }) : super(key: key);
+
+  final List<MessageBox> messages;
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -29,10 +38,14 @@ class MessageBoxBody extends StatelessWidget {
           ),
         ),*/
         Expanded(
-          child: ListView.builder(
-            itemCount: messageBoxsData.length,
+          child: RefreshIndicator(
+            onRefresh: () async{
+              context.read<MessageBloc>().add(LoadMessageBoxEvent());
+            },
+            child: ListView.builder(
+            itemCount: messages.length,
             itemBuilder: (context, index) => MessageBoxCard(
-              messageBox: messageBoxsData[index],
+              messageBox: messages[index],
               press: () => Navigator.push(
                 context,
                 MaterialPageRoute(
@@ -42,7 +55,8 @@ class MessageBoxBody extends StatelessWidget {
             ),
           ),
         ),
-      ],
+      )
+    ],
     );
   }
 }

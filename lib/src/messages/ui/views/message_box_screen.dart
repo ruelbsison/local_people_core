@@ -1,6 +1,7 @@
 import 'package:local_people_core/core.dart';
 import 'package:flutter/material.dart';
-
+import '../blocs/message_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/message_box_body.dart';
 
 class MessageBoxScreen extends StatefulWidget {
@@ -13,36 +14,26 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    context.read<MessageBloc>().add(LoadMessageBoxEvent());
     return Scaffold(
       //appBar: buildAppBar(),
-      appBar: AppBarWidget(
-        //appBarPreferredSize: Size.fromHeight(60.0),
-        /*title: Text(
-            AppLocalizations.of(context).appTitle,
-          ),*/
-        subTitle: LocalPeopleLocalizations.of(context).menuTitleMessages,
-        appBar: AppBar(),
-        bottom: PreferredSize(
-          preferredSize: Size.fromHeight(1.0),
-          child: Container(
-            decoration: BoxDecoration(
-              color: Colors.white,
-              border: Border(
-                bottom: BorderSide(
-                  color: Color.fromRGBO(186, 207, 216, 1),
-                ),
-              ),
-            ),
-          ),
+      appBar: buildAppBar(context),
+      //body: MessageBoxBody(),
+      body: BlocProvider.value(
+        value: context.read<MessageBloc>(),
+        child: BlocBuilder<MessageBloc, MessageState>(
+          builder: (context, state) {
+            if (state is MessageBoxLoading) {
+              return LoadingWidget();
+            } else if (state is LoadMessageBoxFailed) {
+              return LoadingWidget();
+            } else if (state is MessageBoxLoaded) {
+              return MessageBoxBody(messages: state.messages,);
+            }
+            return ErrorWidget('Unhandle State $state');
+          },
         ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
-        ],
       ),
-      body: MessageBoxBody(),
       floatingActionButton: FloatingActionButton(
         onPressed: () {},
         backgroundColor: theme.primaryColor,
@@ -52,6 +43,36 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
         ),
       ),
       bottomNavigationBar: buildBottomNavigationBar(),
+    );
+  }
+
+  AppBarWidget buildAppBar(BuildContext context) {
+    return AppBarWidget(
+      //appBarPreferredSize: Size.fromHeight(60.0),
+      /*title: Text(
+            AppLocalizations.of(context).appTitle,
+          ),*/
+      subTitle: LocalPeopleLocalizations.of(context).menuTitleMessages,
+      appBar: AppBar(),
+      bottom: PreferredSize(
+        preferredSize: Size.fromHeight(1.0),
+        child: Container(
+          decoration: BoxDecoration(
+            color: Colors.white,
+            border: Border(
+              bottom: BorderSide(
+                color: Color.fromRGBO(186, 207, 216, 1),
+              ),
+            ),
+          ),
+        ),
+      ),
+      actions: [
+        IconButton(
+          icon: Icon(Icons.search),
+          onPressed: () {},
+        ),
+      ],
     );
   }
 
@@ -79,35 +100,35 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
     );
   }
 
-  AppBar buildAppBar() {
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Text("Chats"),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search),
-          onPressed: () {},
-        ),
-      ],
-      /*bottom: Padding(
-        padding: EdgeInsets.only(top: 16,left: 16,right: 16),
-        child: TextField(
-          decoration: InputDecoration(
-            hintText: "Search...",
-            hintStyle: TextStyle(color: Colors.grey.shade600),
-            prefixIcon: Icon(Icons.search,color: Colors.grey.shade600, size: 20,),
-            filled: true,
-            fillColor: Colors.grey.shade100,
-            contentPadding: EdgeInsets.all(8),
-            enabledBorder: OutlineInputBorder(
-                borderRadius: BorderRadius.circular(20),
-                borderSide: BorderSide(
-                    color: Colors.grey.shade100
-                )
-            ),
-          ),
-        ),
-      ),*/
-    );
-  }
+  // AppBar buildAppBar() {
+  //   return AppBar(
+  //     automaticallyImplyLeading: false,
+  //     title: Text("Chats"),
+  //     actions: [
+  //       IconButton(
+  //         icon: Icon(Icons.search),
+  //         onPressed: () {},
+  //       ),
+  //     ],
+  //     /*bottom: Padding(
+  //       padding: EdgeInsets.only(top: 16,left: 16,right: 16),
+  //       child: TextField(
+  //         decoration: InputDecoration(
+  //           hintText: "Search...",
+  //           hintStyle: TextStyle(color: Colors.grey.shade600),
+  //           prefixIcon: Icon(Icons.search,color: Colors.grey.shade600, size: 20,),
+  //           filled: true,
+  //           fillColor: Colors.grey.shade100,
+  //           contentPadding: EdgeInsets.all(8),
+  //           enabledBorder: OutlineInputBorder(
+  //               borderRadius: BorderRadius.circular(20),
+  //               borderSide: BorderSide(
+  //                   color: Colors.grey.shade100
+  //               )
+  //           ),
+  //         ),
+  //       ),
+  //     ),*/
+  //   );
+  //}
 }

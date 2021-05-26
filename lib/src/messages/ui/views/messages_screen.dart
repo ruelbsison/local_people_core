@@ -1,14 +1,33 @@
+import 'package:local_people_core/core.dart';
+
 import '../../../core/configs/constants.dart';
 import 'package:flutter/material.dart';
-
+import '../blocs/message_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/message_body.dart';
 
 class MessagesScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
+    context.read<MessageBloc>().add(LoadMessagesEvent());
     return Scaffold(
       appBar: buildAppBar(),
-      body: MessageBody(),
+      //body: MessageBody(),
+      body: BlocProvider.value(
+        value: context.read<MessageBloc>(),
+        child: BlocBuilder<MessageBloc, MessageState>(
+          builder: (context, state) {
+            if (state is MessageLoading) {
+              return LoadingWidget();
+            } else if (state is LoadMessageFailed) {
+              return LoadingWidget();
+            } else if (state is MessageLoaded) {
+              return MessageBody(messages: state.messages,);
+            }
+            return ErrorWidget('Unhandle State $state');
+          },
+        ),
+      ),
     );
   }
 

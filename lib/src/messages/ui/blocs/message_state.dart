@@ -65,3 +65,22 @@ class JobMessageLoaded extends MessageState {
   @override
   List<Object> get props => [messages];
 }
+
+class MessageBoxLoading extends MessageState {
+  @override
+  List<Object> get props => [];
+}
+
+class LoadMessageBoxFailed extends MessageState {
+  @override
+  List<Object> get props => [];
+}
+
+class MessageBoxLoaded extends MessageState {
+  final List<MessageBox> messages;
+
+  MessageBoxLoaded({@required this.messages});
+
+  @override
+  List<Object> get props => [messages];
+}

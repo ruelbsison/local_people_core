@@ -4,24 +4,29 @@ abstract class MessageEvent extends Equatable {
   const MessageEvent();
 }
 
-class LoadMessages extends MessageEvent {
+class LoadMessageBoxEvent extends MessageEvent {
   @override
   List<Object> get props => [];
 }
 
-class LoadJobMessages extends MessageEvent {
+class LoadMessagesEvent extends MessageEvent {
+  @override
+  List<Object> get props => [];
+}
+
+class LoadJobMessagesEvent extends MessageEvent {
   final int jobId;
 
-  LoadJobMessages({@required this.jobId});
+  LoadJobMessagesEvent({@required this.jobId});
 
   @override
   List<Object> get props => [jobId];
 }
 
-class SendMessage extends MessageEvent {
+class SendMessageEvent extends MessageEvent {
   final Message message;
 
-  SendMessage({@required this.message});
+  SendMessageEvent({@required this.message});
 
   @override
   List<Object> get props => [message];
