@@ -84,6 +84,7 @@ dev_dependencies:
   test:
   bloc_test: ^7.1.0
   mockito: ^4.1.0
+  mocktail: ^0.1.1
 
 dependency_overrides:
   analyzer: ^0.41.1
@@ -138,6 +139,7 @@ flutter:
     - packages/local_people_core/assets/images/opportunities-active-icon.svg
     - packages/local_people_core/assets/images/trader-profile-photo.png
     - packages/local_people_core/assets/images/client-profile-photo.png
+    - packages/local_people_core/assets/images/error-icon.svg
   # To add custom fonts to your package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

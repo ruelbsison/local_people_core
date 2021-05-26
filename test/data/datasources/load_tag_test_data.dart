@@ -7,6 +7,12 @@ import '../../res/tags_test_data.dart';
 
 class MockRemoteDataSource extends Mock implements TagRemoteDataSource {}
 
+void printList(List list) {
+  for (var element in list) {
+    print(element);
+  }
+}
+
 void main() {
   TagRemoteDataSource tagRemoteDataSource;
   MockRemoteDataSource mockRemoteDataSource;
@@ -24,6 +30,10 @@ void main() {
   group('Load Test Tag Date, Create The Tag Data', () {
     test('Tag Should Be Created Successfully', () async {
       var listIterator = testTags.iterator;
+      //List<String> alsoBroken = List.from( testTags.cast<Tag>() ).map( (s) => s.name ).toList();
+      List<String> alsoBroken = List.generate(testTags.length, (index) => testTags[index].name);
+      printList(alsoBroken);
+      var map1 = Map.fromIterable(testTags, key: (e) => e.name, value: (e) => e.age);
       while( listIterator.moveNext() ) {
         Tag tag = listIterator.current;
         TagModel model = TagModel.fromTag(tag);
