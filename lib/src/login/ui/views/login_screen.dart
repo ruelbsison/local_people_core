@@ -60,7 +60,7 @@ class LoginScreenState extends State<LoginScreen> {
                 //const Text('⛅', style: TextStyle(fontSize: 64)),
                 Text(
                   'Verifying access',
-                  style: theme.textTheme.headline6,
+                  style: theme.textTheme.bodyText1,
                 ),
               ],
             )
