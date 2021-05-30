@@ -4,11 +4,6 @@ abstract class MessageEvent extends Equatable {
   const MessageEvent();
 }
 
-class LoadMessageBoxEvent extends MessageEvent {
-  @override
-  List<Object> get props => [];
-}
-
 class LoadMessagesEvent extends MessageEvent {
   @override
   List<Object> get props => [];

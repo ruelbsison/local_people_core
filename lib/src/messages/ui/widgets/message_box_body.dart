@@ -3,7 +3,7 @@ import 'package:local_people_core/core.dart';
 import '../../domain/entities/message_box.dart';
 import '../views/messages_screen.dart';
 import 'package:flutter/material.dart';
-import '../blocs/message_bloc.dart';
+import '../blocs/message_box_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
 import 'message_box_card.dart';
@@ -40,7 +40,7 @@ class MessageBoxBody extends StatelessWidget {
         Expanded(
           child: RefreshIndicator(
             onRefresh: () async{
-              context.read<MessageBloc>().add(LoadMessageBoxEvent());
+              context.read<MessageBoxBloc>().add(LoadMessageBoxEvent());
             },
             child: ListView.builder(
             itemCount: messages.length,

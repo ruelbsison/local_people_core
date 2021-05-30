@@ -19,8 +19,10 @@ class MessagesScreen extends StatelessWidget {
           builder: (context, state) {
             if (state is MessageLoading) {
               return LoadingWidget();
-            } else if (state is LoadMessageFailed) {
+            } else if (state is MessageInitial) {
               return LoadingWidget();
+            } else if (state is LoadMessageFailed) {
+              return ErrorWidget('Error $state');
             } else if (state is MessageLoaded) {
               return MessageBody(messages: state.messages,);
             }

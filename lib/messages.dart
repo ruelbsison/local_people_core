@@ -12,6 +12,7 @@ export './src/messages/data/datasources/message_remote_data_source.dart';
 export './src/messages/data/datasources/message_remote_data_source_impl.dart';
 export './src/messages/data/repositories/message_repository_impl.dart';
 
+export './src/messages/ui/blocs/message_box_bloc.dart';
 export './src/messages/ui/blocs/message_bloc.dart';
 export './src/messages/ui/widgets/text_message.dart';
 export './src/messages/ui/widgets/audio_message.dart';

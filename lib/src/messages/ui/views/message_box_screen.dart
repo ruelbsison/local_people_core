@@ -1,6 +1,6 @@
 import 'package:local_people_core/core.dart';
 import 'package:flutter/material.dart';
-import '../blocs/message_bloc.dart';
+import '../blocs/message_box_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/message_box_body.dart';
 
@@ -14,19 +14,21 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    context.read<MessageBloc>().add(LoadMessageBoxEvent());
+    context.read<MessageBoxBloc>().add(LoadMessageBoxEvent());
     return Scaffold(
       //appBar: buildAppBar(),
       appBar: buildAppBar(context),
       //body: MessageBoxBody(),
       body: BlocProvider.value(
-        value: context.read<MessageBloc>(),
-        child: BlocBuilder<MessageBloc, MessageState>(
+        value: context.read<MessageBoxBloc>(),
+        child: BlocBuilder<MessageBoxBloc, MessageBoxState>(
           builder: (context, state) {
             if (state is MessageBoxLoading) {
               return LoadingWidget();
-            } else if (state is LoadMessageBoxFailed) {
+            } else if (state is MessageBoxInitial) {
               return LoadingWidget();
+            } else if (state is LoadMessageBoxFailed) {
+              return ErrorWidget('Error: $state');
             } else if (state is MessageBoxLoaded) {
               return MessageBoxBody(messages: state.messages,);
             }
@@ -42,7 +44,7 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
           color: Colors.white,
         ),
       ),
-      bottomNavigationBar: buildBottomNavigationBar(),
+      //bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
 
