@@ -49,6 +49,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } else if (event is ClientProfileGetEvent) {
       yield ClientProfileGetLoading();
       yield* _mapClientProfileGetToStateWithId(event.id);
+    } else if (event is TraderProfileGetEvent) {
+      yield TraderProfileGetLoading();
+      yield* _mapTraderProfileGetToStateWithId(event.id);
     }
   }
 
@@ -66,6 +69,23 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
     } catch (e) {
       yield ClientProfileGetFailed(e.toString());
+    }
+  }
+
+  Stream<ProfileState> _mapTraderProfileGetToStateWithId(int clientId) async* {
+    try {
+      TraderResponse response = await profileRepository.getTraderProfile(clientId);
+      if (response != null && response.exception != null) {
+        yield TraderProfileGetFailed(response.exception.toString());
+      } else if (response != null && response.profile == null) {
+        yield  TraderProfileGetFailed('');
+      } else if (response != null && response.profile != null) {
+        AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
+        response.profile.photo = authLocalModel.userPhoto;
+        yield TraderProfileGetLoaded(response.profile);
+      }
+    } catch (e) {
+      yield TraderProfileGetFailed(e.toString());
     }
   }
 

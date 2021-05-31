@@ -175,3 +175,27 @@ class ClientProfileGetFailed extends ProfileState {
     return 'ClientProfileGetFailed{e: $e}';
   }
 }
+
+class TraderProfileGetLoading extends ProfileState {}
+
+class TraderProfileGetLoaded extends ProfileState {
+  final TraderProfile profile;
+
+  const TraderProfileGetLoaded(this.profile);
+
+  @override
+  String toString() {
+    return 'ClientProfile{e: $profile}';
+  }
+}
+
+class TraderProfileGetFailed extends ProfileState {
+  final String e;
+
+  const TraderProfileGetFailed(this.e);
+
+  @override
+  String toString() {
+    return 'ClientProfileGetFailed{e: $e}';
+  }
+}

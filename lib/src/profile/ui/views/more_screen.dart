@@ -52,7 +52,7 @@ class _MoreScreenState extends State<MoreScreen> {
 
   Widget _buildBody() { //}BuildContext context) {
     final appType = AppConfig.of(context).appType;
-    BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
+    //BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
     return SafeArea(
       child: Flex (
         direction: Axis.vertical,
@@ -67,7 +67,7 @@ class _MoreScreenState extends State<MoreScreen> {
                 profileRepository: RepositoryProvider.of<ProfileRepository>(context),
                 appType: appType,
                 authLocalDataSource: sl<AuthLocalDataSource>(),
-              ),
+              )..add(ProfileGetEvent()),
               child: BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {
                 if (state is ClientProfileLoaded) {
