@@ -46,6 +46,26 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     } else if (event is ProfileGetTraderTopRatedEvent) {
       yield ProfileTraderTopRatedLoading();
       yield* _mapTraderProfileUGetTapRatedToState();
+    } else if (event is ClientProfileGetEvent) {
+      yield ClientProfileGetLoading();
+      yield* _mapClientProfileGetToStateWithId(event.id);
+    }
+  }
+
+  Stream<ProfileState> _mapClientProfileGetToStateWithId(int clientId) async* {
+    try {
+       ClientResponse response = await profileRepository.getClientProfile(clientId);
+      if (response != null && response.exception != null) {
+        yield ClientProfileGetFailed(response.exception.toString());
+      } else if (response != null && response.profile == null) {
+        yield  ClientProfileGetFailed('');
+      } else if (response != null && response.profile != null) {
+        AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
+        response.profile.photo = authLocalModel.userPhoto;
+        yield ClientProfileGetLoaded(response.profile);
+      }
+    } catch (e) {
+      yield ClientProfileGetFailed(e.toString());
     }
   }
 
@@ -77,7 +97,10 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
       response = await profileRepository.getClientProfile(userId);
       if (response != null && response.exception != null) {
-        yield ProfileNotLoaded(response.exception.toString());
+        if (response.exception.toString().contains(new RegExp(r'NoSuchMethodError')) == true)
+          yield ProfileDoesNotExists();
+        else
+          yield ProfileNotLoaded(response.exception.toString());
       } else if (response != null && response.profile == null) {
         yield  ProfileDoesNotExists();
       } else if (response != null && response.profile != null) {
@@ -102,9 +125,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
         response = await profileRepository.findTraderProfileWithEmail(email);
         if (response != null && response.exception != null) {
-          yield ProfileNotLoaded(response.exception.toString());
+          if (response.exception.toString().contains(new RegExp(r'NoSuchMethodError')) == true)
+            yield ProfileDoesNotExists();
+          else
+            yield ProfileNotLoaded(response.exception.toString());
+          return;
         } else if (response != null && response.profile == null) {
-          yield  ProfileDoesNotExists();
+          yield ProfileDoesNotExists();
+          return;
         } else if (response != null && response.profile != null) {
           AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
           authLocalModel.userId = response.profile.id;

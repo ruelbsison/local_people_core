@@ -41,5 +41,14 @@ class TraderProfileUpdateEvent extends ProfileEvent {
   List<Object> get props => [profile];
 }
 
+class ClientProfileGetEvent extends ProfileEvent {
+  const ClientProfileGetEvent({@required this.id});
+
+  final int id;
+
+  @override
+  List<Object> get props => [id];
+}
+
 
 

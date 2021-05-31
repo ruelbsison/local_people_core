@@ -2,6 +2,9 @@ import 'package:flutter/material.dart';
 import '../../domain/entities/trader_profile.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
+import 'package:intl/intl.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:local_people_core/core.dart';
 
 class ProfileTraderBody extends StatefulWidget {
   ProfileTraderBody({@required this.profile});
@@ -53,10 +56,10 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
       padding: EdgeInsets.all(12.0),
       //margin: EdgeInsets.all(12.0),
       child: Text(
-        'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus nulla vel iaculis aliquet. Integer lacus nibh, elementum id feugiat vel, hendrerit in metus. Donec interdum imperdiet sem eu facilisis. Duis eu sapien in elit eleifend dictum. Nunc at odio tempus lacus pretium fermentum. ',
+        widget.profile.intro != null ? widget.profile.intro : '',
         maxLines: 12,
         overflow: TextOverflow.ellipsis,
-        textDirection: TextDirection.rtl,
+        //textDirection: TextDirection.RTL,
         textAlign: TextAlign.left,
         style: theme.textTheme.bodyText2,
       ),
@@ -72,7 +75,7 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
         mainAxisAlignment: MainAxisAlignment.start,
         children: <Widget>[
           Text(
-            'About The Client',
+            'About The Trader',
             textAlign: TextAlign.left,
             style: theme.textTheme.bodyText1,
           ),
@@ -80,7 +83,9 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
           Opacity (
             opacity: 0.64,
             child: Text(
-              'Member since DD-MM-YYYY',
+              'Member since ' +
+                  DateFormat('dd-MM-yyyy')
+                      .format(widget.profile.memberSince),
               textAlign: TextAlign.left,
               style: theme.textTheme.bodyText2,
             ),
@@ -118,16 +123,19 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
                       children: <Widget> [
                         Expanded(
                           flex: 1,
-                          child: CircleAvatar(
-                            //backgroundColor: Color(0xff0075ff),
-                            radius: 12,
-                            child: Center (
-                                child: Image.asset(
-                                  'packages/local_people_core/assets/images/verified-icon.png',
-                                  fit: BoxFit.contain,
-                                  height: 22,
-                                  width: 22,
-                                )
+                          child: ClipOval (
+                            child: CachedNetworkImage(
+                              imageUrl: widget.profile.photo,
+                              width: 60,
+                              height: 60,
+                              placeholder: (context, url) => LoadingWidget(
+                                isImage: true,
+                              ),
+                              errorWidget: (context, url, error) => Image.asset(
+                                'packages/local_people_core/assets/images/trader-profile-photo.png',
+                                fit: BoxFit.cover,
+                              ),
+                              fit: BoxFit.cover,
                             ),
                           ),
                         ),

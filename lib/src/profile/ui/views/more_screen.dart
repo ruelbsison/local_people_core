@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
+import 'package:local_people_core/auth.dart';
 import '../../domain/entities/profile_item.dart';
+import '../../domain/repositories/profile_repository.dart';
 import '../../domain/entities/more_item.dart';
 import '../../ui/widgets/profile_card.dart';
 import '../../ui/widgets/more_item_card.dart';
@@ -49,7 +51,7 @@ class _MoreScreenState extends State<MoreScreen> {
   }
 
   Widget _buildBody() { //}BuildContext context) {
-    //final appType = AppConfig.of(context).appType;
+    final appType = AppConfig.of(context).appType;
     BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
     return SafeArea(
       child: Flex (
@@ -60,7 +62,13 @@ class _MoreScreenState extends State<MoreScreen> {
         children: [
           Expanded (
             flex: 2,
-            child: BlocBuilder<ProfileBloc, ProfileState>(
+            child: BlocProvider(
+              create: (context) => ProfileBloc(
+                profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+                appType: appType,
+                authLocalDataSource: sl<AuthLocalDataSource>(),
+              ),
+              child: BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {
                 if (state is ClientProfileLoaded) {
                   ProfileItem item = ProfileItem(
@@ -83,6 +91,7 @@ class _MoreScreenState extends State<MoreScreen> {
                 }
               }
             ),
+          ),
           ),
         Expanded (
           flex: 5,

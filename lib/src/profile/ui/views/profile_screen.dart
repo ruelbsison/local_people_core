@@ -46,8 +46,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
     //Widget topContent = (appType == AppType.CLIENT ? ProfileClientHeader(profile: new ClientProfile()) : ProfileTraderHeader(profile: new TraderProfile()));
     // TODO:: Ruel
     Widget bodyContent = (appType == AppType.CLIENT
-        ? ProfileClientBody(profile: new ClientProfile())
-        : ProfileTraderBody(profile: new TraderProfile()));
+        ? ProfileClientBody(profile: widget.profile)
+        : ProfileTraderBody(profile: widget.profile));
     // return Scaffold(
     //   appBar: buildAppBar(context),
     //   body: bodyContent,
