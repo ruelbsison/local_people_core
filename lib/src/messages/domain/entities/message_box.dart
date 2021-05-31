@@ -1,14 +1,39 @@
-class MessageBox {
+class MessageBox implements Comparable {
   final String name, lastMessage, image, time;
   final bool isActive;
+  final int jobId;
+  final int traderId;
+  final DateTime createdAt;
+  //int senderId;
 
   MessageBox({
     this.name,
+    this.jobId,
+    this.traderId,
     this.lastMessage,
     this.image,
     this.time,
     this.isActive,
+    this.createdAt,
+    //this.senderId,
   });
+
+  @override
+  int compareTo(other) {
+    if (this.createdAt == null && other.createdAt == null)
+      return 0;
+    else if (this.createdAt == null && other.createdAt != null)
+      return 1;
+    else if (this.createdAt != null && other.createdAt == null)
+      return -1;
+
+    if (this.createdAt.isAfter(other.createdAt) == true)
+      return 1;
+    else if (this.createdAt.isBefore(other.createdAt) == true)
+      return -1;
+
+    return 0;
+  }
 }
 
 List messageBoxsData = [

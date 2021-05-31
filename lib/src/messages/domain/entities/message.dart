@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 enum MessageType { text, audio, image, video }
 enum MessageStatus { not_sent, not_view, viewed }
 
-class Message {
+class Message implements Comparable {
   final int id;
-  final int clientId;
+  int clientId;
   final String text;
   final MessageType messageType;
   final MessageStatus messageStatus;
@@ -13,7 +13,8 @@ class Message {
   final String subject;
   final DateTime createdAt;
   final int jobId;
-  final int traderId;
+  int traderId;
+  //int senderId;
 
   Message({
     @required this.id,
@@ -25,8 +26,27 @@ class Message {
     @required this.messageType,
     @required this.messageStatus,
     @required this.jobId,
+    //this.senderId,
     @required this.isSender = false,
   });
+
+  @override
+  int compareTo(other) {
+    if (this.jobId < other.jobId) {
+      return 1;
+    }
+    if (this.jobId > other.jobId) {
+      return -1;
+    }
+
+    if (this.traderId < other.traderId) {
+      return 1;
+    }
+    if (this.traderId > other.traderId) {
+      return -1;
+    }
+    return 0;
+  }
 }
 
 List<Message> demoMessages = [
