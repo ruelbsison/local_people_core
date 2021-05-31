@@ -101,6 +101,8 @@ class JobModel extends Equatable {
     if (job.location != null) {
       model.location_id = job.location.id;
     }
+    
+    return model;
   }
 
   @override

@@ -224,16 +224,19 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
 
   Widget buildBody(BuildContext context) {
     //BuildContext context) {
-    return BlocListener<JobFormBloc, JobFormState>(
+    return BlocProvider.value(value:
+    BlocProvider.of<JobFormBloc>(context),
+    child: BlocListener<JobFormBloc, JobFormState>(
       listener: (context, state) {
         if (state is JobFormState) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
         } else if (state is JobFormPostCompleted) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          showDialog<void>(
-            context: context,
-            builder: (_) => SuccessDialog(context),
-          );
+          // showDialog<void>(
+          //   context: context,
+          //   builder: (_) => SuccessDialog(context),
+          // );
+          Navigator.of(context).popUntil(ModalRoute.withName('/'));
         } else if (state is JobFormPosting) {
           ScaffoldMessenger.of(context)
             ..hideCurrentSnackBar()
@@ -243,7 +246,7 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
         }
       },
       child: buildTabBody(context),
-    );
+    ),);
   }
 
   Widget buildTabBody(BuildContext context) {
