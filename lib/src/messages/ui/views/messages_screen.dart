@@ -40,6 +40,7 @@ class _MessageScreenState extends State<MessagesScreen> {
               return ErrorWidget('Error $state');
             } else if (state is JobMessageLoaded) {
               return MessageBody(
+                messageBox: widget.messageBox,
                 messages: state.messages,
                 showInputMessage: true,
               );

@@ -32,15 +32,15 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     super.initState();
 
     _controller = TabController(length: 2, vsync: this);
-    _controller.addListener(() {
-      setState(() {
-        if (_controller.index == 1) {
-          context
-              .read<MessageBloc>()
-              .add(LoadJobMessagesEvent(jobId: widget.job.id));
-        }
-      });
-    });
+    // _controller.addListener(() {
+    //   setState(() {
+    //     if (_controller.index == 1) {
+    //       context
+    //           .read<MessageBloc>()
+    //           .add(LoadJobMessagesEvent(jobId: widget.job.id));
+    //     }
+    //   });
+    // });
   }
 
   @override
@@ -197,7 +197,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
             messageRepository: RepositoryProvider.of<MessageRepository>(context),
             appType: appType,
             authLocalDataSource: sl<AuthLocalDataSource>(),
-          ),
+          )..add(LoadJobMessagesEvent(jobId: widget.job.id)),
           child: BlocBuilder<MessageBloc, MessageState>(
             builder: (context, state) {
               if (state is MessageInitial) {
@@ -208,6 +208,12 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                 return ErrorWidget('Unhandle State $state');
               } else if (state is JobMessageLoaded) {
                 return MessageBody(
+                  messageBox: new MessageBox(
+                    name: widget.job.title,
+                    jobId: widget.job.id,
+                    traderId: widget.job.traderId,
+                    clientId: widget.job.clientId,
+                  ),
                   messages: state.messages,
                 );
               }

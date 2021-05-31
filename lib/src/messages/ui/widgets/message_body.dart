@@ -1,5 +1,6 @@
 import '../../../core/configs/constants.dart';
 import '../../domain/entities/message.dart';
+import '../../domain/entities/message_box.dart';
 import '../../domain/repositories/message_repository.dart';
 import 'package:flutter/material.dart';
 import '../blocs/message_bloc.dart';
@@ -12,38 +13,46 @@ import 'message_widget.dart';
 class MessageBody extends StatefulWidget {
   MessageBody({
     Key key,
+    @required this.messageBox,
     @required this.messages,
     this.showInputMessage = true,
   }) : super(key: key);
 
   final List<Message> messages;
   final bool showInputMessage;
+  final MessageBox messageBox;
 
   @override
   _MessageBodyState createState() => _MessageBodyState();
 }
 
 class _MessageBodyState extends State<MessageBody> {
-  int jobId;
-  int clientId;
-  int traderId;
-  String subject;
-
-  @override
-  void initState() {
-    if (widget.messages.length > 0) {
-      Message message = widget.messages[0];
-      jobId = message.jobId;
-      clientId = message.clientId;
-      traderId = message.traderId;
-      subject = message.subject;
-    }
-    super.initState();
-  }
-
   @override
   Widget build(BuildContext context) {
     final appType = AppConfig.of(context).appType;
+    // return BlocListener<MessageBloc, MessageState>(
+    //   listener: (context, state) {
+    //     if (state is MessageInitial) {
+    //       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    //     } else if (state is MessageSending) {
+    //       ScaffoldMessenger.of(context)
+    //         ..hideCurrentSnackBar()
+    //         ..showSnackBar(
+    //           const SnackBar(content: Text('Sending ...')),
+    //         );
+    //     } else if (state is SendMessageFailed) {
+    //       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    //       return ErrorWidget('Error: $state');
+    //     } else if (state is MessageSent) {
+    //       ScaffoldMessenger.of(context).hideCurrentSnackBar();
+    //       setState(() {
+    //         widget.messages.add(state.message);
+    //       });
+    //       //context.read<MessageBloc>().add(LoadJobMessagesEvent(jobId: jobId));
+    //     }
+    //   },
+    //   child: builBody(context),
+    // );
     return BlocProvider(
       create: (context) => MessageBloc(
         messageRepository: RepositoryProvider.of<MessageRepository>(context),
@@ -91,10 +100,10 @@ class _MessageBodyState extends State<MessageBody> {
         ),
         if (widget.showInputMessage == true)
           MessageInputField(
-            jobId: jobId,
-            clientId: clientId,
-            traderId: traderId,
-            subject: subject,
+            jobId: widget.messageBox.jobId,
+            clientId: widget.messageBox.clientId,
+            traderId: widget.messageBox.traderId,
+            subject: widget.messageBox.name,
           ),
       ],
     );

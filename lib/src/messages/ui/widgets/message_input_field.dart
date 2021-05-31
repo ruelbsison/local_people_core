@@ -100,8 +100,8 @@ class _MessageInputFieldState extends State<MessageInputField> {
                                 text: msg,
                                 subject: widget.subject,
                               );
-                              //BlocProvider.of<MessageBloc>(context).add(SendMessageEvent(message: message));
-                              context.read<MessageBloc>().add(SendMessageEvent(message: message));
+                              BlocProvider.of<MessageBloc>(context).add(SendMessageEvent(message: message));
+                              //context.read<MessageBloc>().add(SendMessageEvent(message: message));
                             }
                           });
                         },

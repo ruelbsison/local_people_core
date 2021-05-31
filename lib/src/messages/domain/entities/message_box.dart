@@ -3,6 +3,7 @@ class MessageBox implements Comparable {
   final bool isActive;
   final int jobId;
   final int traderId;
+  final int clientId;
   final DateTime createdAt;
   //int senderId;
 
@@ -10,6 +11,7 @@ class MessageBox implements Comparable {
     this.name,
     this.jobId,
     this.traderId,
+    this.clientId,
     this.lastMessage,
     this.image,
     this.time,
