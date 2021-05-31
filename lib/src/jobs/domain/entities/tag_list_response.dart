@@ -7,7 +7,7 @@ class TagListResponse {
   List<Tag> tags;
 
   void fromModel(List<TagModel> list) {
-    tags = List<Tag>();
+    tags = [];
 
     var listIter = list.iterator;
     while(listIter.moveNext() ) {

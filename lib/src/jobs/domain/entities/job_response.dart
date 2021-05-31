@@ -2,6 +2,7 @@ import 'job.dart';
 import 'location.dart';
 import '../../data/models/job_model.dart';
 import '../../data/models/location_model.dart';
+import '../../domain/entities/tag.dart';
 
 class JobResponse {
   Exception exception;
@@ -27,11 +28,19 @@ class JobResponse {
         date: DateTime.parse(model.date),
       );
 
-      if (model.location != null) {
+      if (model.tag_ids != null && model.tag_ids.length > 0) {
+        Iterator tagIter = model.tag_ids.iterator;
+        while(tagIter.moveNext()) {
+          int tagId = tagIter.current;
+          job.tags.add(new Tag(
+            id: tagId,
+            name: '',
+          ));
+        }
+      }
+      if (model.location_id != null) {
         job.location = Location (
-          id: model.location.id,
-          name: model.location.name,
-          address: model.location.address,
+          id: model.location_id,
         );
       }
 
