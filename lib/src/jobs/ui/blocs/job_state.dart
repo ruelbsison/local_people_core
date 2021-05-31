@@ -22,7 +22,7 @@ class JobLoaded extends JobState {
 
   @override
   String toString() {
-    return 'HomeLoaded{response: $jobs}';
+    return 'JobLoaded{response: $jobs}';
   }
 }
 
@@ -34,5 +34,34 @@ class JobNotLoaded extends JobState {
   @override
   String toString() {
     return 'JobNotLoaded{e: $e}';
+  }
+}
+
+class OpportunitiesLoading extends JobState {}
+
+class OpportunitiesLoaded extends JobState {
+  final List<Job> jobs;
+
+  const OpportunitiesLoaded(this.jobs);
+
+  @override
+  List<Object> get props {
+    return [jobs];
+  }
+
+  @override
+  String toString() {
+    return 'OpportunitiesLoaded{response: $jobs}';
+  }
+}
+
+class OpportunitiesNotLoaded extends JobState {
+  final String e;
+
+  const OpportunitiesNotLoaded(this.e);
+
+  @override
+  String toString() {
+    return 'OpportunitiesNotLoaded{e: $e}';
   }
 }

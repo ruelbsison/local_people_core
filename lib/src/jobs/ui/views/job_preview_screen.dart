@@ -13,6 +13,12 @@ import 'package:permission_handler/permission_handler.dart';
 import '../blocs/job_form_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/core.dart';
+import '../../domain/repositories/job_repository.dart';
+import '../../domain/repositories/tag_repository.dart';
+import '../../domain/repositories/location_repository.dart';
+import 'package:local_people_core/profile.dart';
+import 'package:local_people_core/auth.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class JobPreviewScreen extends StatefulWidget {
   JobPreviewScreen({
@@ -25,18 +31,17 @@ class JobPreviewScreen extends StatefulWidget {
   //final Profile profile;
 
   @override
-  _JobPreviewScreenState createState() =>
-      _JobPreviewScreenState();
+  _JobPreviewScreenState createState() => _JobPreviewScreenState();
 }
 
 class _JobPreviewScreenState extends State<JobPreviewScreen>
-with TickerProviderStateMixin {
+    with TickerProviderStateMixin {
   TabController _controller;
   int _tab = 0;
 
   void requestPermission() async {
     Map<Permission, PermissionStatus> statuses =
-    await [Permission.location].request();
+        await [Permission.location].request();
   }
 
   @override
@@ -47,7 +52,7 @@ with TickerProviderStateMixin {
     _controller.addListener(() {
       setState(() {
         //if (_controller.index == 1) {
-          //context.read<JobBloc>().add(LoadJobs());
+        //context.read<JobBloc>().add(LoadJobs());
         //}
       });
     });
@@ -59,20 +64,25 @@ with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return Scaffold(
       //appBar: buildAppBar(context),
-      appBar: buildAppBar(),
+      appBar: buildAppBar(context),
       //body: buildTabBody(context),
-      //body: buildBody(context),
-      body: BlocProvider.value(
-        value: BlocProvider.of<JobFormBloc>(context),
-        child: buildBody(),
-      ),
+      //body: buildTabBody(context),
+      body: buildBody(context),
+      // body: BlocProvider.value(
+      //   value: BlocProvider.of<JobFormBloc>(context),
+      //   child: buildBody(),
+      // ),
     );
 
     //return buildBody(context);
   }
 
-  AppBar buildAppBar() { //}BuildContext context) {
+  AppBar buildAppBar(BuildContext context) {
+    //}BuildContext context) {
     final theme = Theme.of(context);
+    final appType = AppConfig.of(context).appType;
+    //context.read<ProfileBloc>().add(ProfileGetEvent());
+    //BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
     return AppBar(
       /*leading: Text(
         LocalPeopleLocalizations.of(context).menuTitleOpportunities,
@@ -80,80 +90,104 @@ with TickerProviderStateMixin {
       toolbarHeight: 220.0,
       centerTitle: false,
       titleSpacing: 0,
-      title: Column (
-        //padding: EdgeInsets.only(bottom: 12.0),
-        //child: Flex(
-        children: <Widget> [
-          SizedBox(height: 60.0),
-          Flex(
-          direction: Axis.horizontal,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Flex(
-                direction: Axis.vertical,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundColor: Color.fromRGBO(255,166,0,1),
-                    radius: 15,
-                    child: Center (
-                        child: Image.asset(
-                          'packages/local_people_core/assets/images/package-icon.png',
-                          fit: BoxFit.contain,
-                          height: 19,
-                          width: 19,
-                        )
-                    ),
-                  ),
-                  Text(
-                    // (widget.job.minutesLeft / 60).toString() + ' hrs left',
-                    widget.job.minutesLeft.toString() + ' hrs left',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Color.fromRGBO(0, 63, 92, 1),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'RedHatDisplay'),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Flex(
-                direction: Axis.vertical,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  //Expanded(
-                  //  flex: 2,
-                  //child: Text(
-                  Text(
-                    widget.job.title != null ? widget.job.title : widget.job.description,
-                    textAlign: TextAlign.left,
-                    style: theme.textTheme.headline6,
-                  ),
-                  //),
-                  //Expanded(
-                  //  flex: 1,
-                  //child: Text(
-                  Text(
-                    'Client Name',
-                    textAlign: TextAlign.left,
-                    style: theme.textTheme.bodyText1,
-                  ),
-                  //),
-                ],
-              ),
-            ),
-          ],
+      title: BlocProvider(
+        create: (context) => ProfileBloc(
+          profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+          appType: appType,
+          authLocalDataSource: sl<AuthLocalDataSource>(),
+        )..add(ProfileGetEvent()),
+        child: BlocBuilder<ProfileBloc, ProfileState>(
+            builder: (context, state) {
+              if (state is ClientProfileLoaded) {
+                return Column(
+                    //padding: EdgeInsets.only(bottom: 12.0),
+                    //child: Flex(
+                    children: <Widget>[
+                      SizedBox(height: 60.0),
+                      Flex(
+                        direction: Axis.horizontal,
+                        mainAxisSize: MainAxisSize.max,
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: <Widget>[
+                          Expanded(
+                            flex: 1,
+                            child: Flex(
+                              direction: Axis.vertical,
+                              crossAxisAlignment: CrossAxisAlignment.stretch,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                CircleAvatar(
+                                  backgroundColor: Color.fromRGBO(255, 166, 0, 1),
+                                  radius: 15,
+                                  child: CachedNetworkImage(
+                                    imageUrl: state.profile.photo,
+                                    placeholder: (context, url) => LoadingWidget(
+                                      isImage: true,
+                                    ),
+                                    errorWidget: (context, url, error) => Image.asset(
+                                      'packages/local_people_core/assets/images/local-people-logo.png',
+                                      fit: BoxFit.cover,
+                                    ),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                Text(
+                                  // (widget.job.minutesLeft / 60).toString() + ' hrs left',
+                                  //widget.job.minutesLeft.toString() + ' hrs left',
+                                  DateFormatUtil.getDateTimeDiff(DateTime.now(), widget.job.date),
+                                  textAlign: TextAlign.center,
+                                  style: TextStyle(
+                                      color: Color.fromRGBO(0, 63, 92, 1),
+                                      fontSize: 10,
+                                      fontWeight: FontWeight.w500,
+                                      fontFamily: 'RedHatDisplay'),
+                                ),
+                              ],
+                            ),
+                          ),
+                          Expanded(
+                            flex: 4,
+                            child: Flex(
+                              direction: Axis.vertical,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: <Widget>[
+                                //Expanded(
+                                //  flex: 2,
+                                //child: Text(
+                                Text(
+                                  widget.job.title != null
+                                      ? widget.job.title
+                                      : widget.job.description,
+                                  textAlign: TextAlign.left,
+                                  style: theme.textTheme.headline6,
+                                ),
+                                //),
+                                //Expanded(
+                                //  flex: 1,
+                                //child: Text(
+                                Text(
+                                  (state.profile.fullName != null
+                                      ? state.profile.fullName
+                                      : 'Client Full Name'),
+                                  textAlign: TextAlign.left,
+                                  style: theme.textTheme.bodyText1,
+                                ),
+                                //),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ],);
+              } else if (state is ProfileNotLoaded) {
+                return ErrorWidget(state.e.toString());
+              } else {
+                return LoadingWidget();
+              }
+            }
         ),
-      ]
       ),
       elevation: 0.0,
       bottom: TabBar(
@@ -188,10 +222,13 @@ with TickerProviderStateMixin {
     );
   }
 
-  Widget buildBody() { //BuildContext context) {
+  Widget buildBody(BuildContext context) {
+    //BuildContext context) {
     return BlocListener<JobFormBloc, JobFormState>(
       listener: (context, state) {
-        if (state is JobFormPostCompleted) {
+        if (state is JobFormState) {
+          ScaffoldMessenger.of(context).hideCurrentSnackBar();
+        } else if (state is JobFormPostCompleted) {
           ScaffoldMessenger.of(context).hideCurrentSnackBar();
           showDialog<void>(
             context: context,
@@ -220,10 +257,12 @@ with TickerProviderStateMixin {
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
-              JobViewWidget(job: widget.job,),
+              JobViewWidget(
+                job: widget.job,
+              ),
               //SizedBox(height: 10.0),
               //PostedByWidget(profile: widget.profile),
-              PostedByWidget(),
+              PostedByWidget(clientId: widget.job.clientId),
               //SizedBox(height: 10.0),
               //PostActionsWidget(),
               _jobPostActions(context),
@@ -250,8 +289,7 @@ with TickerProviderStateMixin {
         children: <Widget>[
           Container(
             color: Colors.white,
-            child: Flex(
-                direction: Axis.horizontal,
+            child: Flex(direction: Axis.horizontal,
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
@@ -276,18 +314,16 @@ with TickerProviderStateMixin {
                     child: CircleAvatar(
                       backgroundColor: Color(0xbbd0d9),
                       radius: 16,
-                      child: Center (
+                      child: Center(
                           child: Image.asset(
-                            'packages/local_people_core/assets/images/delete-job-icon.png',
-                            fit: BoxFit.contain,
-                            height: 25,
-                            width: 25,
-                          )
-                      ),
+                        'packages/local_people_core/assets/images/delete-job-icon.png',
+                        fit: BoxFit.contain,
+                        height: 25,
+                        width: 25,
+                      )),
                     ),
                   ),
-                ]
-            ),
+                ]),
           ),
           SizedBox(height: 30.0),
           Container(
@@ -300,26 +336,23 @@ with TickerProviderStateMixin {
                   Expanded(
                     flex: 1,
                     child: Container(
-                      padding:
-                      EdgeInsets.only(left: 12.0, right: 12.0),
+                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
                       child: ElevatedButton(
-                        onPressed: () => Navigator.of(context).popUntil(ModalRoute.withName('/')),
+                        onPressed: () => Navigator.of(context)
+                            .popUntil(ModalRoute.withName('/')),
                         child: Text(
-                            LocalPeopleLocalizations.of(context)
-                                .btnTitleSave),
+                            LocalPeopleLocalizations.of(context).btnTitleSave),
                       ),
                     ),
                   ),
                   Expanded(
                     flex: 1,
                     child: Container(
-                      padding:
-                      EdgeInsets.only(left: 12.0, right: 12.0),
+                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
                       child: ElevatedButton(
-                        onPressed: () => context.read<JobFormBloc>().add(JobFormPostEvent(job: widget.job)),
+                        onPressed: () => BlocProvider.of<JobFormBloc>(context).add((JobFormPostEvent(job: widget.job))),
                         child: Text(
-                            LocalPeopleLocalizations.of(context)
-                                .btnTitlePost),
+                            LocalPeopleLocalizations.of(context).btnTitlePost),
                       ),
                     ),
                   ),
@@ -358,7 +391,8 @@ with TickerProviderStateMixin {
             ),
             ElevatedButton(
               child: const Text('OK'),
-              onPressed: () => Navigator.of(context).popUntil(ModalRoute.withName('/')),
+              onPressed: () =>
+                  Navigator.of(context).popUntil(ModalRoute.withName('/')),
             ),
           ],
         ),
@@ -409,5 +443,3 @@ class JobPostButton extends StatelessWidget {
     );
   }
 }*/
-
-

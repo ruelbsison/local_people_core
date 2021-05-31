@@ -3,6 +3,10 @@ import 'package:flutter/material.dart';
 import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
 import '../widgets/job_view_widget.dart';
+import 'package:local_people_core/messages.dart';
+import 'package:local_people_core/core.dart';
+import 'package:local_people_core/auth.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class JobBidScreen extends StatefulWidget {
   JobBidScreen({
@@ -13,8 +17,7 @@ class JobBidScreen extends StatefulWidget {
   final Job job;
 
   @override
-  _JobBidScreenState createState() =>
-      _JobBidScreenState();
+  _JobBidScreenState createState() => _JobBidScreenState();
 }
 
 class _JobBidScreenState extends State<JobBidScreen>
@@ -27,6 +30,15 @@ class _JobBidScreenState extends State<JobBidScreen>
     super.initState();
 
     _controller = TabController(length: 2, vsync: this);
+    _controller.addListener(() {
+      setState(() {
+        if (_controller.index == 1) {
+          context
+              .read<MessageBloc>()
+              .add(LoadJobMessagesEvent(jobId: widget.job.id));
+        }
+      });
+    });
   }
 
   @override
@@ -46,7 +58,7 @@ class _JobBidScreenState extends State<JobBidScreen>
       toolbarHeight: 220.0,
       centerTitle: false,
       titleSpacing: 0,
-      title: Container (
+      title: Container(
         padding: EdgeInsets.only(bottom: 12.0),
         child: Flex(
           direction: Axis.horizontal,
@@ -62,16 +74,15 @@ class _JobBidScreenState extends State<JobBidScreen>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundColor: Color.fromRGBO(255,166,0,1),
+                    backgroundColor: Color.fromRGBO(255, 166, 0, 1),
                     radius: 15,
-                    child: Center (
+                    child: Center(
                         child: Image.asset(
-                          'packages/local_people_core/assets/images/package-icon.png',
-                          fit: BoxFit.contain,
-                          height: 19,
-                          width: 19,
-                        )
-                    ),
+                      'packages/local_people_core/assets/images/package-icon.png',
+                      fit: BoxFit.contain,
+                      height: 19,
+                      width: 19,
+                    )),
                   ),
                   Text(
                     // (widget.job.minutesLeft / 60).toString() + ' hrs left',
@@ -97,7 +108,9 @@ class _JobBidScreenState extends State<JobBidScreen>
                   //  flex: 2,
                   //child: Text(
                   Text(
-                    widget.job.title != null ? widget.job.title : widget.job.description,
+                    widget.job.title != null
+                        ? widget.job.title
+                        : widget.job.description,
                     textAlign: TextAlign.left,
                     style: theme.textTheme.headline6,
                   ),
@@ -152,6 +165,7 @@ class _JobBidScreenState extends State<JobBidScreen>
 
   Widget buildBody(BuildContext context) {
     final theme = Theme.of(context);
+    final appType = AppConfig.of(context).appType;
     return TabBarView(
       controller: _controller,
       children: <Widget>[
@@ -168,14 +182,35 @@ class _JobBidScreenState extends State<JobBidScreen>
                 JobViewWidget(job: widget.job),
                 SizedBox(height: 20.0),
                 //PostedByWidget(profile: widget.profile),
-                PostedByWidget(),
+                PostedByWidget(clientId: widget.job.clientId),
                 SizedBox(height: 50.0),
               ],
             ),
           ),
         ),
-        //MessageBody(),
-        Container(),
+        BlocProvider(
+          create: (context) => MessageBloc(
+            messageRepository: RepositoryProvider.of<MessageRepository>(context),
+            appType: appType,
+            authLocalDataSource: sl<AuthLocalDataSource>(),
+          ),
+          child: BlocBuilder<MessageBloc, MessageState>(
+            builder: (context, state) {
+              if (state is MessageInitial) {
+                return LoadingWidget();
+              } else if (state is JobMessageLoading) {
+                return LoadingWidget();
+              } else if (state is LoadJobMessageFailed) {
+                return ErrorWidget('Unhandle State $state');
+              } else if (state is JobMessageLoaded) {
+                return MessageBody(
+                  messages: state.messages,
+                );
+              }
+              return ErrorWidget('Unhandle State $state');
+            },
+          ),
+        ),
       ],
     );
   }

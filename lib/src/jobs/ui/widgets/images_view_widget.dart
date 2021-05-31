@@ -18,11 +18,11 @@ class ImagesViewWidget extends StatefulWidget {
       {@required this.images,
       this.minTagViewHeight = 80,
       this.maxTagViewHeight = 120,
-      this.tagBackgroundColor})
-      : assert(
-            images != null,
-            'Tags can\'t be empty\n'
-            'Provide the list of tags');
+      this.tagBackgroundColor});
+      // : assert(
+      //       images != null,
+      //       'Images can\'t be empty\n'
+      //       'Provide the list of images');
 
   @override
   _ImagesViewWidgetState createState() => _ImagesViewWidgetState();
@@ -49,7 +49,7 @@ class _ImagesViewWidgetState extends State<ImagesViewWidget> {
           ],
         );
       },
-      itemCount: widget.images.length,
+      itemCount: widget.images == null ? 0 : widget.images.length,
     );
   }
 

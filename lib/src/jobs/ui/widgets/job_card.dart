@@ -3,11 +3,9 @@ import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
 import 'locations_view_widget.dart';
 import 'tags_view_widget.dart';
-import 'package:flutter_icons/flutter_icons.dart';
 import '../views/job_detail_screen.dart';
 
 import '../../domain/entities/job.dart';
-import '../../domain/entities/profile.dart';
 
 typedef PressedOpportunity<T> = void Function(T item);
 
@@ -37,7 +35,7 @@ class _JobCardState extends State<JobCard> {
         AppRouter.pushPage(context, JobDetailScreen(job: widget.job,));
       },
       child:  Container(
-        padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+        padding: EdgeInsets.only(top: 6.0, bottom: 6.0),
         margin: EdgeInsets.all(12.0),
         decoration: BoxDecoration(
           color: Color.fromRGBO(255, 255, 255, 1),
@@ -72,7 +70,8 @@ class _JobCardState extends State<JobCard> {
                             ),
                           ),
                           Text(
-                            (widget.job.minutesLeft / 60).toString() + ' hrs left',
+                            //(widget.job.minutesLeft / 60).toString() + ' hrs left',
+                            DateFormatUtil.getDateTimeDiff(DateTime.now(), widget.job.date),
                             textAlign: TextAlign.center,
                             style: TextStyle(
                                 color: Color.fromRGBO(0, 63, 92, 1),
@@ -124,11 +123,11 @@ class _JobCardState extends State<JobCard> {
                         ),
                         SizedBox(height: 20.0),
                         LocationsViewWidget(
-                          location: widget.job.location.name,
+                          location: 'Location Name', //'widget.job.location.name,
                         ),
                         SizedBox(height: 5.0),
                         TagsViewWidget (
-                          tags: [], //widget.job.tags,
+                          tags: widget.job.tags,
                         )
                       ]
                   ),

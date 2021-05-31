@@ -35,4 +35,8 @@ class RefreshJobs extends JobEvent {
   // List<Object> get props => [userId];
 }
 
+class LoadOpportunities extends JobEvent {}
+
+class RefreshOpportunities extends JobEvent {}
+
 

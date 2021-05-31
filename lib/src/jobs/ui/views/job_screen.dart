@@ -1,8 +1,12 @@
 import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
 import '../widgets/job_card.dart';
+import '../widgets/your_job_card.dart';
 //import 'package:flutter_search_bar/flutter_search_bar.dart';
-import 'package:local_people_core/jobs.dart';
+import '../blocs/job_bloc.dart';
+import '../blocs/job_event.dart';
+import '../blocs/job_state.dart';
+import '../../domain/entities/job.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/profile.dart';
 
@@ -14,17 +18,17 @@ class JobScreen extends StatefulWidget {
 class _JobScreenState extends State<JobScreen> {
   //Completer<void> _refreshCompleter;
   final _scrollController = ScrollController();
-  JobBloc _jobBloc;
-  
+  //JobBloc _jobBloc;
+
   @override
   void initState() {
     super.initState();
 
     //_refreshCompleter = Completer<void>();
     _scrollController.addListener(_onScroll);
-    _jobBloc = context.read<JobBloc>();
+    //_jobBloc = context.read<JobBloc>();
     //int userId = BlocProvider.of<ProfileBloc>(context).profile.id;
-    _jobBloc.add(LoadJobs());
+    //_jobBloc.add(LoadJobs());
     //BlocProvider.of<JobBloc>(context).add(LoadJobs());
   }
 
@@ -65,27 +69,46 @@ class _JobScreenState extends State<JobScreen> {
 
   Widget buildBody(BuildContext context) {
     final appCType = AppConfig.of(context).appType;
-    return BlocBuilder<JobBloc, JobState>(
-      builder: (context, state) {
-        if (state is JobLoaded) {
-          return RefreshIndicator(
-            onRefresh: () async {
-              _jobBloc.add(RefreshJobs());
-            },
-            child: ListView.builder(
-              itemCount: state.jobs.length,
-              itemBuilder: (context, index) =>
-              (appCType == AppType.TRADER
-                  ? JobCard(job: state.jobs[index])
-                  : YourJobCard(job: state.jobs[index])),
-            ),
-          );
-        } if  (state is JobNotLoaded) {
-          return const Center(child: Text(''));
-        } else {
-          return const Center(child: CircularProgressIndicator());
-        }
+    if (appCType == AppType.CLIENT)
+      context.read<JobBloc>().add(LoadJobs());
+    else
+      context.read<JobBloc>().add(LoadOpportunities());
+    return BlocProvider.value(
+      value: context.read<JobBloc>(),
+      child: BlocBuilder<JobBloc, JobState>(
+        builder: (context, state) {
+          if (state is JobLoaded) {
+            return buildBodyList(state.jobs);
+          } else if (state is OpportunitiesLoaded) {
+            return buildBodyList(state.jobs);
+          } else if (state is JobNotLoaded) {
+            return ErrorWidget('Error $state');
+          }
+          if (state is OpportunitiesNotLoaded) {
+            return ErrorWidget('Error $state');
+          } else {
+            return const Center(child: CircularProgressIndicator());
+          }
+        },
+      ),
+    );
+  }
+
+  Widget buildBodyList(List<Job> jobs) {
+    final appCType = AppConfig.of(context).appType;
+    return RefreshIndicator(
+      onRefresh: () async {
+        if (appCType == AppType.CLIENT)
+          context.read<JobBloc>().add(RefreshJobs());
+        else
+          context.read<JobBloc>().add(RefreshOpportunities());
       },
+      child: ListView.builder(
+        itemCount: jobs.length,
+        itemBuilder: (context, index) => (appCType == AppType.TRADER
+            ? JobCard(job: jobs[index])
+            : YourJobCard(job: jobs[index])),
+      ),
     );
   }
 

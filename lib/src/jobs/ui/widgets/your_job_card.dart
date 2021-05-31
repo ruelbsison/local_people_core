@@ -30,7 +30,7 @@ class _YourJobCardState extends State<YourJobCard> {
         AppRouter.pushPage(context, JobBidScreen(job: widget.job,));
       },
       child:  Container(
-        padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+        padding: EdgeInsets.only(top: 6.0, bottom: 6.0),
         margin: EdgeInsets.all(12.0),
         decoration: BoxDecoration(
           color: Color.fromRGBO(255, 255, 255, 1),
@@ -111,7 +111,8 @@ class _YourJobCardState extends State<YourJobCard> {
                       children: <Widget> [
                         SizedBox(height: 5.0),
                         Text (
-                          DateFormat('dd MMMM yyyy').format(widget.job.date) + ' | 1 Hour',
+                          DateFormatUtil.getDateTimeDiff(DateTime.now(), widget.job.date),
+                          //DateFormat('dd MMMM yyyy').format(widget.job.date) + ' | 1 Hour',
                           textAlign: TextAlign.left,
                           style: textTheme.subtitle2,
                         ),

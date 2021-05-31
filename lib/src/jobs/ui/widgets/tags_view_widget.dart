@@ -11,10 +11,10 @@ class TagsViewWidget extends StatefulWidget {
     @required this.tags,
     this.minTagViewHeight = 0,
     this.maxTagViewHeight = 80,
-    this.tagBackgroundColor})
-      : assert(tags != null,
-  'Tags can\'t be empty\n'
-      'Provide the list of tags');
+    this.tagBackgroundColor});
+  //     : assert(tags != null,
+  // 'Tags can\'t be empty\n'
+  //     'Provide the list of tags');
 
   @override
   _TagWidgetState createState() => _TagWidgetState();
@@ -43,8 +43,10 @@ class _TagWidgetState extends State<TagsViewWidget> {
 
   List<Widget> buildTags() {
     List<Widget> tags = <Widget>[];
-    for(int i = 0; i < widget.tags.length; i++) {
-      tags.add(createTag(i, widget.tags[i].name));
+    if (widget.tags != null && widget.tags.length > 0) {
+      for(int i = 0; i < widget.tags.length; i++) {
+        tags.add(createTag(i, widget.tags[i].name));
+      }
     }
     return tags;
   }

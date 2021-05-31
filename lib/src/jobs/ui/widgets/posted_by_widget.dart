@@ -1,41 +1,52 @@
 import 'package:flutter/material.dart';
-import  'package:local_people_core/profile.dart';
+import 'package:local_people_core/profile.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/profile.dart';
 import 'package:local_people_core/core.dart';
+import 'package:local_people_core/auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
 
 class PostedByWidget extends StatefulWidget {
   PostedByWidget({
     Key key,
+    @required this.clientId,
   }) : super(key: key);
 
   //final ClientProfile profile = ClientProfile.empty;
-
+  final int clientId;
   @override
   _PostedByWidgetState createState() => _PostedByWidgetState();
 }
 
 class _PostedByWidgetState extends State<PostedByWidget> {
-
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
-    return BlocBuilder<ProfileBloc, ProfileState>(
-        builder: (context, state) {
-          if (state is ClientProfileLoaded) {
-            return buildContent(state.profile);
-          } else {
-            return LoadingWidget();
-          }
+    //BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
+    final appType = AppConfig.of(context).appType;
+    //context.read<ProfileBloc>().add(ClientProfileGetEvent(id: widget.clientId));
+    //BlocProvider.of<ProfileBloc>(context).add(ClientProfileGetEvent(id: widget.clientId));
+    return BlocProvider(
+      create: (context) => ProfileBloc(
+        profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+        appType: appType,
+        authLocalDataSource: sl<AuthLocalDataSource>(),
+      )..add(ClientProfileGetEvent(id: widget.clientId)),
+      child: BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+        if (state is ClientProfileGetLoaded) {
+          return buildContent(state.profile);
+        } else if (state is ClientProfileGetFailed) {
+          return ErrorWidget('Error $state');
+        } else {
+          return LoadingWidget();
         }
+      }),
     );
   }
 
   Widget buildContent(ClientProfile profile) {
     final textTheme = Theme.of(context).textTheme;
-    return  Container(
+    return Container(
       color: Colors.white,
       padding: EdgeInsets.all(12.0),
       // decoration: BoxDecoration(
@@ -43,7 +54,7 @@ class _PostedByWidgetState extends State<PostedByWidget> {
       //   borderRadius: BorderRadius.circular(5.0),
       // ),
       //height: 197,
-      child: Flex (
+      child: Flex(
         direction: Axis.vertical,
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.start,
@@ -54,12 +65,12 @@ class _PostedByWidgetState extends State<PostedByWidget> {
             style: textTheme.subtitle1,
           ),
           SizedBox(height: 20.0),
-          Flex (
+          Flex(
             direction: Axis.horizontal,
             crossAxisAlignment: CrossAxisAlignment.start,
             mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget> [
-              Expanded (
+            children: <Widget>[
+              Expanded(
                 flex: 1,
                 child: CircleAvatar(
                   //child: FlutterLogo(size: 75),
@@ -77,21 +88,25 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                   ),
                 ),
               ),
-              Expanded (
+              Expanded(
                   flex: 3,
-                  child: Flex (
+                  child: Flex(
                     direction: Axis.vertical,
                     crossAxisAlignment: CrossAxisAlignment.start,
                     mainAxisAlignment: MainAxisAlignment.start,
                     mainAxisSize: MainAxisSize.max,
-                    children: <Widget> [
+                    children: <Widget>[
                       Text(
-                        (profile.fullName != null ? profile.fullName : 'Client Full Name'),
+                        (profile.fullName != null
+                            ? profile.fullName
+                            : 'Client Full Name'),
                         textAlign: TextAlign.left,
                         style: textTheme.subtitle1,
                       ),
                       Text(
-                        'Member since DD-MM-YYYY',
+                        'Member since ' +
+                            DateFormat('dd-MM-yyyy')
+                                .format(profile.memberSince),
                         textAlign: TextAlign.left,
                         style: textTheme.bodyText1,
                       ),
@@ -108,93 +123,95 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                         ),
                       ),
                       SizedBox(height: 20.0),
-                      Flex (
+                      Flex(
                         direction: Axis.horizontal,
                         crossAxisAlignment: CrossAxisAlignment.start,
                         mainAxisAlignment: MainAxisAlignment.start,
-                        children: <Widget> [
+                        children: <Widget>[
                           Expanded(
                             flex: 1,
                             child: CircleAvatar(
                               //backgroundColor: Color(0xff0075ff),
                               radius: 12,
-                              child: Center (
+                              child: Center(
                                   child: Image.asset(
-                                    'packages/local_people_core/assets/images/verified-icon.png',
-                                    fit: BoxFit.contain,
-                                    height: 23,
-                                    width: 23,
-                                  )
-                              ),
+                                'packages/local_people_core/assets/images/verified-icon.png',
+                                fit: BoxFit.contain,
+                                height: 23,
+                                width: 23,
+                              )),
                             ),
                           ),
                           Expanded(
                               flex: 6,
-                              child: Flex (
+                              child: Flex(
                                 direction: Axis.vertical,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget> [
+                                children: <Widget>[
                                   Text(
-                                    'Payment Method ' + (profile.paymentMethodVerified == true ? 'Verified' : 'Not Verified'),
+                                    'Payment Method ' +
+                                        (profile.paymentMethodVerified == true
+                                            ? 'Verified'
+                                            : 'Not Verified'),
                                     textAlign: TextAlign.left,
                                     style: textTheme.subtitle1,
                                   ),
                                   Text(
-                                    'Member since ' + DateFormat('dd-MM-yyyy').format(profile.memberSince),
+                                    'Member since ' +
+                                        DateFormat('dd-MM-yyyy')
+                                            .format(profile.memberSince),
                                     textAlign: TextAlign.left,
                                     style: textTheme.bodyText1,
                                   ),
                                 ],
-                              )
-                          )
+                              ))
                         ],
                       ),
                       SizedBox(height: 20.0),
-                      Flex (
+                      Flex(
                         direction: Axis.horizontal,
                         crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget> [
+                        children: <Widget>[
                           Expanded(
                             flex: 1,
                             child: CircleAvatar(
                               //backgroundColor: Color(0xff0075ff),
                               radius: 12,
-                              child: Center (
+                              child: Center(
                                   child: Image.asset(
-                                    'packages/local_people_core/assets/images/verified-icon.png',
-                                    fit: BoxFit.contain,
-                                    height: 23,
-                                    width: 23,
-                                  )
-                              ),
+                                'packages/local_people_core/assets/images/verified-icon.png',
+                                fit: BoxFit.contain,
+                                height: 23,
+                                width: 23,
+                              )),
                             ),
                           ),
                           Expanded(
                               flex: 6,
-                              child: Flex (
+                              child: Flex(
                                 direction: Axis.vertical,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
                                 mainAxisAlignment: MainAxisAlignment.start,
-                                children: <Widget> [
+                                children: <Widget>[
                                   Text(
-                                    profile.numOfJobsPosted.toString() + ' Jobs Posted',
+                                    profile.numOfJobsPosted.toString() +
+                                        ' Jobs Posted',
                                     textAlign: TextAlign.left,
                                     style: textTheme.subtitle1,
                                   ),
                                   Text(
-                                    profile.amountSpent.toString() + ' Jobs commissioned',
+                                    profile.amountSpent.toString() +
+                                        ' Jobs commissioned',
                                     textAlign: TextAlign.left,
                                     style: textTheme.bodyText1,
                                   ),
                                 ],
-                              )
-                          )
+                              ))
                         ],
                       ),
                     ],
-                  )
-              ),
+                  )),
             ],
           ),
         ],

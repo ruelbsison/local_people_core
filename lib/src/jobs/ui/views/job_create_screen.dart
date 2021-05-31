@@ -97,10 +97,10 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
     googlePlace = GooglePlace(apiKey);
     job = Job.empty();
 
-    objTags.add(Tag(id: 0, name: 'Handy Man'));
-    objTags.add(Tag(id: 1, name: 'Window Cleaner'));
-    currentTags.add('Handy Man');
-    currentTags.add('Window Cleaner');
+    // objTags.add(Tag(id: 0, name: 'Handy Man'));
+    // objTags.add(Tag(id: 1, name: 'Window Cleaner'));
+    // currentTags.add('Handy Man');
+    // currentTags.add('Window Cleaner');
 
     _focusNodeLocation.addListener(() {
       if (!_focusNodeLocation.hasFocus) {
@@ -252,31 +252,46 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
       appBar: AppBar(),
       subTitle: LocalPeopleLocalizations.of(context).menuTitlePostJob,
       actions: <Widget>[
-        Container(
-          padding: EdgeInsets.only(right: 14.0),
-          child: ElevatedButton(
-            child: Text(
-              LocalPeopleLocalizations.of(context).btnTitleCancel,
-              style: TextStyle(
-                fontSize: 14,
-                fontWeight: FontWeight.normal,
-              ),
+        ElevatedButton(
+          child: Text(
+            LocalPeopleLocalizations.of(context).btnTitleCancel,
+            style: TextStyle(
+              fontSize: 14,
+              fontWeight: FontWeight.normal,
             ),
-            onPressed: () {
-              //AppRouter.pushPage(context, JobCreateScreen());
-              Navigator.pop(context);
-            },
           ),
-          alignment: Alignment.center,
-        )
+          onPressed: () {
+            //AppRouter.pushPage(context, JobCreateScreen());
+            Navigator.pop(context);
+          },
+        ),
       ],
+      // actions: <Widget>[
+      //   Container(
+      //     padding: EdgeInsets.only(right: 14.0),
+      //     child: ElevatedButton(
+      //       child: Text(
+      //         LocalPeopleLocalizations.of(context).btnTitleCancel,
+      //         style: TextStyle(
+      //           fontSize: 14,
+      //           fontWeight: FontWeight.normal,
+      //         ),
+      //       ),
+      //       onPressed: () {
+      //         //AppRouter.pushPage(context, JobCreateScreen());
+      //         Navigator.pop(context);
+      //       },
+      //     ),
+      //     alignment: Alignment.center,
+      //   )
+      // ],
     );
   }
 
-  Widget buildJobCategoryFormEntry(BuildContext context,TagsLoaded state) {
+  Widget buildJobCategoryFormEntry(BuildContext context) {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
-    context.read<TagBloc>().add(LoadTagsEvent());
+
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
       child: Flex(
@@ -312,7 +327,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                     ),
                     hintText: '',
                     constraintSuggestion: true,
-                    suggestions: List.generate(state.tags.length, (index) => job.tags[index].name), //currentTags,
+                    suggestions: currentTags, //currentTags,
                     keyboardType: TextInputType.text,
                     suggestionTextColor: theme.textTheme.bodyText1.color,
                     //textInputAction: TextInputAction.next,
@@ -321,7 +336,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                       // Add item to the data source.
                       setState(() {
                         // required
-                        var result = state.tags.where((tag) =>
+                        var result = objTags.where((tag) =>
                             tag.name.toLowerCase().contains(val.toLowerCase()));
                         if (result.length > 0) job.tags.add(result.first);
                       });
@@ -384,24 +399,33 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
             style: theme.textTheme.caption,
           ),
           SizedBox(height: 10.0),
-          TagsViewWidget(
-            tags: state.tags,
-          ),
+          buildTagWidget(context),
         ],
       ),
     );
   }
 
-  Widget buildJobCategory(BuildContext context) {
+  Widget buildTagWidget(BuildContext context) {
+    context.read<TagBloc>().add(LoadTagsEvent());
     return BlocBuilder<TagBloc, TagState>(
       builder: (context, state) {
-        if (state is TagsLoading) {
+        if (state is TagInitial) {
+          return LoadingWidget();
+        } else if (state is TagsLoading) {
           return LoadingWidget();
         } else if (state is LoadTagsFailed) {
-          return LoadingWidget();
+          return ErrorWidget('Error $state');
         } else if (state is TagsLoaded) {
-          return buildJobCategoryFormEntry(context, state);
+          //return buildJobCategoryFormEntry(context, state.tags);
+          //setState(() {
+            objTags = state.tags;
+            currentTags = List.generate(state.tags.length, (index) => state.tags[index].name);
+          //});
+          return TagsViewWidget(
+            tags: state.tags,
+          );
         }
+        return ErrorWidget('Unhandle State $state');
       },
     );
 ;  }
@@ -575,8 +599,8 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
       ),
     );
 
-    final jobCategoryFormEntry = buildJobCategory(context);
-
+    //final jobCategoryFormEntry = buildJobCategory(context);
+    final jobCategoryFormEntry = buildJobCategoryFormEntry(context);
     final jobDescriptionFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
       child: Flex(
@@ -1112,7 +1136,6 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
         ],
       ),
     );
-
 
     return SafeArea(
       child: SingleChildScrollView(

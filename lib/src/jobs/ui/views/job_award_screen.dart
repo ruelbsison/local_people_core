@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_icons/flutter_icons.dart';
 import 'package:local_people_core/core.dart';
+import 'package:local_people_core/auth.dart';
 import 'package:local_people_core/messages.dart';
 
 import '../widgets/posted_by_widget.dart';
@@ -34,7 +35,9 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     _controller.addListener(() {
       setState(() {
         if (_controller.index == 1) {
-          context.read<MessageBloc>().add(LoadJobMessagesEvent(jobId: widget.job.id));
+          context
+              .read<MessageBloc>()
+              .add(LoadJobMessagesEvent(jobId: widget.job.id));
         }
       });
     });
@@ -164,6 +167,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
 
   Widget buildBody(BuildContext context) {
     final theme = Theme.of(context);
+    final appType = AppConfig.of(context).appType;
     return TabBarView(
       controller: _controller,
       children: <Widget>[
@@ -180,7 +184,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                 JobViewWidget(job: widget.job),
                 SizedBox(height: 20.0),
                 //PostedByWidget(profile: widget.profile),
-                PostedByWidget(),
+                PostedByWidget(clientId: widget.job.clientId),
                 SizedBox(height: 10.0),
                 JobActionsWidget(),
                 SizedBox(height: 20.0),
@@ -188,16 +192,24 @@ class _JobAwardScreenState extends State<JobAwardScreen>
             ),
           ),
         ),
-        BlocProvider.value(
-          value: context.read<MessageBloc>(), // BlocProvider.of<MessageBloc>(context),
+        BlocProvider(
+          create: (context) => MessageBloc(
+            messageRepository: RepositoryProvider.of<MessageRepository>(context),
+            appType: appType,
+            authLocalDataSource: sl<AuthLocalDataSource>(),
+          ),
           child: BlocBuilder<MessageBloc, MessageState>(
             builder: (context, state) {
-              if (state is JobMessageLoading) {
+              if (state is MessageInitial) {
+                return LoadingWidget();
+              } else if (state is JobMessageLoading) {
                 return LoadingWidget();
               } else if (state is LoadJobMessageFailed) {
                 return ErrorWidget('Unhandle State $state');
               } else if (state is JobMessageLoaded) {
-                return MessageBody(messages: state.messages,);
+                return MessageBody(
+                  messages: state.messages,
+                );
               }
               return ErrorWidget('Unhandle State $state');
             },
