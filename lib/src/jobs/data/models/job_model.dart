@@ -5,6 +5,8 @@ import 'package:json_annotation/json_annotation.dart';
 import 'location_model.dart';
 import 'tag_model.dart';
 import '../../domain/entities/job.dart';
+import '../../domain/entities/tag.dart';
+import '../../domain/entities/location.dart';
 
 part 'job_model.g.dart';
 
@@ -27,8 +29,8 @@ class JobModel extends Equatable {
     this.updated_at,
     this.client_id,
     this.trader_id,
-    this.location,
-    this.tags,
+    this.location_id,
+    this.tag_ids,
   })  : assert(id != null);
 
   /// The current JobModel's email address.
@@ -55,9 +57,10 @@ class JobModel extends Equatable {
 
   int trader_id;
 
-  LocationModel location;
+  //LocationModel location;
+  int location_id;
 
-  List<TagModel> tags;
+  List<int> tag_ids;
 
   /// Empty JobModel which represents an unauthenticated JobModel.
   static empty() {
@@ -71,13 +74,13 @@ class JobModel extends Equatable {
         updated_at: '',
         client_id: 0,
         trader_id: 0,
-      tags: [TagModel.empty()],
-      location: LocationModel.empty(),
+      tag_ids: [],
+      location_id: 0,
     );
   }
 
   static JobModel fromJob(Job job) {
-    return JobModel(
+    JobModel model = JobModel(
       id: job.id,
       title: job.title,
       description: job.description,
@@ -87,10 +90,21 @@ class JobModel extends Equatable {
       client_id: job.clientId, //authLocalModel.userId,
       trader_id: job.traderId,
     );
+    model.tag_ids = [];
+    if (job.tags != null && job.tags.length > 0) {
+      Iterator tagIter = job.tags.iterator;
+      while(tagIter.moveNext()) {
+        Tag tag = tagIter.current;
+        model.tag_ids.add(tag.id);
+      }
+    }
+    if (job.location != null) {
+      model.location_id = job.location.id;
+    }
   }
 
   @override
-  List<Object> get props => [id, title, description, date, budget, created_at, updated_at, client_id, trader_id, location, tags];
+  List<Object> get props => [id, title, description, date, budget, created_at, updated_at, client_id, trader_id, location_id, tag_ids];
 
   factory JobModel.fromJson(Map<String, dynamic> json) => _$JobModelFromJson(json);
   Map<String, dynamic> toJson() => _$JobModelToJson(this);

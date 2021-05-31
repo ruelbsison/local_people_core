@@ -84,7 +84,7 @@ class TagRepositoryImpl implements TagRepository {
     if (await networkInfo.isConnected) {
       try {
         response = await tagRemoteDataSource.listTags();
-        if (response.exception != null) {
+        if (response != null && response.exception != null) {
           logger.severe("Exception occured in listTags", response.exception);
         }
       } catch (error, stacktrace) {
