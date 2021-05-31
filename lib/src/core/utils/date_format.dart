@@ -29,7 +29,17 @@ class DateFormatUtil {
     } else if (dt1.difference(dt2).inSeconds > 0) {
       return dt1.difference(dt2).inSeconds.toString() + 's ago';
     } else {
-      return '0s ago';
+      if (dt2.difference(dt1).inDays > 0) {
+        return dt2.difference(dt1).inDays.toString() + 'd left';
+      } else if (dt2.difference(dt1).inHours > 0) {
+        return dt2.difference(dt1).inHours.toString() + 'h left';
+      } else if (dt2.difference(dt1).inMinutes > 0) {
+        return dt2.difference(dt1).inMinutes.toString() + 'm left';
+      } else if (dt2.difference(dt1).inSeconds > 0) {
+        return dt2.difference(dt1).inSeconds.toString() + 's left';
+      } else {
+        return '0s left';
+      }
     }
   }
 }

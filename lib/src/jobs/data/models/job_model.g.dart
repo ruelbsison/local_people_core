@@ -18,13 +18,8 @@ JobModel _$JobModelFromJson(Map<String, dynamic> json) {
     updated_at: json['updated_at'] as String,
     client_id: json['client_id'] as int,
     trader_id: json['trader_id'] as int,
-    location: json['location'] == null
-        ? null
-        : LocationModel.fromJson(json['location'] as Map<String, dynamic>),
-    tags: (json['tags'] as List)
-        ?.map((e) =>
-            e == null ? null : TagModel.fromJson(e as Map<String, dynamic>))
-        ?.toList(),
+    location_id: json['location_id'] as int,
+    tag_ids: (json['tag_ids'] as List)?.map((e) => e as int)?.toList(),
   );
 }
 
@@ -39,6 +34,6 @@ Map<String, dynamic> _$JobModelToJson(JobModel instance) => <String, dynamic>{
       'updated_at': instance.updated_at,
       'client_id': instance.client_id,
       'trader_id': instance.trader_id,
-      'location': instance.location,
-      'tags': instance.tags,
+      'location_id': instance.location_id,
+      'tag_ids': instance.tag_ids,
     };
