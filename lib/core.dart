@@ -32,6 +32,8 @@ export './src/core/network/network_info.dart';
 export './src/core/network/rest_client_interceptor.dart';
 
 export './src/core/exceptions/server_exception.dart';
+export './src/core/injection_container.dart';
+
 /*export './src/data/models/user_model.dart';
 export './src/data/models/auth_session_model.dart';
 export './src/data/models/auth_profile_model.dart';
