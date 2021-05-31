@@ -48,25 +48,38 @@ class MessageBoxBloc extends Bloc<MessageBoxEvent, MessageBoxState> {
       if (response == null || response.exception != null) {
         yield LoadMessageBoxFailed();
       } else if (response.messages != null) {
+        response.messages.sort((a, b) {
+          return a.compareTo(b);
+        });
+        //String userFullName = await authLocalDataSource.getUserName();
         List<MessageBox> messages = List<MessageBox>();
         Message lastMessage;
         var listIterator = response.messages.iterator;
         while( listIterator.moveNext() ) {
           Message message = listIterator.current;
+          // if (userFullName.toLowerCase().compareTo(userFullName.toLowerCase()) == 0)
+          //   message.senderId = userId;
+          // else
+          //   message.senderId = message.clientId == userId ? message.traderId : message.clientId;
           if (lastMessage == null) {
             lastMessage = message;
           } else {
-            if (message.jobId == lastMessage.jobId) {
+            if (message.jobId == lastMessage.jobId &&
+                message.clientId == lastMessage.clientId &&
+                message.traderId == lastMessage.traderId) {
               if (message.createdAt.isAfter(lastMessage.createdAt) == true) {
                 lastMessage = message;
               }
             } else {
               MessageBox box = MessageBox(
                 name: lastMessage.subject,
+                jobId: lastMessage.jobId,
+                traderId: lastMessage.traderId,
                 lastMessage:lastMessage.text,
                 image: "packages/local_people_core/assets/images/company-logo.png",
                 time: DateFormatUtil.getDateTimeDiff(DateTime.now(), lastMessage.createdAt),
                 isActive: false,
+                createdAt: lastMessage.createdAt,
               );
               messages.add(box);
               lastMessage = message;
@@ -77,14 +90,20 @@ class MessageBoxBloc extends Bloc<MessageBoxEvent, MessageBoxState> {
         if (lastMessage != null) {
           MessageBox box = MessageBox(
             name: lastMessage.subject,
+            jobId: lastMessage.jobId,
+            traderId: lastMessage.traderId,
             lastMessage:lastMessage.text,
             image: "packages/local_people_core/assets/images/company-logo.png",
             time: DateFormatUtil.getDateTimeDiff(DateTime.now(), lastMessage.createdAt),
             isActive: false,
+            createdAt: lastMessage.createdAt,
           );
           messages.add(box);
         }
-        yield MessageBoxLoaded(messages: messages);
+        messages.sort((a, b) {
+          return a.compareTo(b);
+        });
+        yield MessageBoxLoaded(messages: messages.reversed.toList());
       }
     } catch (e) {
       yield LoadMessageBoxFailed();

@@ -46,12 +46,15 @@ class MessageBoxBody extends StatelessWidget {
             itemCount: messages.length,
             itemBuilder: (context, index) => MessageBoxCard(
               messageBox: messages[index],
-              press: () => Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => MessagesScreen(),
-                ),
-              ),
+              press: () {
+                Navigator.push(
+                  context,
+                  MaterialPageRoute(
+                    builder: (context) => MessagesScreen(messageBox: messages[index],),
+                  ),
+                );
+                context.read<MessageBoxBloc>().add(LoadMessageBoxEvent());
+              }
             ),
           ),
         ),

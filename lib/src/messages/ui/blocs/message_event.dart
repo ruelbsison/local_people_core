@@ -11,15 +11,16 @@ class LoadMessagesEvent extends MessageEvent {
 
 class LoadJobMessagesEvent extends MessageEvent {
   final int jobId;
+  final int traderId;
 
-  LoadJobMessagesEvent({@required this.jobId});
+  LoadJobMessagesEvent({@required this.jobId, @required this.traderId});
 
   @override
   List<Object> get props => [jobId];
 }
 
 class SendMessageEvent extends MessageEvent {
-  final Message message;
+  Message message;
 
   SendMessageEvent({@required this.message});
 

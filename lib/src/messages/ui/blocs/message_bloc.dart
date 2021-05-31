@@ -33,7 +33,7 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
       yield* _mapLoadMessagesToState();
     } else if (event is LoadJobMessagesEvent) {
       yield JobMessageLoading();
-      yield* _mapLoadJobMessagesToState(event.jobId);
+      yield* _mapLoadJobMessagesToState(event.jobId, event.traderId);
     } else if (event is SendMessageEvent) {
       yield MessageSending();
       yield* _mapSendMessagesToState(event.message);
@@ -58,13 +58,25 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
     }
   }
 
-  Stream<MessageState> _mapLoadJobMessagesToState(int jobId) async* {
+  Stream<MessageState> _mapLoadJobMessagesToState(int jobId, int traderId) async* {
     try {
       MessageListResponse response = await messageRepository.listJobMessages(jobId);
       if (response == null || response.exception != null) {
         yield LoadJobMessageFailed();
       } else if (response.messages != null) {
-        yield JobMessageLoaded(messages: response.messages);
+        if (traderId != null && traderId != -1) {
+          List<Message> messages = [];
+          var listIterator = response.messages.iterator;
+          while(listIterator.moveNext() ) {
+            Message msg = listIterator.current;
+            if (msg.traderId == traderId) {
+              messages.add(msg);
+            }
+          }
+          yield JobMessageLoaded(messages: messages);
+        } else {
+          yield JobMessageLoaded(messages: response.messages);
+        }
       }
     } catch (e) {
       yield LoadJobMessageFailed();
@@ -73,6 +85,14 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   Stream<MessageState> _mapSendMessagesToState(Message message) async* {
     try {
+      int userId = await authLocalDataSource.getUserId();
+      if (userId != null) {
+        if (appType == AppType.CLIENT)
+          message.clientId = userId;
+        else
+          message.traderId = userId;
+      }
+
       MessageResponse response = await messageRepository.createMessage(message);
       if (response == null || response.exception != null) {
         yield SendMessageFailed();

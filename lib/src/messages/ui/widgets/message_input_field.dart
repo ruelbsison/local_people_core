@@ -1,11 +1,34 @@
 import 'package:flutter/material.dart';
 
 import '../../../core/configs//constants.dart';
+import '../blocs/message_bloc.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../../domain/entities/message.dart';
 
-class MessageInputField extends StatelessWidget {
-  const MessageInputField({
+class MessageInputField extends StatefulWidget {
+  MessageInputField({
     Key key,
+    this.subject,
+    this.jobId,
+    this.clientId,
+    this.traderId,
   }) : super(key: key);
+
+  final String subject;
+  final int jobId;
+  final int clientId;
+  final int traderId;
+
+  @override
+  _MessageInputFieldState createState() => _MessageInputFieldState();
+
+
+}
+
+class _MessageInputFieldState extends State<MessageInputField> {
+  final TextEditingController _sendMessageTextController = TextEditingController();
+  String msgText = '';
+  FocusNode _focusNodeSendMessage = new FocusNode();
 
   @override
   Widget build(BuildContext context) {
@@ -52,10 +75,36 @@ class MessageInputField extends StatelessWidget {
                     SizedBox(width: kDefaultPadding / 4),
                     Expanded(
                       child: TextField(
+                        focusNode: _focusNodeSendMessage,
+                        controller: _sendMessageTextController,
                         decoration: InputDecoration(
                           hintText: "Type message",
                           border: InputBorder.none,
                         ),
+                        //keyboardType: K,
+                        textInputAction: msgText.length > 0 ? TextInputAction.go : TextInputAction.done,
+                        onChanged: (msg) {
+                          setState(() {
+                            msgText = msg;
+                          });
+                        },
+                        onSubmitted: (msg) {
+                          setState(() {
+                            if (msg.length > 0) {
+                              _sendMessageTextController.clear();
+                              _focusNodeSendMessage.requestFocus();
+                              Message message = Message(
+                                jobId: widget.jobId,
+                                clientId: widget.clientId,
+                                traderId: widget.traderId,
+                                text: msg,
+                                subject: widget.subject,
+                              );
+                              //BlocProvider.of<MessageBloc>(context).add(SendMessageEvent(message: message));
+                              context.read<MessageBloc>().add(SendMessageEvent(message: message));
+                            }
+                          });
+                        },
                       ),
                     ),
                     Icon(

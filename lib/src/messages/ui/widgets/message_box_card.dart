@@ -1,7 +1,6 @@
 import '../../domain/entities/message_box.dart';
 import 'package:flutter/material.dart';
-
-import '../../../core/configs/constants.dart';
+import 'package:local_people_core/core.dart';
 
 class MessageBoxCard extends StatelessWidget {
   const MessageBoxCard({
@@ -18,11 +17,16 @@ class MessageBoxCard extends StatelessWidget {
     final theme = Theme.of(context);
     return InkWell(
       onTap: press,
-      child: Padding (
-        //color: Colors.white,
+      child: Container (
+        padding: EdgeInsets.only(top: 6.0, bottom: 6.0),
+        margin: EdgeInsets.all(12.0),
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(255, 255, 255, 1),
+          borderRadius: BorderRadius.circular(5.0),
+        ),
         //padding: EdgeInsets.all(kDefaultPadding),
-        padding: const EdgeInsets.symmetric(
-            horizontal: kDefaultPadding, vertical: kDefaultPadding * 0.75),
+        // padding: const EdgeInsets.symmetric(
+        //     horizontal: kDefaultPadding, vertical: kDefaultPadding * 0.75),
         child: Row(
           children: [
             Stack(
@@ -76,7 +80,9 @@ class MessageBoxCard extends StatelessWidget {
             ),
             Opacity(
               opacity: 0.64,
-              child: Text(messageBox.time),
+              child: Text(
+                DateFormatUtil.getDateTimeDiff(DateTime.now(), messageBox.createdAt),
+              ),
             ),
           ],
         ),
