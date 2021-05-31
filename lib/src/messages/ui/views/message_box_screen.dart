@@ -36,14 +36,14 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
           },
         ),
       ),
-      floatingActionButton: FloatingActionButton(
-        onPressed: () {},
-        backgroundColor: theme.primaryColor,
-        child: Icon(
-          Icons.person_add_alt_1,
-          color: Colors.white,
-        ),
-      ),
+      // floatingActionButton: FloatingActionButton(
+      //   onPressed: () {},
+      //   backgroundColor: theme.primaryColor,
+      //   child: Icon(
+      //     Icons.person_add_alt_1,
+      //     color: Colors.white,
+      //   ),
+      // ),
       //bottomNavigationBar: buildBottomNavigationBar(),
     );
   }
