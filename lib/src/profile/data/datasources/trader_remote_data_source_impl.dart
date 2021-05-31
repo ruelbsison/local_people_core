@@ -27,7 +27,7 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
           .toList() // create a copy to avoid concurrent modifications
           .forEach(paramData.remove); // remove selected keys
       Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
-      param['tarder'] = paramData;
+      param['trader'] = paramData;
       TraderModel data =
       await traderRestApiClient.createTrader(param);
       if (data != null) {
@@ -125,7 +125,7 @@ class TraderRemoteDataSourceImpl implements TraderRemoteDataSource {
           .toList() // create a copy to avoid concurrent modifications
           .forEach(paramData.remove); // remove selected keys
       Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
-      param['tarder'] = paramData;
+      param['trader'] = paramData;
       TraderModel data =
       await traderRestApiClient.updateTrader(model.id, param);
       if (data != null) {
