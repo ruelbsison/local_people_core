@@ -5,6 +5,12 @@ import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:intl/intl.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:local_people_core/core.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package_widget.dart';
+import '../../domain/entities/package.dart';
+import 'package_card.dart';
+import 'qualification_card.dart';
+import 'qualification_widget.dart';
 
 class ProfileTraderBody extends StatefulWidget {
   ProfileTraderBody({@required this.profile});
@@ -19,6 +25,7 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
+    Size size = MediaQuery.of(context).size;
     final introductionActions = Container(
       color: theme.backgroundColor,
       padding: EdgeInsets.all(12.0),
@@ -26,7 +33,7 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget> [
+        children: <Widget>[
           Expanded(
             flex: 5,
             child: Text(
@@ -65,279 +72,111 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
       ),
     );
 
-    final aboutTheClient = Container(
+    final qualificationsContent = Container(
       color: theme.backgroundColor,
       padding: EdgeInsets.all(12.0),
       //margin: EdgeInsets.all(12.0),
-      child: Flex (
-        direction: Axis.vertical,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: <Widget>[
-          Text(
-            'About The Trader',
-            textAlign: TextAlign.left,
-            style: theme.textTheme.bodyText1,
-          ),
-          SizedBox(height: 10.0),
-          Opacity (
-            opacity: 0.64,
-            child: Text(
-              'Member since ' +
-                  DateFormat('dd-MM-yyyy')
-                      .format(widget.profile.memberSince),
-              textAlign: TextAlign.left,
-              style: theme.textTheme.bodyText2,
+      child: Column(
+        children: [
+          Expanded(
+            child: Container(
+              padding: EdgeInsets.only(left: 10),
+              //padding: EdgeInsets.only(left: 12, top: 40),
+              child: Text(
+                'Qualifications',
+                textAlign: TextAlign.left,
+                style: theme.textTheme.bodyText1,
+              ),
             ),
           ),
-          Flex (
-            direction: Axis.horizontal,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget> [
-              Expanded (
-                flex: 3,
-                child: Flex (
-                  direction: Axis.vertical,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.max,
-                  children: <Widget> [
-                    SizedBox(height: 20.0),
-                    Container(
-                      height: 1.0,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border(
-                          bottom: BorderSide(
-                            color: Color.fromRGBO(186, 207, 216, 1),
-                          ),
-                        ),
-                      ),
-                    ),
-                    SizedBox(height: 20.0),
-                    Flex (
-                      direction: Axis.horizontal,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: <Widget> [
-                        Expanded(
-                          flex: 1,
-                          child: ClipOval (
-                            child: CachedNetworkImage(
-                              imageUrl: widget.profile.photo,
-                              width: 60,
-                              height: 60,
-                              placeholder: (context, url) => LoadingWidget(
-                                isImage: true,
-                              ),
-                              errorWidget: (context, url, error) => Image.asset(
-                                'packages/local_people_core/assets/images/trader-profile-photo.png',
-                                fit: BoxFit.cover,
-                              ),
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                          flex: 6,
-                          child: Text(
-                            'Payment Method Verified',
-                            textAlign: TextAlign.left,
-                            style: theme.textTheme.bodyText1,
-                          ),
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 20.0),
-                    Flex (
-                      direction: Axis.horizontal,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget> [
-                        Expanded(
-                          flex: 1,
-                          child: CircleAvatar(
-                            //backgroundColor: Color(0xff0075ff),
-                            radius: 12,
-                            child: Center (
-                                child: Image.asset(
-                                  'packages/local_people_core/assets/images/verified-icon.png',
-                                  fit: BoxFit.contain,
-                                  height: 23,
-                                  width: 23,
-                                )
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                            flex: 6,
-                            child: Flex (
-                              direction: Axis.vertical,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget> [
-                                Text(
-                                  'XX Jobs Posted',
-                                  textAlign: TextAlign.left,
-                                  style: theme.textTheme.bodyText1,
-                                ),
-                                Opacity (
-                                  opacity: 0.84,
-                                  child: Text(
-                                    'YY jobs commissioned',
-                                    textAlign: TextAlign.left,
-                                    style: theme.textTheme.bodyText2,
-                                  ),
-                                )
-                              ],
-                            )
-                        )
-                      ],
-                    ),
-                    SizedBox(height: 20.0),
-                    Flex (
-                      direction: Axis.horizontal,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: <Widget> [
-                        Expanded(
-                          flex: 1,
-                          child: CircleAvatar(
-                            //backgroundColor: Color(0xff0075ff),
-                            radius: 12,
-                            child: Center (
-                                child: Image.asset(
-                                  'packages/local_people_core/assets/images/verified-icon.png',
-                                  fit: BoxFit.contain,
-                                  height: 23,
-                                  width: 23,
-                                )
-                            ),
-                          ),
-                        ),
-                        Expanded(
-                            flex: 6,
-                            child: Flex (
-                              direction: Axis.vertical,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget> [
-                                Text(
-                                  "\$" + 'XXX Spent',
-                                  textAlign: TextAlign.left,
-                                  style: theme.textTheme.bodyText1,
-                                ),
-                              ],
-                            )
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-            ],
-          ),
+          // Expanded(
+          //   child: Container(
+          //       padding: EdgeInsets.only(left: 10),
+          //       child: PackageWidget(
+          //         packages: [Package(name: 'Package 01')],
+          //       )
+          //   ),
+          // ),
         ],
       ),
     );
 
-    final recentJobs = Container(
-      color: theme.backgroundColor,
-      padding: EdgeInsets.all(12.0),
-      child: Text(
-        'Recent Jobs',
-        textAlign: TextAlign.left,
-        style: theme.textTheme.bodyText1,
-      ),
-    );
-
-    final recentJobItems = Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(12.0),
-        child: Container (
-          height: 400,
-        )
-    );
-
-    final reviewsGiven = Container(
-      color: theme.backgroundColor,
-      padding: EdgeInsets.all(12.0),
-      child: Text(
-        'Reviews Given',
-        textAlign: TextAlign.left,
-        style: theme.textTheme.bodyText1,
-      ),
-    );
-
-    final reviewsGivenItems = Container(
-      color: theme.backgroundColor,
-      padding: EdgeInsets.all(12.0),
-      child: SmoothStarRating (
-          allowHalfRating: false,
-          onRated: (v) {},
-          starCount: 5,
-          rating: 100,
-          size: 32.0,
-          isReadOnly:true,
-          //fullRatedIconData: Icons.blur_off,
-          //halfRatedIconData: Icons.blur_on,
-          color: Color.fromRGBO(255, 99, 97, 1),
-          borderColor: Color.fromRGBO(255, 99, 97, 1),
-          spacing:0.0
-      ),
-    );
-
-    final recommendations = Container(
-      color: theme.backgroundColor,
-      padding: EdgeInsets.all(12.0),
-      child: Text(
-        'Recommendations',
-        textAlign: TextAlign.left,
-        style: theme.textTheme.bodyText1,
-      ),
-    );
-
-    final recommendationItems = Container(
-        color: Colors.white,
-        padding: EdgeInsets.all(12.0),
-        child: Container (
-          height: 300,
-        )
-    );
-
-    // Widget bodyContent = SingleChildScrollView(
-    //     physics: BouncingScrollPhysics(),
-    //       child: Container(
-    //         margin: EdgeInsets.all(12.0),
-    //         //height: double.infinity,
-    //         child: Flex (
-    //           direction: Axis.vertical,
-    //           //mainAxisSize: MainAxisSize.max,
-    //           mainAxisAlignment: MainAxisAlignment.start,
-    //           crossAxisAlignment: CrossAxisAlignment.stretch,
-    //           children: <Widget>[introductionActions, introduction, aboutTheClient],
-    //         ),
-    //       ),
-    //   );
-    //
-    // return bodyContent;
-
     final List<Widget> columnChildren = <Widget>[
-      introductionActions, introduction,
-      aboutTheClient,
-      recentJobs, recentJobItems,
-      reviewsGiven, reviewsGivenItems,
-      recommendations, recommendationItems
+      Row(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+        children: [
+          Expanded(
+            child: Align(
+              alignment: Alignment.centerLeft,
+              child: Container(
+                width: (size.width - 10) / 2,
+                //height: 36,
+                padding: EdgeInsets.all(16.0),
+                //padding: EdgeInsets.only(left: 12, top: 40),
+                child: ElevatedButton(
+                  onPressed: () => {},
+                  child: Text(
+                    'Message',
+                    //LocalPeopleLocalizations.of(context)
+                    //    .btnTitleCancel,
+                    textAlign: TextAlign.center,
+                    style: theme.textTheme.button,
+                  ),
+                ),
+                //color: Colors.green,
+              ),
+            ),
+          ),
+          Expanded(
+            child: Align(
+                alignment: Alignment.centerRight,
+                child: Container(
+                  width: (size.width - 10) / 2,
+                  //height: 36,
+                  padding: EdgeInsets.all(16.0),
+                  child: ElevatedButton(
+                    onPressed: () => {},
+                    child: Text(
+                      'Request Quote',
+                      //LocalPeopleLocalizations.of(context)
+                      //    .btnTitleCancel,
+                      textAlign: TextAlign.center,
+                      style: theme.textTheme.button,
+                    ),
+                  ),
+                )),
+          ),
+        ],
+      ),
+      introductionActions,
+      introduction,
+      QualificationWidget (
+        qualifications: ['Handy Man', 'Window Cleaner', 'Qualification 01',],
+      ),
+      SizedBox(height: 20),
+      PackageWidget(
+        packages: [
+          Package(
+            name: 'Package 01',
+            description: 'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Donec finibus nulla vel iaculis aliquet. Integer lacus nibh, elementum id feugiat vel, hendrerit in metus.',
+            durationInHours: 2,
+            cost: 150.0,
+        ),
+          Package(
+              name: 'Package 02',
+          ),
+        ],
+      ),
+      SizedBox(height: 40),
     ];
 
-    Widget bodyContent = SliverList (
+    Widget bodyContent = SliverList(
       delegate: new SliverChildListDelegate(
         columnChildren,
       ),
     );
 
-
     return bodyContent;
-
   }
-
 }

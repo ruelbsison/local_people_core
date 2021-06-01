@@ -68,6 +68,8 @@ class _ProfileScreenState extends State<ProfileScreen> {
             new SliverAppBar(
               expandedHeight: 256.0,
               pinned: true,
+              titleSpacing: 0,
+              centerTitle: false,
               flexibleSpace: new FlexibleSpaceBar(
                 //title: Text("Profile"),
                 background: CachedNetworkImage(
@@ -95,30 +97,39 @@ class _ProfileScreenState extends State<ProfileScreen> {
                   direction: Axis.vertical,
                   mainAxisSize: MainAxisSize.max,
                   mainAxisAlignment: MainAxisAlignment.start,
-                  crossAxisAlignment: CrossAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
                   children: <Widget> [
-                    Text(
-                      widget.profile.fullName,
-                      style: theme.textTheme.headline6,
-                      textAlign: TextAlign.left,
+                    Container (
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                        widget.profile.fullName,
+                        style: theme.textTheme.headline6,
+                        textAlign: TextAlign.left,
+                      ),
                     ),
-                    Text(
-                      'SkyFields',
-                      style: theme.textTheme.subtitle1,
-                      textAlign: TextAlign.left,
+                    Container (
+                      padding: EdgeInsets.only(left: 10),
+                      child: Text(
+                        'SkyFields',
+                        style: theme.textTheme.subtitle1,
+                        textAlign: TextAlign.left,
+                      ),
                     ),
-                    SmoothStarRating (
-                        allowHalfRating: false,
-                        onRated: (v) {},
-                        starCount: 5,
-                        rating: 100,
-                        size: 20.0,
-                        isReadOnly:true,
-                        //fullRatedIconData: Icons.blur_off,
-                        //halfRatedIconData: Icons.blur_on,
-                        color: Color.fromRGBO(255, 99, 97, 1),
-                        borderColor: Color.fromRGBO(255, 99, 97, 1),
-                        spacing:0.0
+                    Container (
+                      padding: EdgeInsets.only(left: 10),
+                      child: SmoothStarRating (
+                          allowHalfRating: false,
+                          onRated: (v) {},
+                          starCount: 5,
+                          rating: 100,
+                          size: 20.0,
+                          isReadOnly:true,
+                          //fullRatedIconData: Icons.blur_off,
+                          //halfRatedIconData: Icons.blur_on,
+                          color: Color.fromRGBO(255, 99, 97, 1),
+                          borderColor: Color.fromRGBO(255, 99, 97, 1),
+                          spacing:0.0
+                      ),
                     ),
                   ],
                 ),

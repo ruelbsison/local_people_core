@@ -13,6 +13,8 @@ import '../blocs/profile_state.dart';
 import 'profile_screen.dart';
 
 class MoreScreen extends StatefulWidget {
+  dynamic profile;
+
   @override
   _MoreScreenState createState() => _MoreScreenState();
 }
@@ -20,6 +22,7 @@ class MoreScreen extends StatefulWidget {
 class _MoreScreenState extends State<MoreScreen> {
   @override
   Widget build(BuildContext context) {
+    
     return Scaffold(
       appBar: buildAppBar(),
       body: _buildBody(),
@@ -71,21 +74,23 @@ class _MoreScreenState extends State<MoreScreen> {
               child: BlocBuilder<ProfileBloc, ProfileState>(
               builder: (context, state) {
                 if (state is ClientProfileLoaded) {
+                  widget.profile = state.profile;
                   ProfileItem item = ProfileItem(
                     name: state.profile.fullName,
                     image: state.profile.photo,
                     totalJobs: state.profile.numOfJobsPosted,
                     totalAmountPaid: state.profile.amountSpent,
                   );
-                  return ProfileCard(profileItem: item, press: () {AppRouter.pushPage(context, ProfileScreen(profile: state.profile,));},);
+                  return ProfileCard(profileItem: item, press: () {AppRouter.pushPage(context, ProfileScreen(profile: widget.profile,));},);
                 } if (state is TraderProfileLoaded) {
+                  widget.profile = state.profile;
                   ProfileItem item = ProfileItem(
                     name: state.profile.fullName,
                     image: state.profile.photo,
                     totalJobs: 0,
                     totalAmountPaid: 0.0,
                   );
-                  return ProfileCard(profileItem: item, press: () {AppRouter.pushPage(context, ProfileScreen(profile: state.profile,));},);
+                  return ProfileCard(profileItem: item, press: () {AppRouter.pushPage(context, ProfileScreen(profile: widget.profile,));},);
                 } else {
                   return LoadingWidget();
                 }
