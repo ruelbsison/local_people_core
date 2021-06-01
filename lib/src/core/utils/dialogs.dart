@@ -81,4 +81,37 @@ class Dialogs {
       ),
     );
   }
+
+  showWidgetInDialog(BuildContext context, Widget widget) {
+    showDialog(
+      context: context,
+      builder: (context) => CustomAlert(
+        child: Padding(
+          padding: EdgeInsets.all(20.0),
+          child: widget,
+        ),
+      ),
+    );
+  }
+
+  // BuildContext dialogContext;
+  // showProgressDialog(BuildContext context) {
+  //   showDialog(
+  //     barrierDismissible: false,
+  //     context: context,
+  //     builder: (context) => CustomAlert(
+  //       dialogContext = context;
+  //       return Dialog(
+  //         child: new Row(
+  //           mainAxisSize: MainAxisSize.min,
+  //           children: [
+  //             new CircularProgressIndicator(),
+  //             new Text("Loading"),
+  //           ],
+  //         ),
+  //       );
+  //     },
+  //   );
+  // }
+
 }

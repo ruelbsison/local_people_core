@@ -151,6 +151,7 @@ class AppThemeConfig {
         borderRadius: BorderRadius.all(Radius.circular(2)),
       ),
     );
+
     final ThemeData base = ThemeData.light();
     return base.copyWith(
       backgroundColor: lightBG,
