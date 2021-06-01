@@ -8,7 +8,7 @@ import 'package:bloc_test/bloc_test.dart';
 import 'package:mocktail/mocktail.dart';
 import 'package:test/test.dart';
 
-class MockJobBloc extends MockBloc<JobEvent> implements JobBloc {}
+//class MockJobBloc extends MockBloc<JobEvent> implements JobBloc {}
 
 //class MockJobRepository extends Mock implements JobRepository {}
 
