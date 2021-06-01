@@ -36,44 +36,44 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
 
     try {
       // use the discovery endpoint to find the configuration
-      final AuthorizationResponse authResponse = await _appAuth.authorize(
-        AuthorizationRequest(
-          authorizationConfig.authClientId,
-          authorizationConfig.authRedirectURI,
-          discoveryUrl: authorizationConfig.authDiscoveryUrl,
-          scopes: authorizationConfig.authScopes,
-        ),
-      );
+      // final AuthorizationResponse authResponse = await _appAuth.authorize(
+      //   AuthorizationRequest(
+      //     authorizationConfig.authClientId,
+      //     authorizationConfig.authRedirectURI,
+      //     discoveryUrl: authorizationConfig.authDiscoveryUrl,
+      //     scopes: authorizationConfig.authScopes,
+      //   ),
+      // );
 
-      if (authResponse == null) {
-        throw Exception('Failed to get authorization');
-      }
-
-      final TokenResponse tokenResponse = await _appAuth.token(
-        TokenRequest(
-          authorizationConfig.authClientId,
-          authorizationConfig.authRedirectURI,
-          authorizationCode: authResponse.authorizationCode,
-          discoveryUrl: authorizationConfig.authDiscoveryUrl,
-          codeVerifier: authResponse.codeVerifier,
-          scopes: authorizationConfig.authScopes,
-        ),
-      );
-
-      /*final AuthorizationTokenResponse tokenResponse =
-      await _appAuth.authorizeAndExchangeCode(
-        AuthorizationTokenRequest(
-            authorizationConfig.authClientId,
-            authorizationConfig.authRedirectURI,
-            issuer: authorizationConfig.authDomain,
-            scopes: authorizationConfig.authScopes,
-            //promptValues: ['login']
-        ),
-      );*/
-
-      if (tokenResponse == null) {
-        throw Exception('Failed token code exchange');
-      }
+      // if (authResponse == null) {
+      //   throw Exception('Failed to get authorization');
+      // }
+      //
+      // final TokenResponse tokenResponse = await _appAuth.token(
+      //   TokenRequest(
+      //     authorizationConfig.authClientId,
+      //     authorizationConfig.authRedirectURI,
+      //     authorizationCode: authResponse.authorizationCode,
+      //     discoveryUrl: authorizationConfig.authDiscoveryUrl,
+      //     codeVerifier: authResponse.codeVerifier,
+      //     scopes: authorizationConfig.authScopes,
+      //   ),
+      // );
+      //
+      // /*final AuthorizationTokenResponse tokenResponse =
+      // await _appAuth.authorizeAndExchangeCode(
+      //   AuthorizationTokenRequest(
+      //       authorizationConfig.authClientId,
+      //       authorizationConfig.authRedirectURI,
+      //       issuer: authorizationConfig.authDomain,
+      //       scopes: authorizationConfig.authScopes,
+      //       //promptValues: ['login']
+      //   ),
+      // );*/
+      //
+      // if (tokenResponse == null) {
+      //   throw Exception('Failed token code exchange');
+      // }
 
       //final Map<String, Object> idToken = parseIdToken(tokenResponse.idToken);
       //final Map<String, Object> profile = await getUserDetails(tokenResponse.accessToken);
@@ -81,14 +81,35 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
       // name = idToken['name'];
       // picture = profile['picture'];
 
+      final AuthorizationTokenResponse authTokenResponse =
+        await _appAuth.authorizeAndExchangeCode(
+        AuthorizationTokenRequest(
+          authorizationConfig.authClientId,
+          authorizationConfig.authRedirectURI,
+          issuer: authorizationConfig.authIssuer,
+          scopes: authorizationConfig.authScopes,
+          promptValues: ['login'],
+        ),
+      );
+
+      if (authTokenResponse == null) {
+        throw Exception('Failed authorize and exchange code');
+      }
+
       _controller.add(AuthenticationStatus.authenticated);
 
       return AuthSessionModel(
-        tokenId: tokenResponse.idToken,
-        refreshToken: tokenResponse.refreshToken,
-        accessToken: tokenResponse.accessToken,
-        expiredAt: tokenResponse.accessTokenExpirationDateTime,
+        tokenId: authTokenResponse.idToken,
+        refreshToken: authTokenResponse.refreshToken,
+        accessToken: authTokenResponse.accessToken,
+        expiredAt: authTokenResponse.accessTokenExpirationDateTime,
       );
+      // return AuthSessionModel(
+      //   tokenId: tokenResponse.idToken,
+      //   refreshToken: tokenResponse.refreshToken,
+      //   accessToken: tokenResponse.accessToken,
+      //   expiredAt: tokenResponse.accessTokenExpirationDateTime,
+      // );
 
       //return refreshSession(tokenResponse.refreshToken);
     } on Exception catch (e, s) {
@@ -105,25 +126,26 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
     logger.info('refreshSession: ' + refreshToken);
 
     try {
-      /*final TokenResponse tokenResponse = await _appAuth.token(TokenRequest(
+      final TokenResponse tokenResponse =
+        await _appAuth.token(TokenRequest(
         authorizationConfig.authClientId,
         authorizationConfig.authRedirectURI,
         issuer: authorizationConfig.authIssuer,
         refreshToken: refreshToken,
-      ));*/
-
-      final TokenResponse tokenResponse = await _appAuth.token(
-        TokenRequest(
-            authorizationConfig.authClientId,
-            authorizationConfig.authRedirectURI,
-            //authorizationCode: authResponse.authorizationCode,
-            discoveryUrl: authorizationConfig.authDiscoveryUrl,
-            //codeVerifier: authResponse.codeVerifier,
-            refreshToken: refreshToken,
-            scopes: authorizationConfig.authScopes
-        ),
-      );
-
+      ));
+      //
+      // final TokenResponse tokenResponse = await _appAuth.token(
+      //   TokenRequest(
+      //       authorizationConfig.authClientId,
+      //       authorizationConfig.authRedirectURI,
+      //       //authorizationCode: authResponse.authorizationCode,
+      //       discoveryUrl: authorizationConfig.authDiscoveryUrl,
+      //       //codeVerifier: authResponse.codeVerifier,
+      //       refreshToken: refreshToken,
+      //       scopes: authorizationConfig.authScopes
+      //   ),
+      // );
+      //
       if (tokenResponse == null) {
         throw RefreshSessionFailure();
       }
