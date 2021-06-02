@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import '../entities/qualification.dart';
+import 'package:local_people_core/jobs.dart';
 
 class TraderProfile extends Equatable {
   TraderProfile({
@@ -38,6 +40,10 @@ class TraderProfile extends Equatable {
 
   String token;
   String tokenExpirationDate;
+
+  List<Qualification> qualifications;
+
+  List<Package> packages;
 
   @override
   bool operator ==(Object other) =>

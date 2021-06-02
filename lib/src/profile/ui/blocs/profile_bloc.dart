@@ -6,6 +6,8 @@ import '../../domain/entities/client_profile.dart';
 import '../../domain/entities/trader_profile.dart';
 import 'package:meta/meta.dart';
 import '../../domain/repositories/profile_repository.dart';
+import '../../domain/repositories/qualification_repository.dart';
+
 import '../../../core/enum/app_type.dart';
 import 'package:intl/intl.dart';
 import 'profile_event.dart';
@@ -14,10 +16,15 @@ import 'package:local_people_core/auth.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository profileRepository;
+  final QualificationRepository qualificationRepository;
   final AppType appType;
   final AuthLocalDataSource authLocalDataSource;
 
-  ProfileBloc({@required this.profileRepository, @required this.appType, @required this.authLocalDataSource,}) :
+  ProfileBloc({
+    @required this.profileRepository,
+    @required this.qualificationRepository,
+    @required this.appType,
+    @required this.authLocalDataSource,}) :
         super(ProfileInitialState());
 
   @override
@@ -55,6 +62,22 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
+  Future<List<Qualification>> getTraderQualifications(int raderId) async {
+    List<Qualification> qualifications = [];
+    try {
+      QualificationListResponse qualificationListResponse = await qualificationRepository.listTraderQualifications(raderId);
+      if (qualificationListResponse != null && qualificationListResponse.exception != null) {
+      } else if (qualificationListResponse != null && qualificationListResponse.qualifications == null) {
+      } else if (qualificationListResponse != null && qualificationListResponse.qualifications != null) {
+        qualifications = qualificationListResponse.qualifications;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return qualifications;
+  }
+
   Stream<ProfileState> _mapClientProfileGetToStateWithId(int clientId) async* {
     try {
        ClientResponse response = await profileRepository.getClientProfile(clientId);
@@ -82,6 +105,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (response != null && response.profile != null) {
         AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
         response.profile.photo = authLocalModel.userPhoto;
+
+        response.profile.packages = [];
+        response.profile.qualifications = [];
+        response.profile.qualifications = await getTraderQualifications(response.profile.id);
+
         yield TraderProfileGetLoaded(response.profile);
       }
     } catch (e) {
@@ -172,6 +200,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (response != null && response.profile != null) {
         AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
         response.profile.photo = authLocalModel.userPhoto;
+
+        response.profile.packages = [];
+        response.profile.qualifications = [];
+        response.profile.qualifications = await getTraderQualifications(response.profile.id);
+
         yield TraderProfileLoaded(response.profile);
       }
     } catch (e) {
@@ -265,6 +298,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (response.exception != null) {
         yield TraderProfileUpdateFailed(response.exception.toString());
       } else if (response.profile != null) {
+        response.profile.packages = [];
+        response.profile.qualifications = [];
+        response.profile.qualifications = await getTraderQualifications(response.profile.id);
         yield TraderProfileUpdated(response.profile);
       }
     } catch (e) {
@@ -280,6 +316,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (response.exception != null) {
         yield ProfileTraderTopRatedFailed(response.exception.toString());
       } else if (response.profiles != null) {
+        var iterator = response.profiles.iterator;
+        while(iterator.moveNext()) {
+          TraderProfile profile = iterator.current;
+          profile.qualifications = await getTraderQualifications(profile.id);
+        }
         yield ProfileTraderTopRatedCompleted(response.profiles);
       }
     } catch (e) {

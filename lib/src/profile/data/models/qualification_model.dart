@@ -26,7 +26,7 @@ class QualificationModel extends Equatable {
         this.created_at,
         this.updated_at});
 
-  static QualificationModel fromClientProfile(Qualification qualification) {
+  static QualificationModel fromQualification(Qualification qualification) {
     return QualificationModel(
       id: qualification.id,
       trader_id: qualification.traderId,
