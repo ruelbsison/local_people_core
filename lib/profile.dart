@@ -29,6 +29,7 @@ export './src/profile/data/models/qualification_model.dart';
 export './src/profile/domain/entities/qualification.dart';
 export './src/profile/domain/entities/qualification_list_response.dart';
 export './src/profile/domain/entities/qualification_response.dart';
+export './src/profile/ui/blocs/qualification_bloc.dart';
 
 export './src/profile/ui/blocs/profile_state.dart';
 export './src/profile/ui/blocs/profile_event.dart';
