@@ -22,6 +22,14 @@ export './src/profile/data/datasources/trader_rest_api_client.dart';
 export './src/profile/data/datasources/trader_remote_data_source.dart';
 export './src/profile/data/datasources/trader_remote_data_source_impl.dart';
 
+export './src/profile/data/datasources/qualification_remote_data_source.dart';
+export './src/profile/data/datasources/qualification_remote_data_source_impl.dart';
+export './src/profile/data/datasources/qualification_rest_api_client.dart';
+export './src/profile/data/models/qualification_model.dart';
+export './src/profile/domain/entities/qualification.dart';
+export './src/profile/domain/entities/qualification_list_response.dart';
+export './src/profile/domain/entities/qualification_response.dart';
+
 export './src/profile/ui/blocs/profile_state.dart';
 export './src/profile/ui/blocs/profile_event.dart';
 export './src/profile/ui/blocs/profile_bloc.dart';
