@@ -22,10 +22,14 @@ class PostedByWidget extends StatefulWidget {
 class _PostedByWidgetState extends State<PostedByWidget> {
   @override
   Widget build(BuildContext context) {
-    //BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
     final appType = AppConfig.of(context).appType;
-    //context.read<ProfileBloc>().add(ClientProfileGetEvent(id: widget.clientId));
-    //BlocProvider.of<ProfileBloc>(context).add(ClientProfileGetEvent(id: widget.clientId));
+    // try {
+    //   ClientProfile clientProfile = sl<ClientProfile>();
+    //   if (clientProfile  != null)
+    //     return buildContent(clientProfile);
+    // } catch(e) {
+    //   print(e.toString());
+    // }
     return BlocProvider(
       create: (context) => ProfileBloc(
         profileRepository: RepositoryProvider.of<ProfileRepository>(context),
@@ -34,6 +38,7 @@ class _PostedByWidgetState extends State<PostedByWidget> {
       )..add(ClientProfileGetEvent(id: widget.clientId)),
       child: BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
         if (state is ClientProfileGetLoaded) {
+          //locatorAddClientProfile(state.profile);
           return buildContent(state.profile);
         } else if (state is ClientProfileGetFailed) {
           return ErrorWidget('Error $state');
@@ -71,29 +76,33 @@ class _PostedByWidgetState extends State<PostedByWidget> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               Expanded(
-                flex: 1,
-                child: CircleAvatar(
-                  //child: FlutterLogo(size: 75),
-                  radius: 24,
-                  child: CachedNetworkImage(
-                    imageUrl: profile.photo,
-                    placeholder: (context, url) => LoadingWidget(
-                      isImage: true,
+                flex: 2,
+                child: Stack(
+                  children: [
+                    ClipOval (
+                      child: CachedNetworkImage(
+                        imageUrl: profile.photo,
+                        width: 75,
+                        height: 75,
+                        placeholder: (context, url) => LoadingWidget(
+                          isImage: true,
+                        ),
+                        errorWidget: (context, url, error) => Image.asset(
+                          'packages/local_people_core/assets/images/trader-profile-photo.png',
+                          fit: BoxFit.cover,
+                        ),
+                        fit: BoxFit.cover,
+                      ),
                     ),
-                    errorWidget: (context, url, error) => Image.asset(
-                      'packages/local_people_core/assets/images/local-people-logo.png',
-                      fit: BoxFit.cover,
-                    ),
-                    fit: BoxFit.cover,
-                  ),
+                  ],
                 ),
               ),
               Expanded(
-                  flex: 3,
+                  flex: 5,
                   child: Flex(
                     direction: Axis.vertical,
                     crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
+                    mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.max,
                     children: <Widget>[
                       Text(
@@ -108,7 +117,7 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                             DateFormat('dd-MM-yyyy')
                                 .format(profile.memberSince),
                         textAlign: TextAlign.left,
-                        style: textTheme.bodyText1,
+                        style: textTheme.overline,
                       ),
                       SizedBox(height: 20.0),
                       Container(
@@ -132,13 +141,13 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                             flex: 1,
                             child: CircleAvatar(
                               //backgroundColor: Color(0xff0075ff),
-                              radius: 12,
+                              radius: 8,
                               child: Center(
                                   child: Image.asset(
                                 'packages/local_people_core/assets/images/verified-icon.png',
                                 fit: BoxFit.contain,
-                                height: 23,
-                                width: 23,
+                                height: 15,
+                                width: 15,
                               )),
                             ),
                           ),
@@ -155,14 +164,14 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                                             ? 'Verified'
                                             : 'Not Verified'),
                                     textAlign: TextAlign.left,
-                                    style: textTheme.subtitle1,
+                                    style: textTheme.bodyText1,
                                   ),
                                   Text(
                                     'Member since ' +
                                         DateFormat('dd-MM-yyyy')
                                             .format(profile.memberSince),
                                     textAlign: TextAlign.left,
-                                    style: textTheme.bodyText1,
+                                    style: textTheme.bodyText2,
                                   ),
                                 ],
                               ))
@@ -177,13 +186,13 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                             flex: 1,
                             child: CircleAvatar(
                               //backgroundColor: Color(0xff0075ff),
-                              radius: 12,
+                              radius: 8,
                               child: Center(
                                   child: Image.asset(
                                 'packages/local_people_core/assets/images/verified-icon.png',
                                 fit: BoxFit.contain,
-                                height: 23,
-                                width: 23,
+                                height: 15,
+                                width: 15,
                               )),
                             ),
                           ),
@@ -198,13 +207,13 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                                     profile.numOfJobsPosted.toString() +
                                         ' Jobs Posted',
                                     textAlign: TextAlign.left,
-                                    style: textTheme.subtitle1,
+                                    style: textTheme.bodyText1,
                                   ),
                                   Text(
                                     profile.amountSpent.toString() +
                                         ' Jobs commissioned',
                                     textAlign: TextAlign.left,
-                                    style: textTheme.bodyText1,
+                                    style: textTheme.bodyText2,
                                   ),
                                 ],
                               ))

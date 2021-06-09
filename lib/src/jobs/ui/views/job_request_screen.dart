@@ -17,7 +17,7 @@ class _JobRequestScreenState extends State<JobRequestScreen>
   void initState() {
     super.initState();
 
-    _controller =  TabController(length: 2, vsync: this);
+    _controller = TabController(length: 2, vsync: this);
   }
 
   //@override
@@ -33,7 +33,7 @@ class _JobRequestScreenState extends State<JobRequestScreen>
 
   AppBarWidget buildAppBar() {
     final theme = Theme.of(context);
-    return AppBarWidget (
+    return AppBarWidget(
       //appBarPreferredSize: Size.fromHeight(120.0),
       //automaticallyImplyLeading: false,
       //toolbarHeight: 120.0,
@@ -79,24 +79,24 @@ class _JobRequestScreenState extends State<JobRequestScreen>
 
   Widget buildBody(BuildContext context) {
     final theme = Theme.of(context);
-    return TabBarView(
-      controller: _controller,
-      children: <Widget>[
-        ListView.builder(
-          shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          itemCount: demeJobs.length,
-          itemBuilder: (context, index) =>
-              JobCard(job: demeJobs[index]),
-        ),
-        ListView.builder(
-          shrinkWrap: true,
-          physics: BouncingScrollPhysics(),
-          itemCount: demeJobs.length,
-          itemBuilder: (context, index) =>
-              JobCard(job: demeJobs[index]),
-        ),
-      ],
+    return SafeArea(
+      child: TabBarView(
+        controller: _controller,
+        children: <Widget>[
+          ListView.builder(
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            itemCount: demeJobs.length,
+            itemBuilder: (context, index) => JobCard(job: demeJobs[index]),
+          ),
+          ListView.builder(
+            shrinkWrap: true,
+            physics: BouncingScrollPhysics(),
+            itemCount: demeJobs.length,
+            itemBuilder: (context, index) => JobCard(job: demeJobs[index]),
+          ),
+        ],
+      ),
     );
   }
 }

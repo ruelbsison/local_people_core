@@ -27,15 +27,15 @@ class Tag extends Object {
       name: ''
     );
   }
-}
 
-List demeTags = [
-  Tag(
-    id: 1,
-    name: '',
-  ),
-  Tag(
-    id: 2,
-    name: '',
-  ),
-];
+  static List<Tag> defaultTags = [
+    Tag(
+      id: 1,
+      name: 'Handy Man',
+    ),
+    Tag(
+      id: 2,
+      name: 'Window Cleaner',
+    ),
+  ];
+}

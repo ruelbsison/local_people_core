@@ -25,15 +25,15 @@ abstract class JobRestApiClient {
   Future<List<JobModel>> listJobsForTrader(@Path("id") int id);
 
   //@ContentType('multipart/form-data')
-  //@MultiPart()
+  @MultiPart()
   // @Headers(<String, dynamic>{
   //   "Content-Type" : "multipart/form-data",
   // })
   @POST(RestAPIConfig.job)
-  Future<JobModel> createJob(@Part() JobModel job, @Part() List<File> images);
+  //Future<JobModel> createJob(@Part() JobModel job, @Part() List<File> images);
   //Future<JobModel> createJob(@Part() List<Map<String, String>> job, @Part() List<File> images);
   //Future<JobModel> createJob(@Header("Content-Type") String contentType, @Body() FormData formData);
-  //Future<JobModel> createJob(@Body() FormData formData);
+  Future<JobModel> createJob(@Body() FormData formData);
   //Future<JobModel> createJob(@MultiPart() List<MultipartFile> formData);
 
   @GET(RestAPIConfig.jobWithId)

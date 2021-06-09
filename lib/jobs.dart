@@ -40,6 +40,7 @@ export './src/jobs/data/datasources/package_rest_api_client.dart';
 export './src/jobs/data/datasources/package_remote_data_source.dart';
 export './src/jobs/data/datasources/package_remote_data_source_impl.dart';
 export './src/jobs/ui/blocs/package_bloc.dart';
+export './src/jobs/ui/widgets/book_package_widget.dart';
 
 export './src/jobs/domain/entities/booking.dart';
 export './src/jobs/domain/entities/booking_list_response.dart';

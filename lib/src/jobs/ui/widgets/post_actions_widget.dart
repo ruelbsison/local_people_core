@@ -1,100 +1,64 @@
 import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import '../blocs/job_form_bloc.dart';
+import '../../domain/entities/job.dart';
 
-class PostActionsWidget extends StatelessWidget {
+class PostActionsWidget extends StatefulWidget {
+  PostActionsWidget({
+    Key key,
+    @required this.job,
+  }) : super(key: key);
+
+  final Job job;
+
+  @override
+  _PostActionsWidgetState createState() => _PostActionsWidgetState();
+}
+
+class _PostActionsWidgetState extends State<PostActionsWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(12.0),
-      //margin: EdgeInsets.all(12.0),
-      child: Flex(
-        direction: Axis.vertical,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: <Widget>[
-          Container(
-            color: Colors.white,
-              child: Flex(
-                  direction: Axis.horizontal,
-                  //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  //crossAxisAlignment: CrossAxisAlignment.start,
-                  children: <Widget>[
-                    Expanded(
-                      flex: 7,
-                      child: Text(
-                        LocalPeopleLocalizations.of(context).menuTitlePostJob,
-                        textAlign: TextAlign.left,
-                        style: theme.textTheme.bodyText1,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 2,
-                      child: Text(
-                        LocalPeopleLocalizations.of(context).titleDeleteJob,
-                        textAlign: TextAlign.left,
-                        style: theme.textTheme.subtitle2,
-                      ),
-                    ),
-                    Expanded(
-                      flex: 1,
-                      child: CircleAvatar(
-                        backgroundColor: Color(0xbbd0d9),
-                        radius: 16,
-                        child: Center (
-                          child: Image.asset(
-                            'packages/local_people_core/assets/images/delete-job-icon.png',
-                            fit: BoxFit.contain,
-                            height: 25,
-                            width: 25,
-                          )
-                      ),
-                    ),
-                    ),
-                  ]
+        color: Colors.white,
+        child: Flex(
+          direction: Axis.horizontal,
+          //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Container(
+                padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                child: ElevatedButton(
+                  onPressed: () => _saveJob(context),
+                  child: Text(
+                    LocalPeopleLocalizations.of(context).btnTitleSave,
+                    style: theme.textTheme.button.copyWith(color: Colors.white),
+                  ),
+                ),
               ),
-          ),
-          SizedBox(height: 30.0),
-          Container(
-              color: Colors.white,
-              child: Flex(
-                direction: Axis.horizontal,
-                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding:
-                      EdgeInsets.only(left: 12.0, right: 12.0),
-                      child: ElevatedButton(
-                        onPressed: () {_saveJob(context);},
-                        child: Text(
-                            LocalPeopleLocalizations.of(context)
-                                .btnTitleSave),
-                      ),
-                    ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Container(
+                padding: EdgeInsets.only(left: 12.0, right: 12.0),
+                child: ElevatedButton(
+                  style: ElevatedButton.styleFrom(
+                    primary: Color.fromRGBO(255, 99, 95, 1),
+                    onPrimary: Color.fromRGBO(170, 186, 205, 1),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding:
-                      EdgeInsets.only(left: 12.0, right: 12.0),
-                      child: ElevatedButton(
-                        onPressed: () {_postJob(context);},
-                        child: Text(
-                            LocalPeopleLocalizations.of(context)
-                                .btnTitlePost),
-                      ),
-                    ),
+                  onPressed: () => _postJob(context),
+                  child: Text(
+                    LocalPeopleLocalizations.of(context).btnTitlePost,
+                    style: theme.textTheme.button.copyWith(color: Colors.white),
                   ),
-                ],
-              )),
-          SizedBox(height: 10.0),
-        ],
-      ),
-    );
+                ),
+              ),
+            ),
+          ],
+        ));
   }
 
   void _saveJob(BuildContext context) {
@@ -102,6 +66,8 @@ class PostActionsWidget extends StatelessWidget {
   }
 
   void _postJob(BuildContext context) {
-    Navigator.of(context).popUntil(ModalRoute.withName('/'));
+    BlocProvider.of<JobFormBloc>(context)
+        .add((JobFormPostEvent(job: widget.job)));
+    //Navigator.of(context).popUntil(ModalRoute.withName('/'));
   }
 }

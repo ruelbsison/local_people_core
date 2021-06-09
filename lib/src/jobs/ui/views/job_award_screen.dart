@@ -168,60 +168,63 @@ class _JobAwardScreenState extends State<JobAwardScreen>
   Widget buildBody(BuildContext context) {
     final theme = Theme.of(context);
     final appType = AppConfig.of(context).appType;
-    return TabBarView(
-      controller: _controller,
-      children: <Widget>[
-        SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.all(12.0),
-            padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
-            color: Color.fromRGBO(255, 255, 255, 1),
-            child: Flex(
-              direction: Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                JobViewWidget(job: widget.job),
-                SizedBox(height: 20.0),
-                //PostedByWidget(profile: widget.profile),
-                PostedByWidget(clientId: widget.job.clientId),
-                SizedBox(height: 10.0),
-                JobActionsWidget(),
-                SizedBox(height: 20.0),
-              ],
+    return SafeArea(
+      child: TabBarView(
+        controller: _controller,
+        children: <Widget>[
+          SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.all(12.0),
+              padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+              color: Color.fromRGBO(255, 255, 255, 1),
+              child: Flex(
+                direction: Axis.vertical,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  JobViewWidget(job: widget.job),
+                  SizedBox(height: 20.0),
+                  //PostedByWidget(profile: widget.profile),
+                  PostedByWidget(clientId: widget.job.clientId),
+                  SizedBox(height: 10.0),
+                  JobActionsWidget(),
+                  SizedBox(height: 20.0),
+                ],
+              ),
             ),
           ),
-        ),
-        BlocProvider(
-          create: (context) => MessageBloc(
-            messageRepository: RepositoryProvider.of<MessageRepository>(context),
-            appType: appType,
-            authLocalDataSource: sl<AuthLocalDataSource>(),
-          )..add(LoadJobMessagesEvent(jobId: widget.job.id)),
-          child: BlocBuilder<MessageBloc, MessageState>(
-            builder: (context, state) {
-              if (state is MessageInitial) {
-                return LoadingWidget();
-              } else if (state is JobMessageLoading) {
-                return LoadingWidget();
-              } else if (state is LoadJobMessageFailed) {
+          BlocProvider(
+            create: (context) => MessageBloc(
+              messageRepository:
+                  RepositoryProvider.of<MessageRepository>(context),
+              appType: appType,
+              authLocalDataSource: sl<AuthLocalDataSource>(),
+            )..add(LoadJobMessagesEvent(jobId: widget.job.id)),
+            child: BlocBuilder<MessageBloc, MessageState>(
+              builder: (context, state) {
+                if (state is MessageInitial) {
+                  return LoadingWidget();
+                } else if (state is JobMessageLoading) {
+                  return LoadingWidget();
+                } else if (state is LoadJobMessageFailed) {
+                  return ErrorWidget('Unhandle State $state');
+                } else if (state is JobMessageLoaded) {
+                  return MessageBody(
+                    messageBox: new MessageBox(
+                      name: widget.job.title,
+                      jobId: widget.job.id,
+                      traderId: widget.job.traderId,
+                      clientId: widget.job.clientId,
+                    ),
+                    messages: state.messages,
+                  );
+                }
                 return ErrorWidget('Unhandle State $state');
-              } else if (state is JobMessageLoaded) {
-                return MessageBody(
-                  messageBox: new MessageBox(
-                    name: widget.job.title,
-                    jobId: widget.job.id,
-                    traderId: widget.job.traderId,
-                    clientId: widget.job.clientId,
-                  ),
-                  messages: state.messages,
-                );
-              }
-              return ErrorWidget('Unhandle State $state');
-            },
+              },
+            ),
           ),
-        ),
-      ],
+        ],
+      ),
     );
   }
 }

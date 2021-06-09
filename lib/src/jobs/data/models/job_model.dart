@@ -25,6 +25,7 @@ class JobModel extends Equatable {
     @required this.date,
     @required this.budget,
     @required this.awarded,
+    this.private = false,
     this.created_at,
     this.updated_at,
     this.client_id,
@@ -56,6 +57,8 @@ class JobModel extends Equatable {
   int client_id;
 
   int trader_id;
+
+  bool private;
 
   //LocationModel location;
   int location_id;
@@ -89,6 +92,7 @@ class JobModel extends Equatable {
       awarded: false,
       client_id: job.clientId, //authLocalModel.userId,
       trader_id: job.traderId,
+        private: job.private,
     );
     model.tag_ids = [];
     if (job.tags != null && job.tags.length > 0) {
@@ -106,7 +110,7 @@ class JobModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, title, description, date, budget, created_at, updated_at, client_id, trader_id, location_id, tag_ids];
+  List<Object> get props => [id, title, description, date, budget, created_at, updated_at, client_id, trader_id, location_id, tag_ids, private];
 
   factory JobModel.fromJson(Map<String, dynamic> json) => _$JobModelFromJson(json);
   Map<String, dynamic> toJson() => _$JobModelToJson(this);

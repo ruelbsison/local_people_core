@@ -1,18 +1,38 @@
-class Package {
+import 'package:equatable/equatable.dart';
+import 'package:meta/meta.dart';
+
+enum PackageOptionType {
+  VIEW_ONLY,
+  ADD_DEFAULT,
+  REMOVE,
+  ADD_NEW,
+}
+
+class Package  extends Equatable implements Comparable {
   int id;
   String name;
   String description;
   int traderId;
   String createdAt;
   String updatedAt;
+  int durationInHours;
+  double cost;
+  PackageOptionType optionType;
 
   Package(
       {this.id,
       this.name,
       this.description,
+      this.durationInHours,
+      this.cost,
       this.traderId,
       this.createdAt,
-      this.updatedAt});
+      this.updatedAt,
+      this.optionType = PackageOptionType.VIEW_ONLY});
+
+  @override
+  List<Object> get props => [id, name, description, traderId,
+    createdAt, updatedAt, durationInHours, cost, optionType];
 
   Package.fromJson(Map<String, dynamic> json) {
     id = json['id'];
@@ -32,5 +52,24 @@ class Package {
     data['created_at'] = this.createdAt;
     data['updated_at'] = this.updatedAt;
     return data;
+  }
+
+  @override
+  int compareTo(other) {
+    if (this.id != null && other.id != null
+    && this.id > 0 && other.id > 0) {
+      if (this.id < other.id) {
+        return 1;
+      } else if (this.id > other.id) {
+        return -1;
+      }
+      return 0;
+    }
+
+    if (this.name != null && other.name != null) {
+      return this.name.toLowerCase().compareTo(other.name.toLowerCase());
+    }
+
+    return 0;
   }
 }

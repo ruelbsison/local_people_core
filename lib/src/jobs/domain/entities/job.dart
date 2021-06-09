@@ -18,6 +18,7 @@ class Job extends Object {
   int clientId;
   int traderId;
   DateTime date;
+  bool private;
 
   Job({
     @required this.id,
@@ -32,6 +33,7 @@ class Job extends Object {
     this.minutesLeft,
     this.images,
     this.date,
+    this.private = false,
   });
 
   @override

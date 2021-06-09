@@ -19,8 +19,6 @@ import '../../domain/entities/location.dart' as loc;
 import 'package:flutter_svg_provider/flutter_svg_provider.dart';
 import '../blocs/tag_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:formz/formz.dart';
-import 'package:permission_handler/permission_handler.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -29,13 +27,13 @@ class JobCreateScreen extends StatefulWidget {
   _JobCreateScreenState createState() => _JobCreateScreenState();
 }
 
-class _JobCreateScreenState extends State<JobCreateScreen> {
+class _JobCreateScreenState extends State<JobCreateScreen>{
     //with WidgetsBindingObserver, AutomaticKeepAliveClientMixin {
   final GlobalKey<FormBuilderState> _formKey = GlobalKey();
 
   Job job;
   //AutocompletePrediction selectedLocation;
-  List<Tag> objTags = [];
+  List<Tag> objTags;
   List<String> currentTags = [];
 
   GooglePlace googlePlace;
@@ -70,16 +68,6 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
     List<Item> lst = _tagStateKey.currentState?.getAllItem;
     if (lst != null)
       lst.where((a) => a.active == true).forEach((a) => print(a.title));
-  }
-
-  void requestPermission() async {
-    Map<Permission, PermissionStatus> statuses = await [
-      Permission.storage,
-      Permission.accessMediaLocation,
-      Permission.photos,
-      Permission.camera,
-    ].request();
-    print(statuses[Permission.storage]);
   }
 
   //@override
@@ -156,7 +144,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
         });
       }
     });*/
-    requestPermission();
+    //requestPermission();
   }
 
   @override
@@ -236,14 +224,16 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
     //super.build(context);
     return Scaffold(
       appBar: buildAppBar(context),
-      body: BlocProvider.value(
-        value: BlocProvider.of<TagBloc>(context),
-        child: buildFormBody(context),
-      ),
+      body: buildBody(context),
+      // body: BlocProvider.value(
+      //   value: BlocProvider.of<TagBloc>(context),
+      //   child: buildLBody(context),
+      // ),
     );
   }
 
   AppBarWidget buildAppBar(BuildContext context) {
+    final theme = Theme.of(context);
     return AppBarWidget(
       //appBarPreferredSize: Size.fromHeight(60.0),
       title: Text(
@@ -252,13 +242,10 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
       appBar: AppBar(),
       subTitle: LocalPeopleLocalizations.of(context).menuTitlePostJob,
       actions: <Widget>[
-        ElevatedButton(
+        TextButton(
           child: Text(
             LocalPeopleLocalizations.of(context).btnTitleCancel,
-            style: TextStyle(
-              fontSize: 14,
-              fontWeight: FontWeight.normal,
-            ),
+            style: theme.textTheme.button,
           ),
           onPressed: () {
             //AppRouter.pushPage(context, JobCreateScreen());
@@ -294,6 +281,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
 
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
+      color: Colors.white,
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
@@ -308,7 +296,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
           ),
           SizedBox(height: 10.0),
           Container(
-            color: Colors.white,
+            color: Color.fromRGBO(239, 244, 246, 1),
             //padding: EdgeInsets.only(left: 12.0, right: 12.0),
             child: EnsureVisibleWhenFocused(
               focusNode: _focusNodeJobGategory,
@@ -393,42 +381,23 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
             ),
           ),
           SizedBox(height: 20.0),
-          Text(
-            LocalPeopleLocalizations.of(context).titleSuggestions,
-            textAlign: TextAlign.left,
-            style: theme.textTheme.caption,
+          Container(
+            color: Color.fromRGBO(239, 244, 246, 1),
+            child: Text(
+              LocalPeopleLocalizations.of(context).titleSuggestions,
+              textAlign: TextAlign.left,
+              style: theme.textTheme.overline,
+            ),
           ),
           SizedBox(height: 10.0),
-          buildTagWidget(context),
+          TagsViewWidget(
+            tagBackgroundColor: Color.fromRGBO(239, 244, 246, 1),
+            tags: objTags,
+          ),
         ],
       ),
     );
   }
-
-  Widget buildTagWidget(BuildContext context) {
-    context.read<TagBloc>().add(LoadTagsEvent());
-    return BlocBuilder<TagBloc, TagState>(
-      builder: (context, state) {
-        if (state is TagInitial) {
-          return LoadingWidget();
-        } else if (state is TagsLoading) {
-          return LoadingWidget();
-        } else if (state is LoadTagsFailed) {
-          return ErrorWidget('Error $state');
-        } else if (state is TagsLoaded) {
-          //return buildJobCategoryFormEntry(context, state.tags);
-          //setState(() {
-            objTags = state.tags;
-            currentTags = List.generate(state.tags.length, (index) => state.tags[index].name);
-          //});
-          return TagsViewWidget(
-            tags: state.tags,
-          );
-        }
-        return ErrorWidget('Unhandle State $state');
-      },
-    );
-;  }
 
   Widget _buildSegmentedTab(BuildContext context, String title) {
     final size = MediaQuery.of(context).size;
@@ -447,8 +416,81 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
     );
   }
 
-  Widget _buildLocationEntry(BuildContext context) {
+  Widget buildBody(BuildContext context) {
+    // try {
+    //   List<Tag> tags = sl<List<Tag>>();
+    //   if (tags == null) {
+    //     context.read<TagBloc>().add(LoadTagsEvent());
+    //   }
+    //   else {
+    //     objTags = tags;
+    //     currentTags = List.generate(objTags.length, (index) => objTags[index].name);
+    //     return buildFormBody(context);
+    //   }
+    // } catch(e) {
+    //   print(e.toString());
+    //   context.read<TagBloc>().add(LoadTagsEvent());
+    // }
 
+    context.read<TagBloc>().add(LoadTagsEvent());
+    return BlocProvider.value(
+      value: BlocProvider.of<TagBloc>(context),
+      child: BlocConsumer<TagBloc, TagState>(
+          listenWhen: (previous, current) {
+            // return true/false to determine whether or not
+            // to invoke listener with state
+            // List<Tag> tags = sl<List<Tag>>();
+            return false;
+          },
+          listener: (context, state) {
+            // do stuff here based on BlocA's state
+          },
+          buildWhen: (previous, current) {
+            // return true/false to determine whether or not
+            // to rebuild the widget with state
+            if (objTags != null)
+              return false;
+
+            try {
+              List<Tag> tags = sl<List<Tag>>();
+              if (tags != null && tags.length > 0)
+                return false;
+            } catch(e) {
+            }
+
+            if (previous is TagsLoading &&
+                current is TagsLoaded) {
+              return true;
+            } else if (previous is TagInitial &&
+                current is TagsLoading) {
+              return true;
+            }
+            return false;
+          },
+          builder: (context, state) {
+            // return widget here based on BlocA's state
+            if (state is TagsLoaded) {
+              if (state.tags != null && state.tags.length > 0) {
+                //locatorAddListTag(state.tags);
+                List<Tag> tags = sl<List<Tag>>();
+                tags.clear();
+                tags.addAll(state.tags);
+
+                objTags = state.tags;
+              } else {
+                objTags = Tag.defaultTags;
+              }
+              currentTags = List.generate(objTags.length, (index) => objTags[index].name);
+              return buildFormBody(context);
+            } else if (state is LoadTagsFailed) {
+              return ErrorWidget('Error $state');
+            } else if (state is TagsLoading) {
+              return LoadingWidget();
+            }
+            return LoadingWidget();
+          }
+      ),
+    );
   }
 
   Widget buildFormBody(BuildContext context) {
@@ -475,6 +517,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
 
     final locationFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
+      color: Colors.white,
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
@@ -489,7 +532,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
           ),
           SizedBox(height: 10.0),
           Container(
-            color: Colors.white,
+            color: Color.fromRGBO(239, 244, 246, 1),
             //padding: EdgeInsets.only(left: 12.0, right: 12.0),
             child: EnsureVisibleWhenFocused(
               focusNode: _focusNodeLocation,
@@ -603,6 +646,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
     final jobCategoryFormEntry = buildJobCategoryFormEntry(context);
     final jobDescriptionFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
+      color: Colors.white,
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
@@ -617,7 +661,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
           ),
           SizedBox(height: 10.0),
           Container(
-            color: Colors.white,
+            color: Color.fromRGBO(239, 244, 246, 1),
             height: 200,
             //padding: EdgeInsets.only(left: 12.0, right: 12.0),
             child: EnsureVisibleWhenFocused(
@@ -629,6 +673,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                 expands: true,
                 minLines: null,
                 maxLines: null,
+                textCapitalization: TextCapitalization.sentences,
                 style: theme.textTheme.bodyText2,
                 decoration: InputDecoration(
                   labelText: 'Job Description',
@@ -661,7 +706,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
             ),
           ),
           Container(
-            color: Colors.white,
+            color: Color.fromRGBO(239, 244, 246, 1),
             child: FormBuilderImagePicker(
               name: 'images',
               initialValue: [],
@@ -754,9 +799,10 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
 
     final budgetFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
+      color: Colors.white,
       child: Flex(
         direction: Axis.vertical,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
@@ -773,7 +819,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                 ),
                 SizedBox(height: 10.0),
                 Container(
-                  color: Colors.white,
+                  color: Color.fromRGBO(239, 244, 246, 1),
                   //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                   width: size.width / 2,
                   child: EnsureVisibleWhenFocused(
@@ -822,6 +868,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
 
     final requestedTimeFrameFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
+      color: Colors.white,
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
@@ -1026,6 +1073,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
 
     final timeToRespondFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
+      color: Colors.white,
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
@@ -1059,6 +1107,7 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
 
     final postEditsFormEntry = Container(
       //padding: EdgeInsets.only(left: 20, right: 20.0),
+      color: Colors.white,
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
@@ -1104,6 +1153,10 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                           child: Container(
                             padding: EdgeInsets.only(left: 12.0, right: 12.0),
                             child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Color.fromRGBO(239, 244, 246, 1),
+                                onPrimary: Color.fromRGBO(170, 186, 205, 1),
+                              ),
                               onPressed: () => _cancelJob(context),
                               child: Text(
                                 LocalPeopleLocalizations.of(context)
@@ -1118,6 +1171,10 @@ class _JobCreateScreenState extends State<JobCreateScreen> {
                           child: Container(
                             padding: EdgeInsets.only(left: 12.0, right: 12.0),
                             child: ElevatedButton(
+                              style: ElevatedButton.styleFrom(
+                                primary: Color.fromRGBO(239, 244, 246, 1),
+                                onPrimary: Color.fromRGBO(170, 186, 205, 1),
+                              ),
                               onPressed: () => _postJob(context),
                               child: Text(
                                 LocalPeopleLocalizations.of(context)

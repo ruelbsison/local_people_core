@@ -7,6 +7,8 @@ import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
 import '../widgets/job_view_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:snapping_sheet/snapping_sheet.dart';
+import '../widgets/job_bid_actions_widget.dart';
 
 class JobDetailScreen extends StatefulWidget {
   JobDetailScreen({
@@ -43,6 +45,23 @@ class _JobDetailScreenState extends State<JobDetailScreen>
 
   @override
   Widget build(BuildContext context) {
+    // return Scaffold(
+    //   appBar: buildAppBar(),
+    //   body: SnappingSheet(
+    //     // TODO: Add your content that is placed
+    //     // behind the sheet. (Can be left empty)
+    //     child: buildBody(context),
+    //     grabbingHeight: 40,
+    //     grabbing: DefaultGrabbing(),
+    //     sheetBelow: SnappingSheetContent(
+    //       // Pass in the scroll controller here!
+    //       //childScrollController: _myScrollController,
+    //       draggable: true,
+    //       // TODO: Add your sheet content here
+    //       child: JobBidActionsWidget(job: widget.job,),
+    //     ),
+    //   ),
+    // );
     return Scaffold(
       appBar: buildAppBar(),
       body: buildBody(context),
@@ -64,7 +83,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
           direction: Axis.horizontal,
           mainAxisSize: MainAxisSize.max,
           mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.stretch,
           children: <Widget>[
             Expanded(
               flex: 1,
@@ -88,11 +107,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                     // (widget.job.minutesLeft / 60).toString() + ' hrs left',
                     widget.job.minutesLeft.toString() + ' hrs left',
                     textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Color.fromRGBO(0, 63, 92, 1),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'RedHatDisplay'),
+                    style: theme.textTheme.overline,
                   ),
                 ],
               ),
@@ -101,29 +116,18 @@ class _JobDetailScreenState extends State<JobDetailScreen>
               flex: 4,
               child: Flex(
                 direction: Axis.vertical,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                mainAxisAlignment: MainAxisAlignment.center,
                 children: <Widget>[
-                  //Expanded(
-                  //  flex: 2,
-                  //child: Text(
                   Text(
                     widget.job.title != null
                         ? widget.job.title
                         : widget.job.description,
                     textAlign: TextAlign.left,
                     style: theme.textTheme.headline6,
+                    maxLines: 2,
                   ),
-                  //),
-                  //Expanded(
-                  //  flex: 1,
-                  //child: Text(
-                  Text(
-                    'Client Name',
-                    textAlign: TextAlign.left,
-                    style: theme.textTheme.bodyText1,
-                  ),
-                  //),
                 ],
               ),
             ),
@@ -166,65 +170,89 @@ class _JobDetailScreenState extends State<JobDetailScreen>
   Widget buildBody(BuildContext context) {
     final theme = Theme.of(context);
     final appType = AppConfig.of(context).appType;
-    return TabBarView(
-      controller: _controller,
-      children: <Widget>[
-        SingleChildScrollView(
-          child: Container(
-            margin: EdgeInsets.all(12.0),
-            padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
-            color: Color.fromRGBO(255, 255, 255, 1),
-            child: Flex(
-              direction: Axis.vertical,
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.stretch,
-              children: <Widget>[
-                JobViewWidget(job: widget.job),
-                SizedBox(height: 20.0),
-                //PostedByWidget(profile: widget.profile),
-                PostedByWidget(
-                  clientId: widget.job.clientId,
-                ),
-                SizedBox(height: 10.0),
-                ElevatedButton(
-                    onPressed: () {},
-                    child: Text(LocalPeopleLocalizations.of(context)
-                        .btnTitleSendMesssage)),
-                SizedBox(height: 20.0),
-              ],
-            ),
-          ),
-        ),
-        BlocProvider(
-          create: (context) => MessageBloc(
-            messageRepository: RepositoryProvider.of<MessageRepository>(context),
-            appType: appType,
-            authLocalDataSource: sl<AuthLocalDataSource>(),
-          )..add(LoadJobMessagesEvent(jobId: widget.job.id)),
-          child: BlocBuilder<MessageBloc, MessageState>(
-            builder: (context, state) {
-              if (state is MessageInitial) {
-                return LoadingWidget();
-              } else if (state is JobMessageLoading) {
-                return LoadingWidget();
-              } else if (state is LoadJobMessageFailed) {
-                return ErrorWidget('Error $state');
-              } else if (state is JobMessageLoaded) {
-                return MessageBody(
-                  messageBox: new MessageBox(
-                    name: widget.job.title,
-                    jobId: widget.job.id,
-                    traderId: widget.job.traderId,
+    return SafeArea(
+      child: TabBarView(
+        controller: _controller,
+        children: <Widget>[
+    //   SnappingSheet(
+    //   // TODO: Add your content that is placed
+    //   // behind the sheet. (Can be left empty)
+    //   child: MyOwnPageContent(),
+    //   grabbingHeight: 75,
+    //   // TODO: Add your grabbing widget here,
+    //   grabbing: MyOwnGrabbingWidget(),
+    //   sheetBelow: SnappingSheetContent(
+    //     draggable: true,
+    //     // TODO: Add your sheet content here
+    //     child: MyOwnSheetContent(),
+    //   ),
+    // ),
+    // );
+          SingleChildScrollView(
+            child: Container(
+              margin: EdgeInsets.all(12.0),
+              padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+              //color: Color.fromRGBO(255, 255, 255, 1),
+              child: Flex(
+                direction: Axis.vertical,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget>[
+                  JobViewWidget(job: widget.job),
+                  SizedBox(height: 20.0),
+                  //PostedByWidget(profile: widget.profile),
+                  PostedByWidget(
                     clientId: widget.job.clientId,
                   ),
-                  messages: state.messages,
-                );
-              }
-              return ErrorWidget('Unhandle State $state');
-            },
+                  Container (
+                    color: Colors.white,
+                    child: ElevatedButton(
+                        onPressed: () {},
+                        child: Text(
+                          LocalPeopleLocalizations.of(context).btnTitleSendMesssage,
+                          style: theme.textTheme.button.copyWith(color: Colors.white),
+                        )
+                    ),
+                  ),
+                  SizedBox(height: 40.0),
+                  JobBidActionsWidget(job: widget.job,),
+                  //SizedBox(height: 5.0),
+                ],
+              ),
+            ),
           ),
-        ),
-      ],
+          BlocProvider(
+            create: (context) => MessageBloc(
+              messageRepository:
+                  RepositoryProvider.of<MessageRepository>(context),
+              appType: appType,
+              authLocalDataSource: sl<AuthLocalDataSource>(),
+            )..add(LoadJobMessagesEvent(jobId: widget.job.id)),
+            child: BlocBuilder<MessageBloc, MessageState>(
+              builder: (context, state) {
+                if (state is MessageInitial) {
+                  return LoadingWidget();
+                } else if (state is JobMessageLoading) {
+                  return LoadingWidget();
+                } else if (state is LoadJobMessageFailed) {
+                  return ErrorWidget('Error $state');
+                } else if (state is JobMessageLoaded) {
+                  return MessageBody(
+                    messageBox: new MessageBox(
+                      name: widget.job.title,
+                      jobId: widget.job.id,
+                      traderId: widget.job.traderId,
+                      clientId: widget.job.clientId,
+                    ),
+                    messages: state.messages,
+                  );
+                }
+                return ErrorWidget('Unhandle State $state');
+              },
+            ),
+          ),
+        ],
+      ),
     );
   }
 }

@@ -11,6 +11,7 @@ import 'dart:io';
 import 'package:mime/mime.dart';
 import '../../domain/entities/job_list_response.dart';
 import '../../domain/entities/job_response.dart';
+import 'package:local_people_core/auth.dart';
 
 class JobRemoteDataSourceImpl implements JobRemoteDataSource {
   final logger = Logger("JobRemoteDataSourceImpl");
@@ -72,7 +73,14 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
     try {
       var request =
           http.MultipartRequest('POST', Uri.parse(RestAPIConfig().baseURL + '/jobs'));
-          Dio dio = RestAPIConfig.getDioOptions();
+          AuthLocalDataSource authLocalDataSource = sl<AuthLocalDataSource>();
+          String token = await authLocalDataSource.getAccessToken();
+          //String token = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjZ5Sl81RW9zYWpkVzh1SFJSTVktZyJ9.eyJpc3MiOiJodHRwczovL2xvY2FsLXBlb3BsZS5ldS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTQ5OTc5MTg3NDkxMTY3OTEzMzMiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbHBlb3BsZS1hcGkiLCJodHRwczovL2xvY2FsLXBlb3BsZS5ldS5hdXRoMC5jb20vdXNlcmluZm8iXSwiaWF0IjoxNjIyOTk0MTc4LCJleHAiOjE2MjMwODA1NzgsImF6cCI6IlBKb2tmRWxLaDQ0Y3QyQUZrSjBYeFZxdUh2dDVmdHcxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCJ9.YmvKhcKlHQqHEj9b535zDnkWiXPX69BynnLqLdd-2sNTFxrPMHh6N-lHoO1FWBhGzzpqrVmpPSWJ4gimmml-Nad3sQcwjXTRRTmat1RD7opp6lCV2SvlV4264-THeIwHg847FOTWZBDZ0oHIs6GZeVxoQB_FjEhhwBTfkEXPOhC6YgLhzWaTR-AjRfa_e3O55A4ObcRpN00LrYxZG4EhRkC-BKlVEmYeFmusTfD72VI-obKSxXmMUNqwmUlQdj5IOUU8ugo6I4ERieOOuMYSj3PcGPK7-QFv7s2VQpeMbgtjoDLehpS6YetgHMIHb0zJUypun00X6wOW01wNmfogdg";
+          if (token != null) {
+            request.headers.addAll(<String, String>{
+              "Authorization" : "Bearer " + token,
+            });
+          }
           request.headers.addAll(<String, String>{
             "Content-Type" : "multipart/form-data",
           });
@@ -114,6 +122,9 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
           response.jobFromModel(model);
         }
       }
+      // FormData formData = FormData();
+      // formData.fields.add(request.fields);
+      // jobRestApiClient.createJob(request.f, images);
       //return response.body;
 
       // JobModel jobModel = await request

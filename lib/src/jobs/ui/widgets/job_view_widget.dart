@@ -38,7 +38,7 @@ class _JobViewWidgetState extends State<JobViewWidget> {
     final theme = Theme.of(context);
     final size = MediaQuery.of(context).size;
     return Container(
-      color: Colors.white,
+      //color: Colors.white,
       padding: EdgeInsets.all(12.0),
       //margin: EdgeInsets.all(12.0),
       child: Flex(

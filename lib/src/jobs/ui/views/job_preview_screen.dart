@@ -1,24 +1,15 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
-import 'dart:async';
-import 'dart:typed_data';
 import '../widgets/posted_by_widget.dart';
-import '../widgets/post_actions_widget.dart';
-import '../../domain/entities/profile.dart';
 import '../../domain/entities/job.dart';
 import '../widgets/job_view_widget.dart';
-import 'package:google_place/google_place.dart';
-import 'package:permission_handler/permission_handler.dart';
-//import 'package:local_people_core/jobs.dart';
 import '../blocs/job_form_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/core.dart';
-import '../../domain/repositories/job_repository.dart';
-import '../../domain/repositories/tag_repository.dart';
-import '../../domain/repositories/location_repository.dart';
 import 'package:local_people_core/profile.dart';
 import 'package:local_people_core/auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:snapping_sheet/snapping_sheet.dart';
+import '../widgets/post_actions_widget.dart';
 
 class JobPreviewScreen extends StatefulWidget {
   JobPreviewScreen({
@@ -28,7 +19,7 @@ class JobPreviewScreen extends StatefulWidget {
   }) : super(key: key);
 
   final Job job;
-  //final Profile profile;
+  dynamic profile;
 
   @override
   _JobPreviewScreenState createState() => _JobPreviewScreenState();
@@ -38,11 +29,7 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
     with TickerProviderStateMixin {
   TabController _controller;
   int _tab = 0;
-
-  void requestPermission() async {
-    Map<Permission, PermissionStatus> statuses =
-        await [Permission.location].request();
-  }
+  final ScrollController _scrollController = ScrollController();
 
   @override
   void initState() {
@@ -57,137 +44,173 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
       });
     });
 
-    requestPermission();
+    //requestPermission();
   }
 
   @override
   Widget build(BuildContext context) {
+    // return Scaffold(
+    //   //appBar: buildAppBar(context),
+    //   appBar: buildAppBar(context),
+    //   //body: buildTabBody(context),
+    //   //body: buildTabBody(context),
+    //   body: buildBody(context),
+    //   // body: BlocProvider.value(
+    //   //   value: BlocProvider.of<JobFormBloc>(context),
+    //   //   child: buildBody(),
+    //   // ),
+    // );
+    //
+    // //return buildBody(context);
     return Scaffold(
-      //appBar: buildAppBar(context),
       appBar: buildAppBar(context),
-      //body: buildTabBody(context),
-      //body: buildTabBody(context),
-      body: buildBody(context),
-      // body: BlocProvider.value(
-      //   value: BlocProvider.of<JobFormBloc>(context),
-      //   child: buildBody(),
-      // ),
+      body: SnappingSheet(
+        // TODO: Add your content that is placed
+        // behind the sheet. (Can be left empty)
+        child: buildBody(context),
+        grabbingHeight: 140,
+        grabbing: DefaultGrabbing(),
+        sheetBelow: SnappingSheetContent(
+          // Pass in the scroll controller here!
+          //childScrollController: _myScrollController,
+          draggable: true,
+          // TODO: Add your sheet content here
+          child: PostActionsWidget(job: widget.job,),
+        ),
+      ),
     );
-
-    //return buildBody(context);
   }
 
-  AppBar buildAppBar(BuildContext context) {
+  Widget buildAppBar(BuildContext context) {
     //}BuildContext context) {
     final theme = Theme.of(context);
     final appType = AppConfig.of(context).appType;
-    //context.read<ProfileBloc>().add(ProfileGetEvent());
-    //BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
+    try {
+      if (appType == AppType.CLIENT) {
+        ClientProfile clientProfile = sl<ClientProfile>();
+        if (clientProfile != null) {
+          widget.profile = clientProfile;
+          return buildAppBarContent(context);
+        }
+      } else {
+        TraderProfile traderProfile = sl<TraderProfile>();
+        if (traderProfile != null) {
+          widget.profile = traderProfile;
+          return buildAppBarContent(context);
+        }
+      }
+    } catch(e) {
+    }
+
+    return BlocProvider(
+      create: (context) => ProfileBloc(
+        profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+        appType: appType,
+        authLocalDataSource: sl<AuthLocalDataSource>(),
+      )..add(ProfileGetEvent()),
+      child: BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+        if (state is ClientProfileLoaded) {
+          locatorAddClientProfile(state.profile);
+          widget.profile = state.profile;
+          return buildAppBarContent(context);
+        } else if (state is ProfileNotLoaded) {
+          return ErrorWidget(state.e.toString());
+        } else {
+          return LoadingWidget();
+        }
+      }),
+    );
+  }
+
+  Widget buildAppBarContent(BuildContext context) {
+    final theme = Theme.of(context);
     return AppBar(
-      /*leading: Text(
-        LocalPeopleLocalizations.of(context).menuTitleOpportunities,
-      ),*/
       toolbarHeight: 220.0,
       centerTitle: false,
       titleSpacing: 0,
-      title: BlocProvider(
-        create: (context) => ProfileBloc(
-          profileRepository: RepositoryProvider.of<ProfileRepository>(context),
-          appType: appType,
-          authLocalDataSource: sl<AuthLocalDataSource>(),
-        )..add(ProfileGetEvent()),
-        child: BlocBuilder<ProfileBloc, ProfileState>(
-            builder: (context, state) {
-              if (state is ClientProfileLoaded) {
-                return Column(
-                    //padding: EdgeInsets.only(bottom: 12.0),
-                    //child: Flex(
-                    children: <Widget>[
-                      SizedBox(height: 60.0),
-                      Flex(
-                        direction: Axis.horizontal,
-                        mainAxisSize: MainAxisSize.max,
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: <Widget>[
-                          Expanded(
-                            flex: 1,
-                            child: Flex(
-                              direction: Axis.vertical,
-                              crossAxisAlignment: CrossAxisAlignment.stretch,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                CircleAvatar(
-                                  backgroundColor: Color.fromRGBO(255, 166, 0, 1),
-                                  radius: 15,
-                                  child: CachedNetworkImage(
-                                    imageUrl: state.profile.photo,
-                                    placeholder: (context, url) => LoadingWidget(
-                                      isImage: true,
-                                    ),
-                                    errorWidget: (context, url, error) => Image.asset(
-                                      'packages/local_people_core/assets/images/local-people-logo.png',
-                                      fit: BoxFit.cover,
-                                    ),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                Text(
-                                  // (widget.job.minutesLeft / 60).toString() + ' hrs left',
-                                  //widget.job.minutesLeft.toString() + ' hrs left',
-                                  DateFormatUtil.getDateTimeDiff(DateTime.now(), widget.job.date),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyle(
-                                      color: Color.fromRGBO(0, 63, 92, 1),
-                                      fontSize: 10,
-                                      fontWeight: FontWeight.w500,
-                                      fontFamily: 'RedHatDisplay'),
-                                ),
-                              ],
-                            ),
-                          ),
-                          Expanded(
-                            flex: 4,
-                            child: Flex(
-                              direction: Axis.vertical,
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              mainAxisAlignment: MainAxisAlignment.start,
-                              children: <Widget>[
-                                //Expanded(
-                                //  flex: 2,
-                                //child: Text(
-                                Text(
-                                  widget.job.title != null
-                                      ? widget.job.title
-                                      : widget.job.description,
-                                  textAlign: TextAlign.left,
-                                  style: theme.textTheme.headline6,
-                                ),
-                                //),
-                                //Expanded(
-                                //  flex: 1,
-                                //child: Text(
-                                Text(
-                                  (state.profile.fullName != null
-                                      ? state.profile.fullName
-                                      : 'Client Full Name'),
-                                  textAlign: TextAlign.left,
-                                  style: theme.textTheme.bodyText1,
-                                ),
-                                //),
-                              ],
-                            ),
-                          ),
-                        ],
+      title: Column(
+        //padding: EdgeInsets.only(bottom: 12.0),
+        //child: Flex(
+        children: <Widget>[
+          SizedBox(height: 60.0),
+          Flex(
+            direction: Axis.horizontal,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: <Widget>[
+              Expanded(
+                flex: 1,
+                child: Flex(
+                  direction: Axis.vertical,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    CircleAvatar(
+                      backgroundColor: Color.fromRGBO(255, 166, 0, 1),
+                      radius: 15,
+                      child: CachedNetworkImage(
+                        imageUrl: widget.profile.photo,
+                        placeholder: (context, url) => LoadingWidget(
+                          isImage: true,
+                        ),
+                        errorWidget: (context, url, error) => Image.asset(
+                          'packages/local_people_core/assets/images/local-people-logo.png',
+                          fit: BoxFit.cover,
+                        ),
+                        fit: BoxFit.cover,
                       ),
-                    ],);
-              } else if (state is ProfileNotLoaded) {
-                return ErrorWidget(state.e.toString());
-              } else {
-                return LoadingWidget();
-              }
-            }
-        ),
+                    ),
+                    Text(
+                      // (widget.job.minutesLeft / 60).toString() + ' hrs left',
+                      //widget.job.minutesLeft.toString() + ' hrs left',
+                      DateFormatUtil.getDateTimeDiff(
+                          DateTime.now(), widget.job.date),
+                      textAlign: TextAlign.center,
+                      style: TextStyle(
+                          color: Color.fromRGBO(0, 63, 92, 1),
+                          fontSize: 10,
+                          fontWeight: FontWeight.w500,
+                          fontFamily: 'RedHatDisplay'),
+                    ),
+                  ],
+                ),
+              ),
+              Expanded(
+                flex: 4,
+                child: Flex(
+                  direction: Axis.vertical,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: <Widget>[
+                    //Expanded(
+                    //  flex: 2,
+                    //child: Text(
+                    Text(
+                      widget.job.title != null
+                          ? widget.job.title
+                          : widget.job.description,
+                      textAlign: TextAlign.left,
+                      style: theme.textTheme.headline6,
+                    ),
+                    //),
+                    //Expanded(
+                    //  flex: 1,
+                    //child: Text(
+                    Text(
+                      (widget.profile.fullName != null
+                          ? widget.profile.fullName
+                          : 'Client Full Name'),
+                      textAlign: TextAlign.left,
+                      style: theme.textTheme.bodyText1,
+                    ),
+                    //),
+                  ],
+                ),
+              ),
+            ],
+          ),
+        ],
       ),
       elevation: 0.0,
       bottom: TabBar(
@@ -224,58 +247,61 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
 
   Widget buildBody(BuildContext context) {
     //BuildContext context) {
-    return BlocProvider.value(value:
-    BlocProvider.of<JobFormBloc>(context),
-    child: BlocListener<JobFormBloc, JobFormState>(
-      listener: (context, state) {
-        if (state is JobFormState) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-        } else if (state is JobFormPostCompleted) {
-          ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          // showDialog<void>(
-          //   context: context,
-          //   builder: (_) => SuccessDialog(context),
-          // );
-          Navigator.of(context).popUntil(ModalRoute.withName('/'));
-        } else if (state is JobFormPosting) {
-          ScaffoldMessenger.of(context)
-            ..hideCurrentSnackBar()
-            ..showSnackBar(
-              const SnackBar(content: Text('Job Posting...')),
-            );
-        }
-      },
-      child: buildTabBody(context),
-    ),);
+    return BlocProvider.value(
+      value: BlocProvider.of<JobFormBloc>(context),
+      child: BlocListener<JobFormBloc, JobFormState>(
+        listener: (context, state) {
+          if (state is JobFormState) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+          } else if (state is JobFormPostCompleted) {
+            ScaffoldMessenger.of(context).hideCurrentSnackBar();
+            // showDialog<void>(
+            //   context: context,
+            //   builder: (_) => SuccessDialog(context),
+            // );
+            Navigator.of(context).popUntil(ModalRoute.withName('/'));
+          } else if (state is JobFormPosting) {
+            ScaffoldMessenger.of(context)
+              ..hideCurrentSnackBar()
+              ..showSnackBar(
+                const SnackBar(content: Text('Job Posting...')),
+              );
+          }
+        },
+        child: buildTabBody(context),
+      ),
+    );
   }
 
   Widget buildTabBody(BuildContext context) {
-    return TabBarView(
-      controller: _controller,
-      children: <Widget>[
-        SingleChildScrollView(
-          physics: BouncingScrollPhysics(),
-          child: Flex(
-            direction: Axis.vertical,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              JobViewWidget(
-                job: widget.job,
-              ),
-              //SizedBox(height: 10.0),
-              //PostedByWidget(profile: widget.profile),
-              PostedByWidget(clientId: widget.job.clientId),
-              //SizedBox(height: 10.0),
-              //PostActionsWidget(),
-              _jobPostActions(context),
-              //SizedBox(height: 10.0),
-            ],
+    return SafeArea(
+      child: TabBarView(
+        controller: _controller,
+        children: <Widget>[
+          SingleChildScrollView(
+            physics: BouncingScrollPhysics(),
+            child: Flex(
+              direction: Axis.vertical,
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                JobViewWidget(
+                  job: widget.job,
+                ),
+                //SizedBox(height: 10.0),
+                //PostedByWidget(profile: widget.profile),
+                PostedByWidget(clientId: widget.job.clientId),
+                //SizedBox(height: 10.0),
+                //PostActionsWidget(),
+                _jobPostActions(context),
+                //SizedBox(height: 10.0),
+              ],
+            ),
           ),
-        ),
-        //MessageBody(),
-        Container(),
-      ],
+          //MessageBody(),
+          Container(),
+        ],
+      ),
     );
   }
 
@@ -329,39 +355,6 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
                 ]),
           ),
           SizedBox(height: 30.0),
-          Container(
-              color: Colors.white,
-              child: Flex(
-                direction: Axis.horizontal,
-                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //crossAxisAlignment: CrossAxisAlignment.start,
-                children: <Widget>[
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
-                      child: ElevatedButton(
-                        onPressed: () => Navigator.of(context)
-                            .popUntil(ModalRoute.withName('/')),
-                        child: Text(
-                            LocalPeopleLocalizations.of(context).btnTitleSave),
-                      ),
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding: EdgeInsets.only(left: 12.0, right: 12.0),
-                      child: ElevatedButton(
-                        onPressed: () => BlocProvider.of<JobFormBloc>(context).add((JobFormPostEvent(job: widget.job))),
-                        child: Text(
-                            LocalPeopleLocalizations.of(context).btnTitlePost),
-                      ),
-                    ),
-                  ),
-                ],
-              )),
-          SizedBox(height: 10.0),
         ],
       ),
     );

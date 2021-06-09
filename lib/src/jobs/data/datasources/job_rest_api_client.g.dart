@@ -76,19 +76,11 @@ class _JobRestApiClient implements JobRestApiClient {
   }
 
   @override
-  Future<JobModel> createJob(job, images) async {
-    ArgumentError.checkNotNull(job, 'job');
-    ArgumentError.checkNotNull(images, 'images');
+  Future<JobModel> createJob(formData) async {
+    ArgumentError.checkNotNull(formData, 'formData');
     const _extra = <String, dynamic>{};
     final queryParameters = <String, dynamic>{};
-    final _data = FormData();
-    _data.fields.add(MapEntry('job', jsonEncode(job ?? <String, dynamic>{})));
-    _data.files.addAll(images?.map((i) => MapEntry(
-        'images',
-        MultipartFile.fromFileSync(
-          i.path,
-          filename: i.path.split(Platform.pathSeparator).last,
-        ))));
+    final _data = formData;
     final _result = await _dio.request<Map<String, dynamic>>('/jobs',
         queryParameters: queryParameters,
         options: RequestOptions(

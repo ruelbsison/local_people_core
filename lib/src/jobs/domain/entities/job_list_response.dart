@@ -29,6 +29,7 @@ class JobListResponse {
         minutesLeft: 120,
         //images: model.images,
         date: DateTime.parse(model.date),
+        private: model.private,
       );
       if (model.tag_ids != null && model.tag_ids.length > 0) {
         Iterator tagIter = model.tag_ids.iterator;

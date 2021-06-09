@@ -96,18 +96,20 @@ class _JobScreenState extends State<JobScreen> {
 
   Widget buildBodyList(List<Job> jobs) {
     final appCType = AppConfig.of(context).appType;
-    return RefreshIndicator(
-      onRefresh: () async {
-        if (appCType == AppType.CLIENT)
-          context.read<JobBloc>().add(RefreshJobs());
-        else
-          context.read<JobBloc>().add(RefreshOpportunities());
-      },
-      child: ListView.builder(
-        itemCount: jobs.length,
-        itemBuilder: (context, index) => (appCType == AppType.TRADER
-            ? JobCard(job: jobs[index])
-            : YourJobCard(job: jobs[index])),
+    return SafeArea(
+      child: RefreshIndicator(
+        onRefresh: () async {
+          if (appCType == AppType.CLIENT)
+            context.read<JobBloc>().add(RefreshJobs());
+          else
+            context.read<JobBloc>().add(RefreshOpportunities());
+        },
+        child: ListView.builder(
+          itemCount: jobs.length,
+          itemBuilder: (context, index) => (appCType == AppType.TRADER
+              ? JobCard(job: jobs[index])
+              : YourJobCard(job: jobs[index])),
+        ),
       ),
     );
   }
