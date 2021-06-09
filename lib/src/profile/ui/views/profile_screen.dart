@@ -1,13 +1,10 @@
 import 'package:local_people_core/core.dart';
 
 import 'package:flutter/material.dart';
-//import '../widgets/profile_client_header.dart';
 import '../widgets/profile_client_body.dart';
-//import '../widgets/profile_trader_header.dart';
 import '../widgets/profile_trader_body.dart';
 import '../../domain/entities/client_profile.dart';
 import '../../domain/entities/trader_profile.dart';
-//import 'package:permission_handler/permission_handler.dart';
 import 'package:sliver_fab/sliver_fab.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,9 +12,11 @@ import 'package:cached_network_image/cached_network_image.dart';
 
 class ProfileScreen extends StatefulWidget {
   final dynamic profile;
+  final dynamic otherProfile;
   ProfileScreen({
     Key key,
     @required this.profile,
+    this.otherProfile,
   }) : super(key: key);
 
   @override
@@ -25,18 +24,6 @@ class ProfileScreen extends StatefulWidget {
 }
 
 class _ProfileScreenState extends State<ProfileScreen> {
-
-  // void requestPermission() async {
-  //   Map<Permission, PermissionStatus> statuses =
-  //   await [Permission.location].request();
-  // }
-  //
-  // @override
-  // void initState() {
-  //   super.initState();
-  //
-  //   requestPermission();
-  // }
 
   @override
   Widget build(BuildContext context) {
@@ -47,7 +34,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
     // TODO:: Ruel
     Widget bodyContent = (widget.profile is ClientProfile //appType == AppType.CLIENT
         ? ProfileClientBody(profile: widget.profile)
-        : ProfileTraderBody(profile: widget.profile));
+        : ProfileTraderBody(profile: widget.profile, clientProfile: widget.otherProfile,));
     // return Scaffold(
     //   appBar: buildAppBar(context),
     //   body: bodyContent,
@@ -55,15 +42,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return new Scaffold(
       body: new Builder(
         builder: (context) =>
-        new SliverFab(
-          floatingWidget: FloatingActionButton(
-            onPressed: () =>
-                Scaffold.of(context).showSnackBar(
-                    SnackBar(content: Text("You clicked!"))),
-            child: Icon(Icons.add),
-          ),
-          floatingPosition: FloatingPosition(right: 16),
-          expandedHeight: 256.0,
+        new CustomScrollView (
+        // new SliverFab(
+        //   floatingWidget: FloatingActionButton(
+        //     onPressed: () => {},
+        //         //Scaffold.of(context).showSnackBar(
+        //         //    SnackBar(content: Text("You clicked!"))),
+        //     child: Icon(Icons.add),
+        //   ),
+        //   floatingPosition: FloatingPosition(right: 16),
+        //   expandedHeight: 256.0,
           slivers: <Widget>[
             new SliverAppBar(
               expandedHeight: 256.0,
@@ -103,7 +91,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
                         widget.profile.fullName,
-                        style: theme.textTheme.headline6,
+                        style: theme.textTheme.headline6.copyWith(color: Colors.white),
                         textAlign: TextAlign.left,
                       ),
                     ),
@@ -111,7 +99,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
                         'SkyFields',
-                        style: theme.textTheme.subtitle1,
+                        style: theme.textTheme.subtitle1.copyWith(color: Colors.white),
                         textAlign: TextAlign.left,
                       ),
                     ),

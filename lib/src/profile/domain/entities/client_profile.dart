@@ -1,4 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:equatable/equatable.dart';
+//import 'package:scoped_model/scoped_model.dart';
+//import 'package:provider/provider.dart';
 import 'package:local_people_core/jobs.dart';
 
 class ClientProfile extends Equatable {
@@ -64,8 +67,11 @@ class ClientProfile extends Equatable {
 
   static get empty => ClientProfile();
 
+  /// Wraps [ScopedModel.of] for this [Model].
+  //static ClientProfile of(BuildContext context) =>
+  //    ScopedModel.of<ClientProfile>(context);
+
   @override
-  // TODO: implement props
   List<Object> get props => [id, userId, description, address, intro, fullName, photo, memberSince, email, paymentMethodVerified, numOfJobsPosted,
     numOfJobsInProgress, amountSpent, numOfDisputes, recentJobs, token, tokenExpirationDate];
 

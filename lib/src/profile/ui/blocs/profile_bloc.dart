@@ -33,7 +33,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   @override
   Stream<ProfileState> mapEventToState(ProfileEvent event) async* {
     if (event is ProfileGetEvent) {
-      //yield ProfileLoading();
+      yield ProfileLoading();
       if (appType == AppType.CLIENT)
         yield* _mapClientProfileGetToState();
       else
@@ -87,6 +87,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield  ClientProfileGetFailed('');
       } else if (response != null && response.profile != null) {
         AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
+        response.profile.fullName = authLocalModel.userFullName;
         response.profile.photo = authLocalModel.userPhoto;
         yield ClientProfileGetLoaded(response.profile);
       }
@@ -105,6 +106,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (response != null && response.profile != null) {
         AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
         response.profile.photo = authLocalModel.userPhoto;
+        response.profile.fullName = authLocalModel.userFullName;
 
         response.profile.packages = [];
         response.profile.qualifications = [];
@@ -129,9 +131,14 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         }
         response = await profileRepository.findClientProfileWithEmail(email);
         if (response != null && response.exception != null) {
-          yield ProfileNotLoaded(response.exception.toString());
+          if (response.exception.toString().contains(new RegExp(r'NoSuchMethodError')) == true)
+            yield ProfileDoesNotExists();
+          else
+            yield ProfileNotLoaded(response.exception.toString());
+          return;
         } else if (response != null && response.profile == null) {
-          yield  ProfileDoesNotExists();
+          yield ProfileDoesNotExists();
+          return;
         } else if (response != null && response.profile != null) {
           AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
           authLocalModel.userId = response.profile.id;
@@ -145,15 +152,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
       response = await profileRepository.getClientProfile(userId);
       if (response != null && response.exception != null) {
-        if (response.exception.toString().contains(new RegExp(r'NoSuchMethodError')) == true)
-          yield ProfileDoesNotExists();
-        else
-          yield ProfileNotLoaded(response.exception.toString());
+       yield ProfileNotLoaded(response.exception.toString());
       } else if (response != null && response.profile == null) {
         yield  ProfileDoesNotExists();
       } else if (response != null && response.profile != null) {
         AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
         response.profile.photo = authLocalModel.userPhoto;
+        response.profile.fullName = authLocalModel.userFullName;
         yield ClientProfileLoaded(response.profile);
       }
     } catch (e) {
@@ -200,6 +205,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (response != null && response.profile != null) {
         AuthLocalModel authLocalModel = await authLocalDataSource.getAuth();
         response.profile.photo = authLocalModel.userPhoto;
+        response.profile.fullName = authLocalModel.userFullName;
 
         response.profile.packages = [];
         response.profile.qualifications = [];
@@ -235,6 +241,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         authLocalModel.userId = response.profile.id;
         await authLocalDataSource.saveAuth(authLocalModel);
 
+        response.profile.fullName = authLocalModel.userFullName;
         response.profile.photo = authLocalModel.userPhoto;
         //profile = response.profile;
         yield ProfileCreated(response.profile);
@@ -266,6 +273,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         authLocalModel.userId = response.profile.id;
         await authLocalDataSource.saveAuth(authLocalModel);
 
+        response.profile.fullName = authLocalModel.userFullName;
         response.profile.photo = authLocalModel.userPhoto;
         //profile = response.profile;
         yield ProfileCreated(response.profile);

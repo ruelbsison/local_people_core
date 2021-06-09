@@ -7,14 +7,17 @@ import '../../domain/entities/qualification.dart';
 import '../../domain/entities/qualification_response.dart';
 import '../../domain/entities/qualification_list_response.dart';
 import '../../domain/repositories/qualification_repository.dart';
+import 'package:local_people_core/auth.dart';
 
 part 'qualification_event.dart';
 part 'qualification_state.dart';
 
 class QualificationBloc extends Bloc<QualificationEvent, QualificationState> {
   final QualificationRepository qualificationRepository;
+  final AuthLocalDataSource authLocalDataSource;
 
-  QualificationBloc(@required this.qualificationRepository) : super(QualificationInitial());
+  QualificationBloc(@required this.qualificationRepository,
+      @required this.authLocalDataSource) : super(QualificationInitial());
 
   @override
   Stream<QualificationState> mapEventToState(
@@ -37,6 +40,10 @@ class QualificationBloc extends Bloc<QualificationEvent, QualificationState> {
 
   Stream<QualificationState> _mapQualificationAddToState(Qualification qualification) async* {
     try {
+      int userId = await authLocalDataSource.getUserId();
+      if (userId != null)
+        qualification.traderId = userId;
+
       QualificationResponse response = await qualificationRepository.createQualification(qualification);
       if (response != null && response.exception != null) {
         yield QualificationAddFailed(response.exception.toString());

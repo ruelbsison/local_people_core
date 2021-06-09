@@ -1,17 +1,22 @@
 import 'dart:io';
 import 'package:flutter/material.dart';
+//import 'package:local_people_core/profile.dart';
+import '../../domain/entities/qualification.dart';
 import 'package:uuid/uuid.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
-import '../../domain/entities/package.dart';
+import 'package:local_people_core/jobs.dart';
 import 'qualification_card.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:local_people_core/jobs.dart';
 
 class QualificationWidget extends StatefulWidget {
-  List<String> qualifications;
+  List<Qualification> qualifications;
+  final List<String> sugesstions;
   QualificationWidget(
       {@required this.qualifications,
+      this.sugesstions = const [],
     });
 
   @override
@@ -33,7 +38,7 @@ class _QualificationWidgetState extends State<QualificationWidget> {
             padding: EdgeInsets.only(left: 12.0),
             child: Text(
             "Qualifications",
-            style: theme.textTheme.bodyText1,
+            style: theme.textTheme.subtitle1,
           ),
           ),
           ListView.builder(
@@ -42,7 +47,7 @@ class _QualificationWidgetState extends State<QualificationWidget> {
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
-                child: createImage(widget.qualifications[index]),
+                child: createQualification(widget.qualifications[index]),
                 onTap: () {
                   // TODO 15: Call Add To Cart
                 }
@@ -55,12 +60,10 @@ class _QualificationWidgetState extends State<QualificationWidget> {
     );
   }
 
-  Widget createImage(String qualification) {
-    return Padding(
-      padding: EdgeInsets.only(top: 6.0, bottom: 6.0),
-      child: QualificationCard(
-        qualification: qualification,
-      ),
+  Widget createQualification(Qualification qualification) {
+    return QualificationCard(
+      qualification: qualification,
+      sugesstions: widget.sugesstions,
     );
   }
 

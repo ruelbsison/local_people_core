@@ -1,4 +1,7 @@
+import 'package:flutter/widgets.dart';
 import 'package:equatable/equatable.dart';
+//import 'package:scoped_model/scoped_model.dart';
+//import 'package:provider/provider.dart';
 import '../entities/qualification.dart';
 import 'package:local_people_core/jobs.dart';
 
@@ -54,7 +57,11 @@ class TraderProfile extends Equatable {
 
   static get empty => TraderProfile();
 
+  /// Wraps [ScopedModel.of] for this [Model].
+  //static TraderProfile of(BuildContext context) =>
+  //    ScopedModel.of<TraderProfile>(context);
+
   @override
-  // TODO: implement props
-  List<Object> get props => [id, userId, description, address, intro, fullName, photo, memberSince, email, ratingAvg, token, tokenExpirationDate];
+  List<Object> get props => [id, userId, description, address, intro,
+    fullName, photo, memberSince, email, ratingAvg, token, tokenExpirationDate];
 }

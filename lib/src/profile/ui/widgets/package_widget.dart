@@ -1,23 +1,11 @@
-import 'dart:io';
 import 'package:flutter/material.dart';
-import 'package:uuid/uuid.dart';
-import 'package:cached_network_image/cached_network_image.dart';
-import 'dart:typed_data';
 import 'package:flutter/foundation.dart';
-import '../../domain/entities/package.dart';
+import 'package:local_people_core/jobs.dart';
 import 'package_card.dart';
-import 'package:flutter_tags/flutter_tags.dart';
 
 class PackageWidget extends StatefulWidget {
   List<Package> packages;
-
-
-  static final uuid = Uuid();
-  //final String imgTag = uuid.v4();
-
-  PackageWidget(
-      {@required this.packages,
-    });
+  PackageWidget({@required this.packages,});
 
   @override
   _PackageWidgetState createState() => _PackageWidgetState();
@@ -38,7 +26,7 @@ class _PackageWidgetState extends State<PackageWidget> {
             padding: EdgeInsets.only(left: 12.0),
             child: Text(
             "Packages",
-            style: theme.textTheme.bodyText1,
+            style: theme.textTheme.subtitle1,
           ),
           ),
           ListView.builder(
@@ -47,7 +35,7 @@ class _PackageWidgetState extends State<PackageWidget> {
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
-                child: createImage(widget.packages[index]),
+                child: createPackage(widget.packages[index]),
                 onTap: () {
                   // TODO 15: Call Add To Cart
                 }
@@ -60,46 +48,10 @@ class _PackageWidgetState extends State<PackageWidget> {
     );
   }
 
-  Widget createImage(Package package) {
+  Widget createPackage(Package package) {
     return PackageCard(
-        package: package,
-        isAdd: package.description == null ? true : false,
-      );
+      package: package,
+    );
   }
-
-  // ItemTags _buildTagItem(tags, index) {
-  //   final item = tags[index];
-  //
-  //   return ItemTags(
-  //     key: Key(index.toString()),
-  //     index: index,
-  //     elevation: 0,
-  //     border: Border.all(
-  //       width: 0,
-  //       color: Colors.white,
-  //     ),
-  //     title: item,
-  //     active: _selectedTags.contains(item),
-  //     textColor: Colors.grey,
-  //     textActiveColor: Colors.white,
-  //     customData: item,
-  //     color: Colors.white,
-  //     activeColor: Colors.purple,
-  //     padding: EdgeInsets.symmetric(horizontal: 12, vertical: 8),
-  //     textStyle: TextStyle(
-  //       fontSize: 12,
-  //     ),
-  //     pressEnabled: true,
-  //     onPressed: (_item) {
-  //       setState(() {
-  //         if (_item.active) {
-  //           _selectedTags.add(_item.customData);
-  //         } else {
-  //           _selectedTags.remove(_item.customData);
-  //         }
-  //       });
-  //     },
-  //   );
-  // }
 
 }
