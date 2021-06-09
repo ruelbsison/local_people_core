@@ -2,6 +2,8 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import '../../../core/widgets/loading_widget.dart';
 //import 'package:webview_flutter/webview_flutter.dart';
+//import 'package:permission_handler/permission_handler.dart';
+//import 'package:after_layout/after_layout.dart';
 
 class LoginScreen extends StatefulWidget {
   static Route route() {
@@ -48,7 +50,6 @@ class LoginScreenState extends State<LoginScreen> {
         child: Scaffold (
           backgroundColor: theme.primaryColor,
           body: Center (
-            //child: LoadingWidget(),
             child: Column(
               mainAxisSize: MainAxisSize.min,
               crossAxisAlignment: CrossAxisAlignment.center,
@@ -57,10 +58,9 @@ class LoginScreenState extends State<LoginScreen> {
                   padding: EdgeInsets.all(16.0),
                   child: LoadingWidget(),
                 ),
-                //const Text('⛅', style: TextStyle(fontSize: 64)),
                 Text(
                   'Verifying access',
-                  style: theme.textTheme.bodyText1,
+                  style: theme.textTheme.subtitle1,
                 ),
               ],
             )

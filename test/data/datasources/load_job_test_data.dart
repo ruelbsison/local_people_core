@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 //import 'package:test/test.dart';
 import 'package:local_people_core/core.dart';
+import 'package:local_people_core/auth.dart';
 import 'package:local_people_core/jobs.dart';
 import '../../res/jobs_test_data.dart';
 import 'dart:convert';
@@ -14,6 +15,12 @@ void main() {
 
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
+    AuthorizationConfig authorizationConfig = AuthorizationConfig.prodClientAuthorizationConfig();
+    locatorInit(authorizationConfig);
+    AuthLocalDataSource authLocalDataSource = sl<AuthLocalDataSource>();
+    // RestClientInterceptor restClientInterceptor = RestClientInterceptor(
+    //   authLocalDataSource: authLocalDataSource,
+    // );
     JobRestApiClient jobRestApiClient = JobRestApiClient(
       RestAPIConfig.getDioOptions(),
       baseUrl: RestAPIConfig().baseURL,

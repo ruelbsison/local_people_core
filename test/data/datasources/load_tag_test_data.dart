@@ -2,6 +2,7 @@ import 'package:flutter_test/flutter_test.dart';
 import 'package:mockito/mockito.dart';
 //import 'package:test/test.dart';
 import 'package:local_people_core/core.dart';
+//import 'package:local_people_core/auth.dart';
 import 'package:local_people_core/jobs.dart';
 import '../../res/tags_test_data.dart';
 
@@ -19,6 +20,13 @@ void main() {
 
   setUp(() {
     mockRemoteDataSource = MockRemoteDataSource();
+    // AuthorizationConfig authorizationConfig = AuthorizationConfig.prodClientAuthorizationConfig();
+    // AuthLocalDataSource authLocalDataSource = AuthLocalDataSourceImpl (
+    //   authorizationConfig: authorizationConfig,
+    // );
+    // RestClientInterceptor restClientInterceptor = RestClientInterceptor(
+    //   authLocalDataSource: authLocalDataSource,
+    // );
     TagRestApiClient tagRestApiClient = TagRestApiClient(
       RestAPIConfig.getDioOptions(),
       baseUrl: RestAPIConfig().baseURL,
@@ -31,9 +39,9 @@ void main() {
     test('Tag Should Be Created Successfully', () async {
       var listIterator = testTags.iterator;
       //List<String> alsoBroken = List.from( testTags.cast<Tag>() ).map( (s) => s.name ).toList();
-      List<String> alsoBroken = List.generate(testTags.length, (index) => testTags[index].name);
-      printList(alsoBroken);
-      var map1 = Map.fromIterable(testTags, key: (e) => e.name, value: (e) => e.age);
+      //List<String> alsoBroken = List.generate(testTags.length, (index) => testTags[index].name);
+      //printList(alsoBroken);
+      //var map1 = Map.fromIterable(testTags, key: (e) => e.name, value: (e) => e.age);
       while( listIterator.moveNext() ) {
         Tag tag = listIterator.current;
         TagModel model = TagModel.fromTag(tag);
