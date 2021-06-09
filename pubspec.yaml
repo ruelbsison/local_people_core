@@ -70,6 +70,14 @@ dependencies:
   flutter_linear_datepicker: ^2.0.0
   smooth_star_rating: ^1.1.1
   # shared_preferences: ^0.5.12+4
+  overlay_dialog: ^0.2.0
+  after_layout: ^1.1.0
+  scoped_model: ^1.1.0
+  provide: ^1.0.2
+  rflutter_alert: ^2.0.2
+  flutter_typeahead: ^2.0.0
+  snapping_sheet: ^3.1.0
+  page_indicator: ^0.4.1
 
 dev_dependencies:
   flutter_test:
@@ -141,6 +149,7 @@ flutter:
     - packages/local_people_core/assets/images/trader-profile-photo.png
     - packages/local_people_core/assets/images/client-profile-photo.png
     - packages/local_people_core/assets/images/error-icon.svg
+    - packages/local_people_core/assets/images/package-grey.svg
   # To add custom fonts to your package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a
@@ -165,6 +174,8 @@ fonts:
     fonts:
       - asset: packages/local_people_core/assets/fonts/Merriweather-Black.ttf
         weight: 900
+      - asset: packages/local_people_core/assets/fonts/Merriweather-Bpld.ttf
+        weight: 700
   - family: RedHatDisplay
     fonts:
       - asset: packages/local_people_core/assets/fonts/RedHatDisplay-Regular.ttf

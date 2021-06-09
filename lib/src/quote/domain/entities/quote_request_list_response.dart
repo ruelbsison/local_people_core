@@ -3,10 +3,10 @@ import '../../data/models/quote_request_model.dart';
 
 class QuoteRequestListResponse {
   Exception exception;
-  List<QuoteRequest> quotes;
+  List<QuoteRequest> quoteRequests;
 
   void fromModel(List<QuoteRequestModel> models) {
-    quotes = List<QuoteRequest>();
+    quoteRequests = List<QuoteRequest>();
     var listIter = models.iterator;
     while (listIter.moveNext()) {
       QuoteRequestModel model = listIter.current;
@@ -19,7 +19,7 @@ class QuoteRequestListResponse {
         createdAt: model.createdAt,
         updatedAt: model.updatedAt,
       );
-      quotes.add(quote);
+      quoteRequests.add(quote);
     }
   }
 }
