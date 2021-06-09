@@ -1,3 +1,5 @@
+import 'dart:ui';
+
 import 'package:flutter/material.dart';
 
 class AppThemeConfig {
@@ -10,45 +12,44 @@ class AppThemeConfig {
       headline6: base.headline6.copyWith(
         fontFamily: 'Merriweather',
         fontWeight: FontWeight.w900,
-        fontSize: 30,
+        fontSize: 24,
       ),
       subtitle1: base.subtitle1.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.bold,
         fontSize: 16,
       ),
       subtitle2: base.subtitle2.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.bold,
         fontSize: 14,
       ),
       caption: base.caption.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.w700,
+        fontWeight: FontWeight.w400,
         fontSize: 12,
       ),
       bodyText1: base.bodyText1.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.w700,
-        fontSize: 16,
+        fontWeight: FontWeight.bold,
+        fontSize: 14,
       ),
       bodyText2: base.bodyText2.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.normal,
         fontSize: 14,
       ),
       button: base.button.copyWith(
         fontFamily: 'RedHatDisplay',
         fontWeight: FontWeight.bold,
-        fontSize: 14,
+        fontSize: 12,
       ),
       overline: base.overline.copyWith(
         fontFamily: 'RedHatDisplay',
         fontWeight: FontWeight.w500,
         fontSize: 10,
       ),
-    )
-        .apply(
+    ).apply(
       displayColor: Color(0xFF012B3A),
       bodyColor: Color(0xFF012B3A),
     );
@@ -194,6 +195,28 @@ class AppThemeConfig {
       //   base.colorScheme.copyWith(secondary: Colors.black), // Text color
       //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
       // ),
+      bottomNavigationBarTheme: base.bottomNavigationBarTheme.copyWith(
+        backgroundColor: base.primaryColor,
+        selectedItemColor: base.accentColor,
+        unselectedItemColor: Colors.grey[500],
+        elevation: 20,
+          selectedLabelStyle: TextStyle(
+            fontFamily: 'RedHatDisplay',
+            fontWeight: FontWeight.normal,
+            fontSize: 8,
+          ),
+        unselectedLabelStyle: TextStyle(
+          fontFamily: 'RedHatDisplay',
+          fontWeight: FontWeight.normal,
+          fontSize: 8,
+        ),
+        selectedIconTheme: IconThemeData (
+          size: 24,
+        ),
+        unselectedIconTheme: IconThemeData (
+          size: 24,
+        ),
+      ),
       buttonTheme: ButtonThemeData(
         buttonColor: themeMaterialColor.shade500,
         disabledColor: themeMaterialColor.withRed(200),
@@ -219,14 +242,14 @@ class AppThemeConfig {
       ),
       visualDensity: VisualDensity.adaptivePlatformDensity,
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
+        fillColor: Color.fromRGBO(170, 186, 205, 1),
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
         ),
         labelStyle: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'RedHatDisplay',
           fontSize: 12,
           fontWeight: FontWeight.normal,
-          letterSpacing: 0.4,
         ),
       ),
       textTheme: _buildClientTextTheme(base.textTheme),
@@ -237,6 +260,17 @@ class AppThemeConfig {
         backgroundColor: lightPrimary,
         iconTheme: IconThemeData(color: Colors.black),
       ),
+      buttonBarTheme: base.buttonBarTheme.copyWith(
+        buttonTextTheme: ButtonTextTheme.accent,              // Button style
+        alignment: MainAxisAlignment.end,                     // Button position
+      ),
+      dialogTheme: base.dialogTheme.copyWith(
+        backgroundColor: Color.fromRGBO(170, 186, 205, 1.0),                         // Dialog background
+        titleTextStyle: TextStyle(color: Color.fromRGBO(1, 43, 58, 1.0)),       // Title style
+        contentTextStyle: TextStyle(color: Color.fromRGBO(1, 43, 58, 1.0)),
+        shape:
+        RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),// Content style
+      )
     );
   }
 

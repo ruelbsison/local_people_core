@@ -15,7 +15,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   const AppBarWidget({Key key, 
     this.title, this.appBar, this.actions,
-    this.subTitle, this.bottom, this.appBarPreferredSize = const Size.fromHeight(138.0)})
+    this.subTitle, this.bottom, this.appBarPreferredSize = const Size.fromHeight(116.0)})
       : super(key: key);
 
   @override
@@ -48,7 +48,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                               //padding: EdgeInsets.only(left: 12, top: 40),
                               child: LogoWidget(
                                 fit: BoxFit.contain,
-                                height: 52,
+                                height: 40,
                                 //width: 105 * mediaQueryData.devicePixelRatio,
                               ),
                               //color: Colors.green,

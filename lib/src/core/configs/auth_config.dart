@@ -2,7 +2,7 @@
 import 'package:meta/meta.dart';
 //import 'package:flutter_appauth/flutter_appauth.dart';
 
-const String AUTH0_CLIENT_DOMAIN = 'local-people-client.eu.auth0.com';
+const String AUTH0_CLIENT_DOMAIN = 'local-people.eu.auth0.com'; //'local-people-client.eu.auth0.com';
 const String AUTH0_CLIENT_CLIENT_ID = '320GqfRM747tQd6WJV7BxngjJtmWxVzS';
 const String AUTH0_CLIENT_SECRET = '7rGOwiCMYOLbNZJO-n0bNiYdR7LRiM3_i0nmEjLrzGmN5hRlx6tzaXpKFv1JV8mT';
 const String AUTH0_CLIENT_REDIRECT_URI = 'combineai.localpeople.client://login-callback';
@@ -16,7 +16,7 @@ const String AUTH0_DOMAIN_PROD = 'local-people.eu.auth0.com';
 const String AUTH0_DOMAIN_DEV = 'dev-pgi9e-14.eu.auth0.com';
 const String AUTH0_CLIENT_CLIENT_ID_DEV = 'wFVbmSPRNiU4cvfoZa8j11BvoJ17zvRm';
 const String AUTH0_CLIENT_CLIENT_ID_PROD = 'PJokfElKh44ct2AFkJ0XxVquHvt5ftw1';
-//const String AUTH0_CLIENT_SECRET = 'aAtHBXH6KdZ3OZHKXDQsNMoYpNF36V420t3hQ67maI3bVGzdc9ELTmlMUgbLNyFY';
+const String AUTH0_CLIENT_SECRET_PROD = 'aAtHBXH6KdZ3OZHKXDQsNMoYpNF36V420t3hQ67maI3bVGzdc9ELTmlMUgbLNyFY';
 const String AUTH0_TRADER_CLIENT_ID_DEV = 'V9cNgmtlDesECyFrfip4FuR1SmcAQDQ4';
 const String AUTH0_TRADER_CLIENT_ID_PROD = 'nW82vRTOq7v2YXDQppUdZ50GeUDu93in';
 const String AUTH0_TRADER_SECRET = 'JxxFeSjUyf-nh7kgOIrlpWTW15_d3z7V7II9NITykdsBSBZNbowAhQAdbU6vo-Ym';
@@ -47,6 +47,7 @@ class AuthorizationConfig {
         authUserEmailKey = 'user_email_$authUserBaseKey',
         authUserPhotoKey = 'user_proto_$authUserBaseKey',
         authUserTokenKey = 'user_token_$authUserBaseKey',
+        authUserAccessTokenKey = 'user_access_token_$authUserBaseKey',
         authUserTokenDateKey = 'user_token_data_$authUserBaseKey',
         authIssuer = 'https://$authDomain',
         authDiscoveryUrl = 'https://$authDomain/.well-known/openid-configuration',
@@ -69,6 +70,7 @@ class AuthorizationConfig {
   final String authUserPhotoKey;
   final String authUserEmailKey;
   final String authUserTokenKey;
+  final String authUserAccessTokenKey;
   final String authUserTokenDateKey;
   final String authIssuer;
   final String authDiscoveryUrl;
@@ -83,8 +85,8 @@ class AuthorizationConfig {
   static AuthorizationConfig prodClientAuthorizationConfig() {
     return AuthorizationConfig(
         authDomain: AUTH0_CLIENT_DOMAIN,
-        authClientId: AUTH0_CLIENT_CLIENT_ID,
-        authSecret: AUTH0_CLIENT_SECRET,
+        authClientId: AUTH0_CLIENT_CLIENT_ID_PROD, // AUTH0_CLIENT_CLIENT_ID,
+        authSecret: AUTH0_CLIENT_SECRET_PROD, //AUTH0_CLIENT_SECRET,
         authRedirectURI: AUTH0_CLIENT_REDIRECT_URI,
         //authTokenKey: AUTH0_CLIENT_TOKEN_KEY,
         authDebugTag: false,
@@ -95,9 +97,9 @@ class AuthorizationConfig {
   static AuthorizationConfig prodIOSClientAuthorizationConfig() {
     return AuthorizationConfig(
       authDomain: AUTH0_CLIENT_DOMAIN,
-      authClientId: AUTH0_CLIENT_CLIENT_ID_IOS,
-      authSecret: AUTH0_CLIENT_SECRET_IOS,
-      authRedirectURI: AUTH0_CLIENT_REDIRECT_URI_IOS,
+      authClientId: AUTH0_CLIENT_CLIENT_ID_PROD, //AUTH0_CLIENT_CLIENT_ID_IOS,
+      authSecret: AUTH0_CLIENT_SECRET_PROD, //AUTH0_CLIENT_SECRET_IOS,
+      authRedirectURI: AUTH0_CLIENT_REDIRECT_URI, //AUTH0_CLIENT_REDIRECT_URI_IOS,
       //authTokenKey: AUTH0_CLIENT_TOKEN_KEY,
       authDebugTag: false,
       authUserBaseKey: 'client',

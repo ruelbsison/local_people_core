@@ -59,6 +59,13 @@ class LocalPeopleLocalizations {
     locale: locale.toString(),
   );
 
+  String get menuTitleJobs => Intl.message(
+    'Jobs',
+    name: 'menuTitleJobs',
+    args: [],
+    locale: locale.toString(),
+  );
+
   String get menuTitleSearch => Intl.message(
     'Search',
     name: 'menuTitleSearch',
@@ -279,6 +286,20 @@ class LocalPeopleLocalizations {
   String get titleJobBid => Intl.message(
     'Job Bid',
     name: 'titleJobBid',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titlePlaceBid => Intl.message(
+    'Place Bid',
+    name: 'titlePlaceBid',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleRequestVisit => Intl.message(
+    'Request Visit',
+    name: 'titleRequestVisit',
     args: [],
     locale: locale.toString(),
   );

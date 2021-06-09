@@ -2,7 +2,7 @@ import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
 
 class RestAPIConfig {
-  String get baseURL => 'http://11152c75075b.ngrok.io/api/v1';
+  String get baseURL => 'http://r-sison.ngrok.io/api/v1'; // ./ngrok http -region=us -hostname=r-sison.ngrok.io 3001
   // 'http://192.168.1.5:3001/api/v1/';
   // 'http://localhost:3001/api/v1/';
 
@@ -108,9 +108,15 @@ class RestAPIConfig {
 
   static const String requirementWithPackageId = '/packages/{id}/requirements';
 
+  static const String qualification = '/qualifications';
+
+  static const String qualificationWithId = '/qualifications/{id}';
+
+  static const String qualificationWithTraderId = '/traders/{id}/qualifications';
+
   static Dio getDioOptions() {
     final dio = Dio();   // Provide a dio instance
-    //dio.options.headers["Authorization"] = "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6Ii0zMndiMC15aEQ1U2FyM01CTm82QyJ9.eyJpc3MiOiJodHRwczovL2NvbWJpbmVkb3RhaS5ldS5hdXRoMC5jb20vIiwic3ViIjoiVFNPY0MxaWZjdWdRejZOYXNjc29iZ3YxeVkxUXR0TFlAY2xpZW50cyIsImF1ZCI6Imh0dHBzOi8vbG9jYWxwZW9wbGUtYXBpIiwiaWF0IjoxNjE5NzcwMTc3LCJleHAiOjE2MTk4NTY1NzcsImF6cCI6IlRTT2NDMWlmY3VnUXo2TmFzY3NvYmd2MXlZMVF0dExZIiwiZ3R5IjoiY2xpZW50LWNyZWRlbnRpYWxzIn0.lk1We2ISICepnLwYMWZd-rA3e05A6cr_jd2LyTiZTzBIQWT82LJyEYArRKW_AsGxWnGBusjZQD_4_8IZIBBaGI09y5l1GNt6tkQWNsfE2F2ujSuIiuw9w8_jPquNHp_j1o6gG6AQmtEUffQ-C9xOaHYu4VM7Hc-AX09h5YXk1CtTgAj87IRjyC6yAvkTc6I59lRUGj5osJybvHUlX8oqh5uFz2uwrSh4E7621-eCYZB_sO5FNxHSZq-hlUuigIwkWO6G3EP8vl3ZUntve6doNjE8xgSiwBPwHZnsydfyfQmyquk613E-d-Aaw37KAw-Zs9Gc7G6y754Rq-AwyTi7YQ";
+    dio.options.headers["Authorization"] = 'Bearer ' + "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjZ5Sl81RW9zYWpkVzh1SFJSTVktZyJ9.eyJpc3MiOiJodHRwczovL2xvY2FsLXBlb3BsZS5ldS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTQ5OTc5MTg3NDkxMTY3OTEzMzMiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbHBlb3BsZS1hcGkiLCJodHRwczovL2xvY2FsLXBlb3BsZS5ldS5hdXRoMC5jb20vdXNlcmluZm8iXSwiaWF0IjoxNjIyOTk0MTc4LCJleHAiOjE2MjMwODA1NzgsImF6cCI6IlBKb2tmRWxLaDQ0Y3QyQUZrSjBYeFZxdUh2dDVmdHcxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCJ9.YmvKhcKlHQqHEj9b535zDnkWiXPX69BynnLqLdd-2sNTFxrPMHh6N-lHoO1FWBhGzzpqrVmpPSWJ4gimmml-Nad3sQcwjXTRRTmat1RD7opp6lCV2SvlV4264-THeIwHg847FOTWZBDZ0oHIs6GZeVxoQB_FjEhhwBTfkEXPOhC6YgLhzWaTR-AjRfa_e3O55A4ObcRpN00LrYxZG4EhRkC-BKlVEmYeFmusTfD72VI-obKSxXmMUNqwmUlQdj5IOUU8ugo6I4ERieOOuMYSj3PcGPK7-QFv7s2VQpeMbgtjoDLehpS6YetgHMIHb0zJUypun00X6wOW01wNmfogdg";
     //dio.options.headers["contentType"] = "application/json";
 
     return dio;

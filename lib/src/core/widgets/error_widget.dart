@@ -9,7 +9,7 @@ class ErrorWidget extends StatelessWidget {
   final BoxFit fit;
   final Color backgroundColor = Color.fromRGBO(255, 255, 255, 0.5);
 
-  ErrorWidget({Key key, this.message, this.fit, this.width, this.height}) : super(key: key);
+  ErrorWidget({Key key, this.message, this.fit = BoxFit.contain, this.width = 80, this.height = 80}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

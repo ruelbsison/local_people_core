@@ -21,6 +21,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static Map<String, dynamic> _notInlinedMessages(_) => {
     'menuTitleHome': MessageLookupByLibrary.simpleMessage('Home'),
     'menuTitleYourJobs': MessageLookupByLibrary.simpleMessage('Your Jobs'),
+    'menuTitleJobs': MessageLookupByLibrary.simpleMessage('Jobs'),
     'menuTitleSearch': MessageLookupByLibrary.simpleMessage('Search'),
     'menuTitleMessages':
     MessageLookupByLibrary.simpleMessage('Messages'),
@@ -51,6 +52,8 @@ class MessageLookup extends MessageLookupByLibrary {
     'titleDate': MessageLookupByLibrary.simpleMessage('Date'),
     'titleTime': MessageLookupByLibrary.simpleMessage('Time'),
     'titleJobBid': MessageLookupByLibrary.simpleMessage('Job Bid'),
+    'titlePlaceBid': MessageLookupByLibrary.simpleMessage('Place Bid'),
+    'titleRequestVisit': MessageLookupByLibrary.simpleMessage('Request Visit'),
     'btnTitleCancel': MessageLookupByLibrary.simpleMessage('Cancel'),
     'btnTitlePost': MessageLookupByLibrary.simpleMessage('Post'),
     'btnTitleSave': MessageLookupByLibrary.simpleMessage('Save'),

@@ -7,6 +7,7 @@ export './src/core/widgets/logo_widget.dart';
 export './src/core/widgets/appbar_widget.dart';
 export './src/core/widgets/box_container_widget.dart';
 export './src/core/widgets/fill_outline_nutton.dart';
+export './src/core/widgets/default_grabbing.dart';
 
 export './src/core/local/localization.dart';
 
@@ -30,6 +31,7 @@ export './src/core/utils/date_text_input_formatter.dart';
 export './src/core/utils/ensure_visible_when_focused.dart';
 export './src/core/network/network_info.dart';
 export './src/core/network/rest_client_interceptor.dart';
+export './src/core/utils/simple_bloc_observer.dart';
 
 export './src/core/exceptions/server_exception.dart';
 export './src/core/injection_container.dart';
