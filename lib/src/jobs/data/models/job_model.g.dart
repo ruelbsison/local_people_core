@@ -14,6 +14,7 @@ JobModel _$JobModelFromJson(Map<String, dynamic> json) {
     date: json['date'] as String,
     budget: json['budget'] as String,
     awarded: json['awarded'] as bool,
+    private: json['private'] as bool,
     created_at: json['created_at'] as String,
     updated_at: json['updated_at'] as String,
     client_id: json['client_id'] as int,
@@ -34,6 +35,7 @@ Map<String, dynamic> _$JobModelToJson(JobModel instance) => <String, dynamic>{
       'updated_at': instance.updated_at,
       'client_id': instance.client_id,
       'trader_id': instance.trader_id,
+      'private': instance.private,
       'location_id': instance.location_id,
       'tag_ids': instance.tag_ids,
     };
