@@ -14,7 +14,6 @@ class AuthSessionModel extends Equatable {
     @required this.accessToken,
     @required this.expiredAt,
   })  : assert(tokenId != null),
-        assert(refreshToken != null),
         assert(accessToken != null);
 
   /// The current user's id.

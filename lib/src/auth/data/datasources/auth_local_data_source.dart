@@ -24,6 +24,8 @@ abstract class AuthLocalDataSource {
 
   Future<String> getToken();
 
+  Future<String> getAccessToken();
+
 }
 
 class AuthLocalDataSourceImpl implements AuthLocalDataSource {
@@ -41,7 +43,7 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
 
       //SharedPreferences prefs = await SharedPreferences.getInstance();
       //String storedUserToken = await prefs.getString(authorizationConfig.authUserTokenKey);
-      final String storedUserToken = await secureStorage.read(key: authorizationConfig.authUserTokenKey);
+      final String storedUserToken = await secureStorage.read(key: authorizationConfig.authUserAccessTokenKey);
       if (storedUserToken == null) {
         logger.info('hasAuth: storedUserToken is null');
       } else {
@@ -142,6 +144,22 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
         }
       }
 
+      if (authLocal.accessToken != null) {
+        try {
+          logger.info('Writing accessToken: ' + authLocal.accessToken);
+
+          await secureStorage.write(
+              key: authorizationConfig.authUserAccessTokenKey,
+              value: authLocal.accessToken);
+          // await prefs.setString(
+          //     authorizationConfig.authUserTokenKey,
+          //     authLocal.token);
+          logger.info('Writing accessToken ok: ' + authLocal.accessToken);
+        } on Exception catch (error, stacktrace) {
+          logger.severe("Exception occured in saveAuth $error $stacktrace", error, stacktrace);
+        }
+      }
+
       //prefs.commit();
     return true;
   }
@@ -191,6 +209,8 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       await secureStorage.delete(key: authorizationConfig.authUserTokenKey);
 
       await secureStorage.delete(key: authorizationConfig.authUserTokenDateKey);
+
+      await secureStorage.delete(key: authorizationConfig.authUserAccessTokenKey);
     } on Exception catch (e, s) {
       throw e;
     }
@@ -272,6 +292,14 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
           authLocalModel.tokenExpirationDate = DateTime.fromMillisecondsSinceEpoch(int.parse(expiredAt));
         }
       }
+
+      String accessToken;
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserAccessTokenKey) == true) {
+        accessToken = await secureStorage.read(key: authorizationConfig.authUserAccessTokenKey);
+        if (accessToken != null) {
+          authLocalModel.accessToken = accessToken;
+        }
+      }
       // authLocalModel = AuthLocalModel(
       //   userId:  int.parse(userId),
       //   userEmail: email,
@@ -341,6 +369,25 @@ class AuthLocalDataSourceImpl implements AuthLocalDataSource {
       return storedToken;
     } on Exception catch (e, s) {
       throw e;
+    }
+  }
+
+  @override
+  Future<String> getAccessToken() async {
+    try {
+      if (await secureStorage.containsKey(key: authorizationConfig.authUserAccessTokenKey) == false) {
+    return null;
+    }
+    final String storedToken =
+    await secureStorage.read(key: authorizationConfig.authUserAccessTokenKey);
+    // SharedPreferences prefs = await SharedPreferences.getInstance();
+    // final String storedToken =
+    //   await prefs.getString(authorizationConfig.authUserAccessTokenKey);
+    if (storedToken == null) return '';
+
+    return storedToken;
+    } on Exception catch (e, s) {
+    throw e;
     }
   }
 }

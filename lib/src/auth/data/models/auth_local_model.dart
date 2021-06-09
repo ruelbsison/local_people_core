@@ -15,6 +15,7 @@ class AuthLocalModel extends Equatable {
     @required this.userPhoto,
     @required this.token,
     @required this.tokenExpirationDate,
+    @required this.accessToken,
   });//  : assert(userId != null),
      //   assert(token != null);
 
@@ -32,9 +33,11 @@ class AuthLocalModel extends Equatable {
 
   String userPhoto;
 
+  String accessToken;
+
   /// Empty AuthLocalModel which represents an unauthenticated AuthLocalModel.
-  static empty() => AuthLocalModel(userId: 0, userFullName: '', userEmail: '', userPhoto: '', token: '', tokenExpirationDate: null);
+  static empty() => AuthLocalModel(userId: 0, userFullName: '', userEmail: '', userPhoto: '', token: '', tokenExpirationDate: null, accessToken: '');
 
   @override
-  List<Object> get props => [userId, userFullName, userEmail, userPhoto, token, tokenExpirationDate];
+  List<Object> get props => [userId, userFullName, userEmail, userPhoto, token, tokenExpirationDate, accessToken];
 }

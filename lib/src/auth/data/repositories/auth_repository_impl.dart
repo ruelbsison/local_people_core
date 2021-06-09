@@ -54,6 +54,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
           userFullName: profile.name,
           userPhoto: profile.photo,
           token: session.refreshToken,
+          accessToken: session.accessToken,
           tokenExpirationDate: session.expiredAt,
         );
         //authLocalDataSource.saveAuth(authLocal);
@@ -81,6 +82,7 @@ class AuthenticationRepositoryImpl implements AuthenticationRepository {
           userFullName: profile.name,
           userPhoto: profile.photo,
           token: session.refreshToken,
+          accessToken: session.accessToken,
           tokenExpirationDate: session.expiredAt,
         );
         //authLocalDataSource.saveAuth(authLocal);

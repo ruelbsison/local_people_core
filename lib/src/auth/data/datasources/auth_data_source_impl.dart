@@ -80,12 +80,17 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
 
       // name = idToken['name'];
       // picture = profile['picture'];
-
+      Map<String, String> params = <String, String>{
+        "audience" : "https://localpeople-api",
+        "grant_type" : "client_credentials",
+      };
       final AuthorizationTokenResponse authTokenResponse =
         await _appAuth.authorizeAndExchangeCode(
         AuthorizationTokenRequest(
           authorizationConfig.authClientId,
           authorizationConfig.authRedirectURI,
+          additionalParameters: params,
+          clientSecret: authorizationConfig.authSecret,
           issuer: authorizationConfig.authIssuer,
           scopes: authorizationConfig.authScopes,
           promptValues: ['login'],
@@ -98,6 +103,8 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
 
       _controller.add(AuthenticationStatus.authenticated);
 
+      logger.info('authTokenResponse.idToken: ' + authTokenResponse.idToken);
+      logger.info('authTokenResponse.accessToken: ' + authTokenResponse.accessToken);
       return AuthSessionModel(
         tokenId: authTokenResponse.idToken,
         refreshToken: authTokenResponse.refreshToken,
@@ -126,10 +133,16 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
     logger.info('refreshSession: ' + refreshToken);
 
     try {
+      Map<String, String> params = <String, String>{
+        "audience" : "https://localpeople-api",
+        "grant_type" : "client_credentials",
+      };
       final TokenResponse tokenResponse =
         await _appAuth.token(TokenRequest(
         authorizationConfig.authClientId,
         authorizationConfig.authRedirectURI,
+          clientSecret: authorizationConfig.authSecret,
+        additionalParameters: params,
         issuer: authorizationConfig.authIssuer,
         refreshToken: refreshToken,
       ));
@@ -158,6 +171,8 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
 
       _controller.add(AuthenticationStatus.authenticated);
 
+      logger.info('tokenResponse.idToken: ' + tokenResponse.idToken);
+      logger.info('tokenResponse.accessToken: ' + tokenResponse.accessToken);
       return AuthSessionModel(
         tokenId: tokenResponse.idToken,
         refreshToken: tokenResponse.refreshToken,
@@ -175,6 +190,7 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
     logger.info('getSessionProfile: ' + accessToken);
     //final Map<String, Object> profile = parseIdToken(idToken);
     final Map<String, Object> profile = await getUserDetails(accessToken);
+    profile.forEach((k,v) => print('${k}: ${v}'));
 
     return AuthProfileModel(
       name: profile['name'],
