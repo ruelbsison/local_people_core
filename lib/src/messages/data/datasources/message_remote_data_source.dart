@@ -7,11 +7,11 @@ abstract class MessageRemoteDataSource {
 
   Future<MessageListResponse> listTraderMessages(int traderId);
 
-  Future<MessageListResponse> listJobMessages(int jobId);
+  Future<MessageListResponse> listJobMessages(int currentUserId, int jobId);
 
   Future<MessageResponse> createMessage(MessageModel message);
 
-  Future<MessageResponse> showMessage(int id);
+  Future<MessageResponse> showMessage(int currentUserId, int id);
 
   Future<MessageResponse> updateMessage(MessageModel message);
 

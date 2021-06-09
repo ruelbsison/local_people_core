@@ -30,7 +30,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
       param['message'] = temp;
       MessageModel data = await messageRestApiClient.createMessage(param);
       if (data != null) {
-        response.fromModel(data);
+        response.fromModel(data, model.sender_id);
       }
     } catch (error, stacktrace) {
       logger.severe("Exception occured in createMessage $error $stacktrace", error,
@@ -56,12 +56,12 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
   }
 
   @override
-  Future<MessageListResponse> listJobMessages(int job_id) async {
+  Future<MessageListResponse> listJobMessages(int currentUserId, int jobId) async {
     MessageListResponse response = MessageListResponse();
     try {
-      List<MessageModel> data = await messageRestApiClient.listJobMessages(job_id);
+      List<MessageModel> data = await messageRestApiClient.listJobMessages(jobId);
       if (data != null) {
-        response.fromModel(data);
+        response.fromModel(data, currentUserId);
       }
     } catch (error, stacktrace) {
       logger.severe("Exception occured in listJobMessages $error $stacktrace", error,
@@ -73,12 +73,12 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
   }
 
   @override
-  Future<MessageResponse> showMessage(int id) async {
+  Future<MessageResponse> showMessage(int currentUserId, int id) async {
     MessageResponse response = MessageResponse();
     try {
       MessageModel data = await messageRestApiClient.showMessage(id);
       if (data != null) {
-        response.fromModel(data);
+        response.fromModel(data, currentUserId);
       }
     } catch (error, stacktrace) {
       logger.severe("Exception occured in showMessage $error $stacktrace", error,
@@ -97,7 +97,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
       param['message'] = model.toJson();
       MessageModel data = await messageRestApiClient.updateMessage(model.id, param);
       if (data != null) {
-        response.fromModel(data);
+        response.fromModel(data, model.sender_id);
       }
     } catch (error, stacktrace) {
       logger.severe("Exception occured in updateMessage $error $stacktrace", error,
@@ -114,7 +114,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     try {
       List<MessageModel> data = await messageRestApiClient.listClientMessages(clientId);
       if (data != null) {
-        response.fromModel(data);
+        response.fromModel(data, clientId);
       }
     } catch (error, stacktrace) {
       logger.severe("Exception occured in listClientMessages $error $stacktrace", error,
@@ -131,7 +131,7 @@ class MessageRemoteDataSourceImpl implements MessageRemoteDataSource {
     try {
       List<MessageModel> data = await messageRestApiClient.listTraderMessages(traderId);
       if (data != null) {
-        response.fromModel(data);
+        response.fromModel(data, traderId);
       }
     } catch (error, stacktrace) {
       logger.severe("Exception occured in listTraderMessages $error $stacktrace", error,

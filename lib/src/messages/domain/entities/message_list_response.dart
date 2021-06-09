@@ -5,7 +5,7 @@ class MessageListResponse {
   Exception exception;
   List<Message> messages;
 
-  void fromModel(List<MessageModel> list) {
+  void fromModel(List<MessageModel> list, int userId) {
     messages = List<Message>();
 
     var listIter = list.iterator;
@@ -21,6 +21,8 @@ class MessageListResponse {
         createdAt: DateTime.parse(model.created_at),
         jobId: model.job_id,
         messageType: MessageType.text,
+        senderId: model.sender_id,
+        isSender: userId == model.sender_id ? true : false,
       );
 
       messages.add(message);

@@ -23,6 +23,7 @@ class MessageModel extends Equatable {
     this.read,
     this.created_at,
     this.updated_at,
+    this.sender_id,
   }): assert(subject != null), assert(body != null);
         //assert(client_id == null), assert(trader_id == null),
         //assert(job_id == null);
@@ -46,17 +47,20 @@ class MessageModel extends Equatable {
 
   int job_id;
 
+  int sender_id;
+
   static MessageModel fromMessage(Message message) {
     return MessageModel (
     //id: message.id,
     subject: message.subject,
     body: message.text.toString(),
-    //read: message.messageStatus == MessageStatus.viewed ? true : false,
+    read: message.messageStatus == MessageStatus.viewed ? true : false,
     client_id: message.clientId,
     trader_id: message.traderId,
     //created_at: DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(message.createdAt),
       //updated_at: DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(message.createdAt),
     job_id: message.jobId,
+      sender_id: message.senderId,
     );
   }
 
@@ -64,7 +68,7 @@ class MessageModel extends Equatable {
   //static empty = MessageModel(id: -1, title: '', description: '', date: '', budget: '', awarded: false, created_at: '', updated_at: '', client_id: 0, trader_id: 0);
 
   @override
-  List<Object> get props => [id, subject, body, client_id, trader_id, read, created_at, updated_at, job_id];
+  List<Object> get props => [id, subject, body, client_id, trader_id, read, created_at, updated_at, job_id, sender_id];
 
   factory MessageModel.fromJson(Map<String, dynamic> json) => _$MessageModelFromJson(json);
   Map<String, dynamic> toJson() => _$MessageModelToJson(this);

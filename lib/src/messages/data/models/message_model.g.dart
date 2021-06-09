@@ -17,6 +17,7 @@ MessageModel _$MessageModelFromJson(Map<String, dynamic> json) {
     read: json['read'] as bool,
     created_at: json['created_at'] as String,
     updated_at: json['updated_at'] as String,
+    sender_id: json['sender_id'] as int,
   );
 }
 
@@ -31,4 +32,5 @@ Map<String, dynamic> _$MessageModelToJson(MessageModel instance) =>
       'created_at': instance.created_at,
       'updated_at': instance.updated_at,
       'job_id': instance.job_id,
+      'sender_id': instance.sender_id,
     };

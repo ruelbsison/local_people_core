@@ -9,12 +9,12 @@ class Message implements Comparable {
   final String text;
   final MessageType messageType;
   final MessageStatus messageStatus;
-  final bool isSender;
-  final String subject;
+  bool isSender;
+  String subject;
   final DateTime createdAt;
   final int jobId;
   int traderId;
-  //int senderId;
+  int senderId;
 
   Message({
     @required this.id,
@@ -26,8 +26,8 @@ class Message implements Comparable {
     @required this.messageType,
     @required this.messageStatus,
     @required this.jobId,
-    //this.senderId,
-    @required this.isSender = false,
+    @required this.senderId,
+    @required this.isSender,
   });
 
   @override

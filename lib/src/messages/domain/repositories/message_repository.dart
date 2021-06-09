@@ -8,11 +8,11 @@ abstract class MessageRepository {
 
   Future<MessageListResponse> listTraderMessages(int trader_id);
 
-  Future<MessageListResponse> listJobMessages(int job_id);
+  Future<MessageListResponse> listJobMessages(int currentUserId, int job_id);
 
   Future<MessageResponse> createMessage(Message message);
 
-  Future<MessageResponse> showMessage(int id);
+  Future<MessageResponse> showMessage(int currentUserId, int id);
 
   Future<MessageResponse> updateMessage(Message message);
 

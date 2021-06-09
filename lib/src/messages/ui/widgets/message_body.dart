@@ -86,26 +86,28 @@ class _MessageBodyState extends State<MessageBody> {
   }
 
   Widget builBody(BuildContext context) {
-    return Column(
-      children: [
-        Expanded(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
-            child: ListView.builder(
-              itemCount: widget.messages.length,
-              itemBuilder: (context, index) =>
-                  MessageWidget(message: widget.messages[index]),
+    return SafeArea(
+      child: Column(
+        children: [
+          Expanded(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: kDefaultPadding),
+              child: ListView.builder(
+                itemCount: widget.messages.length,
+                itemBuilder: (context, index) =>
+                    MessageWidget(message: widget.messages[index]),
+              ),
             ),
           ),
-        ),
-        if (widget.showInputMessage == true)
-          MessageInputField(
-            jobId: widget.messageBox.jobId,
-            clientId: widget.messageBox.clientId,
-            traderId: widget.messageBox.traderId,
-            subject: widget.messageBox.name,
-          ),
-      ],
+          if (widget.showInputMessage == true)
+            MessageInputField(
+              jobId: widget.messageBox.jobId,
+              clientId: widget.messageBox.clientId,
+              traderId: widget.messageBox.traderId,
+              subject: widget.messageBox.name,
+            ),
+        ],
+      ),
     );
   }
 }

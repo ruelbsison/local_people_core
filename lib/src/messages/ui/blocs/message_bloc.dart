@@ -60,7 +60,8 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   Stream<MessageState> _mapLoadJobMessagesToState(int jobId, int traderId) async* {
     try {
-      MessageListResponse response = await messageRepository.listJobMessages(jobId);
+      int userId = await authLocalDataSource.getUserId();
+      MessageListResponse response = await messageRepository.listJobMessages(userId, jobId);
       if (response == null || response.exception != null) {
         yield LoadJobMessageFailed();
       } else if (response.messages != null) {
@@ -91,6 +92,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
           message.clientId = userId;
         else
           message.traderId = userId;
+        message.senderId = userId;
+        message.isSender = true;
+      }
+
+      if (message.subject == null || message.subject.length == 0) {
+        message.subject = await authLocalDataSource.getUserName();
       }
 
       MessageResponse response = await messageRepository.createMessage(message);

@@ -79,11 +79,11 @@ class MessageRepositoryImpl implements MessageRepository {
   }
 
   @override
-  Future<MessageListResponse> listJobMessages(int job_id) async {
+  Future<MessageListResponse> listJobMessages(int currentUserId, int jobId) async {
     MessageListResponse response = MessageListResponse();
     if (await networkInfo.isConnected) {
       try {
-        response = await messageRemoteDataSource.listJobMessages(job_id);
+        response = await messageRemoteDataSource.listJobMessages(currentUserId, jobId);
         if (response.exception != null) {
           logger.severe("Exception occured in listJobMessages", response.exception);
         }
@@ -119,11 +119,11 @@ class MessageRepositoryImpl implements MessageRepository {
   }
 
   @override
-  Future<MessageResponse> showMessage(int id) async {
+  Future<MessageResponse> showMessage(int currentUserId, int id) async {
     MessageResponse response = MessageResponse();
     if (await networkInfo.isConnected) {
       try {
-        response = await messageRemoteDataSource.showMessage(id);
+        response = await messageRemoteDataSource.showMessage(currentUserId, id);
         if (response.exception != null) {
           logger.severe("Exception occured in showMessage", response.exception);
         }
