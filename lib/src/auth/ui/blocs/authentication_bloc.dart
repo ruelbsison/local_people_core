@@ -73,8 +73,10 @@ class AuthenticationBloc
   }
 
   Stream<AuthenticationState> _mapReAuthenticateUserState() async* {
-    String token = await authLocalDataSource.getToken();
-    AuthLocalModel authLocalModel = await authenticationRepository.refreshUserAuthorization(token);
+    //String token = await authLocalDataSource.getAccessToken();
+    //AuthLocalModel authLocalModel = await authenticationRepository.refreshUserAuthorization(token);
+    AuthLocalModel authLocalModel = await authenticationRepository
+        .requestUserAuthorization();
     if (authLocalModel != null) {
       await authLocalDataSource.saveAuth(authLocalModel);
       yield Authenticated(); //authLocalModel.userFullName);
