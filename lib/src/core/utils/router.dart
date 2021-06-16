@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import '../dialog/dialog_manager.dart';
 
 class AppRouter{
   static Future pushPage(BuildContext context, Widget page) {
@@ -6,7 +7,7 @@ class AppRouter{
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return page;
+          return DialogManager(child: page,);
         },
       ),
     );
@@ -33,7 +34,7 @@ class AppRouter{
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return page;
+          return DialogManager(child: page,);
         },
       ),
     );

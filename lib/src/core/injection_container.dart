@@ -8,6 +8,8 @@ final sl = GetIt.instance; //sl is referred to as Service Locator
 
 //Dependency injection
 Future<void> locatorInit(AuthorizationConfig authorizationConfig) async {
+  sl.registerLazySingleton(() => DialogService());
+
   sl.registerLazySingleton<AuthLocalDataSource>(
         () => AuthLocalDataSourceImpl(
       authorizationConfig: authorizationConfig,

@@ -1,10 +1,15 @@
 library local_people_core;
 
+export './src/core/dialog/status_dialog.dart';
+export './src/core/dialog/dialog_service.dart';
+export './src/core/dialog/dialog_manager.dart';
+
 export './src/core/widgets/loading_widget.dart';
 export './src/core/widgets/custom_alert.dart';
 export './src/core/widgets/spacer_widget.dart';
 export './src/core/widgets/logo_widget.dart';
 export './src/core/widgets/appbar_widget.dart';
+export './src/core/widgets/local_people_appbar_widget.dart';
 export './src/core/widgets/box_container_widget.dart';
 export './src/core/widgets/fill_outline_nutton.dart';
 export './src/core/widgets/default_grabbing.dart';

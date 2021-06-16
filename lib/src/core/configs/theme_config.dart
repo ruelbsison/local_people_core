@@ -21,7 +21,7 @@ class AppThemeConfig {
       ),
       subtitle2: base.subtitle2.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w500,
         fontSize: 14,
       ),
       caption: base.caption.copyWith(
@@ -243,6 +243,9 @@ class AppThemeConfig {
       visualDensity: VisualDensity.adaptivePlatformDensity,
       inputDecorationTheme: base.inputDecorationTheme.copyWith(
         fillColor: Color.fromRGBO(170, 186, 205, 1),
+        enabledBorder: OutlineInputBorder(
+          borderSide: BorderSide.none,
+        ),
         border: OutlineInputBorder(
           borderSide: BorderSide.none,
         ),
