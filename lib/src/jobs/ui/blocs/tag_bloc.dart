@@ -35,6 +35,23 @@ class TagBloc extends Bloc<TagEvent, TagState> {
       if (response == null) {
         yield LoadTagsFailed();
       } else {
+        if (response.tags == null || response.tags.length == 0) {
+          response.tags = Tag.defaultTags;
+          var tagIterator = response.tags.iterator;
+          while (tagIterator.moveNext()) {
+            Tag tag = tagIterator.current;
+            try {
+              TagResponse tagResponse = await tagRepository.createTag(tag);
+              if (tagResponse == null) {
+              } else if (tagResponse != null &&
+                  tagResponse.exception != null) {
+              } else if (tagResponse.tag != null) {
+              }
+            } catch (e) {
+              print(e.toString());
+            }
+          }
+        }
         yield TagsLoaded(tags: response.tags);
       }
     } catch (e) {

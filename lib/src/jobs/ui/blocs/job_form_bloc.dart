@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 import 'package:equatable/equatable.dart';
+import 'package:local_people_core/jobs.dart';
 import '../../domain/entities/location.dart';
 import '../../domain/entities/tag.dart';
 import '../../domain/entities/job.dart';
@@ -49,6 +50,23 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
   }
 
   Stream<JobFormState> _mapJobPostToState(Job job) async* {
+    if (job.location != null) {
+      try {
+        LocationResponse locResponse = await locationRepository.createLocation(job.location);
+        if (locResponse == null) {
+          //yield JobNotLoaded('');
+        } else if (locResponse != null &&
+            locResponse.exception != null) {
+          //yield JobNotLoaded(tagListResponse.exception.toString());
+        } else if (locResponse.location != null) {
+          job.location = locResponse.location;
+        }
+      } catch (e) {
+        print(e.toString());
+        //yield JobNotLoaded(e.toString());
+      }
+    }
+
     try {
       final response = await jobRepository.postJob(job);
       if (response == null) {

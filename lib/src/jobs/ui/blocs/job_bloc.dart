@@ -6,6 +6,7 @@ import '../../domain/repositories/job_repository.dart';
 import '../../domain/entities/job_list_response.dart';
 import '../../domain/repositories/tag_repository.dart';
 import '../../domain/entities/tag_response.dart';
+import '../../domain/entities/location_response.dart';
 import '../../../core/enum/app_type.dart';
 import '../../domain/entities/job.dart';
 import '../../domain/entities/tag.dart';
@@ -93,8 +94,28 @@ class JobBloc extends Bloc<JobEvent, JobState> {
               }
             }
           }
+
+          if (job.location != null && job.location.id > 0){
+            try {
+              LocationResponse locResponse = await locationRepository.showLocation(job.location.id);
+              if (locResponse == null) {
+                //yield JobNotLoaded('');
+              } else if (locResponse != null &&
+                  locResponse.exception != null) {
+                //yield JobNotLoaded(tagListResponse.exception.toString());
+              } else if (locResponse.location != null) {
+                job.location = locResponse.location;
+              }
+            } catch (e) {
+              print(e.toString());
+              //yield JobNotLoaded(e.toString());
+            }
+          }
         }
-        yield JobLoaded(response.jobs);
+        response.jobs.sort((a, b) {
+          return a.compareTo(b);
+        });
+        yield JobLoaded(response.jobs.reversed.toList());
       }
     } catch (e) {
       yield JobNotLoaded(e.toString());
@@ -140,8 +161,27 @@ class JobBloc extends Bloc<JobEvent, JobState> {
               }
             }
           }
+          if (job.location != null && job.location.id > 0){
+            try {
+              LocationResponse locResponse = await locationRepository.showLocation(job.location.id);
+              if (locResponse == null) {
+                //yield JobNotLoaded('');
+              } else if (locResponse != null &&
+                  locResponse.exception != null) {
+                //yield JobNotLoaded(tagListResponse.exception.toString());
+              } else if (locResponse.location != null) {
+                job.location = locResponse.location;
+              }
+            } catch (e) {
+              print(e.toString());
+              //yield JobNotLoaded(e.toString());
+            }
+          }
         }
-        yield JobLoaded(response.jobs);
+        response.jobs.sort((a, b) {
+          return a.compareTo(b);
+        });
+        yield JobLoaded(response.jobs.reversed.toList());
       }
     } catch (e) {
       yield JobNotLoaded(e.toString());
@@ -186,8 +226,28 @@ class JobBloc extends Bloc<JobEvent, JobState> {
               }
             }
           }
+          if (job.location != null && job.location.id > 0){
+            try {
+              LocationResponse locResponse = await locationRepository.showLocation(job.location.id);
+              if (locResponse == null) {
+                //yield JobNotLoaded('');
+              } else if (locResponse != null &&
+                  locResponse.exception != null) {
+                //yield JobNotLoaded(tagListResponse.exception.toString());
+              } else if (locResponse.location != null) {
+                job.location = locResponse.location;
+              }
+            } catch (e) {
+              print(e.toString());
+              //yield JobNotLoaded(e.toString());
+            }
+          }
         }
-        yield OpportunitiesLoaded(response.jobs);
+        response.jobs.sort((a, b) {
+          return a.compareTo(b);
+        });
+        yield OpportunitiesLoaded(response.jobs.reversed.toList());
+        //yield OpportunitiesLoaded(response.jobs);
       }
     } catch (e) {
       yield OpportunitiesNotLoaded(e.toString());

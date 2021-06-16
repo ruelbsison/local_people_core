@@ -16,7 +16,9 @@ part 'package_state.dart';
 class PackageBloc extends Bloc<PackageEvent, PackageState> {
   final PackageRepository packageRepository;
 
-  PackageBloc(@required this.packageRepository) : super(PackageInitial());
+  PackageBloc({
+    @required this.packageRepository
+  }) : super(PackageInitial());
 
   @override
   Stream<PackageState> mapEventToState(

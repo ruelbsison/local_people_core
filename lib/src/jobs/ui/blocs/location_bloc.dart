@@ -20,6 +20,42 @@ class LocationBloc extends Bloc<LocationEvent, LocationState> {
   Stream<LocationState> mapEventToState(
     LocationEvent event,
   ) async* {
-    // TODO: implement mapEventToState
+     if (event is LoadJobLocationEvent) {
+      yield JobLocationLoading();
+      yield* _mapLoadJobLocationToState(event.jobId);
+    } else if (event is GetLocationEvent) {
+       yield GetLocationLoading();
+       yield* _mapGetLocationToState(event.id);
+     }
+  }
+
+  Stream<LocationState> _mapLoadJobLocationToState(int jobId) async* {
+    try {
+      LocationResponse response = await locationRepository.listJobLocations(jobId);
+      if (response == null) {
+        yield LoadJobLocationFailed();
+      } else if (response != null && response.exception != null) {
+        yield LoadJobLocationFailed();
+      } else if (response != null && response.location != null) {
+        yield JobLocationLoaded(location: response.location);
+      }
+    } catch (e) {
+      yield LoadJobLocationFailed();
+    }
+  }
+
+  Stream<LocationState> _mapGetLocationToState(int id) async* {
+    try {
+      LocationResponse response = await locationRepository.showLocation(id);
+      if (response == null) {
+        yield GetLocationFailed();
+      } else if (response != null && response.exception != null) {
+        yield GetLocationFailed();
+      } else if (response != null && response.location != null) {
+        yield GetLocationLoaded(location: response.location);
+      }
+    } catch (e) {
+      yield LoadJobLocationFailed();
+    }
   }
 }
