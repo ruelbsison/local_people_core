@@ -6,7 +6,8 @@ import '../blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../widgets/message_body.dart';
 import '../../domain/entities/message_box.dart';
-import 'package:cached_network_image/cached_network_image.dart';
+//import 'package:cached_network_image/cached_network_image.dart';
+import 'package:local_people_core/core.dart';
 
 class MessagesScreen extends StatefulWidget {
   MessagesScreen({
@@ -25,7 +26,7 @@ class _MessageScreenState extends State<MessagesScreen> {
   Widget build(BuildContext context) {
 
     return Scaffold(
-      appBar: buildAppBar(),
+      appBar: buildAppBar(context),
       body: ((widget.messageBox.jobId == null
           || widget.messageBox.jobId == 0
           || widget.messageBox.jobId == -1)
@@ -34,53 +35,63 @@ class _MessageScreenState extends State<MessagesScreen> {
     );
   }
 
-  AppBar buildAppBar() {
-    final ThemeData theme = Theme.of(context);
-    return AppBar(
-      automaticallyImplyLeading: false,
-      title: Row(
-        children: [
-          BackButton(),
-          ClipOval (
-            child: CachedNetworkImage(
-              imageUrl: widget.messageBox.image,
-              width: 60,
-              height: 60,
-              placeholder: (context, url) => LoadingWidget(
-                isImage: true,
-              ),
-              errorWidget: (context, url, error) => Image.asset(
-                'packages/local_people_core/assets/images/trader-profile-photo.png',
-                fit: BoxFit.cover,
-              ),
-              fit: BoxFit.cover,
-            ),
-          ),
-          SizedBox(width: kDefaultPadding * 0.75),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                widget.messageBox.name,
-                style: theme.textTheme.subtitle1,
-              )
-            ],
-          )
-        ],
-      ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.local_phone),
-          onPressed: () {},
-        ),
-        IconButton(
-          icon: Icon(Icons.videocam),
-          onPressed: () {},
-        ),
-        SizedBox(width: kDefaultPadding / 2),
-      ],
+  Widget buildAppBar(BuildContext context) {
+    return LocalPeopleAppBarWidget(
+      title: widget.messageBox.name != null ? widget.messageBox.name : '',
+      networkIcon: widget.messageBox.image,
     );
   }
+
+  // AppBar buildAppBar() {
+  //   final ThemeData theme = Theme.of(context);
+  //   return AppBar(
+  //     automaticallyImplyLeading: false,
+  //     title: Row(
+  //       children: [
+  //         BackButton(),
+  //         ClipOval (
+  //           child: CachedNetworkImage(
+  //             imageUrl: widget.messageBox.image,
+  //             width: 60,
+  //             height: 60,
+  //             placeholder: (context, url) => LoadingWidget(
+  //               isImage: true,
+  //             ),
+  //             errorWidget: (context, url, error) => Image.asset(
+  //               'packages/local_people_core/assets/images/trader-profile-photo.png',
+  //               fit: BoxFit.cover,
+  //             ),
+  //             fit: BoxFit.cover,
+  //           ),
+  //         ),
+  //         SizedBox(width: kDefaultPadding * 0.75),
+  //         Column(
+  //           mainAxisSize: MainAxisSize.max,
+  //           mainAxisAlignment: MainAxisAlignment.center,
+  //           crossAxisAlignment: CrossAxisAlignment.stretch,
+  //           children: [
+  //             Text(
+  //               widget.messageBox.name,
+  //               style: theme.textTheme.subtitle1,
+  //               maxLines: 2,
+  //             )
+  //           ],
+  //         )
+  //       ],
+  //     ),
+  //     actions: [
+  //       IconButton(
+  //         icon: Icon(Icons.local_phone),
+  //         onPressed: () {},
+  //       ),
+  //       IconButton(
+  //         icon: Icon(Icons.videocam),
+  //         onPressed: () {},
+  //       ),
+  //       SizedBox(width: kDefaultPadding / 2),
+  //     ],
+  //   );
+  // }
 
   Widget buildBodyWithMessageBox() {
     return MessageBody(

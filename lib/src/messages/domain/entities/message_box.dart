@@ -5,7 +5,7 @@ class MessageBox implements Comparable {
   final int traderId;
   final int clientId;
   final DateTime createdAt;
-  //int senderId;
+  int senderId;
 
   MessageBox({
     this.name,
@@ -17,7 +17,7 @@ class MessageBox implements Comparable {
     this.time,
     this.isActive,
     this.createdAt,
-    //this.senderId,
+    this.senderId,
   });
 
   @override

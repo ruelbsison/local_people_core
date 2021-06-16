@@ -81,6 +81,7 @@ class MessageBoxBloc extends Bloc<MessageBoxEvent, MessageBoxState> {
                 time: DateFormatUtil.getDateTimeDiff(DateTime.now(), lastMessage.createdAt),
                 isActive: false,
                 createdAt: lastMessage.createdAt,
+                senderId: lastMessage.senderId,
               );
               messages.add(box);
               lastMessage = message;
@@ -99,6 +100,7 @@ class MessageBoxBloc extends Bloc<MessageBoxEvent, MessageBoxState> {
             time: DateFormatUtil.getDateTimeDiff(DateTime.now(), lastMessage.createdAt),
             isActive: false,
             createdAt: lastMessage.createdAt,
+            senderId: lastMessage.senderId,
           );
           messages.add(box);
         }
