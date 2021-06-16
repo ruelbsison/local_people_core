@@ -8,25 +8,27 @@ class QuoteResponse {
 
   void fromModel(QuoteModel model) {
     quote = Quote(
+      dureationRequired: model.duration_required,
       labour: model.labour,
       materials: model.materials,
       totalCost: model.totalCost,
-      depositRequired: model.depositRequired,
-      deliveryTime: model.deliveryTime,
-      traderId: model.traderId,
-      jobId: model.jobId,
+      depositRequired: model.deposit_required,
+      deliveryDate: DateTime.parse(model.delivery_date),
+      traderId: model.trader_id,
+      jobId: model.job_id,
     );
   }
 
   static QuoteModel fromQuote(Quote quote) {
     return QuoteModel (
+      duration_required: quote.dureationRequired,
       labour: quote.labour,
       materials: quote.materials,
       totalCost: quote.totalCost,
-      depositRequired: quote.depositRequired,
-      deliveryTime: quote.deliveryTime,
-      traderId: quote.traderId,
-      jobId: quote.jobId,
+      deposit_required: quote.depositRequired,
+      delivery_date: quote.deliveryDate.toString(),
+      trader_id: quote.traderId,
+      job_id: quote.jobId,
     );
   }
 }

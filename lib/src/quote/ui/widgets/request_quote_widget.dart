@@ -6,8 +6,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 class RequestQuoteWidget extends StatefulWidget {
   RequestQuoteWidget({
     Key key,
+    @required this.traderId,
   }) : super(key: key);
 
+  final int traderId;
   @override
   _RequestQuoteWidgetState createState() => _RequestQuoteWidgetState();
 }
@@ -22,18 +24,18 @@ class _RequestQuoteWidgetState extends State<RequestQuoteWidget> {
       //color: Colors.white,
       width: 345,
       height: 429,
-      margin: EdgeInsets.only(left: 12, right: 12),
-      //padding: EdgeInsets.all(10),
-      decoration: BoxDecoration(
-          border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
-          borderRadius: BorderRadius.circular(8.0),
-          color: Colors.white),
+      // margin: EdgeInsets.only(left: 12, right: 12),
+      // //padding: EdgeInsets.all(10),
+      // decoration: BoxDecoration(
+      //     border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
+      //     borderRadius: BorderRadius.circular(8.0),
+      //     color: Colors.white),
         child: BlocProvider.value(
           value: context.read<JobBloc>(),
           child: BlocBuilder<JobBloc, JobState>(
             builder: (context, state) {
               if (state is JobLoaded) {
-                return QuoteRequestDetailWidget(jobs: state.jobs);
+                return QuoteRequestDetailWidget(jobs: state.jobs, traderId: widget.traderId,);
               } else if (state is JobNotLoaded) {
                 return ErrorWidget('Error $state');
               }
@@ -58,5 +60,6 @@ class _RequestQuoteWidgetState extends State<RequestQuoteWidget> {
   @override
   void dispose() {
     _controller.dispose();
+    super.dispose();
   }
 }

@@ -28,27 +28,24 @@ class _RequestVisitWidgetState extends State<RequestVisitWidget> {
           border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
           borderRadius: BorderRadius.circular(8.0),
           color: Colors.white),
-      child: Expanded(
-        flex: 1,
-        child: PageIndicatorContainer(
-          child: PageView(
-            children: <Widget>[
-              SuggestedTimeSlotWidget(),
-              PlaceBidDetailWidget(),
-              PlaceBidTotallWidget(),
-            ],
-            controller: _controller,
-          ),
-          align: IndicatorAlign.bottom,
-          length: 3,
-          indicatorSpace: 20.0,
-          padding: const EdgeInsets.all(10),
-          indicatorColor: Color.fromRGBO(255, 99, 95, 1),
-          indicatorSelectorColor: Colors.white,
-          shape: IndicatorShape.circle(size: 12),
-          // shape: IndicatorShape.roundRectangleShape(size: Size.square(12),cornerSize: Size.square(3)),
-          // shape: IndicatorShape.oval(size: Size(12, 8)),
+      child: PageIndicatorContainer(
+        child: PageView(
+          children: <Widget>[
+            SuggestedTimeSlotWidget(),
+            PlaceBidDetailWidget(),
+            PlaceBidTotallWidget(),
+          ],
+          controller: _controller,
         ),
+        align: IndicatorAlign.bottom,
+        length: 3,
+        indicatorSpace: 20.0,
+        padding: const EdgeInsets.all(10),
+        indicatorColor: Color.fromRGBO(255, 99, 95, 1),
+        indicatorSelectorColor: Colors.white,
+        shape: IndicatorShape.circle(size: 12),
+        // shape: IndicatorShape.roundRectangleShape(size: Size.square(12),cornerSize: Size.square(3)),
+        // shape: IndicatorShape.oval(size: Size(12, 8)),
       ),
     );
   }
@@ -67,5 +64,6 @@ class _RequestVisitWidgetState extends State<RequestVisitWidget> {
   @override
   void dispose() {
     _controller.dispose();
+    super.dispose();
   }
 }

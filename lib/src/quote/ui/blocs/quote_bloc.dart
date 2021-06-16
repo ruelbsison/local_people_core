@@ -7,13 +7,25 @@ import '../../domain/entities/quote.dart';
 import '../../domain/entities/quote_response.dart';
 import '../../domain/entities/quote_list_response.dart';
 import '../../domain/repositories/quote_repository.dart';
+import 'package:local_people_core/auth.dart';
+import 'package:local_people_core/jobs.dart';
+import 'package:local_people_core/profile.dart';
+
 part 'quote_event.dart';
 part 'quote_state.dart';
 
 class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   final QuoteRepository quoteRepository;
+  final ProfileRepository profileRepository;
+  final JobRepository jobRepository;
+  final AuthLocalDataSource authLocalDataSource;
 
-  QuoteBloc(@required this.quoteRepository) : super(QuoteInitial());
+  QuoteBloc({
+    @required this.quoteRepository,
+    @required this.profileRepository,
+    @required this.jobRepository,
+    @required this.authLocalDataSource,
+  }) : super(QuoteInitial());
 
   @override
   Stream<QuoteState> mapEventToState(
@@ -31,12 +43,22 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
     } else if (event is QuoteUpdateEvent) {
       yield QuoteUpdating();
       yield* _mapQuoteUpdateToState(event.quote);
+    } else if (event is QuoteJobLoadEvent) {
+      yield QuoteJobLoading();
+      yield* _mapQuoteLoadFromJobToState(event.id);
     }
   }
 
-  Stream<QuoteState> _mapQuoteAddToState(Quote Quote) async* {
+  Stream<QuoteState> _mapQuoteAddToState(Quote quote) async* {
     try {
-      QuoteResponse response = await quoteRepository.createQuote(Quote);
+      int traderId = await authLocalDataSource.getUserId();
+      if (traderId == null) {
+        yield  QuoteAddFailed('Trader user id not found!');
+        return;
+      }
+
+      quote.traderId = traderId;
+      QuoteResponse response = await quoteRepository.createQuote(quote);
       if (response != null && response.exception != null) {
         yield QuoteAddFailed(response.exception.toString());
       } else if (response != null && response.quote == null) {
@@ -49,9 +71,9 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
     }
   }
 
-  Stream<QuoteState> _mapQuoteUpdateToState(Quote Quote) async* {
+  Stream<QuoteState> _mapQuoteUpdateToState(Quote quote) async* {
     try {
-      QuoteResponse response = await quoteRepository.updateQuote(Quote);
+      QuoteResponse response = await quoteRepository.updateQuote(quote);
       if (response != null && response.exception != null) {
         yield QuoteUpdateFailed(response.exception.toString());
       } else if (response != null && response.quote == null) {
@@ -92,6 +114,41 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
       }
     } catch (e) {
       yield QuoteLoadFailed(e.toString());
+    }
+  }
+
+  Stream<QuoteState> _mapQuoteLoadFromJobToState(int jobId) async* {
+    try {
+      QuoteListResponse response = await quoteRepository.listJobQuotes(jobId);
+      if (response != null && response.exception != null) {
+        yield QuoteJobLoadFailed(response.exception.toString());
+      } else if (response != null && response.quotes == null) {
+        yield  QuoteJobLoadFailed('');
+      } else if (response != null && response.quotes != null) {
+        var listIterator = response.quotes.iterator;
+        while (listIterator.moveNext()) {
+          Quote quote = listIterator.current;
+
+          JobResponse jobResponse = await jobRepository.showJob(quote.jobId);
+          if (jobResponse != null && jobResponse.exception != null) {
+          } else if (jobResponse != null && jobResponse.job == null) {
+            yield  QuoteJobLoadFailed('');
+          } else if (jobResponse != null && jobResponse.job != null) {
+            quote.job = jobResponse.job;
+          }
+
+          TraderResponse traderResponse = await profileRepository.getTraderProfile(quote.traderId);
+          if (traderResponse != null && traderResponse.exception != null) {
+          } else if (traderResponse != null && traderResponse.profile == null) {
+            yield  QuoteJobLoadFailed('');
+          } else if (traderResponse != null && traderResponse.profile != null) {
+            quote.traderProfile = traderResponse.profile;
+          }
+        }
+        yield QuoteJobLoaded(response.quotes);
+      }
+    } catch (e) {
+      yield QuoteJobLoadFailed(e.toString());
     }
   }
 }

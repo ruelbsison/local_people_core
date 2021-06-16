@@ -14,7 +14,9 @@ part 'quote_request_state.dart';
 class QuoteRequestBloc extends Bloc<QuoteRequestEvent, QuoteRequestState> {
   final QuoteRequestRepository quoteRequestRepository;
 
-  QuoteRequestBloc(@required this.quoteRequestRepository) : super(QuoteRequestInitial());
+  QuoteRequestBloc({
+    @required this.quoteRequestRepository
+  }) : super(QuoteRequestInitial());
 
   @override
   Stream<QuoteRequestState> mapEventToState(

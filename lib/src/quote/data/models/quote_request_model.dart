@@ -8,23 +8,23 @@ part 'quote_request_model.g.dart';
 class QuoteRequestModel extends Equatable {
   int id;
   String message;
-  int traderId;
-  int clientId;
-  int jobId;
-  String createdAt;
-  String updatedAt;
+  int trader_id;
+  int client_id;
+  int job_id;
+  String created_at;
+  String updated_at;
 
   QuoteRequestModel(
       {this.id,
         this.message,
-        this.traderId,
-        this.clientId,
-        this.jobId,
-        this.createdAt,
-        this.updatedAt});
+        this.trader_id,
+        this.client_id,
+        this.job_id,
+        this.created_at,
+        this.updated_at});
 
   @override
-  List<Object> get props => [id, message, traderId, clientId, jobId, createdAt, traderId, updatedAt];
+  List<Object> get props => [id, message, trader_id, client_id, job_id, created_at, updated_at];
 
   factory QuoteRequestModel.fromJson(Map<String, dynamic> json) => _$QuoteRequestModelFromJson(json);
   Map<String, dynamic> toJson() => _$QuoteRequestModelToJson(this);

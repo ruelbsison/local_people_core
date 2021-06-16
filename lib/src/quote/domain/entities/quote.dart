@@ -1,4 +1,6 @@
 import 'package:equatable/equatable.dart';
+import 'package:local_people_core/profile.dart';
+import 'package:local_people_core/jobs.dart';
 
 class Quote extends Equatable {
   int id;
@@ -7,22 +9,30 @@ class Quote extends Equatable {
   String materials;
   String totalCost;
   String depositRequired;
-  int deliveryTime;
+  int dureationRequired;
+  DateTime deliveryDate;
   int traderId;
   int jobId;
 
+  Job job;
+  TraderProfile traderProfile;
+
   Quote({this.id,
+    this.dureationRequired,
     this.details,
     this.labour,
     this.materials,
     this.totalCost,
     this.depositRequired,
-    this.deliveryTime,
+    this.deliveryDate,
     this.traderId,
-    this.jobId});
+    this.jobId,
+    this.job,
+    this.traderProfile});
 
   @override
-  List<Object> get props => [id, details, labour, materials,
-    totalCost, depositRequired, deliveryTime, traderId, jobId];
+  List<Object> get props => [id, dureationRequired, details, labour, materials,
+    totalCost, depositRequired, deliveryDate, traderId, jobId,
+    job, traderProfile];
 
 }

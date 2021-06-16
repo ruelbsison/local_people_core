@@ -13,11 +13,11 @@ class QuoteRequestListResponse {
       QuoteRequest quote = QuoteRequest(
         id: model.id,
         message: model.message,
-        traderId: model.traderId,
-        clientId: model.clientId,
-        jobId: model.jobId,
-        createdAt: model.createdAt,
-        updatedAt: model.updatedAt,
+        traderId: model.trader_id,
+        clientId: model.client_id,
+        jobId: model.job_id,
+        createdAt: model.created_at,
+        updatedAt: model.updated_at,
       );
       quoteRequests.add(quote);
     }

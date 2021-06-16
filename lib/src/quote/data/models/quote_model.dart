@@ -13,28 +13,31 @@ part 'quote_model.g.dart';
 class QuoteModel extends Equatable {
   int id;
   String details;
+  int duration_required;
   String labour;
   String materials;
   String totalCost;
-  String depositRequired;
-  int deliveryTime;
-  int traderId;
-  int jobId;
+  String deposit_required;
+  String delivery_date;
+  int trader_id;
+  int job_id;
 
   QuoteModel(
       {
         this.id,
+        this.duration_required,
         this.details,
         this.labour,
         this.materials,
         this.totalCost,
-        this.depositRequired,
-        this.deliveryTime,
-        this.traderId,
-        this.jobId});
+        this.deposit_required,
+        this.delivery_date,
+        this.trader_id,
+        this.job_id});
 
   @override
-  List<Object> get props => [id, details, labour, materials, totalCost, depositRequired, deliveryTime, traderId, jobId];
+  List<Object> get props => [id, duration_required, details, labour,
+    materials, totalCost, deposit_required, delivery_date, trader_id, job_id];
 
   factory QuoteModel.fromJson(Map<String, dynamic> json) => _$QuoteModelFromJson(json);
   Map<String, dynamic> toJson() => _$QuoteModelToJson(this);
