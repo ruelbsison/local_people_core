@@ -3,7 +3,7 @@ import '../../domain/entities/location_response.dart';
 import '../../domain/entities/location_list_response.dart';
 
 abstract class LocationRemoteDataSource {
-  Future<LocationListResponse> listJobLocations(int job_id);
+  Future<LocationResponse> listJobLocations(int job_id);
 
   Future<LocationListResponse> listClientLocations(int client_id);
 

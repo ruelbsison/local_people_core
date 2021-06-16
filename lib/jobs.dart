@@ -95,6 +95,10 @@ export './src/jobs/ui/widgets/your_job_card.dart';
 export './src/jobs/ui/widgets/post_actions_widget.dart';
 export './src/jobs/ui/widgets/job_actions_widget.dart';
 export './src/jobs/ui/widgets/job_view_widget.dart';
+export './src/jobs/ui/widgets/job_award_widget.dart';
+export './src/jobs/ui/widgets/job_update_widget.dart';
+export './src/jobs/ui/widgets/job_change_widget.dart';
+export './src/jobs/ui/widgets/job_cancel_widget.dart';
 
 export './src/jobs/ui/blocs/job_state.dart';
 export './src/jobs/ui/blocs/job_event.dart';

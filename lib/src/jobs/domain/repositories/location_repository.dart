@@ -8,7 +8,7 @@ abstract class LocationRepository {
 
   Future<LocationListResponse> listTraderLocations(int trader_id);
 
-  Future<LocationListResponse> listJobLocations(int job_id);
+  Future<LocationResponse> listJobLocations(int job_id);
 
   Future<LocationResponse> createLocation(Location location);
 

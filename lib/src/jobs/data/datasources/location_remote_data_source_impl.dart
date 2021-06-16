@@ -57,11 +57,11 @@ class LocationRemoteDataSourceImpl implements LocationRemoteDataSource {
   }
 
   @override
-  Future<LocationListResponse> listJobLocations(int job_id) async {
-    LocationListResponse reponse = LocationListResponse();
+  Future<LocationResponse> listJobLocations(int job_id) async {
+    LocationResponse reponse = LocationResponse();
 
     try {
-      List<LocationModel> data = await locationRestApiClient.listJobLocations(job_id);
+      LocationModel data = await locationRestApiClient.listJobLocations(job_id);
       if (data != null) {
         reponse.fromModel(data);
       }

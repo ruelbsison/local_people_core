@@ -10,24 +10,24 @@ class PackageModel extends Equatable {
   int id;
   String name;
   String description;
-  int traderId;
-  String createdAt;
-  String updatedAt;
+  int trader_id;
+  String created_at;
+  String updated_at;
 
   PackageModel(
       {this.id,
       @required this.name,
       @required this.description,
-      @required this.traderId,
-      this.createdAt,
-      this.updatedAt})
+      @required this.trader_id,
+      this.created_at,
+      this.updated_at})
       : assert(name != null),
         assert(description != null),
-        assert(traderId != null);
+        assert(trader_id != null);
 
   @override
   List<Object> get props =>
-      [id, name, description, traderId, createdAt, updatedAt];
+      [id, name, description, trader_id, created_at, updated_at];
 
   factory PackageModel.fromJson(Map<String, dynamic> json) =>
       _$PackageModelFromJson(json);

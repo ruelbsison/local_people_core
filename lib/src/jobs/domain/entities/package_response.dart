@@ -8,22 +8,22 @@ class PackageResponse {
   void fromModel(PackageModel model) {
     package = Package (
       id: model.id,
-      traderId : model.traderId,
+      traderId : model.trader_id,
       name: model.name,
       description: model.description,
-      createdAt: model.createdAt,
-      updatedAt: model.updatedAt,
+      createdAt: model.created_at,
+      updatedAt: model.updated_at,
     );
   }
 
   static PackageModel fromPackage(Package package) {
     return PackageModel (
       id: package.id,
-      traderId : package.traderId,
+      trader_id : package.traderId,
       name: package.name,
       description: package.description,
-      createdAt: package.createdAt,
-      updatedAt: package.updatedAt,
+      created_at: package.createdAt,
+      updated_at: package.updatedAt,
     );
   }
 }

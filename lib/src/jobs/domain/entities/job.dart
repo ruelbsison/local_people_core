@@ -5,7 +5,7 @@ import 'package:meta/meta.dart';
 import 'tag.dart';
 import 'location.dart';
 
-class Job extends Object {
+class Job extends Object implements Comparable {
   int id;
   String title;
   String description;
@@ -19,6 +19,7 @@ class Job extends Object {
   int traderId;
   DateTime date;
   bool private;
+  DateTime createdAt;
 
   Job({
     @required this.id,
@@ -33,6 +34,7 @@ class Job extends Object {
     this.minutesLeft,
     this.images,
     this.date,
+    this.createdAt,
     this.private = false,
   });
 
@@ -42,6 +44,23 @@ class Job extends Object {
 
   @override
   int get hashCode => id;
+
+  @override
+  int compareTo(other) {
+    if (this.createdAt == null && other.createdAt == null)
+      return 0;
+    else if (this.createdAt == null && other.createdAt != null)
+      return 1;
+    else if (this.createdAt != null && other.createdAt == null)
+      return -1;
+
+    if (this.createdAt.isAfter(other.createdAt) == true)
+      return 1;
+    else if (this.createdAt.isBefore(other.createdAt) == true)
+      return -1;
+
+    return 0;
+  }
 
   static empty() {
     return Job(id: 0,

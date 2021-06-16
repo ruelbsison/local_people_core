@@ -15,7 +15,7 @@ abstract class LocationRestApiClient {
 
   @GET(RestAPIConfig.jobLocations)
   //Future<Response> listUsers();
-  Future<List<LocationModel>> listJobLocations(@Path("id") int id);
+  Future<LocationModel> listJobLocations(@Path("id") int id);
 
   @GET(RestAPIConfig.clientLocations)
   //Future<Response> listUsers();

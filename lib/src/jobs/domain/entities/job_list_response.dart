@@ -29,6 +29,7 @@ class JobListResponse {
         minutesLeft: 120,
         //images: model.images,
         date: DateTime.parse(model.date),
+        createdAt: DateTime.parse(model.created_at),
         private: model.private,
       );
       if (model.tag_ids != null && model.tag_ids.length > 0) {

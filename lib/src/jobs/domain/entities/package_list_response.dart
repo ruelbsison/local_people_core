@@ -14,11 +14,11 @@ class PackageListResponse {
       PackageModel model = listIter.current;
       Package package = Package(
         id: model.id,
-        traderId : model.traderId,
+        traderId : model.trader_id,
         name: model.name,
         description: model.description,
-        createdAt: model.createdAt,
-        updatedAt: model.updatedAt,
+        createdAt: model.created_at,
+        updatedAt: model.updated_at,
       );
 
       packages.add(package);

@@ -86,8 +86,21 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
           });
 
       if (job != null) {
-        Map<String, dynamic> map =  job.toJson();
+        var temp = job.toJson();
+        //temp.removeWhere((key, value) => value == null);
+        temp.keys
+            .where((k) => temp[k] == null) // filter keys
+            .toList() // create a copy to avoid concurrent modifications
+            .forEach(temp.remove); // remove selected keys
+
+        //if (job.tag_ids != null && job.tag_ids.length > 0) {
+        //  temp.addAll(Map.fromEntries(job.tag_ids.map((value) => MapEntry('tag_ids', value))));
+        //}
+
+        Map<String, dynamic> map =  temp; //job.toJson();
+        print(map);
         map.forEach((k,v) => (v != null ? request.fields.addAll(<String, String>{'job[$k]' : v.toString()}) : print(k)));
+        print(request.fields);
       }
 
       if (files != null && files.length > 0) {
@@ -110,9 +123,11 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
         }
       }
       http.Response httpResponse = await http.Response.fromStream(await request.send());
-      print("Result: ${httpResponse.statusCode}");
-      if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
-        print("Uploaded! ");
+      if (httpResponse.statusCode != null) {
+        print("Result: ${httpResponse.statusCode}");
+        if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
+          print("Uploaded! ");
+        }
         if (httpResponse.body != null) {
           print('response.body ' + httpResponse.body);
           Map<String, dynamic> map = jsonDecode(httpResponse.body);
@@ -122,6 +137,7 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
           response.jobFromModel(model);
         }
       }
+
       // FormData formData = FormData();
       // formData.fields.add(request.fields);
       // jobRestApiClient.createJob(request.f, images);

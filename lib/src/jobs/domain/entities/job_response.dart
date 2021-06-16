@@ -26,6 +26,7 @@ class JobResponse {
         minutesLeft: 120,
         //images: model.images,
         date: DateTime.parse(model.date),
+      createdAt: DateTime.parse(model.created_at),
       private: model.private,
       );
 

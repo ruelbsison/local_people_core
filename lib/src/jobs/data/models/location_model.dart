@@ -22,7 +22,7 @@ class LocationModel extends Equatable {
     this.job_id,
     this.created_at,
     this.updated_at,
-  }) : assert(name == null), assert(address == null);
+  }) : assert(name != null), assert(address != null);
 
   /// The current LocationModel's email address.
   String name;

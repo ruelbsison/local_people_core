@@ -84,7 +84,7 @@ class JobModel extends Equatable {
 
   static JobModel fromJob(Job job) {
     JobModel model = JobModel(
-      id: job.id,
+      id: job.id != null ? job.id : 0,
       title: job.title,
       description: job.description,
       date:  DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(job.date), //DateFormat('yyyyy-MM-ddThh:mm.sssZ').format(DateTime.now()), //job.date),
