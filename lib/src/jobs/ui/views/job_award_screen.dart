@@ -3,20 +3,22 @@ import 'package:flutter_icons/flutter_icons.dart';
 import 'package:local_people_core/core.dart';
 import 'package:local_people_core/auth.dart';
 import 'package:local_people_core/messages.dart';
+import 'package:local_people_core/quote.dart';
 
 import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
 import '../widgets/job_view_widget.dart';
 import '../widgets/job_actions_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class JobAwardScreen extends StatefulWidget {
   JobAwardScreen({
     Key key,
-    @required this.job,
+    @required this.quote,
   }) : super(key: key);
 
-  final Job job;
+  final Quote quote;
 
   @override
   _JobAwardScreenState createState() => _JobAwardScreenState();
@@ -37,7 +39,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     //     if (_controller.index == 1) {
     //       context
     //           .read<MessageBloc>()
-    //           .add(LoadJobMessagesEvent(jobId: widget.job.id));
+    //           .add(LoadJobMessagesEvent(jobId: widget.quote.job.id));
     //     }
     //   });
     // });
@@ -76,19 +78,22 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
                   CircleAvatar(
-                    backgroundColor: Color.fromRGBO(255, 166, 0, 1),
+                    //backgroundColor: Color.fromRGBO(255, 166, 0, 1),
                     radius: 15,
-                    child: Center(
-                        child: Image.asset(
-                      'packages/local_people_core/assets/images/package-icon.png',
-                      fit: BoxFit.contain,
-                      height: 19,
-                      width: 19,
-                    )),
+                    child: SvgPicture.asset(
+                      'packages/local_people_core/assets/images/package-orange.svg',
+                    ),
+                    // child: Center(
+                    //     child: Image.asset(
+                    //   'packages/local_people_core/assets/images/package-icon.png',
+                    //   fit: BoxFit.contain,
+                    //   height: 19,
+                    //   width: 19,
+                    // )),
                   ),
                   Text(
-                    // (widget.job.minutesLeft / 60).toString() + ' hrs left',
-                    widget.job.minutesLeft.toString() + ' hrs left',
+                    // (widget.quote.job.minutesLeft / 60).toString() + ' hrs left',
+                    widget.quote.job.minutesLeft.toString() + ' hrs left',
                     textAlign: TextAlign.center,
                     style: TextStyle(
                         color: Color.fromRGBO(0, 63, 92, 1),
@@ -110,9 +115,9 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                   //  flex: 2,
                   //child: Text(
                   Text(
-                    widget.job.title != null
-                        ? widget.job.title
-                        : widget.job.description,
+                    widget.quote.job.title != null
+                        ? widget.quote.job.title
+                        : widget.quote.job.description,
                     textAlign: TextAlign.left,
                     style: theme.textTheme.headline6,
                   ),
@@ -182,12 +187,12 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  JobViewWidget(job: widget.job),
+                  JobViewWidget(job: widget.quote.job),
                   SizedBox(height: 20.0),
                   //PostedByWidget(profile: widget.profile),
-                  PostedByWidget(clientId: widget.job.clientId),
+                  PostedByWidget(clientId: widget.quote.job.clientId),
                   SizedBox(height: 10.0),
-                  JobActionsWidget(),
+                  JobActionsWidget(job: widget.quote.job,),
                   SizedBox(height: 20.0),
                 ],
               ),
@@ -199,7 +204,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                   RepositoryProvider.of<MessageRepository>(context),
               appType: appType,
               authLocalDataSource: sl<AuthLocalDataSource>(),
-            )..add(LoadJobMessagesEvent(jobId: widget.job.id)),
+            )..add(LoadJobMessagesEvent(jobId: widget.quote.job.id)),
             child: BlocBuilder<MessageBloc, MessageState>(
               builder: (context, state) {
                 if (state is MessageInitial) {
@@ -211,10 +216,10 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                 } else if (state is JobMessageLoaded) {
                   return MessageBody(
                     messageBox: new MessageBox(
-                      name: widget.job.title,
-                      jobId: widget.job.id,
-                      traderId: widget.job.traderId,
-                      clientId: widget.job.clientId,
+                      name: widget.quote.job.title,
+                      jobId: widget.quote.job.id,
+                      traderId: widget.quote.job.traderId,
+                      clientId: widget.quote.job.clientId,
                     ),
                     messages: state.messages,
                   );

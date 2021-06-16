@@ -21,6 +21,7 @@ import '../blocs/tag_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:path/path.dart';
 import 'package:path_provider/path_provider.dart';
+import 'package:local_people_core/profile.dart';
 
 class JobCreateScreen extends StatefulWidget {
   @override
@@ -281,7 +282,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
 
     return Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
-      color: Colors.white,
+      color: Color.fromRGBO(239, 244, 246, 1),
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
@@ -296,7 +297,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
           ),
           SizedBox(height: 10.0),
           Container(
-            color: Color.fromRGBO(239, 244, 246, 1),
+            color: Colors.white,
             //padding: EdgeInsets.only(left: 12.0, right: 12.0),
             child: EnsureVisibleWhenFocused(
               focusNode: _focusNodeJobGategory,
@@ -312,6 +313,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                     textCapitalization: TextCapitalization.words,
                     inputDecoration: InputDecoration(
                       labelText: 'Add Job Category',
+                      floatingLabelBehavior: FloatingLabelBehavior.never,
                     ),
                     hintText: '',
                     constraintSuggestion: true,
@@ -323,10 +325,17 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                     onSubmitted: (val) {
                       // Add item to the data source.
                       setState(() {
+                        int index = objTags.indexWhere((tag) =>
+                          tag.compareTo(val.toLowerCase()) == 0 ? true : false);
                         // required
-                        var result = objTags.where((tag) =>
-                            tag.name.toLowerCase().contains(val.toLowerCase()));
-                        if (result.length > 0) job.tags.add(result.first);
+                         //var result = objTags.where((tag) =>
+                         //tag.compareTo(val.toLowerCase()) == 0 ? true : false);
+                         //var result = List.generate(objTags.length, (index) => objTags[index].compareTo(val.toLowerCase()) == 0 ? objTags[index] : null);
+                        // if (result.length > 0) job.tags.add(result.first);
+                        bool exists = job.tags.contains(val);
+                        if (exists == false && index >= 0) {
+                          job.tags.add(objTags.elementAt(index));
+                        }
                       });
                     },
                     onChanged: (val) {}
@@ -345,7 +354,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                     index: index,
                     // required
                     title: item.name,
-                    //active: item.active,
+                    active: true,
                     //customData: item.customData,
                     pressEnabled: true,
                     color: Color.fromRGBO(196, 196, 196, 1),
@@ -391,7 +400,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
           ),
           SizedBox(height: 10.0),
           TagsViewWidget(
-            tagBackgroundColor: Color.fromRGBO(239, 244, 246, 1),
+            //tagBackgroundColor: Color.fromRGBO(239, 244, 246, 1),
             tags: objTags,
           ),
         ],
@@ -417,20 +426,20 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
   }
 
   Widget buildBody(BuildContext context) {
-    // try {
-    //   List<Tag> tags = sl<List<Tag>>();
-    //   if (tags == null) {
-    //     context.read<TagBloc>().add(LoadTagsEvent());
-    //   }
-    //   else {
-    //     objTags = tags;
-    //     currentTags = List.generate(objTags.length, (index) => objTags[index].name);
-    //     return buildFormBody(context);
-    //   }
-    // } catch(e) {
-    //   print(e.toString());
-    //   context.read<TagBloc>().add(LoadTagsEvent());
-    // }
+    try {
+      List<Tag> tags = sl<List<Tag>>();
+      if (tags == null || tags.length == 0) {
+        context.read<TagBloc>().add(LoadTagsEvent());
+      }
+      else {
+        objTags = tags;
+        currentTags = List.generate(objTags.length, (index) => objTags[index].name);
+        return buildFormBody(context);
+      }
+    } catch(e) {
+      print(e.toString());
+      context.read<TagBloc>().add(LoadTagsEvent());
+    }
 
     context.read<TagBloc>().add(LoadTagsEvent());
     return BlocProvider.value(
@@ -448,7 +457,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
           buildWhen: (previous, current) {
             // return true/false to determine whether or not
             // to rebuild the widget with state
-            if (objTags != null)
+            if (objTags != null && objTags.length > 0)
               return false;
 
             try {
@@ -517,7 +526,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
 
     final locationFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
-      color: Colors.white,
+      color: Color.fromRGBO(239, 244, 246, 1),
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
@@ -532,7 +541,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
           ),
           SizedBox(height: 10.0),
           Container(
-            color: Color.fromRGBO(239, 244, 246, 1),
+            color: Colors.white,
             //padding: EdgeInsets.only(left: 12.0, right: 12.0),
             child: EnsureVisibleWhenFocused(
               focusNode: _focusNodeLocation,
@@ -543,8 +552,11 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                 focusNode: _focusNodeLocation,
                 style: theme.textTheme.bodyText2,
                 //controller: _locationTextController,
+                textCapitalization: TextCapitalization.words,
                 decoration: InputDecoration(
                   labelText: LocalPeopleLocalizations.of(context).titleAreaName,
+                  //hasFloatingPlaceholder: false,
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
                 ),
                 onChanged: (value) {
                   if (value.isNotEmpty) {
@@ -646,7 +658,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
     final jobCategoryFormEntry = buildJobCategoryFormEntry(context);
     final jobDescriptionFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
-      color: Colors.white,
+      color: Color.fromRGBO(239, 244, 246, 1),
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
@@ -661,7 +673,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
           ),
           SizedBox(height: 10.0),
           Container(
-            color: Color.fromRGBO(239, 244, 246, 1),
+            color: Colors.white,
             height: 200,
             //padding: EdgeInsets.only(left: 12.0, right: 12.0),
             child: EnsureVisibleWhenFocused(
@@ -669,6 +681,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
               child: FormBuilderTextField(
                 autovalidateMode: AutovalidateMode.disabled,
                 name: 'description',
+                textAlignVertical: TextAlignVertical.top,
                 focusNode: _focusNodeJobDesc,
                 expands: true,
                 minLines: null,
@@ -677,6 +690,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                 style: theme.textTheme.bodyText2,
                 decoration: InputDecoration(
                   labelText: 'Job Description',
+                  floatingLabelBehavior: FloatingLabelBehavior.never,
                 ),
                 onChanged: (val) {
                   if (val.isNotEmpty) {
@@ -706,7 +720,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
             ),
           ),
           Container(
-            color: Color.fromRGBO(239, 244, 246, 1),
+            color: Colors.white,
             child: FormBuilderImagePicker(
               name: 'images',
               initialValue: [],
@@ -718,7 +732,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
               previewMargin: EdgeInsets.only(right: 8.0),
               decoration: InputDecoration(
                   //labelText: 'Attach Photos'
-                  ),
+              ),
               maxImages: maxImages,
               validator: FormBuilderValidators.compose([
                 //FormBuilderValidators.required(context),
@@ -799,12 +813,12 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
 
     final budgetFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
-      color: Colors.white,
+      color: Color.fromRGBO(239, 244, 246, 1),
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           SizedBox(height: 30.0),
           Flex(
@@ -819,7 +833,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                 ),
                 SizedBox(height: 10.0),
                 Container(
-                  color: Color.fromRGBO(239, 244, 246, 1),
+                  color: Colors.white,
                   //padding: EdgeInsets.only(left: 12.0, right: 12.0),
                   width: size.width / 2,
                   child: EnsureVisibleWhenFocused(
@@ -831,6 +845,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                       style: theme.textTheme.bodyText2,
                       decoration: InputDecoration(
                         labelText: 'Amount',
+                        floatingLabelBehavior: FloatingLabelBehavior.never,
                       ),
                       onChanged: (val) {
                         if (val.isNotEmpty) {
@@ -862,6 +877,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                   ),
                 ),
               ]),
+          SizedBox(height: 30.0),
         ],
       ),
     );
@@ -1107,14 +1123,18 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
 
     final postEditsFormEntry = Container(
       //padding: EdgeInsets.only(left: 20, right: 20.0),
-      color: Colors.white,
+      //color: Colors.white,
+      decoration: BoxDecoration(
+          border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 5),
+          borderRadius: BorderRadius.circular(8.0),
+          color: Colors.white,),
       child: Flex(
         direction: Axis.vertical,
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: <Widget>[
-          SizedBox(height: 30.0),
+          SizedBox(height: 10.0),
           Container(
             //color: Colors.white,
             padding: EdgeInsets.all(12.0),
@@ -1186,7 +1206,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                         ),
                       ],
                     )),
-                SizedBox(height: 30.0),
+                SizedBox(height: 10.0),
               ],
             ),
           ),
@@ -1212,6 +1232,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
               budgetFormEntry,
               requestedTimeFrameFormEntry,
               timeToRespondFormEntry,
+              SizedBox(height: 30.0),
               postEditsFormEntry,
             ],
           ),
@@ -1246,20 +1267,29 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
       });
 
       String url = '';
-      var urls = selectedLocation.photos[0].htmlAttributions.where((attr) => attr.toLowerCase().contains('http'.toLowerCase()));
-      if (urls.length > 0) {
-        url = urls.first.replaceAll('<a href=\"', '');
-        int last = url.indexOf('"');
-        url = url.substring(0, last);
+      if (selectedLocation != null && selectedLocation.photos != null) {
+        try {
+          var urls = selectedLocation.photos[0].htmlAttributions.where((attr) => attr.toLowerCase().contains('http'.toLowerCase()));
+          if (urls.length > 0) {
+            url = urls.first.replaceAll('<a href=\"', '');
+            int last = url.indexOf('"');
+            url = url.substring(0, last);
+          }
+        } catch(e) {
+        }
       }
-      job.location = loc.Location(
-        id: 0,
-        name: _formKey.currentState.value['location'],
-        lat: selectedLocation.geometry.location.lat,
-        long: selectedLocation.geometry.location.lng,
-        address: selectedLocation.formattedAddress,
-        photoUrl: url.length > 0 ? url : '',
-      );
+
+      if (selectedLocation != null) {
+        job.location = loc.Location(
+          id: 0,
+          name: _formKey.currentState.value['location'],
+          lat: selectedLocation.geometry.location.lat,
+          long: selectedLocation.geometry.location.lng,
+          address: selectedLocation.formattedAddress,
+          photoUrl: url.length > 0 ? url : '',
+        );
+      }
+
       job.description = _formKey.currentState.value['description'];
       job.title = _formKey.currentState.value['description'];
       //job.tags = [_formKey.currentState.value['category']];
@@ -1277,8 +1307,15 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
       job.minutesLeft = 120;
       job.preview = _formKey.currentState.value['description'];
       //job.images = _formKey.currentState.value['images'].cast<File>();
-      // TODO: Ruel
-      job.clientId = 1;
+      try {
+        ClientProfile clientProfile = sl<ClientProfile>();
+        if (clientProfile != null) {
+          job.clientId = clientProfile.id;
+          job.location.clientId = clientProfile.id;
+        }
+      } catch (e) {
+        print(e.toString());
+      }
 
       //print(job);
       //ScaffoldMessenger.of(context)

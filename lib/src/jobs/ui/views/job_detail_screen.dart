@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
 import 'package:local_people_core/auth.dart';
 import 'package:local_people_core/messages.dart';
+import 'package:local_people_core/profile.dart';
 
 import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
@@ -9,14 +10,17 @@ import '../widgets/job_view_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 import '../widgets/job_bid_actions_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class JobDetailScreen extends StatefulWidget {
-  JobDetailScreen({
-    Key key,
-    @required this.job,
-  }) : super(key: key);
+  JobDetailScreen(
+      {Key key,
+      @required this.job,
+      this.appBarPreferredSize = const Size.fromHeight(180.0)})
+      : super(key: key);
 
   final Job job;
+  final Size appBarPreferredSize;
 
   @override
   _JobDetailScreenState createState() => _JobDetailScreenState();
@@ -68,73 +72,12 @@ class _JobDetailScreenState extends State<JobDetailScreen>
     );
   }
 
-  AppBar buildAppBar() {
+  Widget buildAppBar() {
     final theme = Theme.of(context);
-    return AppBar(
-      /*leading: Text(
-        LocalPeopleLocalizations.of(context).menuTitleOpportunities,
-      ),*/
-      toolbarHeight: 220.0,
-      centerTitle: false,
-      titleSpacing: 0,
-      title: Container(
-        padding: EdgeInsets.only(bottom: 12.0),
-        child: Flex(
-          direction: Axis.horizontal,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.stretch,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Flex(
-                direction: Axis.vertical,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  CircleAvatar(
-                    backgroundColor: Color.fromRGBO(255, 166, 0, 1),
-                    radius: 15,
-                    child: Center(
-                        child: Image.asset(
-                      'packages/local_people_core/assets/images/package-icon.png',
-                      fit: BoxFit.contain,
-                      height: 19,
-                      width: 19,
-                    )),
-                  ),
-                  Text(
-                    // (widget.job.minutesLeft / 60).toString() + ' hrs left',
-                    widget.job.minutesLeft.toString() + ' hrs left',
-                    textAlign: TextAlign.center,
-                    style: theme.textTheme.overline,
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Flex(
-                direction: Axis.vertical,
-                mainAxisSize: MainAxisSize.max,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: <Widget>[
-                  Text(
-                    widget.job.title != null
-                        ? widget.job.title
-                        : widget.job.description,
-                    textAlign: TextAlign.left,
-                    style: theme.textTheme.headline6,
-                    maxLines: 2,
-                  ),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      elevation: 0.0,
+    final Size size = MediaQuery.of(context).size;
+    return LocalPeopleAppBarWidget(
+      title: widget.job.title != null ? widget.job.title : widget.job.description,
+      startrDateTime: widget.job.date,
       bottom: TabBar(
         controller: _controller,
         //unselectedLabelColor: Color.fromRGBO(239, 244, 246, 1), //theme.primaryColor,
@@ -164,7 +107,104 @@ class _JobDetailScreenState extends State<JobDetailScreen>
           ),
         ],
       ),
-    );
+    ); //
+    // return PreferredSize(
+    //     preferredSize: widget.appBarPreferredSize,
+    //     child: AppBar(
+    //     titleSpacing: 0,
+    //     centerTitle: false,
+    //     //automaticallyImplyLeading: false,
+    //     flexibleSpace: PreferredSize(
+    //       preferredSize: Size(size.width, widget.appBarPreferredSize.height),
+    //       child: Flex(
+    //         direction: Axis.horizontal,
+    //         mainAxisSize: MainAxisSize.max,
+    //         mainAxisAlignment: MainAxisAlignment.start,
+    //         crossAxisAlignment: CrossAxisAlignment.center,
+    //         children: [
+    //           Flex(
+    //             direction: Axis.vertical,
+    //             mainAxisSize: MainAxisSize.max,
+    //             mainAxisAlignment: MainAxisAlignment.center,
+    //             crossAxisAlignment: CrossAxisAlignment.center,
+    //             children: [
+    //               // Container(
+    //               //   child: Align(
+    //               //     alignment: Alignment.center,
+    //               //     child: BackButton(),
+    //               //   ),
+    //               // ),
+    //               Container(
+    //                 child: ClipOval(
+    //                   child: SvgPicture.asset(
+    //                     'packages/local_people_core/assets/images/package-orange.svg',
+    //                     fit: BoxFit.contain,
+    //                     height: 37,
+    //                     width: 37,
+    //                   ),
+    //                 ),
+    //               ),
+    //               Container(
+    //                 child: Text(
+    //                   widget.job.minutesLeft.toString() + ' hrs left',
+    //                   textAlign: TextAlign.center,
+    //                   style: theme.textTheme.overline,
+    //                 ),
+    //               ),
+    //             ],
+    //           ),
+    //           Expanded(
+    //             flex: 3,
+    //             child: Column(
+    //               mainAxisSize: MainAxisSize.max,
+    //               mainAxisAlignment: MainAxisAlignment.center,
+    //               crossAxisAlignment: CrossAxisAlignment.stretch,
+    //               children: [
+    //                 Text(
+    //                   widget.job.title != null
+    //                       ? widget.job.title
+    //                       : widget.job.description,
+    //                   style: theme.textTheme.headline6,
+    //                   maxLines: 2,
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //       ],
+    //       ),
+    //     ),
+    //     elevation: 0.0,
+    //     bottom: TabBar(
+    //       controller: _controller,
+    //       //unselectedLabelColor: Color.fromRGBO(239, 244, 246, 1), //theme.primaryColor,
+    //       indicatorSize: TabBarIndicatorSize.tab,
+    //       //indicatorColor: Color.fromRGBO(239, 244, 246, 1),
+    //       indicator: BoxDecoration(
+    //           borderRadius: BorderRadius.circular(5),
+    //           color: Color.fromRGBO(239, 244, 246, 1)),
+    //       tabs: [
+    //         Tab(
+    //           child: Align(
+    //             alignment: Alignment.center,
+    //             child: Text(
+    //               "DETAILS",
+    //               style: theme.textTheme.bodyText2,
+    //             ),
+    //           ),
+    //         ),
+    //         Tab(
+    //           child: Align(
+    //             alignment: Alignment.center,
+    //             child: Text(
+    //               "MESSAGES",
+    //               style: theme.textTheme.bodyText2,
+    //             ),
+    //           ),
+    //         ),
+    //       ],
+    //     ),
+    //   ),
+    // );
   }
 
   Widget buildBody(BuildContext context) {
@@ -174,20 +214,20 @@ class _JobDetailScreenState extends State<JobDetailScreen>
       child: TabBarView(
         controller: _controller,
         children: <Widget>[
-    //   SnappingSheet(
-    //   // TODO: Add your content that is placed
-    //   // behind the sheet. (Can be left empty)
-    //   child: MyOwnPageContent(),
-    //   grabbingHeight: 75,
-    //   // TODO: Add your grabbing widget here,
-    //   grabbing: MyOwnGrabbingWidget(),
-    //   sheetBelow: SnappingSheetContent(
-    //     draggable: true,
-    //     // TODO: Add your sheet content here
-    //     child: MyOwnSheetContent(),
-    //   ),
-    // ),
-    // );
+          //   SnappingSheet(
+          //   // TODO: Add your content that is placed
+          //   // behind the sheet. (Can be left empty)
+          //   child: MyOwnPageContent(),
+          //   grabbingHeight: 75,
+          //   // TODO: Add your grabbing widget here,
+          //   grabbing: MyOwnGrabbingWidget(),
+          //   sheetBelow: SnappingSheetContent(
+          //     draggable: true,
+          //     // TODO: Add your sheet content here
+          //     child: MyOwnSheetContent(),
+          //   ),
+          // ),
+          // );
           SingleChildScrollView(
             child: Container(
               margin: EdgeInsets.all(12.0),
@@ -204,18 +244,21 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                   PostedByWidget(
                     clientId: widget.job.clientId,
                   ),
-                  Container (
+                  Container(
                     color: Colors.white,
                     child: ElevatedButton(
-                        onPressed: () {},
+                        onPressed: () {_sendMessage(context);},
                         child: Text(
-                          LocalPeopleLocalizations.of(context).btnTitleSendMesssage,
-                          style: theme.textTheme.button.copyWith(color: Colors.white),
-                        )
-                    ),
+                          LocalPeopleLocalizations.of(context)
+                              .btnTitleSendMesssage,
+                          style: theme.textTheme.button
+                              .copyWith(color: Colors.white),
+                        )),
                   ),
                   SizedBox(height: 40.0),
-                  JobBidActionsWidget(job: widget.job,),
+                  JobBidActionsWidget(
+                    job: widget.job,
+                  ),
                   //SizedBox(height: 5.0),
                 ],
               ),
@@ -252,6 +295,44 @@ class _JobDetailScreenState extends State<JobDetailScreen>
             ),
           ),
         ],
+      ),
+    );
+  }
+
+  void _sendMessage(BuildContext context) {
+    int userId = 0;
+    String photo = '';
+    final appType = AppConfig.of(context).appType;
+    try {
+      if (appType == AppType.CLIENT) {
+        ClientProfile clientProfile = sl<ClientProfile>();
+        if (clientProfile  != null) {
+          userId = clientProfile.id;
+          photo = clientProfile.photo;
+        }
+      } else {
+        TraderProfile traderProfile = sl<TraderProfile>();
+        if (traderProfile != null) {
+          userId = traderProfile.id;
+          photo = traderProfile.photo;
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+
+    MessageBox messageBox = new MessageBox(
+      name: widget.job.title,
+      jobId: widget.job.id,
+      traderId: (appType == AppType.TRADER ? userId : widget.job.traderId),
+      clientId: (appType == AppType.CLIENT ? userId : widget.job.clientId),
+      senderId: userId,
+      image: photo,
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MessagesScreen(messageBox: messageBox,),
       ),
     );
   }

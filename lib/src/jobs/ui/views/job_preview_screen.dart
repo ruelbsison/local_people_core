@@ -10,6 +10,9 @@ import 'package:local_people_core/auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:snapping_sheet/snapping_sheet.dart';
 import '../widgets/post_actions_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:overlay_dialog/overlay_dialog.dart';
+import 'package:local_people_core/quote.dart';
 
 class JobPreviewScreen extends StatefulWidget {
   JobPreviewScreen({
@@ -49,37 +52,37 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
 
   @override
   Widget build(BuildContext context) {
-    // return Scaffold(
-    //   //appBar: buildAppBar(context),
-    //   appBar: buildAppBar(context),
-    //   //body: buildTabBody(context),
-    //   //body: buildTabBody(context),
-    //   body: buildBody(context),
-    //   // body: BlocProvider.value(
-    //   //   value: BlocProvider.of<JobFormBloc>(context),
-    //   //   child: buildBody(),
-    //   // ),
-    // );
-    //
-    // //return buildBody(context);
     return Scaffold(
+      //appBar: buildAppBar(context),
       appBar: buildAppBar(context),
-      body: SnappingSheet(
-        // TODO: Add your content that is placed
-        // behind the sheet. (Can be left empty)
-        child: buildBody(context),
-        grabbingHeight: 140,
-        grabbing: DefaultGrabbing(),
-        sheetBelow: SnappingSheetContent(
-          // Pass in the scroll controller here!
-          //childScrollController: _myScrollController,
-          draggable: true,
-          // TODO: Add your sheet content here
-          child: PostActionsWidget(job: widget.job,),
-        ),
-      ),
+      //body: buildTabBody(context),
+      //body: buildTabBody(context),
+      body: buildBody(context),
+      // body: BlocProvider.value(
+      //   value: BlocProvider.of<JobFormBloc>(context),
+      //   child: buildBody(),
+      // ),
     );
-  }
+
+    // //return buildBody(context);
+  //   return Scaffold(
+  //     appBar: buildAppBar(context),
+  //     body: SnappingSheet(
+  //       // TODO: Add your content that is placed
+  //       // behind the sheet. (Can be left empty)
+  //       child: buildBody(context),
+  //       grabbingHeight: 140,
+  //       grabbing: DefaultGrabbing(),
+  //       sheetBelow: SnappingSheetContent(
+  //         // Pass in the scroll controller here!
+  //         //childScrollController: _myScrollController,
+  //         draggable: true,
+  //         // TODO: Add your sheet content here
+  //         child: PostActionsWidget(job: widget.job,),
+  //       ),
+  //     ),
+  //   );
+   }
 
   Widget buildAppBar(BuildContext context) {
     //}BuildContext context) {
@@ -124,95 +127,10 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
 
   Widget buildAppBarContent(BuildContext context) {
     final theme = Theme.of(context);
-    return AppBar(
-      toolbarHeight: 220.0,
-      centerTitle: false,
-      titleSpacing: 0,
-      title: Column(
-        //padding: EdgeInsets.only(bottom: 12.0),
-        //child: Flex(
-        children: <Widget>[
-          SizedBox(height: 60.0),
-          Flex(
-            direction: Axis.horizontal,
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: <Widget>[
-              Expanded(
-                flex: 1,
-                child: Flex(
-                  direction: Axis.vertical,
-                  crossAxisAlignment: CrossAxisAlignment.stretch,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    CircleAvatar(
-                      backgroundColor: Color.fromRGBO(255, 166, 0, 1),
-                      radius: 15,
-                      child: CachedNetworkImage(
-                        imageUrl: widget.profile.photo,
-                        placeholder: (context, url) => LoadingWidget(
-                          isImage: true,
-                        ),
-                        errorWidget: (context, url, error) => Image.asset(
-                          'packages/local_people_core/assets/images/local-people-logo.png',
-                          fit: BoxFit.cover,
-                        ),
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    Text(
-                      // (widget.job.minutesLeft / 60).toString() + ' hrs left',
-                      //widget.job.minutesLeft.toString() + ' hrs left',
-                      DateFormatUtil.getDateTimeDiff(
-                          DateTime.now(), widget.job.date),
-                      textAlign: TextAlign.center,
-                      style: TextStyle(
-                          color: Color.fromRGBO(0, 63, 92, 1),
-                          fontSize: 10,
-                          fontWeight: FontWeight.w500,
-                          fontFamily: 'RedHatDisplay'),
-                    ),
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 4,
-                child: Flex(
-                  direction: Axis.vertical,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  children: <Widget>[
-                    //Expanded(
-                    //  flex: 2,
-                    //child: Text(
-                    Text(
-                      widget.job.title != null
-                          ? widget.job.title
-                          : widget.job.description,
-                      textAlign: TextAlign.left,
-                      style: theme.textTheme.headline6,
-                    ),
-                    //),
-                    //Expanded(
-                    //  flex: 1,
-                    //child: Text(
-                    Text(
-                      (widget.profile.fullName != null
-                          ? widget.profile.fullName
-                          : 'Client Full Name'),
-                      textAlign: TextAlign.left,
-                      style: theme.textTheme.bodyText1,
-                    ),
-                    //),
-                  ],
-                ),
-              ),
-            ],
-          ),
-        ],
-      ),
-      elevation: 0.0,
+    return LocalPeopleAppBarWidget(
+      title: widget.job.title != null ? widget.job.title : widget.job.description,
+      startrDateTime: widget.job.date,
+      packageSvgAssetIcon: 'packages/local_people_core/assets/images/package-grey.svg',
       bottom: TabBar(
         controller: _controller,
         //unselectedLabelColor: Color.fromRGBO(239, 244, 246, 1), //theme.primaryColor,
@@ -242,30 +160,168 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
           ),
         ],
       ),
-    );
+    ); //
+    // return AppBar(
+    //   toolbarHeight: 220.0,
+    //   centerTitle: false,
+    //   titleSpacing: 0,
+    //   title: Column(
+    //     //padding: EdgeInsets.only(bottom: 12.0),
+    //     //child: Flex(
+    //     children: <Widget>[
+    //       SizedBox(height: 60.0),
+    //       Flex(
+    //         direction: Axis.horizontal,
+    //         mainAxisSize: MainAxisSize.max,
+    //         mainAxisAlignment: MainAxisAlignment.start,
+    //         crossAxisAlignment: CrossAxisAlignment.start,
+    //         children: <Widget>[
+    //           Expanded(
+    //             flex: 1,
+    //             child: Flex(
+    //               direction: Axis.vertical,
+    //               crossAxisAlignment: CrossAxisAlignment.stretch,
+    //               mainAxisAlignment: MainAxisAlignment.start,
+    //               children: <Widget>[
+    //                 CircleAvatar(
+    //                   backgroundColor: Color.fromRGBO(255, 166, 0, 1),
+    //                   radius: 15,
+    //                   child: CachedNetworkImage(
+    //                     imageUrl: widget.profile.photo,
+    //                     placeholder: (context, url) => LoadingWidget(
+    //                       isImage: true,
+    //                     ),
+    //                     errorWidget: (context, url, error) => Image.asset(
+    //                       'packages/local_people_core/assets/images/local-people-logo.png',
+    //                       fit: BoxFit.cover,
+    //                     ),
+    //                     fit: BoxFit.cover,
+    //                   ),
+    //                 ),
+    //                 Text(
+    //                   // (widget.job.minutesLeft / 60).toString() + ' hrs left',
+    //                   //widget.job.minutesLeft.toString() + ' hrs left',
+    //                   DateFormatUtil.getDateTimeDiff(
+    //                       DateTime.now(), widget.job.date),
+    //                   textAlign: TextAlign.center,
+    //                   style: TextStyle(
+    //                       color: Color.fromRGBO(0, 63, 92, 1),
+    //                       fontSize: 10,
+    //                       fontWeight: FontWeight.w500,
+    //                       fontFamily: 'RedHatDisplay'),
+    //                 ),
+    //               ],
+    //             ),
+    //           ),
+    //           Expanded(
+    //             flex: 4,
+    //             child: Flex(
+    //               direction: Axis.vertical,
+    //               crossAxisAlignment: CrossAxisAlignment.start,
+    //               mainAxisAlignment: MainAxisAlignment.start,
+    //               children: <Widget>[
+    //                 //Expanded(
+    //                 //  flex: 2,
+    //                 //child: Text(
+    //                 Text(
+    //                   widget.job.title != null
+    //                       ? widget.job.title
+    //                       : widget.job.description,
+    //                   textAlign: TextAlign.left,
+    //                   style: theme.textTheme.headline6,
+    //                 ),
+    //                 //),
+    //                 //Expanded(
+    //                 //  flex: 1,
+    //                 //child: Text(
+    //                 Text(
+    //                   (widget.profile.fullName != null
+    //                       ? widget.profile.fullName
+    //                       : 'Client Full Name'),
+    //                   textAlign: TextAlign.left,
+    //                   style: theme.textTheme.bodyText1,
+    //                 ),
+    //                 //),
+    //               ],
+    //             ),
+    //           ),
+    //         ],
+    //       ),
+    //     ],
+    //   ),
+    //   elevation: 0.0,
+    //   bottom: TabBar(
+    //     controller: _controller,
+    //     //unselectedLabelColor: Color.fromRGBO(239, 244, 246, 1), //theme.primaryColor,
+    //     indicatorSize: TabBarIndicatorSize.tab,
+    //     //indicatorColor: Color.fromRGBO(239, 244, 246, 1),
+    //     indicator: BoxDecoration(
+    //         borderRadius: BorderRadius.circular(5),
+    //         color: Color.fromRGBO(239, 244, 246, 1)),
+    //     tabs: [
+    //       Tab(
+    //         child: Align(
+    //           alignment: Alignment.center,
+    //           child: Text(
+    //             "DETAILS",
+    //             style: theme.textTheme.bodyText2,
+    //           ),
+    //         ),
+    //       ),
+    //       Tab(
+    //         child: Align(
+    //           alignment: Alignment.center,
+    //           child: Text(
+    //             "BIDS",
+    //             style: theme.textTheme.bodyText2,
+    //           ),
+    //         ),
+    //       ),
+    //     ],
+    //   ),
+    // );
   }
 
+  void _showProgressDialog(DialogService _dialogService) async {
+    StatusDialogResponse dialogResult = await _dialogService.showStatusDialog(
+      title: 'Post Job',
+      message: 'Job Posting...',
+    );
+    if (dialogResult.status == StatusDialogStatus.SUCCESSFUL) {
+      Future
+          .delayed(Duration(seconds: 5))
+          .then((_) => _dialogService.successfulStatusDialogComplete());
+      await _dialogService.showSuccessfulStatusDialog(message: 'Job Posted Successfully!');
+      Navigator.of(context).popUntil(ModalRoute.withName('/'));
+    } else {
+      Future
+          .delayed(Duration(seconds: 5))
+          .then((_) => _dialogService.errorStatusDialogComplete());
+      await _dialogService.showErrorStatusDialog(message: 'Job Post Failed!');
+    }
+  }
+  
   Widget buildBody(BuildContext context) {
     //BuildContext context) {
+    DialogService _dialogService = sl<DialogService>();
     return BlocProvider.value(
       value: BlocProvider.of<JobFormBloc>(context),
       child: BlocListener<JobFormBloc, JobFormState>(
         listener: (context, state) {
-          if (state is JobFormState) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          } else if (state is JobFormPostCompleted) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            // showDialog<void>(
-            //   context: context,
-            //   builder: (_) => SuccessDialog(context),
-            // );
-            Navigator.of(context).popUntil(ModalRoute.withName('/'));
-          } else if (state is JobFormPosting) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                const SnackBar(content: Text('Job Posting...')),
-              );
+          if (state is JobFormPostCompleted) {
+            _dialogService.statusDialogComplete(
+                StatusDialogResponse(
+                    status: StatusDialogStatus.SUCCESSFUL
+                )
+            );
+          } else if (state is JobFormPostFailed){
+            _dialogService.statusDialogComplete(
+                StatusDialogResponse(
+                    status: StatusDialogStatus.FAILED
+                )
+            );
+          } else if (state is JobFormPosting){
+            _showProgressDialog(_dialogService);
           }
         },
         child: buildTabBody(context),
@@ -292,14 +348,13 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
                 //PostedByWidget(profile: widget.profile),
                 PostedByWidget(clientId: widget.job.clientId),
                 //SizedBox(height: 10.0),
-                //PostActionsWidget(),
-                _jobPostActions(context),
-                //SizedBox(height: 10.0),
+                PostActionsWidget(job: widget.job,),
+                //_jobPostActions(context),
+                SizedBox(height: 10.0),
               ],
             ),
           ),
-          //MessageBody(),
-          Container(),
+          QuoteBodyWidget(jobId: widget.job.id,),
         ],
       ),
     );
@@ -344,12 +399,13 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
                       backgroundColor: Color(0xbbd0d9),
                       radius: 16,
                       child: Center(
-                          child: Image.asset(
-                        'packages/local_people_core/assets/images/delete-job-icon.png',
-                        fit: BoxFit.contain,
-                        height: 25,
-                        width: 25,
-                      )),
+                        child: SvgPicture.asset(
+                          'packages/local_people_core/assets/images/dis-approved.svg',
+                          fit: BoxFit.contain,
+                          height: 25,
+                          width: 25,
+                        ),
+                      ),
                     ),
                   ),
                 ]),
@@ -360,41 +416,41 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
     );
   }
 
-  Widget SuccessDialog(BuildContext context) {
-    return Dialog(
-      shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(8),
-      ),
-      child: Padding(
-        padding: const EdgeInsets.all(8.0),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: <Widget>[
-            Row(
-              mainAxisSize: MainAxisSize.max,
-              children: <Widget>[
-                const Icon(Icons.info),
-                const Flexible(
-                  child: Padding(
-                    padding: EdgeInsets.all(10),
-                    child: Text(
-                      'Job Posted Successfully!',
-                      softWrap: true,
-                    ),
-                  ),
-                ),
-              ],
-            ),
-            ElevatedButton(
-              child: const Text('OK'),
-              onPressed: () =>
-                  Navigator.of(context).popUntil(ModalRoute.withName('/')),
-            ),
-          ],
-        ),
-      ),
-    );
-  }
+//   Widget SuccessDialog(BuildContext context) {
+//     return Dialog(
+//       shape: RoundedRectangleBorder(
+//         borderRadius: BorderRadius.circular(8),
+//       ),
+//       child: Padding(
+//         padding: const EdgeInsets.all(8.0),
+//         child: Column(
+//           mainAxisSize: MainAxisSize.min,
+//           children: <Widget>[
+//             Row(
+//               mainAxisSize: MainAxisSize.max,
+//               children: <Widget>[
+//                 const Icon(Icons.info),
+//                 const Flexible(
+//                   child: Padding(
+//                     padding: EdgeInsets.all(10),
+//                     child: Text(
+//                       'Job Posted Successfully!',
+//                       softWrap: true,
+//                     ),
+//                   ),
+//                 ),
+//               ],
+//             ),
+//             ElevatedButton(
+//               child: const Text('OK'),
+//               onPressed: () =>
+//                   Navigator.of(context).popUntil(ModalRoute.withName('/')),
+//             ),
+//           ],
+//         ),
+//       ),
+//     );
+//   }
 }
 
 /*class JobCancelButton extends StatelessWidget {
