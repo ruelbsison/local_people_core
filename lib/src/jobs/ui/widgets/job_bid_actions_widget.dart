@@ -1,8 +1,9 @@
 import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
 import '../../domain/entities/job.dart';
-import 'package:overlay_dialog/overlay_dialog.dart';
-import 'package:local_people_core/quote.dart';
+//import 'package:overlay_dialog/overlay_dialog.dart';
+//import 'package:local_people_core/quote.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class JobBidActionsWidget extends StatelessWidget {
   final Job job;
@@ -57,12 +58,12 @@ class JobBidActionsWidget extends StatelessWidget {
                       backgroundColor: Color(0xbbd0d9),
                       radius: 16,
                       child: Center (
-                          child: Image.asset(
-                            'packages/local_people_core/assets/images/delete-job-icon.png',
-                            fit: BoxFit.contain,
-                            height: 25,
-                            width: 25,
-                          )
+                        child: SvgPicture.asset(
+                          'packages/local_people_core/assets/images/dis-approved.svg',
+                          fit: BoxFit.contain,
+                          height: 25,
+                          width: 25,
+                        ),
                       ),
                     ),
                   ),
@@ -119,20 +120,23 @@ class JobBidActionsWidget extends StatelessWidget {
   }
 
   void _requestVisit(BuildContext context) {
-    DialogHelper().show(
-        context,
-        DialogWidget.custom(
-          child: RequestVisitWidget(),
-        )
-    );
+    DialogService _dialogService = sl<DialogService>();
+    // DialogHelper().show(
+    //     context,
+    //     DialogWidget.custom(
+    //       child: RequestVisitWidget(),
+    //     )
+    // );
   }
 
   void _placeBid(BuildContext context) {
-    DialogHelper().show(
-        context,
-        DialogWidget.custom(
-          child: PlaceBidWidget(),
-        )
-    );
+    DialogService _dialogService = sl<DialogService>();
+    _dialogService.showPlaceBidDialog(job: job,);
+    // DialogHelper().show(
+    //     context,
+    //     DialogWidget.custom(
+    //       child: PlaceBidWidget(job: job,),
+    //     )
+    // );
   }
 }

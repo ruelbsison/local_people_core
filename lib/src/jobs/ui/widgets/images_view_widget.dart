@@ -16,8 +16,8 @@ class ImagesViewWidget extends StatefulWidget {
 
   ImagesViewWidget(
       {@required this.images,
-      this.minTagViewHeight = 80,
-      this.maxTagViewHeight = 120,
+      this.minTagViewHeight = 870,
+      this.maxTagViewHeight = 70,
       this.tagBackgroundColor});
       // : assert(
       //       images != null,
@@ -38,13 +38,14 @@ class _ImagesViewWidgetState extends State<ImagesViewWidget> {
       itemBuilder: (BuildContext context, int index) {
         return Column(
           children: <Widget>[
-            Padding(
+            Card(
+              color: Color.fromRGBO(196, 196, 196, 1.0),
               child: InkWell(
                   child: createImage(widget.images[index]),
                   onTap: () {
                     // TODO 15: Call Add To Cart
                   }),
-              padding: EdgeInsets.all(10.0),
+              //padding: EdgeInsets.all(10.0),
             ),
           ],
         );

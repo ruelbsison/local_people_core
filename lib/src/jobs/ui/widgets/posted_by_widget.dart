@@ -6,6 +6,7 @@ import 'package:local_people_core/core.dart';
 import 'package:local_people_core/auth.dart';
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:intl/intl.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class PostedByWidget extends StatefulWidget {
   PostedByWidget({
@@ -82,8 +83,8 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                     ClipOval (
                       child: CachedNetworkImage(
                         imageUrl: profile.photo,
-                        width: 75,
-                        height: 75,
+                        width: 65,
+                        height: 65,
                         placeholder: (context, url) => LoadingWidget(
                           isImage: true,
                         ),
@@ -98,7 +99,7 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                 ),
               ),
               Expanded(
-                  flex: 5,
+                  flex: 6,
                   child: Flex(
                     direction: Axis.vertical,
                     crossAxisAlignment: CrossAxisAlignment.start,
@@ -134,25 +135,26 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                       SizedBox(height: 20.0),
                       Flex(
                         direction: Axis.horizontal,
-                        crossAxisAlignment: CrossAxisAlignment.start,
+                        crossAxisAlignment: CrossAxisAlignment.center,
                         mainAxisAlignment: MainAxisAlignment.start,
                         children: <Widget>[
                           Expanded(
                             flex: 1,
                             child: CircleAvatar(
-                              //backgroundColor: Color(0xff0075ff),
+                              backgroundColor: Color(0x00000000),
                               radius: 8,
                               child: Center(
-                                  child: Image.asset(
-                                'packages/local_people_core/assets/images/verified-icon.png',
-                                fit: BoxFit.contain,
-                                height: 15,
-                                width: 15,
-                              )),
+                                child: SvgPicture.asset(
+                                  'packages/local_people_core/assets/images/verified.svg',
+                                  fit: BoxFit.contain,
+                                  height: 15,
+                                  width: 15,
+                                ),
+                              ),
                             ),
                           ),
                           Expanded(
-                              flex: 6,
+                              flex: 7,
                               child: Flex(
                                 direction: Axis.vertical,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -164,7 +166,7 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                                             ? 'Verified'
                                             : 'Not Verified'),
                                     textAlign: TextAlign.left,
-                                    style: textTheme.bodyText1,
+                                    style: textTheme.subtitle2,
                                   ),
                                   Text(
                                     'Member since ' +
@@ -185,19 +187,20 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                           Expanded(
                             flex: 1,
                             child: CircleAvatar(
-                              //backgroundColor: Color(0xff0075ff),
+                              backgroundColor: Color(0x00000000),
                               radius: 8,
                               child: Center(
-                                  child: Image.asset(
-                                'packages/local_people_core/assets/images/verified-icon.png',
-                                fit: BoxFit.contain,
-                                height: 15,
-                                width: 15,
-                              )),
+                                child: SvgPicture.asset(
+                                  'packages/local_people_core/assets/images/verified.svg',
+                                  fit: BoxFit.contain,
+                                  height: 15,
+                                  width: 15,
+                                ),
+                              ),
                             ),
                           ),
                           Expanded(
-                              flex: 6,
+                              flex: 7,
                               child: Flex(
                                 direction: Axis.vertical,
                                 crossAxisAlignment: CrossAxisAlignment.stretch,
@@ -207,7 +210,7 @@ class _PostedByWidgetState extends State<PostedByWidget> {
                                     profile.numOfJobsPosted.toString() +
                                         ' Jobs Posted',
                                     textAlign: TextAlign.left,
-                                    style: textTheme.bodyText1,
+                                    style: textTheme.subtitle2,
                                   ),
                                   Text(
                                     profile.amountSpent.toString() +

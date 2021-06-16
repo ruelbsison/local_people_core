@@ -1,7 +1,23 @@
 import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_people_core/messages.dart';
+import '../../domain/entities/job.dart';
+import 'package:local_people_core/profile.dart';
+//import 'package:flutter_bloc/flutter_bloc.dart';
 
-class JobActionsWidget extends StatelessWidget {
+class JobActionsWidget extends StatefulWidget {
+  JobActionsWidget({
+    Key key,
+    @required this.job,
+  }) : super(key: key);
+
+  final Job job;
+
+  @override
+  _JobActionsWidgetState createState() => _JobActionsWidgetState();
+}
+class _JobActionsWidgetState extends State<JobActionsWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -43,12 +59,12 @@ class JobActionsWidget extends StatelessWidget {
                       backgroundColor: Color(0xbbd0d9),
                       radius: 16,
                       child: Center (
-                          child: Image.asset(
-                            'packages/local_people_core/assets/images/delete-job-icon.png',
-                            fit: BoxFit.contain,
-                            height: 25,
-                            width: 25,
-                          )
+                        child: SvgPicture.asset(
+                          'packages/local_people_core/assets/images/dis-approved.svg',
+                          fit: BoxFit.contain,
+                          height: 25,
+                          width: 25,
+                        ),
                       ),
                     ),
                   ),
@@ -69,7 +85,7 @@ class JobActionsWidget extends StatelessWidget {
                       padding:
                       EdgeInsets.only(left: 12.0, right: 12.0),
                       child: ElevatedButton(
-                        onPressed: _sendMessage,
+                        onPressed: () {_sendMessage(context);},
                         child: Text(
                             LocalPeopleLocalizations.of(context)
                                 .btnTitleSendMesssage,
@@ -88,7 +104,7 @@ class JobActionsWidget extends StatelessWidget {
                           primary: Color.fromRGBO(255, 99, 95, 1),
                           onPrimary: Color.fromRGBO(170, 186, 205, 1),
                         ),
-                        onPressed: _awardJob,
+                        onPressed: () {_awardJob(context);},
                         child: Text(
                             LocalPeopleLocalizations.of(context)
                                 .btnTitleAwardJob,
@@ -105,15 +121,45 @@ class JobActionsWidget extends StatelessWidget {
     );
   }
 
-  void _sendMessage() {
-    // you can write your
+  void _sendMessage(BuildContext context) {
+    int userId = 0;
+    String photo = '';
+    final appType = AppConfig.of(context).appType;
+    try {
+      if (appType == AppType.CLIENT) {
+        ClientProfile clientProfile = sl<ClientProfile>();
+        if (clientProfile  != null) {
+          userId = clientProfile.id;
+          photo = clientProfile.photo;
+        }
+      } else {
+        TraderProfile traderProfile = sl<TraderProfile>();
+        if (traderProfile != null) {
+          userId = traderProfile.id;
+          photo = traderProfile.photo;
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+    }
 
-    // own code according to
-
-    // whatever you want to submit;
+    MessageBox messageBox = new MessageBox(
+      name: widget.job.title,
+      jobId: widget.job.id,
+      traderId: (appType == AppType.TRADER ? userId : widget.job.traderId),
+      clientId: (appType == AppType.CLIENT ? userId : widget.job.clientId),
+      senderId: userId,
+      image: photo,
+    );
+    Navigator.push(
+      context,
+      MaterialPageRoute(
+        builder: (context) => MessagesScreen(messageBox: messageBox,),
+      ),
+    );
   }
 
-  void _awardJob() {
+  void _awardJob(BuildContext context) {
 
   }
 }

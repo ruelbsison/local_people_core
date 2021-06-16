@@ -56,12 +56,12 @@ class _TagWidgetState extends State<TagsViewWidget> {
     return Container(
       padding: EdgeInsets.all(4.0),
       decoration: BoxDecoration(
-        color: (widget.tagBackgroundColor == null ? Color.fromRGBO(196, 196, 196, 1) : widget.tagBackgroundColor),
+        color: (widget.tagBackgroundColor == null ? Color.fromRGBO(170, 186, 205, 1) : widget.tagBackgroundColor),
         borderRadius: BorderRadius.circular(2.0),
       ),
       child: Text(
         tagTitle,
-        style: textTheme.caption,
+        style: textTheme.overline,
       ),
     );
   }

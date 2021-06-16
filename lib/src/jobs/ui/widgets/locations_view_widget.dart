@@ -49,10 +49,11 @@ class _LocationsViewWidgetState extends State<LocationsViewWidget> {
   }
 
   Widget createLocation(int index, String locationTitle) {
+    final textTheme = Theme.of(context).textTheme;
     return Container(
       padding: EdgeInsets.all(4.0),
       decoration: BoxDecoration(
-        color: (widget.tagBackgroundColor == null ? Color.fromRGBO(239, 244, 246, 1) : widget.tagBackgroundColor),
+        color: (widget.tagBackgroundColor == null ? Color.fromRGBO(196, 196, 196, 1) : widget.tagBackgroundColor),
         borderRadius: BorderRadius.circular(2.0),
       ),
       child: Flex (
@@ -65,12 +66,7 @@ class _LocationsViewWidgetState extends State<LocationsViewWidget> {
           ),
           Text(
             locationTitle,
-            style: TextStyle(
-                color: Color.fromRGBO(0, 63, 92, 1),
-                fontSize: 10,
-                fontWeight: FontWeight.w500,
-                fontFamily: 'RedHatDisplay'
-            ),
+            style: textTheme.overline,
           ),
         ],
       ),
