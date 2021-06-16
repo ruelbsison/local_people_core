@@ -37,14 +37,15 @@ class TraderContactActions extends StatelessWidget {
                     traderId: profile.id,
                     clientId: otherProfile.id,
                     image: otherProfile.photo,
+                    senderId: otherProfile.id,
                     lastMessage:'',
                   );
-                  AppRouter.pushPage(context, MessagesScreen(messageBox: msgBox),);
+                  AppRouter.pushPage(context,
+                    MessagesScreen(messageBox: msgBox),);
                 },
                 child: Text(
-                  'Message',
-                  //LocalPeopleLocalizations.of(context)
-                  //    .btnTitleCancel,
+                  LocalPeopleLocalizations.of(context)
+                      .btnTitleSendMesssage,
                   textAlign: TextAlign.center,
                   style: theme.textTheme.button.copyWith(color: Colors.white),
                 ),
@@ -65,7 +66,9 @@ class TraderContactActions extends StatelessWidget {
                     primary: Color.fromRGBO(255, 99, 95, 1),
                     onPrimary: Color.fromRGBO(170, 186, 205, 1),
                   ),
-                  onPressed: () => {},
+                  onPressed: () {
+                    _requestQuote(context);
+                  },
                   child: Text(
                     'Request Quote',
                     //LocalPeopleLocalizations.of(context)
@@ -81,11 +84,13 @@ class TraderContactActions extends StatelessWidget {
   }
 
   void _requestQuote(BuildContext context) {
-    DialogHelper().show(
-        context,
-        DialogWidget.custom(
-          child: RequestQuoteWidget(),
-        )
-    );
+    DialogService _dialogService = sl<DialogService>();
+    _dialogService.showRequestQuoteDialog(traderId: profile.id);
+    // DialogHelper().show(
+    //     context,
+    //     DialogWidget.custom(
+    //       child: RequestQuoteWidget(),
+    //     )
+    // );
   }
 }

@@ -42,16 +42,16 @@ class _ProfileScreenState extends State<ProfileScreen> {
     return new Scaffold(
       body: new Builder(
         builder: (context) =>
-        new CustomScrollView (
-        // new SliverFab(
-        //   floatingWidget: FloatingActionButton(
-        //     onPressed: () => {},
-        //         //Scaffold.of(context).showSnackBar(
-        //         //    SnackBar(content: Text("You clicked!"))),
-        //     child: Icon(Icons.add),
-        //   ),
-        //   floatingPosition: FloatingPosition(right: 16),
-        //   expandedHeight: 256.0,
+        //new CustomScrollView (
+        new SliverFab(
+          floatingWidget: FloatingActionButton(
+            onPressed: () => {},
+                //Scaffold.of(context).showSnackBar(
+                //    SnackBar(content: Text("You clicked!"))),
+            child: Icon(Icons.add),
+          ),
+          floatingPosition: FloatingPosition(right: 16),
+          expandedHeight: 256.0,
           slivers: <Widget>[
             new SliverAppBar(
               expandedHeight: 256.0,

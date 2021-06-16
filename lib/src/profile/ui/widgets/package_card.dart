@@ -111,7 +111,7 @@ class _PackageCardState extends State<PackageCard> {
               //width: size.width - 60,
               //padding: EdgeInsets.only(left: 10),
               child: Text(
-                widget.package.cost != null ? '\$' + widget.package.cost.toString() : '',
+                widget.package.cost != null ? '£' + widget.package.cost.toString() : '',
                 style: theme.textTheme.bodyText1,
               ),
             ),

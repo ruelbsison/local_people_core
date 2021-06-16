@@ -29,7 +29,7 @@ class ProfileTraderBody extends StatefulWidget {
 
   final TraderProfile profile;
   final ClientProfile clientProfile;
-  List<Tag> tags;
+  List<Tag> tags = [];
   List<String> qualifications = [];
 
 }
@@ -38,21 +38,21 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
   @override
   Widget build(BuildContext context) {
     //return buildContent(context);
-    // try {
-    //   List<Tag> tags = sl<List<Tag>>();
-    //   if (tags == null || tags.length == 0) {
-    //     context.read<TagBloc>().add(LoadTagsEvent());
-    //   }
-    //   else {
-    //     widget.tags = tags;
-    //     widget.qualifications.addAll(List.generate(widget.tags.length, (index) => widget.tags[index].name));
-    //     return buildContent(context);
-    //   }
-    // } catch(e) {
-    //   context.read<TagBloc>().add(LoadTagsEvent());
-    //   print(e.toString());
-    // }
-    context.read<TagBloc>().add(LoadTagsEvent());
+    try {
+      List<Tag> tags = sl<List<Tag>>();
+      if (tags == null || tags.length == 0) {
+        context.read<TagBloc>().add(LoadTagsEvent());
+      }
+      else {
+        widget.tags = tags;
+        widget.qualifications.addAll(List.generate(widget.tags.length, (index) => widget.tags[index].name));
+        return buildContent(context);
+      }
+    } catch(e) {
+      context.read<TagBloc>().add(LoadTagsEvent());
+      print(e.toString());
+    }
+    //context.read<TagBloc>().add(LoadTagsEvent());
     return BlocProvider.value(
       value: BlocProvider.of<TagBloc>(context),
       child: BlocConsumer<TagBloc, TagState>(
@@ -68,7 +68,7 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
           buildWhen: (previous, current) {
             // return true/false to determine whether or not
             // to rebuild the widget with state
-            if (widget.tags != null)
+            if (widget.tags != null && widget.tags.length > 0)
               return false;
 
             try {
@@ -79,6 +79,10 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
             }
             if (previous is TagsLoading &&
                 current is TagsLoaded) {
+              return true;
+            }
+            if (previous is TagsLoading &&
+                current is LoadTagsFailed) {
               return true;
             }
             return false;
@@ -99,9 +103,13 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
               widget.qualifications.addAll(List.generate(widget.tags.length, (index) => widget.tags[index].name));
               return buildContent(context);
             } else if (state is LoadTagsFailed) {
-              return ErrorWidget('Error $state');
+              return SliverToBoxAdapter(
+                child: ErrorWidget('Error $state'),
+              );
             }
-            return LoadingWidget();
+            return SliverToBoxAdapter(
+              child: LoadingWidget(),
+            );
           }
       ),
     );
@@ -109,10 +117,10 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
 
   Widget buildContent(BuildContext context) {
     final theme = Theme.of(context);
-    Size size = MediaQuery.of(context).size;
-    //List<Widget> columnChildren = <Widget>[];
-    widget.tags = Tag.defaultTags;
-    widget.qualifications.addAll(List.generate(widget.tags.length, (index) => widget.tags[index].name));
+    //Size size = MediaQuery.of(context).size;
+    List<Widget> columnChildren = <Widget>[];
+    //widget.tags = Tag.defaultTags;
+    //widget.qualifications.addAll(List.generate(widget.tags.length, (index) => widget.tags[index].name));
     final introductionActions = Container(
       color: theme.backgroundColor,
       padding: EdgeInsets.all(12.0),
@@ -173,6 +181,8 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
     // columnChildren.add(SizedBox(height: 20));
 
     // Qualifications
+    if (widget.profile.qualifications != null && widget.profile.qualifications.length > 0)
+      widget.profile.qualifications.clear();
     if (appType == AppType.TRADER) {
       widget.profile.qualifications.forEach((qualification) {
         qualification.optionType = QualificationOptionType.REMOVE;
@@ -206,6 +216,8 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
     // }
 
     // Packages
+    if (widget.profile.packages != null && widget.profile.packages.length > 0)
+      widget.profile.packages.clear();
     if (appType == AppType.TRADER) {
       widget.profile.packages.forEach((package) {
         package.optionType = PackageOptionType.REMOVE;
@@ -226,21 +238,51 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
      // columnChildren.add(packageWidget);
      // columnChildren.add(SizedBox(height: 20));
    // }
+   //  columnChildren.add(SliverToBoxAdapter(
+   //    child: introductionActions,
+   //  ));
+   //  columnChildren.add(SliverToBoxAdapter(
+   //    child: introduction,
+   //  ));
+   //  columnChildren.add(SliverToBoxAdapter(
+   //    child: SizedBox(height: 10),
+   //  ));
+   //  columnChildren.add(SliverToBoxAdapter(
+   //    child: qualificationWidget,
+   //  ));
+   //  columnChildren.add(SliverToBoxAdapter(
+   //    child: SizedBox(height: 10),
+   //  ));
+   //  columnChildren.add(SliverToBoxAdapter(
+   //    child: packageWidget,
+   //  ));
+   //  if (appType == AppType.CLIENT) {
+   //    columnChildren.add(SliverToBoxAdapter(
+   //      child: SizedBox(height: 10),
+   //    ));
+   //    columnChildren.add(SliverToBoxAdapter(
+   //      child: traderContactOptiosn,
+   //    ));
+   //  }
+   //  columnChildren.add(SliverToBoxAdapter(
+   //    child: SizedBox(height: 20),
+   //  ));
+
+    columnChildren.add(introductionActions);
+    columnChildren.add(introduction);
+    columnChildren.add(SizedBox(height: 10));
+    columnChildren.add(qualificationWidget);
+    columnChildren.add(SizedBox(height: 10));
+    columnChildren.add(packageWidget);
+    if (appType == AppType.CLIENT) {
+      columnChildren.add(SizedBox(height: 10));
+      columnChildren.add(traderContactOptiosn);
+    }
+    columnChildren.add(SizedBox(height: 20));
 
     return SliverList(
       delegate: new SliverChildListDelegate(
-        [
-          introduction,
-        SizedBox(height: 10),
-        introductionActions,
-        SizedBox(height: 20),
-        // qualificationWidget,
-        // SizedBox(height: 20),
-        // packageWidget,
-        // SizedBox(height: 20),
-          traderContactOptiosn,
-          SizedBox(height: 20),
-        ]
+          columnChildren,
       ),
     );
   }

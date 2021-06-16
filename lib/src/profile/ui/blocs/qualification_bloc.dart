@@ -16,8 +16,10 @@ class QualificationBloc extends Bloc<QualificationEvent, QualificationState> {
   final QualificationRepository qualificationRepository;
   final AuthLocalDataSource authLocalDataSource;
 
-  QualificationBloc(@required this.qualificationRepository,
-      @required this.authLocalDataSource) : super(QualificationInitial());
+  QualificationBloc({
+    @required this.qualificationRepository,
+    @required this.authLocalDataSource,
+  }) : super(QualificationInitial());
 
   @override
   Stream<QualificationState> mapEventToState(

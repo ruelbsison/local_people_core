@@ -4,6 +4,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/qualification.dart';
 import '../blocs/qualification_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
+import 'package:local_people_core/core.dart';
 
 class QualificationCard extends StatefulWidget {
   QualificationCard({
@@ -35,14 +36,61 @@ class _QualificationCardState extends State<QualificationCard> {
     _qualificationextController.dispose();
   }
 
+  void _showProgressDialog(DialogService _dialogService) async {
+    StatusDialogResponse dialogResult = await _dialogService.showStatusDialog(
+      title: 'Qualification',
+      message: 'Adding ...',
+    );
+    if (dialogResult.status == StatusDialogStatus.SUCCESSFUL) {
+      Future
+          .delayed(Duration(seconds: 5))
+          .then((_) => _dialogService.successfulStatusDialogComplete());
+      await _dialogService.showSuccessfulStatusDialog(message: 'Added Successfully!');
+      Navigator.of(context).popUntil(ModalRoute.withName('/'));
+    } else {
+      Future
+          .delayed(Duration(seconds: 5))
+          .then((_) => _dialogService.errorStatusDialogComplete());
+      await _dialogService.showErrorStatusDialog(message: 'Add Failed!');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    DialogService _dialogService = sl<DialogService>();
+    return BlocProvider.value(
+      value: BlocProvider.of<QualificationBloc>(context),
+      child: BlocListener<QualificationBloc, QualificationState>(
+        listener: (context, state) {
+          // do stuff here based on BlocA's state
+          if (state is QualificationAdded) {
+            _dialogService.statusDialogComplete(
+                StatusDialogResponse(
+                    status: StatusDialogStatus.SUCCESSFUL
+                )
+            );
+          } else if (state is QualificationAddFailed){
+            _dialogService.statusDialogComplete(
+                StatusDialogResponse(
+                    status: StatusDialogStatus.FAILED
+                )
+            );
+          } else if (state is QualificationAdding){
+            _showProgressDialog(_dialogService);
+          }
+        },
+        child: buildBody(),
+      ),
+    );
+  }
+
+  Widget buildBody() {
     if (widget.qualification == null)
       return Container();
     if (widget.qualification.optionType == QualificationOptionType.ADD_DEFAULT) {
       return build_qualification_add_default(context);
     } else if (widget.qualification.optionType == QualificationOptionType.ADD_NEW) {
-      return build_qualification_add_new(context);
+      //return build_qualification_add_new(context);
     } else if (widget.qualification.optionType == QualificationOptionType.REMOVE) {
       return build_qualification_remove(context);
     } else if (widget.qualification.optionType == QualificationOptionType.VIEW_ONLY) {
@@ -64,12 +112,13 @@ class _QualificationCardState extends State<QualificationCard> {
           child: CircleAvatar(
             radius: 12,
             child: Center(
-                child: Image.asset(
-                  'packages/local_people_core/assets/images/verified-icon.png',
-                  fit: BoxFit.contain,
-                  height: 23,
-                  width: 23,
-                )),
+              child: SvgPicture.asset(
+                'packages/local_people_core/assets/images/verified.svg',
+                fit: BoxFit.contain,
+                height: 15,
+                width: 15,
+              ),
+            ),
           ),
         ),
         Expanded(
@@ -116,12 +165,13 @@ class _QualificationCardState extends State<QualificationCard> {
           child: CircleAvatar(
             radius: 12,
             child: Center(
-                child: Image.asset(
-                  'packages/local_people_core/assets/images/verified-icon.png',
-                  fit: BoxFit.contain,
-                  height: 23,
-                  width: 23,
-                )),
+              child: SvgPicture.asset(
+                'packages/local_people_core/assets/images/verified.svg',
+                fit: BoxFit.contain,
+                height: 15,
+                width: 15,
+              ),
+            ),
           ),
         ),
         Expanded(
@@ -144,7 +194,7 @@ class _QualificationCardState extends State<QualificationCard> {
               return ListTile(
                 //leading: Icon(Icons.cat),
                 title: Text(suggestion),
-                //subtitle: Text('\$}'),
+                //subtitle: Text('£'),
               );
             },
             onSuggestionSelected: (suggestion) {
@@ -193,12 +243,13 @@ class _QualificationCardState extends State<QualificationCard> {
           child: CircleAvatar(
             radius: 12,
             child: Center(
-                child: Image.asset(
-                  'packages/local_people_core/assets/images/verified-icon.png',
-                  fit: BoxFit.contain,
-                  height: 23,
-                  width: 23,
-                )),
+              child: SvgPicture.asset(
+                'packages/local_people_core/assets/images/verified.svg',
+                fit: BoxFit.contain,
+                height: 15,
+                width: 15,
+              ),
+            ),
           ),
         ),
         Expanded(
@@ -246,12 +297,13 @@ class _QualificationCardState extends State<QualificationCard> {
           child: CircleAvatar(
             radius: 12,
             child: Center(
-                child: Image.asset(
-                  'packages/local_people_core/assets/images/verified-icon.png',
-                  fit: BoxFit.contain,
-                  height: 23,
-                  width: 23,
-                )),
+              child: SvgPicture.asset(
+                'packages/local_people_core/assets/images/verified.svg',
+                fit: BoxFit.contain,
+                height: 15,
+                width: 15,
+              ),
+            ),
           ),
         ),
         Expanded(

@@ -162,7 +162,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield ClientProfileLoaded(response.profile);
       }
     } catch (e) {
-      yield ProfileNotLoaded(e.toString());
+      print(e.toString());
+      if (e.toString().contains(new RegExp(r'NoSuchMethodError')) == true)
+        yield ProfileDoesNotExists();
+      else
+        yield ProfileNotLoaded(e.toString());
     }
   }
 
@@ -214,7 +218,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield TraderProfileLoaded(response.profile);
       }
     } catch (e) {
-      yield ProfileNotLoaded(e.toString());
+      print(e.toString());
+      if (e.toString().contains(new RegExp(r'NoSuchMethodError')) == true)
+        yield ProfileDoesNotExists();
+      else
+        yield ProfileNotLoaded(e.toString());
     }
   }
 
