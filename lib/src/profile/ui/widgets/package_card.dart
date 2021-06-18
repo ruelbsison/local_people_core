@@ -2,15 +2,22 @@ import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
 import 'package:local_people_core/jobs.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
+
+enum PackageCallbackType {
+  ON_PACKAGE_CREATE,
+  ON_PACKAGE_REMOVE,
+}
+typedef OnPackageCallback = void Function(PackageCallbackType, Package);
 
 class PackageCard extends StatefulWidget {
-  const PackageCard({
+  PackageCard({
     Key key,
     @required this.package,
+    @required this.onPackageCallback,
   }) : super(key: key);
 
   final Package package;
+  final OnPackageCallback onPackageCallback;
 
   @override
   _PackageCardState createState() => _PackageCardState();
@@ -185,12 +192,13 @@ class _PackageCardState extends State<PackageCard> {
                 width: 24,
               ),
               iconSize: 24,
-              onPressed: () {
+              onPressed: () async {
+                if (widget.onPackageCallback == null)
+                  return;
                 if (widget.package.optionType == PackageOptionType.REMOVE) {
-                  BlocProvider.of<PackageBloc>(context)
-                      .add(PackageDeleteEvent(id: widget.package.id));
+                  widget.onPackageCallback(PackageCallbackType.ON_PACKAGE_REMOVE, widget.package);
                 } else {
-
+                  widget.onPackageCallback(PackageCallbackType.ON_PACKAGE_CREATE, widget.package);
                 }
               },
             ),

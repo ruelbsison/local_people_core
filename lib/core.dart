@@ -1,9 +1,11 @@
 library local_people_core;
 
+export './src/core/dialog/package_create_dialog.dart';
 export './src/core/dialog/status_dialog.dart';
 export './src/core/dialog/dialog_service.dart';
 export './src/core/dialog/dialog_manager.dart';
 
+export './src/core/widgets/app_dialog.dart';
 export './src/core/widgets/loading_widget.dart';
 export './src/core/widgets/custom_alert.dart';
 export './src/core/widgets/spacer_widget.dart';
@@ -25,6 +27,7 @@ export './src/core/configs/rest_api_config.dart';
 export './src/core/enum/api_request_status.dart';
 export './src/core/enum/view_state.dart';
 export './src/core/enum/app_type.dart';
+export './src/core/enum/entity_status.dart';
 
 export './src/core/utils/router.dart';
 export './src/core/utils/dialogs.dart';

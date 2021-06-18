@@ -10,7 +10,9 @@ export './src/quote/domain/entities/quote_response.dart';
 export './src/quote/domain/repositories/quote_repository.dart';
 export './src/quote/domain/repositories/quote_request_repository.dart';
 
+export './src/quote/data/datasources/quote_rest_api_client.dart';
 export './src/quote/data/datasources/quote_remote_data_source.dart';
+export './src/quote/data/datasources/quote_request_rest_api_client.dart';
 export './src/quote/data/datasources/quote_request_remote_data_source.dart';
 export './src/quote/data/datasources/quote_remote_data_source_impl.dart';
 export './src/quote/data/datasources/quote_request_remote_data_source_impl.dart';
@@ -30,3 +32,4 @@ export './src/quote/ui/widgets/place_bid_widget.dart';
 export './src/quote/ui/widgets/request_visit_widget.dart';
 export './src/quote/ui/widgets/quote_request_detail_widget.dart';
 export './src/quote/ui/widgets/request_quote_widget.dart';
+export './src/quote/ui/widgets/quote_body_widget.dart';

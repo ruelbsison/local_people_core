@@ -1,5 +1,6 @@
 import 'dart:async';
 import 'status_dialog.dart';
+import 'package_create_dialog.dart';
 import 'package:local_people_core/jobs.dart';
 
 class DialogService {
@@ -148,5 +149,32 @@ class DialogService {
   void placeBidDialogComplete() {
     _dialogPlaceBidCompleter.complete();
     _dialogPlaceBidCompleter = null;
+  }
+
+  /* --------------------------------------------------------------------------------------*/
+  Function(PackageCreateRequest) _showCreatePackageDialogListener;
+  Completer<PackageCreateResponse> _dialogCreatePackageCompleter;
+
+  /// Registers a callback function. Typically to show the dialog
+  void registerCreatePackageDialogListener(Function(PackageCreateRequest) showCreatePackageDialogListener) {
+    _showCreatePackageDialogListener = showCreatePackageDialogListener;
+  }
+
+  Future<PackageCreateResponse> showCreatePackageDialog({
+    int traderId,
+    String packageName,
+  }) {
+    _dialogCreatePackageCompleter = Completer<PackageCreateResponse>();
+    _showCreatePackageDialogListener(PackageCreateRequest(
+      traderId: traderId,
+      packageName: packageName
+    ));
+    return _dialogCreatePackageCompleter.future;
+  }
+
+  /// Completes the _dialogCompleter to resume the Future's execution call
+  void createPackageDialogComplete(PackageCreateResponse reponse) {
+    _dialogCreatePackageCompleter.complete(reponse);
+    _dialogCreatePackageCompleter = null;
   }
 }

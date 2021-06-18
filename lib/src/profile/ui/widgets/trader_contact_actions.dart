@@ -38,6 +38,7 @@ class TraderContactActions extends StatelessWidget {
                     clientId: otherProfile.id,
                     image: otherProfile.photo,
                     senderId: otherProfile.id,
+                    recipientId: profile.id,
                     lastMessage:'',
                   );
                   AppRouter.pushPage(context,

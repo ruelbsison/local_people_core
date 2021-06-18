@@ -41,3 +41,4 @@ export './src/profile/ui/widgets/profile_card.dart';
 export './src/profile/ui/views/more_screen.dart';
 export './src/profile/ui/views/profile_screen.dart';
 export './src/profile/ui/widgets/package_input.dart';
+export './src/profile/ui/widgets/package_detail_widget.dart';

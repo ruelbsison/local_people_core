@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
+import 'package:local_people_core/core.dart';
 
 enum PackageOptionType {
   VIEW_ONLY,
@@ -18,6 +19,7 @@ class Package  extends Equatable implements Comparable {
   int durationInHours;
   double cost;
   PackageOptionType optionType;
+  EntityStatus entityStatus;
 
   Package(
       {this.id,
@@ -28,11 +30,12 @@ class Package  extends Equatable implements Comparable {
       this.traderId,
       this.createdAt,
       this.updatedAt,
-      this.optionType = PackageOptionType.VIEW_ONLY});
+      this.optionType = PackageOptionType.VIEW_ONLY,
+      this.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED});
 
   @override
   List<Object> get props => [id, name, description, traderId,
-    createdAt, updatedAt, durationInHours, cost, optionType];
+    createdAt, updatedAt, durationInHours, cost, optionType, entityStatus];
 
   Package.fromJson(Map<String, dynamic> json) {
     id = json['id'];
