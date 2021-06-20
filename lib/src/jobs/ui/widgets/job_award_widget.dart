@@ -22,7 +22,8 @@ class _JobAwardWidgetState extends State<JobAwardWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
+    return SingleChildScrollView(
+        child: Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.start,
@@ -96,6 +97,6 @@ class _JobAwardWidgetState extends State<JobAwardWidget> {
           ],
         ),
       ],
-    );
+    ),);
   }
 }

@@ -146,9 +146,10 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
     MessageBox messageBox = new MessageBox(
       name: widget.job.title,
       jobId: widget.job.id,
-      traderId: (appType == AppType.TRADER ? userId : widget.job.traderId),
-      clientId: (appType == AppType.CLIENT ? userId : widget.job.clientId),
+      traderId: widget.job.traderId,
+      clientId: widget.job.clientId,
       senderId: userId,
+      recipientId: (appType == AppType.TRADER ? widget.job.clientId : widget.job.traderId),
       image: photo,
     );
     Navigator.push(
