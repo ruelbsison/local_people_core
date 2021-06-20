@@ -39,4 +39,13 @@ class LoadOpportunities extends JobEvent {}
 
 class RefreshOpportunities extends JobEvent {}
 
+class JobGetEvent extends JobEvent {
+  final int jobId;
+
+  JobGetEvent({@required this.jobId});
+
+  @override
+  List<Object> get props => [jobId];
+}
+
 

@@ -37,9 +37,9 @@ class LocationModel extends Equatable {
 
   String updated_at;
 
-  // int latitude;
-  //
-  // int longitude;
+  double latitude;
+
+  double longitude;
 
   int client_id;
 

@@ -74,32 +74,32 @@ class JobFormBloc extends Bloc<JobFormEvent, JobFormState> {
       } else if (response != null && response.exception != null) {
         yield JobFormPostFailed(response.exception.toString());
       } else if (response != null && response.job != null) {
-        if (response.job.tags != null && response.job.tags.length > 0) {
-          List<Tag> tagsWithName = [];
-          var tagIterator = job.tags.iterator;
-          while (tagIterator.moveNext()) {
-            Tag tag = tagIterator.current;
-
-            try {
-              TagResponse tagResponse = await tagRepository.showTag(tag.id);
-              if (tagResponse == null) {
-                //yield JobNotLoaded('');
-              } else if (tagResponse != null &&
-                  tagResponse.exception != null) {
-                //yield JobNotLoaded(tagListResponse.exception.toString());
-              } else if (tagResponse.tag != null) {
-                tagsWithName.add(tagResponse.tag);
-              }
-            } catch (e) {
-              print(e.toString());
-              //yield JobNotLoaded(e.toString());
-            }
-
-            if (tagsWithName.length > 0) {
-              job.tags = tagsWithName;
-            }
-          }
-        }
+        // if (response.job.tags != null && response.job.tags.length > 0) {
+        //   List<Tag> tagsWithName = [];
+        //   var tagIterator = job.tags.iterator;
+        //   while (tagIterator.moveNext()) {
+        //     Tag tag = tagIterator.current;
+        //
+        //     try {
+        //       TagResponse tagResponse = await tagRepository.showTag(tag.id);
+        //       if (tagResponse == null) {
+        //         //yield JobNotLoaded('');
+        //       } else if (tagResponse != null &&
+        //           tagResponse.exception != null) {
+        //         //yield JobNotLoaded(tagListResponse.exception.toString());
+        //       } else if (tagResponse.tag != null) {
+        //         tagsWithName.add(tagResponse.tag);
+        //       }
+        //     } catch (e) {
+        //       print(e.toString());
+        //       //yield JobNotLoaded(e.toString());
+        //     }
+        //
+        //     if (tagsWithName.length > 0) {
+        //       job.tags = tagsWithName;
+        //     }
+        //   }
+        // }
         yield JobFormPostCompleted(response.job);
       }
     } catch (e) {

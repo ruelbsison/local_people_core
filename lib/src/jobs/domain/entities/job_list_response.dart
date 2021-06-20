@@ -31,14 +31,16 @@ class JobListResponse {
         date: DateTime.parse(model.date),
         createdAt: DateTime.parse(model.created_at),
         private: model.private,
+        tags: [],
+        awarded: model.awarded,
       );
-      if (model.tag_ids != null && model.tag_ids.length > 0) {
-        Iterator tagIter = model.tag_ids.iterator;
+      if (model.tags != null && model.tags.length > 0) {
+        Iterator tagIter = model.tags.iterator;
         while(tagIter.moveNext()) {
-          int tagId = tagIter.current;
-          job.tags.add(new Tag(
-            id: tagId,
-            name: '',
+          TagModel model = tagIter.current;
+          job.tags.add(Tag(
+            id: model.id,
+            name: model.name,
           ));
         }
       }

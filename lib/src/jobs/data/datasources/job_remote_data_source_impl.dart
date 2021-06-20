@@ -93,13 +93,21 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
             .toList() // create a copy to avoid concurrent modifications
             .forEach(temp.remove); // remove selected keys
 
-        //if (job.tag_ids != null && job.tag_ids.length > 0) {
-        //  temp.addAll(Map.fromEntries(job.tag_ids.map((value) => MapEntry('tag_ids', value))));
-        //}
+        // if (job.tag_ids != null && job.tag_ids.length > 0) {
+        //   job.tag_ids.map((e) => MapEntry('tag_ids', e));
+        //    temp.addAll(Map.fromEntries(job.tag_ids.map((value) => MapEntry('tag_ids', value))));
+        // }
 
         Map<String, dynamic> map =  temp; //job.toJson();
-        print(map);
+        //print(map);
+        //map.forEach((k,v) => (v != null ? request.fields.addAll(<String, String>{k.compareTo('tag_ids') == 0 ? 'job[$k][]' : 'job[$k]' : v.toString()}) : print(k)));
         map.forEach((k,v) => (v != null ? request.fields.addAll(<String, String>{'job[$k]' : v.toString()}) : print(k)));
+        if (job.tag_ids != null && job.tag_ids.length > 0) {
+          //request.fields.addAll(Map.fromEntries(job.tag_ids.map((e) => MapEntry('job[tag_ids' + job.tag_ids.indexOf(e).toString() + '][]', e.toString()))));
+          request.fields.addAll(Map.fromEntries(job.tag_ids.map((e) => MapEntry('job[tag_ids][]', e.toString()))));
+          request.fields.remove('job[tags]');
+          request.fields.remove('job[tag_ids]');
+        }
         print(request.fields);
       }
 
@@ -127,14 +135,17 @@ class JobRemoteDataSourceImpl implements JobRemoteDataSource {
         print("Result: ${httpResponse.statusCode}");
         if (httpResponse.statusCode >= 200 && httpResponse.statusCode <= 299) {
           print("Uploaded! ");
-        }
-        if (httpResponse.body != null) {
-          print('response.body ' + httpResponse.body);
-          Map<String, dynamic> map = jsonDecode(httpResponse.body);
-          print('map ' + map.toString());
-          JobModel model = JobModel.fromJson(map);
-          print('model ' + model.toJson().toString());
-          response.jobFromModel(model);
+
+          if (httpResponse.body != null) {
+            print('response.body ' + httpResponse.body);
+            Map<String, dynamic> map = jsonDecode(httpResponse.body);
+            print('map ' + map.toString());
+            JobModel model = JobModel.fromJson(map);
+            print('model ' + model.toJson().toString());
+            response.jobFromModel(model);
+          }
+        } else {
+          response.exception = Exception("Error status code:  ${httpResponse.statusCode}");
         }
       }
 

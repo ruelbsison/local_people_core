@@ -389,7 +389,25 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
               ),
             ),
           ),
-          SizedBox(height: 20.0),
+        ],
+      ),
+    );
+  }
+
+  Widget buildJobCategorySuggestionFormEntry(BuildContext context) {
+    final theme = Theme.of(context);
+    final size = MediaQuery.of(context).size;
+
+    return Container(
+      padding: EdgeInsets.only(left: 20, right: 20.0),
+      color: Color.fromRGBO(239, 244, 246, 1),
+      child: Flex(
+        direction: Axis.vertical,
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: <Widget>[
+          SizedBox(height: 30.0),
           Container(
             color: Color.fromRGBO(239, 244, 246, 1),
             child: Text(
@@ -656,6 +674,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
 
     //final jobCategoryFormEntry = buildJobCategory(context);
     final jobCategoryFormEntry = buildJobCategoryFormEntry(context);
+    final jobCategorySuggestionFormEntry = buildJobCategorySuggestionFormEntry(context);
     final jobDescriptionFormEntry = Container(
       padding: EdgeInsets.only(left: 20, right: 20.0),
       color: Color.fromRGBO(239, 244, 246, 1),
@@ -877,7 +896,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
                   ),
                 ),
               ]),
-          SizedBox(height: 30.0),
+          //SizedBox(height: 30.0),
         ],
       ),
     );
@@ -912,7 +931,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
               });
             },
           ),
-          SizedBox(height: 30.0),
+          SizedBox(height: 20.0),
           /*Container(
                         color: Colors.white,
                         width: _requestedTimeframeCurrentSelection == 0 ? size.width : 0,
@@ -1227,10 +1246,17 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
             crossAxisAlignment: CrossAxisAlignment.start,
             children: <Widget>[
               locationFormEntry,
+              SizedBox(height: 30.0),
               jobCategoryFormEntry,
+              SizedBox(height: 30.0),
+              jobCategorySuggestionFormEntry,
+              SizedBox(height: 30.0),
               jobDescriptionFormEntry,
+              SizedBox(height: 30.0),
               budgetFormEntry,
+              SizedBox(height: 30.0),
               requestedTimeFrameFormEntry,
+              SizedBox(height: 30.0),
               timeToRespondFormEntry,
               SizedBox(height: 30.0),
               postEditsFormEntry,
@@ -1290,8 +1316,20 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
         );
       }
 
+      if (job.tags != null && job.tags.length > 0) {
+        job.title = job.tags[0].name;
+      }
+      if (job.location != null && job.location.name != null) {
+        if (job.title!= null && job.title.length > 0 ) {
+          job.title = job.title + ' - ' + job.location.name;
+        } else {
+          job.title = 'Job - ' + job.location.name;
+        }
+      }
       job.description = _formKey.currentState.value['description'];
-      job.title = _formKey.currentState.value['description'];
+      if (job.title== null || job.title.length == 0 ) {
+        job.title = _formKey.currentState.value['description'];
+      }
       //job.tags = [_formKey.currentState.value['category']];
       job.budget = _formKey.currentState.value['budget'];
       if (_requestedTimeframeCurrentSelection == 0) {
@@ -1325,9 +1363,12 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
       //Uint8List locationImageData = await getGooglePlacePhoto(selectedLocation.placeId);
       AppRouter.pushPage(
           context,
-          JobPreviewScreen(
-            job: job,
-          ));
+          DialogManager(
+            child: JobPreviewScreen(
+              job: job,
+            ),
+          ),
+      );
     } else {
       print(_formKey.currentState.value);
     }

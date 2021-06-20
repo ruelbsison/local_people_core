@@ -75,8 +75,15 @@ class _JobDetailScreenState extends State<JobDetailScreen>
   Widget buildAppBar() {
     final theme = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
+    final appCType = AppConfig.of(context).appType;
     return LocalPeopleAppBarWidget(
       title: widget.job.title != null ? widget.job.title : widget.job.description,
+      leading: Text(
+        (appCType == AppType.TRADER
+            ? LocalPeopleLocalizations.of(context).menuTitleOpportunities
+            : LocalPeopleLocalizations.of(context).menuTitleYourJobs),
+        style: theme.textTheme.caption,
+      ),
       startrDateTime: widget.job.date,
       bottom: TabBar(
         controller: _controller,
@@ -286,6 +293,8 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                       jobId: widget.job.id,
                       traderId: widget.job.traderId,
                       clientId: widget.job.clientId,
+                      senderId: appType == AppType.TRADER ? widget.job.traderId : widget.job.clientId,
+                      recipientId: appType == AppType.TRADER ? widget.job.clientId : widget.job.traderId,
                     ),
                     messages: state.messages,
                   );
@@ -324,16 +333,17 @@ class _JobDetailScreenState extends State<JobDetailScreen>
     MessageBox messageBox = new MessageBox(
       name: widget.job.title,
       jobId: widget.job.id,
-      traderId: (appType == AppType.TRADER ? userId : widget.job.traderId),
-      clientId: (appType == AppType.CLIENT ? userId : widget.job.clientId),
+      traderId: widget.job.traderId,
+      clientId: widget.job.clientId,
       senderId: userId,
+      recipientId: (appType == AppType.TRADER ? widget.job.clientId : widget.job.traderId),
       image: photo,
     );
-    Navigator.push(
-      context,
-      MaterialPageRoute(
-        builder: (context) => MessagesScreen(messageBox: messageBox,),
-      ),
+    AppRouter.pushPage(
+        context,
+      MessagesScreen(
+          messageBox: messageBox,
+        ),
     );
   }
 }

@@ -1,5 +1,6 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/job.dart';
+import 'package:meta/meta.dart';
 
 abstract class JobState extends Equatable {
   const JobState();
@@ -64,4 +65,23 @@ class OpportunitiesNotLoaded extends JobState {
   String toString() {
     return 'OpportunitiesNotLoaded{e: $e}';
   }
+}
+
+class JobGetLoading extends JobState {
+  @override
+  List<Object> get props => [];
+}
+
+class JobGetFailed extends JobState {
+  @override
+  List<Object> get props => [];
+}
+
+class JobGetLoaded extends JobState {
+  final Job job;
+
+  JobGetLoaded({@required this.job});
+
+  @override
+  List<Object> get props => [job];
 }

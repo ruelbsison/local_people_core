@@ -288,16 +288,17 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
       message: 'Job Posting...',
     );
     if (dialogResult.status == StatusDialogStatus.SUCCESSFUL) {
-      Future
-          .delayed(Duration(seconds: 5))
-          .then((_) => _dialogService.successfulStatusDialogComplete());
+      //Future
+      //    .delayed(Duration(seconds: 5))
+      //    .then((_) => _dialogService.successfulStatusDialogComplete());
       await _dialogService.showSuccessfulStatusDialog(message: 'Job Posted Successfully!');
       Navigator.of(context).popUntil(ModalRoute.withName('/'));
     } else {
-      Future
-          .delayed(Duration(seconds: 5))
-          .then((_) => _dialogService.errorStatusDialogComplete());
+      //Future
+      //    .delayed(Duration(seconds: 5))
+      //    .then((_) => _dialogService.errorStatusDialogComplete());
       await _dialogService.showErrorStatusDialog(message: 'Job Post Failed!');
+      Navigator.of(context).pop();
     }
   }
   

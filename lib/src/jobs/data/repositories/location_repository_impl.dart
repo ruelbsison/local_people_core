@@ -60,8 +60,8 @@ class LocationRepositoryImpl implements LocationRepository {
   }
 
   @override
-  Future<LocationListResponse> listJobLocations(int job_id) async {
-    LocationListResponse response = LocationListResponse();
+  Future<LocationResponse> listJobLocations(int job_id) async {
+    LocationResponse response = LocationResponse();
     if (await networkInfo.isConnected) {
       try {
         response = await locationRemoteDataSource.listJobLocations(job_id);

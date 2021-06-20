@@ -19,6 +19,8 @@ class LocationListResponse {
         jobId: model.job_id,
         clientId: model.client_id,
         traderId: model.trader_id,
+        lat: model.latitude,
+        long: model.longitude,
       );
 
       locations.add(location);

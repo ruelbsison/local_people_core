@@ -1,20 +1,10 @@
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-import 'dart:async';
 import 'package:local_people_core/core.dart';
 import '../widgets/tags_view_widget.dart';
 import '../widgets/images_view_widget.dart';
 import '../../domain/entities/job.dart';
-//import 'dart:typed_data';
-//import 'package:flutter_inappwebview/flutter_inappwebview.dart';
 import 'package:google_maps_flutter/google_maps_flutter.dart';
-//import '../blocs/tag_bloc.dart';
-//import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:google_place/google_place.dart';
-//import 'package:after_layout/after_layout.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
-import '../blocs/location_bloc.dart';
-import '../blocs/tag_bloc.dart';
 
 class JobViewWidget extends StatefulWidget {
   JobViewWidget({
@@ -23,8 +13,6 @@ class JobViewWidget extends StatefulWidget {
   }) : super(key: key);
 
   final Job job;
-
-
 
   @override
   _JobViewWidgetState createState() =>
@@ -35,8 +23,8 @@ class _JobViewWidgetState extends State<JobViewWidget> {
   //Completer<GoogleMapController> _googleMapController = Completer();
   GoogleMapController _googleMapController;
   final Set<Marker> _markers = new Set();
-  GooglePlace googlePlace;
-  List<SearchResult> googlePlaceSearchResults = [];
+  //GooglePlace googlePlace;
+  //List<SearchResult> googlePlaceSearchResults = [];
 
   LatLng _locLatLng = LatLng(45.521563, -122.677433);
   CameraPosition _cameraPosition;
@@ -45,39 +33,41 @@ class _JobViewWidgetState extends State<JobViewWidget> {
   void initState() {
     super.initState();
 
-    String apiKey =
-        'AIzaSyDas3RPqegAcudGgkX4xlykHztH1nZCfvo'; //DotEnv().env['API_KEY'];
-    googlePlace = GooglePlace(apiKey);
+    //String apiKey =
+    //    'AIzaSyDas3RPqegAcudGgkX4xlykHztH1nZCfvo'; //DotEnv().env['API_KEY'];
+    //googlePlace = GooglePlace(apiKey);
 
+    if (widget.job.location != null && widget.job.location.lat != null && widget.job.location.long != null) {
+      _locLatLng = LatLng(widget.job.location.lat, widget.job.location.long);
+    }
     _cameraPosition = CameraPosition(target: _locLatLng, zoom: 11.0);
   }
 
-  void googlePlaceTextSearch(String query) async {
-    print('query: ' + query);
-    try {
-      TextSearchResponse response = await googlePlace.search.getTextSearch(query);
-      if (response != null && response.results != null && mounted) {
-          if (response.results.length > 0) {
-            SearchResult result = response.results.first;
-            print('result.geometry.location.lat: ' + result.geometry.location.lat.toString() + ' result.geometry.location.lng: ' + result.geometry.location.lng.toString());
-            setState(() {
-             _locLatLng = LatLng(result.geometry.location.lat, result.geometry.location.lng);
-             myMarker();
-             //_cameraPosition = CameraPosition(target: LatLng(result.geometry.location.lat, result.geometry.location.lng), zoom: 11.0);
-           });
-          }
-      }
-    } catch (error) {
-      print(error.toString());
-    }
-  }
+  // void googlePlaceTextSearch(String query) async {
+  //   print('query: ' + query);
+  //   try {
+  //     TextSearchResponse response = await googlePlace.search.getTextSearch(query);
+  //     if (response != null && response.results != null && mounted) {
+  //         if (response.results.length > 0) {
+  //           SearchResult result = response.results.first;
+  //           print('result.geometry.location.lat: ' + result.geometry.location.lat.toString() + ' result.geometry.location.lng: ' + result.geometry.location.lng.toString());
+  //           setState(() {
+  //            _locLatLng = LatLng(result.geometry.location.lat, result.geometry.location.lng);
+  //            myMarker();
+  //            //_cameraPosition = CameraPosition(target: LatLng(result.geometry.location.lat, result.geometry.location.lng), zoom: 11.0);
+  //          });
+  //         }
+  //     }
+  //   } catch (error) {
+  //     print(error.toString());
+  //   }
+  // }
 
   void onMapCreated(GoogleMapController controller) {
     setState(() {
       _googleMapController = controller;
     });
-    
-    
+
   }
 
   Set<Marker> myMarker() {
@@ -190,7 +180,7 @@ class _JobViewWidgetState extends State<JobViewWidget> {
                     initialCameraPosition: _cameraPosition,
                     onMapCreated: onMapCreated,
                     mapType: MapType.normal,
-                    markers: _markers,
+                    markers: myMarker(),
                     compassEnabled: false,
                     mapToolbarEnabled: false,
                     myLocationEnabled: true,

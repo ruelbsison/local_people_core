@@ -4,6 +4,9 @@ import 'package:flutter/foundation.dart';
 import 'package:meta/meta.dart';
 import 'tag.dart';
 import 'location.dart';
+import 'package.dart';
+import 'package:local_people_core/quote.dart';
+import 'package:local_people_core/core.dart';
 
 class Job extends Object implements Comparable {
   int id;
@@ -20,6 +23,14 @@ class Job extends Object implements Comparable {
   DateTime date;
   bool private;
   DateTime createdAt;
+  EntityStatus entityStatus;
+  bool awarded;
+  bool isPosted;
+  bool isConfirmed;
+  bool isCompleted;
+  List<Quote> bids;
+  QuoteRequest quoteRequest;
+  Package package;
 
   Job({
     @required this.id,
@@ -36,6 +47,14 @@ class Job extends Object implements Comparable {
     this.date,
     this.createdAt,
     this.private = false,
+    this.awarded = false,
+    this.isPosted = true,
+    this.isConfirmed = false,
+    this.isCompleted = false,
+    this.bids = const [],
+    this.quoteRequest = null,
+    this.package = null,
+    this.entityStatus = EntityStatus.ENTIRY_STATUS_NONE,
   });
 
   @override

@@ -220,6 +220,8 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                       jobId: widget.quote.job.id,
                       traderId: widget.quote.job.traderId,
                       clientId: widget.quote.job.clientId,
+                      senderId: appType == AppType.TRADER ? widget.quote.traderId : widget.quote.job.clientId,
+                      recipientId: appType == AppType.TRADER ? widget.quote.job.clientId : widget.quote.job.traderId,
                     ),
                     messages: state.messages,
                   );

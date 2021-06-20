@@ -9,8 +9,16 @@ import '../blocs/job_state.dart';
 import '../../domain/entities/job.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/profile.dart';
+import '../views/job_detail_screen.dart';
+import '../views/job_bid_screen.dart';
 
 class JobScreen extends StatefulWidget {
+  JobScreen({
+    Key key,
+  }) : super(key: key);
+
+  List<Job> jobs = [];
+
   @override
   _JobScreenState createState() => _JobScreenState();
 }
@@ -19,6 +27,25 @@ class _JobScreenState extends State<JobScreen> {
   //Completer<void> _refreshCompleter;
   final _scrollController = ScrollController();
   //JobBloc _jobBloc;
+ final List<String> _traderFilterItem = [
+   "All",
+   "Expiry",
+   "Value",
+   "Packages",
+   "Bids",
+   "Client",
+ ];
+
+  final List<String> _clientFilterItem = [
+    "All",
+    "Posted",
+    "Bids \ Quotes",
+    "Awarded",
+    "Confirmed",
+    "Completed",
+  ];
+
+  String filterValue = 'All';
 
   @override
   void initState() {
@@ -39,6 +66,12 @@ class _JobScreenState extends State<JobScreen> {
     return Scaffold(
       appBar: AppBarWidget(
         //appBarPreferredSize: Size.fromHeight(60.0),
+          showFilter: true,
+        filterValue: filterValue,
+        filterItems: (appCType == AppType.TRADER
+            ? _traderFilterItem
+            : _clientFilterItem),
+        onFilterValueChanged: onFilterValueChanged,
         subTitle: (appCType == AppType.TRADER
             ? LocalPeopleLocalizations.of(context).menuTitleOpportunities
             : LocalPeopleLocalizations.of(context).menuTitleYourJobs),
@@ -67,6 +100,12 @@ class _JobScreenState extends State<JobScreen> {
     );
   }
 
+  void onFilterValueChanged(String value) {
+    setState(() {
+      filterValue = value;
+    });
+  }
+
   Widget buildBody(BuildContext context) {
     final appCType = AppConfig.of(context).appType;
     if (appCType == AppType.CLIENT)
@@ -78,9 +117,15 @@ class _JobScreenState extends State<JobScreen> {
       child: BlocBuilder<JobBloc, JobState>(
         builder: (context, state) {
           if (state is JobLoaded) {
-            return buildBodyList(state.jobs);
+            //setState(() {
+              widget.jobs = state.jobs;
+            //});
+            return buildBodyList(context);
           } else if (state is OpportunitiesLoaded) {
-            return buildBodyList(state.jobs);
+            //setState(() {
+              widget.jobs = state.jobs;
+            //});
+            return buildBodyList(context);
           } else if (state is JobNotLoaded) {
             return ErrorWidget('Error $state');
           }
@@ -94,8 +139,60 @@ class _JobScreenState extends State<JobScreen> {
     );
   }
 
-  Widget buildBodyList(List<Job> jobs) {
+  Widget buildBodyList(BuildContext context) {
     final appCType = AppConfig.of(context).appType;
+    List<Job> tmp = widget.jobs;
+    widget.jobs = tmp.where((job) {
+      if (filterValue.startsWith('Expiry') == true) {
+        DateTime tom = job.date.add(Duration(days: 1));
+        if (job.date != null
+            && tom.isAtSameMomentAs(DateTime.now())) {
+          return true;
+        }
+        return false;
+      } else if (filterValue.startsWith('Value') == true) {
+        return false;
+      } else if (filterValue.startsWith('Bids') == true) {
+        if (job.bids != null
+            && (job.bids.length > 0) == true) {
+          return true;
+        }
+        return false;
+      } else if (filterValue.startsWith('Packages') == true) {
+        if (job.private != null
+            && job.private == true) {
+          return true;
+        }
+        return false;
+      } else if (filterValue.startsWith('Clients') == true) {
+        return false;
+      } else if (filterValue.startsWith('Posted') == true) {
+        if (job.isPosted != null
+            && job.isPosted == true) {
+          return true;
+        }
+        return false;
+      } else if (filterValue.startsWith('Awarded') == true) {
+        if (job.awarded != null
+            && job.awarded == true) {
+          return true;
+        }
+        return false;
+      } else if (filterValue.startsWith('Confirmed') == true) {
+        if (job.isConfirmed != null
+            && job.isConfirmed == true) {
+          return true;
+        }
+        return false;
+      } else if (filterValue.startsWith('Completed') == true) {
+        if (job.isCompleted != null
+            && job.isCompleted == true) {
+          return true;
+        }
+        return false;
+      }
+      return true;
+    }).toList();
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
@@ -105,13 +202,86 @@ class _JobScreenState extends State<JobScreen> {
             context.read<JobBloc>().add(RefreshOpportunities());
         },
         child: ListView.builder(
-          itemCount: jobs.length,
-          itemBuilder: (context, index) => (appCType == AppType.TRADER
-              ? JobCard(job: jobs[index])
-              : YourJobCard(job: jobs[index])),
+          itemCount: widget.jobs.length,
+          itemBuilder: (context, index) {
+            final appCType = AppConfig.of(context).appType;
+            if (appCType == AppType.TRADER) {
+              return createJobCard(widget.jobs[index]);
+            } else {
+              return createYourJobCard(widget.jobs[index]);
+            }
+          }
         ),
       ),
     );
+  }
+
+  // Widget createJob(int index) {
+  //   widget.jobs[index].entityStatus = EntityStatus.ENTIRY_STATUS_LOADING;
+  //   BlocProvider.of<JobBloc>(context)
+  //       .add(JobGetEvent(jobId: widget.jobs[index].id));
+  //   return BlocBuilder<JobBloc, JobState>(
+  //     bloc: BlocProvider.of<JobBloc>(context),
+  //     builder: (BuildContext context, JobState state) {
+  //       final appCType = AppConfig.of(context).appType;
+  //       if (state is JobGetLoaded) {
+  //         setState(() {
+  //           widget.jobs[index] = state.job;
+  //           widget.jobs[index].entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
+  //         });
+  //         if (appCType == AppType.TRADER) {
+  //           return createJobCard(widget.jobs[index]);
+  //         } else {
+  //           return createYourJobCard(widget.jobs[index]);
+  //         }
+  //       } else if (state is JobGetFailed) {
+  //         setState(() {
+  //           widget.jobs[index] = state.job;
+  //           widget.jobs[index].entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
+  //         });
+  //
+  //         if (appCType == AppType.TRADER) {
+  //           return createJobCard(widget.jobs[index]);
+  //         } else {
+  //           return createYourJobCard(widget.jobs[index]);
+  //         }
+  //       } else {
+  //         return LoadingWidget();
+  //       }
+  //     },
+  //   );
+  // }
+
+  Widget createJobCard(Job job) {
+    return InkWell(
+        child: JobCard(job: job),
+        onTap: () {
+          AppRouter.pushPage(
+              context,
+              DialogManager(
+                child: JobDetailScreen(
+                  job: job,
+                ),
+              ));
+        }
+    );
+    //return JobCard(job: job);
+  }
+
+  Widget createYourJobCard(Job job) {
+    return InkWell(
+        child: YourJobCard(job: job),
+        onTap: () {
+          AppRouter.pushPage(
+              context,
+              DialogManager(
+                child: JobBidScreen(
+                  job: job,
+                ),
+              ));
+        }
+    );
+    return YourJobCard(job: job);
   }
 
   @override

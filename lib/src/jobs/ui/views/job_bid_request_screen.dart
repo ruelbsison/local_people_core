@@ -249,6 +249,8 @@ class _JobBidScreenState extends State<JobBidScreen>
                       jobId: widget.job.id,
                       traderId: widget.job.traderId,
                       clientId: widget.job.clientId,
+                      senderId: appType == AppType.TRADER ? widget.job.traderId : widget.job.clientId,
+                      recipientId: appType == AppType.TRADER ? widget.job.clientId : widget.job.traderId,
                     ),
                     messages: state.messages,
                   );
