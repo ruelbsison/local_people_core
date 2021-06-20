@@ -1,3 +1,5 @@
+import 'package:local_people_core/core.dart';
+
 class MessageBox implements Comparable {
   final String name, lastMessage, image, time;
   final bool isActive;
@@ -6,6 +8,8 @@ class MessageBox implements Comparable {
   final int clientId;
   final DateTime createdAt;
   int senderId;
+  int recipientId;
+  EntityStatus entityStatus;
 
   MessageBox({
     this.name,
@@ -18,6 +22,8 @@ class MessageBox implements Comparable {
     this.isActive,
     this.createdAt,
     this.senderId,
+    this.recipientId,
+    this.entityStatus = EntityStatus.ENTIRY_STATUS_NONE,
   });
 
   @override

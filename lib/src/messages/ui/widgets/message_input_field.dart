@@ -5,19 +5,27 @@ import '../blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/message.dart';
 
+typedef OnMessageSend = void Function(String);
+
 class MessageInputField extends StatefulWidget {
   MessageInputField({
     Key key,
-    this.subject,
-    this.jobId,
-    this.clientId,
-    this.traderId,
+    this.onMessageSend,
+    // this.subject,
+    // this.jobId,
+    // this.clientId,
+    // this.traderId,
+    // this.senderId,
+    // this.recepientId,
   }) : super(key: key);
 
-  final String subject;
-  final int jobId;
-  final int clientId;
-  final int traderId;
+  final OnMessageSend onMessageSend;
+  // final String subject;
+  // final int jobId;
+  // final int clientId;
+  // final int traderId;
+  // final int senderId;
+  // final int recepientId;
 
   @override
   _MessageInputFieldState createState() => _MessageInputFieldState();
@@ -91,17 +99,10 @@ class _MessageInputFieldState extends State<MessageInputField> {
                         onSubmitted: (msg) {
                           setState(() {
                             if (msg.length > 0) {
-                              _sendMessageTextController.clear();
                               _focusNodeSendMessage.requestFocus();
-                              Message message = Message(
-                                jobId: widget.jobId,
-                                clientId: widget.clientId,
-                                traderId: widget.traderId,
-                                text: msg,
-                                subject: widget.subject,
-                              );
-                              BlocProvider.of<MessageBloc>(context).add(SendMessageEvent(message: message));
-                              //context.read<MessageBloc>().add(SendMessageEvent(message: message));
+                              if (widget.onMessageSend != null)
+                                widget..onMessageSend(msg);
+                              _sendMessageTextController.clear();
                             }
                           });
                         },

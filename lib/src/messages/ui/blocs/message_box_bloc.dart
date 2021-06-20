@@ -47,6 +47,7 @@ class MessageBoxBloc extends Bloc<MessageBoxEvent, MessageBoxState> {
         response = await messageRepository.listTraderMessages(userId);
       if (response == null || response.exception != null) {
         yield LoadMessageBoxFailed();
+        return;
       } else if (response.messages != null) {
         response.messages.sort((a, b) {
           return a.compareTo(b);
@@ -82,6 +83,7 @@ class MessageBoxBloc extends Bloc<MessageBoxEvent, MessageBoxState> {
                 isActive: false,
                 createdAt: lastMessage.createdAt,
                 senderId: lastMessage.senderId,
+                recipientId: lastMessage.recipientId,
               );
               messages.add(box);
               lastMessage = message;
@@ -101,6 +103,7 @@ class MessageBoxBloc extends Bloc<MessageBoxEvent, MessageBoxState> {
             isActive: false,
             createdAt: lastMessage.createdAt,
             senderId: lastMessage.senderId,
+            recipientId: lastMessage.recipientId,
           );
           messages.add(box);
         }

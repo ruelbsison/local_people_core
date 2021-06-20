@@ -23,6 +23,7 @@ class MessageListResponse {
         messageType: MessageType.text,
         senderId: model.sender_id,
         isSender: userId == model.sender_id ? true : false,
+        recipientId: model.recipient_id,
       );
 
       messages.add(message);

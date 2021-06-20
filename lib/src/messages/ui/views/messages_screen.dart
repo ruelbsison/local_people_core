@@ -94,6 +94,29 @@ class _MessageScreenState extends State<MessagesScreen> {
   // }
 
   Widget buildBodyWithMessageBox() {
+    //LoadMessagesEvent
+    context.read<MessageBloc>().add(LoadMessagesEvent());
+    return BlocProvider.value(
+      value: context.read<MessageBloc>(),
+      child: BlocBuilder<MessageBloc, MessageState>(
+        builder: (context, state) {
+          if (state is MessageLoading) {
+            return LoadingWidget();
+          } else if (state is MessageInitial) {
+            return LoadingWidget();
+          } else if (state is LoadMessageFailed) {
+            return ErrorWidget('Error $state');
+          } else if (state is MessageLoaded) {
+            return MessageBody(
+              messageBox: widget.messageBox,
+              messages: state.messages,
+              showInputMessage: true,
+            );
+          }
+          return ErrorWidget('Unhandle State $state');
+        },
+      ),
+    );
     return MessageBody(
       messageBox: widget.messageBox,
       messages: [],

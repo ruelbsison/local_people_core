@@ -24,6 +24,7 @@ class MessageModel extends Equatable {
     this.created_at,
     this.updated_at,
     this.sender_id,
+    this.recipient_id,
   }): assert(subject != null), assert(body != null);
         //assert(client_id == null), assert(trader_id == null),
         //assert(job_id == null);
@@ -49,6 +50,8 @@ class MessageModel extends Equatable {
 
   int sender_id;
 
+  int recipient_id;
+
   static MessageModel fromMessage(Message message) {
     return MessageModel (
     //id: message.id,
@@ -61,6 +64,7 @@ class MessageModel extends Equatable {
       //updated_at: DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(message.createdAt),
     job_id: message.jobId,
       sender_id: message.senderId,
+        recipient_id: message.recipientId,
     );
   }
 

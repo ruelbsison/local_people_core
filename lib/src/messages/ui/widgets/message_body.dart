@@ -1,7 +1,6 @@
 import '../../../core/configs/constants.dart';
 import '../../domain/entities/message.dart';
 import '../../domain/entities/message_box.dart';
-import '../../domain/repositories/message_repository.dart';
 import 'package:flutter/material.dart';
 import '../blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -18,7 +17,7 @@ class MessageBody extends StatefulWidget {
     this.showInputMessage = true,
   }) : super(key: key);
 
-  final List<Message> messages;
+  List<Message> messages;
   final bool showInputMessage;
   final MessageBox messageBox;
 
@@ -29,63 +28,6 @@ class MessageBody extends StatefulWidget {
 class _MessageBodyState extends State<MessageBody> {
   @override
   Widget build(BuildContext context) {
-    final appType = AppConfig.of(context).appType;
-    // return BlocListener<MessageBloc, MessageState>(
-    //   listener: (context, state) {
-    //     if (state is MessageInitial) {
-    //       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    //     } else if (state is MessageSending) {
-    //       ScaffoldMessenger.of(context)
-    //         ..hideCurrentSnackBar()
-    //         ..showSnackBar(
-    //           const SnackBar(content: Text('Sending ...')),
-    //         );
-    //     } else if (state is SendMessageFailed) {
-    //       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    //       return ErrorWidget('Error: $state');
-    //     } else if (state is MessageSent) {
-    //       ScaffoldMessenger.of(context).hideCurrentSnackBar();
-    //       setState(() {
-    //         widget.messages.add(state.message);
-    //       });
-    //       //context.read<MessageBloc>().add(LoadJobMessagesEvent(jobId: jobId));
-    //     }
-    //   },
-    //   child: builBody(context),
-    // );
-    return BlocProvider(
-      create: (context) => MessageBloc(
-        messageRepository: RepositoryProvider.of<MessageRepository>(context),
-        appType: appType,
-        authLocalDataSource: sl<AuthLocalDataSource>(),
-      ),
-      child: BlocListener<MessageBloc, MessageState>(
-        listener: (context, state) {
-          if (state is MessageInitial) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-          } else if (state is MessageSending) {
-            ScaffoldMessenger.of(context)
-              ..hideCurrentSnackBar()
-              ..showSnackBar(
-                const SnackBar(content: Text('Sending ...')),
-              );
-          } else if (state is SendMessageFailed) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            return ErrorWidget('Unhandle State $state');
-          } else if (state is MessageSent) {
-            ScaffoldMessenger.of(context).hideCurrentSnackBar();
-            setState(() {
-              widget.messages.add(state.message);
-            });
-            //context.read<MessageBloc>().add(LoadJobMessagesEvent(jobId: jobId));
-          }
-        },
-        child: builBody(context),
-      ),
-    );
-  }
-
-  Widget builBody(BuildContext context) {
     return SafeArea(
       child: Column(
         children: [
@@ -101,10 +43,25 @@ class _MessageBodyState extends State<MessageBody> {
           ),
           if (widget.showInputMessage == true)
             MessageInputField(
-              jobId: widget.messageBox.jobId,
-              clientId: widget.messageBox.clientId,
-              traderId: widget.messageBox.traderId,
-              subject: widget.messageBox.name,
+              // jobId: widget.messageBox.jobId,
+              // clientId: widget.messageBox.clientId,
+              // traderId: widget.messageBox.traderId,
+              // subject: widget.messageBox.name,
+              // senderId: widget.messageBox.senderId,
+              // recepientId: widget.messageBox.recipientId,
+              onMessageSend: (text) {
+                Message message = Message(
+                  jobId: widget.messageBox.jobId,
+                  clientId: widget.messageBox.clientId,
+                  traderId: widget.messageBox.traderId,
+                  text: text,
+                  subject: widget.messageBox.name,
+                  senderId: widget.messageBox.senderId,
+                  recipientId: widget.messageBox.recipientId,
+                  entityStatus: EntityStatus.ENTIRY_STATUS_CREATING,
+                );
+                widget.messages.add(message);
+              },
             ),
         ],
       ),

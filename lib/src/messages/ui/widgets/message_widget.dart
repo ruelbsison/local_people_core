@@ -1,10 +1,15 @@
 import '../../domain/entities/message.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/configs//constants.dart';
+import '../../../core/configs/constants.dart';
 import 'audio_message.dart';
 import 'text_message.dart';
 import 'video_message.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_people_core/profile.dart';
+import 'package:local_people_core/auth.dart';
+import 'package:local_people_core/core.dart';
+import 'package:cached_network_image/cached_network_image.dart';
 
 class MessageWidget extends StatelessWidget {
   const MessageWidget({
@@ -32,6 +37,14 @@ class MessageWidget extends StatelessWidget {
       }
     }
 
+    final appType = AppConfig.of(context).appType;
+    if (message.senderId == message.traderId) {
+      BlocProvider.of<ProfileBloc>(context)
+          .add((TraderProfileGetEvent(id: message.senderId)));
+    } else if (message.senderId == message.clientId) {
+      BlocProvider.of<ProfileBloc>(context)
+          .add((ClientProfileGetEvent(id: message.senderId)));
+    }
     return Padding(
       padding: const EdgeInsets.only(top: kDefaultPadding),
       child: Row(
@@ -39,15 +52,48 @@ class MessageWidget extends StatelessWidget {
         message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!message.isSender) ...[
-            CircleAvatar(
-              radius: 12,
-              //backgroundImage: AssetImage("assets/images/user_2.png"),
+          BlocProvider(
+            create: (context) => ProfileBloc(
+              profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+              appType: appType,
+              authLocalDataSource: sl<AuthLocalDataSource>(),
             ),
+            child: BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+              if (state is TraderProfileGetLoaded) {
+                return buildProfileAvatar(state.profile.photo);
+              } else if (state is ClientProfileGetLoaded) {
+                return buildProfileAvatar(state.profile.photo);
+              } else if (state is TraderProfileGetFailed || state is ClientProfileGetFailed) {
+                return ErrorWidget('');
+              } else {
+                return LoadingWidget();
+              }
+            }),
+          ),
             SizedBox(width: kDefaultPadding / 2),
           ],
           messageContaint(message),
           if (message.isSender) MessageStatusDot(status: message.messageStatus)
         ],
+      ),
+    );
+  }
+
+  Widget buildProfileAvatar(String photoUrl) {
+    return CircleAvatar(
+      radius: 12,
+      child:  CachedNetworkImage(
+        imageUrl: photoUrl,
+        width: 60,
+        height: 60,
+        placeholder: (context, url) => LoadingWidget(
+          isImage: true,
+        ),
+        errorWidget: (context, url, error) => Image.asset(
+          'packages/local_people_core/assets/images/trader-profile-photo.png',
+          fit: BoxFit.cover,
+        ),
+        fit: BoxFit.cover,
       ),
     );
   }

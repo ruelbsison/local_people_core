@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local_people_core/core.dart';
 
 enum MessageType { text, audio, image, video }
 enum MessageStatus { not_sent, not_view, viewed }
@@ -15,6 +16,8 @@ class Message implements Comparable {
   final int jobId;
   int traderId;
   int senderId;
+  int recipientId;
+  EntityStatus entityStatus;
 
   Message({
     @required this.id,
@@ -28,15 +31,30 @@ class Message implements Comparable {
     @required this.jobId,
     @required this.senderId,
     @required this.isSender,
+    @required this.recipientId,
+    this.entityStatus = EntityStatus.ENTIRY_STATUS_NONE,
   });
 
   @override
   int compareTo(other) {
-    if (this.jobId < other.jobId) {
-      return 1;
+    if (this.jobId != null && other.jobId != null) {
+      if (this.jobId < other.jobId) {
+        return 1;
+      } else if (this.jobId > other.jobId) {
+        return -1;
+      } else {
+        return 0;
+      }
     }
-    if (this.jobId > other.jobId) {
-      return -1;
+
+    if (this.id != null && other.id != null) {
+      if (this.id < other.id) {
+        return 1;
+      } else if (this.id > other.id) {
+        return -1;
+      } else {
+        return 0;
+      }
     }
 
     if (this.traderId < other.traderId) {

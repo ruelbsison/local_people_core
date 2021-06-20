@@ -86,15 +86,15 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
   Stream<MessageState> _mapSendMessagesToState(Message message) async* {
     try {
-      int userId = await authLocalDataSource.getUserId();
-      if (userId != null) {
-        if (appType == AppType.CLIENT)
-          message.clientId = userId;
-        else
-          message.traderId = userId;
-        message.senderId = userId;
-        message.isSender = true;
-      }
+      // int userId = await authLocalDataSource.getUserId();
+      // if (userId != null) {
+      //   if (appType == AppType.CLIENT)
+      //     message.clientId = userId;
+      //   else
+      //     message.traderId = userId;
+      //   message.senderId = userId;
+      //   message.isSender = true;
+      // }
 
       if (message.subject == null || message.subject.length == 0) {
         message.subject = await authLocalDataSource.getUserName();
