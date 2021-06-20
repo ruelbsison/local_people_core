@@ -7,7 +7,7 @@ class AppRouter{
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return DialogManager(child: page,);
+          return page;
         },
       ),
     );
@@ -34,7 +34,7 @@ class AppRouter{
       context,
       MaterialPageRoute(
         builder: (BuildContext context) {
-          return DialogManager(child: page,);
+          return page;
         },
       ),
     );

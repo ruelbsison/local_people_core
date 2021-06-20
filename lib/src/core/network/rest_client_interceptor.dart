@@ -1,6 +1,8 @@
 import 'package:dio/dio.dart';
 import 'package:meta/meta.dart';
 import 'package:local_people_core/auth.dart';
+import 'package:local_people_core/profile.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class RestClientInterceptor {
   final AuthLocalDataSource authLocalDataSource;
@@ -20,6 +22,19 @@ class RestClientInterceptor {
       };
       options.headers.addAll(customHeaders);
       return options;
+    }));
+
+    dio.interceptors.add(InterceptorsWrapper(onError: (DioError error) async {
+      if ( error.response == null)
+        return;
+      int _errorCode = error.response.statusCode;
+      if (error.type == DioErrorType.RESPONSE) {
+        print("Received invalid status code: ${error.response.statusCode} : ${error.response.statusMessage}");
+        if (_errorCode == 404 && (error.request.path.startsWith('/client') == true
+            || error.request.path.startsWith('/trader') == true )) {
+          //context.read<ProfileBloc>().add(ProfileCreateEvent());
+        }
+      }
     }));
   }
 }

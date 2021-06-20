@@ -3,6 +3,9 @@ import 'package:flutter/material.dart';
 import 'logo_widget.dart';
 import '../utils/date_format.dart';
 import 'spacer_widget.dart';
+
+typedef FilterValueChanged = void Function(String);
+
 class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final Color backgroundColor = Colors.white;
   final Widget title;
@@ -11,11 +14,21 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final List<Widget> actions;
   final PreferredSizeWidget bottom;
   final Size appBarPreferredSize;
+  final bool showFilter;
+  final List<String> filterItems;
+  final String filterValue;
+  final FilterValueChanged onFilterValueChanged;
   /// you can add more fields that meet your needs
 
   const AppBarWidget({Key key, 
     this.title, this.appBar, this.actions,
-    this.subTitle, this.bottom, this.appBarPreferredSize = const Size.fromHeight(116.0)})
+    this.subTitle, this.bottom,
+  this.appBarPreferredSize = const Size.fromHeight(116.0),
+  this.showFilter = false,
+  this.filterItems = const [],
+  this.filterValue = '',
+    this.onFilterValueChanged = null,
+  })
       : super(key: key);
 
   @override
@@ -66,17 +79,9 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                     ),
                 ],
               ),
+              //SizedBox(height: 10),
+              buildTitleContent(context),
               SizedBox(height: 10),
-              Container (
-                padding: EdgeInsets.only(left: 12),
-                child: Text(
-                  subTitle,
-                  textAlign: TextAlign.left,
-                  style: headline6Style,
-                ),
-                //color: Colors.yellow,
-              ),
-              SizedBox(height: 20),
             ],
           ),
         ),
@@ -112,6 +117,71 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         //bottom: bottom,
       ),
     );
+  }
+
+  Widget buildTitleContent(BuildContext context) {
+    final theme = Theme.of(context).textTheme;
+    if (showFilter == true) {
+      return Container (
+        child: Row(
+          mainAxisSize: MainAxisSize.max,
+          children: <Widget>[
+            Expanded(
+              flex: 2,
+              child: Container (
+                padding: EdgeInsets.only(left: 12),
+                child: Text(
+                  subTitle,
+                  textAlign: TextAlign.left,
+                  style: theme.headline6,
+                ),
+                //color: Colors.yellow,
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              //SingleChildScrollView
+              child: SingleChildScrollView (
+                padding: EdgeInsets.only(right: 12),
+                child: DropdownButtonHideUnderline(
+                child: DropdownButton<String>(
+                  isExpanded: true,
+                  hint: Text("Filter by"),
+                  focusColor: Color.fromRGBO(96, 106, 129, 1.0),
+                  items: filterItems.map((String value) {
+                    return DropdownMenuItem(
+                      value: value,
+                      child: Text(value,
+                          style: theme.bodyText1),
+                    );
+                  }).toList(),
+                  value: filterValue,
+                  onChanged: (newValue) {
+                    if (onFilterValueChanged != null) {
+                      onFilterValueChanged(newValue);
+                    }
+                    // setState(() {
+                    //   _sortValue = newValue;
+                    // });
+                  },
+                ),
+              ),
+              ),
+            ),
+          ],
+        ),
+      );
+    } else {
+      return Container (
+        padding: EdgeInsets.only(left: 12),
+        child: Text(
+          subTitle,
+          textAlign: TextAlign.left,
+          style: theme.headline6,
+        ),
+        //color: Colors.yellow,
+      );
+    }
   }
 
   @override

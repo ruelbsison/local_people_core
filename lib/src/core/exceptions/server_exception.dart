@@ -19,6 +19,9 @@ class ServerException implements Exception {
   }
 
   _handleError(DioError error) {
+    if (error.response == null)
+      return;
+
     _errorCode = error.response.statusCode;
     switch (error.type) {
       case DioErrorType.CANCEL:

@@ -185,7 +185,7 @@ class AppThemeConfig {
         textTheme: ButtonTextTheme.accent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
       ),*/
-      iconTheme: base.iconTheme.copyWith(color: Colors.black),
+      //iconTheme: base.iconTheme.copyWith(color: Colors.black),
       accentIconTheme: base.accentIconTheme.copyWith(color: Colors.black),
       primaryIconTheme: base.primaryIconTheme.copyWith(color: Colors.black),
       // buttonTheme: base.buttonTheme.copyWith(
@@ -261,7 +261,7 @@ class AppThemeConfig {
       appBarTheme: AppBarTheme(
         elevation: 0.0,
         backgroundColor: lightPrimary,
-        iconTheme: IconThemeData(color: Colors.black),
+        //iconTheme: IconThemeData(color: Colors.black),
       ),
       buttonBarTheme: base.buttonBarTheme.copyWith(
         buttonTextTheme: ButtonTextTheme.accent,              // Button style
@@ -376,7 +376,7 @@ class AppThemeConfig {
         textTheme: ButtonTextTheme.accent,
         shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
       ),*/
-      iconTheme: base.iconTheme.copyWith(color: Colors.black,),
+      //iconTheme: base.iconTheme.copyWith(color: Colors.black,),
       accentIconTheme: base.accentIconTheme.copyWith(color: Colors.black),
       primaryIconTheme: base.primaryIconTheme.copyWith(color: Colors.black),
       // buttonTheme: base.buttonTheme.copyWith(
@@ -427,7 +427,7 @@ class AppThemeConfig {
       appBarTheme: AppBarTheme(
         elevation: 0.0,
         backgroundColor: lightPrimary,
-        iconTheme: IconThemeData(color: Colors.black),
+        //iconTheme: IconThemeData(color: Colors.black),
       ),
     );
   }

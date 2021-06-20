@@ -19,6 +19,11 @@ class DateFormatUtil {
     return DateTime.now().day.toString() + dayOfMonthSuffix + ' ' + DateFormat('MMMM yyyy').format(DateTime.now());
   }
 
+  static String getFormattedDateWithDateTime(DateTime dt) {
+    String dayOfMonthSuffix = getDayOfMonthSuffix(dt.day);
+    return dt.day.toString() + dayOfMonthSuffix + ' ' + DateFormat('MMMM yyyy').format(dt);
+  }
+
   static String getDateTimeDiff(DateTime dt1, DateTime dt2) {
     if (dt1.difference(dt2).inDays > 0) {
       return dt1.difference(dt2).inDays.toString() + 'd ago';
