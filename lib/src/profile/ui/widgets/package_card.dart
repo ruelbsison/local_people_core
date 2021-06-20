@@ -38,18 +38,21 @@ class _PackageCardState extends State<PackageCard> {
       columnChildren.add(SizedBox(height: 10));
       columnChildren.add(build_package_details(context));
     }
-    if (widget.package.optionType == PackageOptionType.VIEW_ONLY) {
+    AppType appType = AppConfig.of(context).appType;
+    if (widget.package.optionType == PackageOptionType.VIEW_ONLY || appType == AppType.CLIENT) {
       columnChildren.add(SizedBox(height: 10));
       columnChildren.add(build_package_booking_action(context));
     }
 
     columnChildren.add(SizedBox(height: 20));
+    final theme = Theme.of(context);
     return Container(
-      color: Color(0xfff5f5f5),
+      color: Colors.white,
       //padding: const EdgeInsets.only(left: 15, right: 18, top: 34, bottom: 56, ),
+      //padding: EdgeInsets.only(bottom: 20.0),
       child: Flex (
         direction: Axis.vertical,
-        mainAxisSize: MainAxisSize.min,
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: columnChildren,
@@ -61,78 +64,84 @@ class _PackageCardState extends State<PackageCard> {
     final theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
       List<Widget> columnChildren = <Widget>[
-        Row (
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Container (
-              padding: EdgeInsets.only(left: 10),
-              width: size.width - 60,
-              child: Align (
-                alignment: Alignment.center,
+    Expanded(
+      flex: 1,
+      child: Container(),
+    ),
+        Expanded(
+          flex: 3,
+          child: Column (
+            mainAxisAlignment: MainAxisAlignment.center,
+            mainAxisSize: MainAxisSize.max,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: <Widget>[
+              Container (
+                //width: size.width - 60,
                 child: Text(
                   widget.package.description != null ? widget.package.description : '',
                   maxLines: 16,
+                  style: theme.textTheme.caption,
                 ),
               ),
-            ),
-          ],
+              SizedBox(height: 10),
+              Row (
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: Text(
+                      'Duration:',
+                      style: theme.textTheme.bodyText2,
+                    ),
+                  ),
+                  Container(
+                    //width: size.width - 60,
+                    child: Text(
+                      widget.package.durationInHours != null ? widget.package.durationInHours.toString() + ' Hours' : '',
+                      style: theme.textTheme.bodyText1,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+              Row (
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.max,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    child: Text(
+                      'Cost:',
+                      style: theme.textTheme.bodyText2,
+                    ),
+                  ),
+                  Container(
+                    //width: size.width - 60,
+                    //padding: EdgeInsets.only(left: 10),
+                    child: Text(
+                      widget.package.cost != null ? '£' + widget.package.cost.toString() : '',
+                      style: theme.textTheme.bodyText1,
+                    ),
+                  ),
+                ],
+              ),
+              SizedBox(height: 10),
+            ],
+          ),
         ),
-        SizedBox(height: 10),
-        Row (
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.only(left: 20),
-              child: Text(
-                'Duration:',
-                style: theme.textTheme.bodyText2,
-              ),
-            ),
-            Container(
-              //width: size.width - 60,
-              child: Text(
-                widget.package.durationInHours != null ? widget.package.durationInHours.toString() + ' Hours' : '',
-                style: theme.textTheme.bodyText1,
-              ),
-            ),
-          ],
+        Expanded(
+          flex: 1,
+          child: Container(),
         ),
-        SizedBox(height: 10),
-        Row (
-          mainAxisAlignment: MainAxisAlignment.center,
-          mainAxisSize: MainAxisSize.max,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            Container(
-              padding: EdgeInsets.only(left: 20),
-              child: Text(
-                'Cost:',
-                style: theme.textTheme.bodyText2,
-              ),
-            ),
-            Container(
-              //width: size.width - 60,
-              //padding: EdgeInsets.only(left: 10),
-              child: Text(
-                widget.package.cost != null ? '£' + widget.package.cost.toString() : '',
-                style: theme.textTheme.bodyText1,
-              ),
-            ),
-          ],
-        ),
-        SizedBox(height: 10),
       ];
 
     return Container(
-      color: Color(0xfff5f5f5),
+      color: Colors.white,
       //padding: const EdgeInsets.only(left: 15, right: 18, top: 34, bottom: 56, ),
       child: Flex (
-        direction: Axis.vertical,
-        mainAxisSize: MainAxisSize.min,
+        direction: Axis.horizontal,
+        mainAxisSize: MainAxisSize.max,
         mainAxisAlignment: MainAxisAlignment.start,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: columnChildren,

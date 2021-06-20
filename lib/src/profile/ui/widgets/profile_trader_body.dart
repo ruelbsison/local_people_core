@@ -14,7 +14,6 @@ import 'qualification_card.dart';
 import 'qualification_widget.dart';
 import 'trader_contact_actions.dart';
 import '../../domain/entities/qualification.dart';
-import 'package:local_people_core/jobs.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/src/widgets/framework.dart';
 
@@ -27,7 +26,7 @@ class ProfileTraderBody extends StatefulWidget {
   @override
   _ProfileTraderBodyState createState() => _ProfileTraderBodyState();
 
-  final TraderProfile profile;
+  TraderProfile profile;
   final ClientProfile clientProfile;
   List<Tag> tags = [];
   List<String> qualifications = [];
@@ -186,12 +185,14 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
     if (appType == AppType.TRADER) {
       widget.profile.qualifications.forEach((qualification) {
         qualification.optionType = QualificationOptionType.REMOVE;
+        qualification.traderId = widget.profile.id;
       });
       widget.qualifications.forEach((element) {
         Qualification qualification = Qualification(
             id: -1,
             title: element,
-            optionType: QualificationOptionType.ADD_DEFAULT
+            optionType: QualificationOptionType.ADD_DEFAULT,
+          traderId: widget.profile.id,
         );
         if (widget.profile.qualifications.contains(qualification) == false) {
           widget.profile.qualifications.add(qualification);
@@ -202,6 +203,7 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
         id: -1,
         title: 'Qualification ' + length.toString(),
         optionType: QualificationOptionType.ADD_NEW,
+        traderId: widget.profile.id,
       );
       widget.profile.qualifications.add(qualification);
     }
@@ -216,24 +218,52 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
     // }
 
     // Packages
-    if (widget.profile.packages != null && widget.profile.packages.length > 0)
-      widget.profile.packages.clear();
+    //if (widget.profile.packages != null && widget.profile.packages.length > 0)
+      //widget.profile.packages.clear();
+    List<Package> packages = [];
     if (appType == AppType.TRADER) {
+      //List<Package> packages = widget.profile.packages;
       widget.profile.packages.forEach((package) {
-        package.optionType = PackageOptionType.REMOVE;
+        if (package.id > 0) {
+          if (package.optionType == PackageOptionType.VIEW_ONLY) {
+            package.optionType = PackageOptionType.REMOVE;
+          }
+          packages.add(package);
+        }
       });
-      int length = widget.profile.packages.length + 1;
+      int length = packages.length + 1;
       Package package = Package(
         id: -1,
         name: 'Package ' + length.toString(),
         optionType: PackageOptionType.ADD_NEW,
+        traderId: widget.profile.id,
       );
-      widget.profile.packages.add(package);
+      packages.add(package);
+    } else {
+      widget.profile.packages.forEach((package) {
+        if (package.id > 0) {
+          packages.add(package);
+        }
+      });
     }
     //if (widget.profile.packages != null &&
     //    widget.profile.packages.length > 0) {
       final packageWidget = PackageWidget (
-        packages: widget.profile.packages,
+        packages: packages,
+        onPackageAdded: (package) {
+          int index = widget.profile.packages.indexOf(package);
+          //setState(() {
+            widget.profile.packages.removeAt(index);
+          locatorAddTraderProfile(widget.profile);
+          //});
+        },
+        onPackageRemoved: (package) {
+          int index = widget.profile.packages.indexOf(package);
+          //setState(() {
+            widget.profile.packages.insert(index, package);
+            locatorAddTraderProfile(widget.profile);
+          //});
+        },
       );
      // columnChildren.add(packageWidget);
      // columnChildren.add(SizedBox(height: 20));
@@ -268,17 +298,17 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
    //    child: SizedBox(height: 20),
    //  ));
 
-    columnChildren.add(introductionActions);
-    columnChildren.add(introduction);
-    columnChildren.add(SizedBox(height: 10));
-    columnChildren.add(qualificationWidget);
-    columnChildren.add(SizedBox(height: 10));
-    columnChildren.add(packageWidget);
     if (appType == AppType.CLIENT) {
-      columnChildren.add(SizedBox(height: 10));
+      columnChildren.add(SizedBox(height: 30));
       columnChildren.add(traderContactOptiosn);
     }
-    columnChildren.add(SizedBox(height: 20));
+    columnChildren.add(introductionActions);
+    columnChildren.add(introduction);
+    columnChildren.add(SizedBox(height: 30));
+    columnChildren.add(qualificationWidget);
+    columnChildren.add(SizedBox(height: 30));
+    columnChildren.add(packageWidget);
+    columnChildren.add(SizedBox(height: 30));
 
     return SliverList(
       delegate: new SliverChildListDelegate(

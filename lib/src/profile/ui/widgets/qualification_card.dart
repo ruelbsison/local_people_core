@@ -2,9 +2,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/qualification.dart';
+import '../../domain/repositories/qualification_repository.dart';
 import '../blocs/qualification_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
 import 'package:local_people_core/core.dart';
+import 'package:local_people_core/auth.dart';
 
 class QualificationCard extends StatefulWidget {
   QualificationCard({
@@ -34,6 +36,8 @@ class _QualificationCardState extends State<QualificationCard> {
   void dispose() {
     _focusNode.dispose();
     _qualificationextController.dispose();
+
+    super.dispose();
   }
 
   void _showProgressDialog(DialogService _dialogService) async {
@@ -42,24 +46,30 @@ class _QualificationCardState extends State<QualificationCard> {
       message: 'Adding ...',
     );
     if (dialogResult.status == StatusDialogStatus.SUCCESSFUL) {
-      Future
-          .delayed(Duration(seconds: 5))
-          .then((_) => _dialogService.successfulStatusDialogComplete());
+      //Future
+      //    .delayed(Duration(seconds: 5))
+      //    .then((_) => _dialogService.successfulStatusDialogComplete());
+      Navigator.of(context).pop();
       await _dialogService.showSuccessfulStatusDialog(message: 'Added Successfully!');
-      Navigator.of(context).popUntil(ModalRoute.withName('/'));
+      Navigator.of(context).pop();
     } else {
-      Future
-          .delayed(Duration(seconds: 5))
-          .then((_) => _dialogService.errorStatusDialogComplete());
+      //Future
+      //    .delayed(Duration(seconds: 5))
+      //    .then((_) => _dialogService.errorStatusDialogComplete());
       await _dialogService.showErrorStatusDialog(message: 'Add Failed!');
+      Navigator.of(context).pop();
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    //return buildBody();
     DialogService _dialogService = sl<DialogService>();
-    return BlocProvider.value(
-      value: BlocProvider.of<QualificationBloc>(context),
+    return BlocProvider(
+      create: (context) => QualificationBloc(
+        qualificationRepository: RepositoryProvider.of<QualificationRepository>(context),
+        authLocalDataSource: sl<AuthLocalDataSource>(),
+      ),
       child: BlocListener<QualificationBloc, QualificationState>(
         listener: (context, state) {
           // do stuff here based on BlocA's state
@@ -88,13 +98,13 @@ class _QualificationCardState extends State<QualificationCard> {
     if (widget.qualification == null)
       return Container();
     if (widget.qualification.optionType == QualificationOptionType.ADD_DEFAULT) {
-      return build_qualification_add_default(context);
+      return Container(color: Colors.white, margin: EdgeInsets.only(bottom: 10.0), child: build_qualification_add_default(context));
     } else if (widget.qualification.optionType == QualificationOptionType.ADD_NEW) {
-      //return build_qualification_add_new(context);
+      return Container(color: Colors.white, margin: EdgeInsets.only(bottom: 10.0), child: build_qualification_add_new(context));
     } else if (widget.qualification.optionType == QualificationOptionType.REMOVE) {
-      return build_qualification_remove(context);
+      return Container(color: Colors.white, margin: EdgeInsets.only(bottom: 10.0), child: build_qualification_remove(context));
     } else if (widget.qualification.optionType == QualificationOptionType.VIEW_ONLY) {
-      return build_qualification_view(context);
+      return Container(color: Colors.white, margin: EdgeInsets.only(bottom: 10.0), child: build_qualification_view(context));
     }
   }
 
@@ -126,7 +136,7 @@ class _QualificationCardState extends State<QualificationCard> {
           child: Text(
             widget.qualification.title != null ? widget.qualification.title : '',
             textAlign: TextAlign.left,
-            style: theme.textTheme.subtitle1,
+            style: theme.textTheme.bodyText1,
           ),
         ),
         Expanded(
@@ -184,7 +194,7 @@ class _QualificationCardState extends State<QualificationCard> {
                     fontStyle: FontStyle.italic
                 ),
                 decoration: InputDecoration(
-                    border: OutlineInputBorder()
+                  border: InputBorder.none,
                 )
             ),
             suggestionsCallback: (pattern) async {

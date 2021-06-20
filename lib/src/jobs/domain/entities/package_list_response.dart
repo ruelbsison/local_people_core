@@ -16,6 +16,8 @@ class PackageListResponse {
         id: model.id,
         traderId : model.trader_id,
         name: model.name,
+        durationInHours: model.duration,
+        cost: double.parse(model.price),
         description: model.description,
         createdAt: model.created_at,
         updatedAt: model.updated_at,

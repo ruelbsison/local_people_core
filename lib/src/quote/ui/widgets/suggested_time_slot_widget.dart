@@ -5,6 +5,8 @@ import 'package:uuid/uuid.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/quote.dart';
 import 'package:local_people_core/core.dart';
+import 'package:local_people_core/schedule.dart';
+import 'package:intl/intl.dart';
 
 class SuggestedTimeSlotWidget extends StatefulWidget {
   static final uuid = Uuid();
@@ -21,65 +23,17 @@ class SuggestedTimeSlotWidget extends StatefulWidget {
 
 class _SuggestedTimeSlotWidgetState extends State<SuggestedTimeSlotWidget> {
   List<bool> isSelected = [false, false, false];
+  final ScheduleBloc scheduleBloc = ScheduleBloc();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
-    return Column(
+    return SingleChildScrollView(
+      child: Column(
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        // Column(
-        //   mainAxisSize: MainAxisSize.min,
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: <Widget>[
-        //     Container(
-        //       color: Color.fromRGBO(239, 244, 246, 1),
-        //       child: Row(
-        //         mainAxisSize: MainAxisSize.max,
-        //         children: <Widget>[
-        //           Expanded(
-        //             flex: 3,
-        //             child: Container(
-        //               padding: EdgeInsets.only(left: 12.0),
-        //               child: Align(
-        //                 alignment: Alignment.centerLeft,
-        //                 child: Text(
-        //                   'Place Bid',
-        //                   textAlign: TextAlign.left,
-        //                   style: theme.textTheme.bodyText1,
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //           Expanded(
-        //             flex: 1,
-        //             child: Card(
-        //               color: Color.fromRGBO(239, 244, 246, 1),
-        //               //padding: EdgeInsets.only(right: 10),
-        //               child: Align(
-        //                 alignment: Alignment.centerRight,
-        //                 child: IconButton(
-        //                   padding: EdgeInsets.all(2.0),
-        //                   icon: SvgPicture.asset(
-        //                     'packages/local_people_core/assets/images/minus.svg',
-        //                     height: 24,
-        //                     width: 24,
-        //                   ),
-        //                   iconSize: 24,
-        //                   onPressed: () {
-        //                     DialogService _dialogService = sl<DialogService>();
-        //                     _dialogService.placeBidDialogComplete();
-        //                   },
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ],
-        // ),
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -113,6 +67,9 @@ class _SuggestedTimeSlotWidgetState extends State<SuggestedTimeSlotWidget> {
                           labelText: 'hours',
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                         ),
+                        onSubmitted: (val) {
+                          scheduleBloc.getTimeslots(interval: int.parse(val));
+                        },
                         keyboardType: TextInputType.number,
                         textInputAction: TextInputAction.next,
                       ),
@@ -179,64 +136,89 @@ class _SuggestedTimeSlotWidgetState extends State<SuggestedTimeSlotWidget> {
                   child: Container(
                     padding: EdgeInsets.only(left: 12.0, right: 12.0),
                     child: Card (
+                      child: getTimeslotsWidget(),
                       //padding: EdgeInsets.only(left: 12.0, right: 12.0),
-                      child: ToggleButtons(
-                        direction: Axis.vertical,
-                        borderRadius: BorderRadius.circular(35.0),
-                        fillColor: Colors.white,
-                        borderColor: Color.fromRGBO(255, 99, 95, 1),
-                        borderWidth: 1.0,
-                        textStyle: theme.textTheme.bodyText1,
-                        children: <Widget>[
-                          Padding (
-                            padding: EdgeInsets.all(6.0),
-                            child: Card (
-                              //tag: SuggestedTimeSlotWidget.uuid.v4(),
-                              child: Text(
-                                '2.00pm 7th July 2021',
-                                textAlign: TextAlign.left,
-                                style: theme.textTheme.bodyText1,
-                              ),
-                            ),
-                          ),
-                          Padding (
-                            padding: EdgeInsets.all(6.0),
-                            child: Card (
-                              //tag: SuggestedTimeSlotWidget.uuid.v4(),
-                              child: Text(
-                                '4.00pm 7th July 2021',
-                                textAlign: TextAlign.left,
-                                style: theme.textTheme.bodyText1,
-                              ),
-                            ),
-                          ),
-                          Padding (
-                            padding: EdgeInsets.all(6.0),
-                            child: Card (
-                              //tag: SuggestedTimeSlotWidget.uuid.v4(),
-                              child: Text(
-                                '6.00pm 7th July 2021',
-                                textAlign: TextAlign.left,
-                                style: theme.textTheme.bodyText1,
-                              ),
-                            ),
-                          ),
-                        ],
-                        onPressed: (int index) {
-                          setState(() {
-                            for (int buttonIndex = 0;
-                            buttonIndex < isSelected.length;
-                            buttonIndex++) {
-                              if (buttonIndex == index) {
-                                isSelected[buttonIndex] = true;
-                              } else {
-                                isSelected[buttonIndex] = false;
-                              }
-                            }
-                          });
-                        },
-                        isSelected: isSelected,
-                      ),
+                      // child: ToggleButtons(
+                      //   direction: Axis.vertical,
+                      //   borderRadius: BorderRadius.circular(35.0),
+                      //   fillColor: Colors.white,
+                      //   borderColor: Color.fromRGBO(255, 99, 95, 1),
+                      //   borderWidth: 1.0,
+                      //   textStyle: theme.textTheme.bodyText1,
+                      //   children: <Widget> [
+                      //     StreamBuilder(
+                      //       stream: scheduleBloc.timeslots,
+                      //       builder: (BuildContext context, AsyncSnapshot<List<Timeslot>> timeslots) {
+                      //         if (timeslots.hasData) {
+                      //           return Padding (
+                      //             padding: EdgeInsets.all(6.0),
+                      //             child: Card (
+                      //               //tag: SuggestedTimeSlotWidget.uuid.v4(),
+                      //               child: Text(
+                      //                 DateFormat().format(timeslots.data.timeslot.startDateTime),
+                      //                 '2.00pm 7th July 2021',
+                      //                 textAlign: TextAlign.left,
+                      //                 style: theme.textTheme.bodyText1,
+                      //               ),
+                      //             ),
+                      //           );
+                      //         } else if (timeslots.hasError) {
+                      //           return Text(timeslots.error.toString());
+                      //         }
+                      //         return Center(child: CircularProgressIndicator());
+                      //       },
+                      //     ),
+                      //   ],
+                      //   //children: <Widget>[
+                      //     // Padding (
+                      //     //   padding: EdgeInsets.all(6.0),
+                      //     //   child: Card (
+                      //     //     //tag: SuggestedTimeSlotWidget.uuid.v4(),
+                      //     //     child: Text(
+                      //     //       '2.00pm 7th July 2021',
+                      //     //       textAlign: TextAlign.left,
+                      //     //       style: theme.textTheme.bodyText1,
+                      //     //     ),
+                      //     //   ),
+                      //     // ),
+                      //     // Padding (
+                      //     //   padding: EdgeInsets.all(6.0),
+                      //     //   child: Card (
+                      //     //     //tag: SuggestedTimeSlotWidget.uuid.v4(),
+                      //     //     child: Text(
+                      //     //       '4.00pm 7th July 2021',
+                      //     //       textAlign: TextAlign.left,
+                      //     //       style: theme.textTheme.bodyText1,
+                      //     //     ),
+                      //     //   ),
+                      //     // ),
+                      //     // Padding (
+                      //     //   padding: EdgeInsets.all(6.0),
+                      //     //   child: Card (
+                      //     //     //tag: SuggestedTimeSlotWidget.uuid.v4(),
+                      //     //     child: Text(
+                      //     //       '6.00pm 7th July 2021',
+                      //     //       textAlign: TextAlign.left,
+                      //     //       style: theme.textTheme.bodyText1,
+                      //     //     ),
+                      //     //   ),
+                      //     // ),
+                      //   //],
+                      //   onPressed: (int index) {
+                      //     setState(() {
+                      //       for (int buttonIndex = 0;
+                      //       buttonIndex < isSelected.length;
+                      //       buttonIndex++) {
+                      //         if (buttonIndex == index) {
+                      //           isSelected[buttonIndex] = true;
+                      //         } else {
+                      //           isSelected[buttonIndex] = false;
+                      //         }
+                      //       }
+                      //     });
+                      //   },
+                      //   isSelected: isSelected,
+                      // ),
                     ),
                   ),
                 ),
@@ -324,6 +306,68 @@ class _SuggestedTimeSlotWidgetState extends State<SuggestedTimeSlotWidget> {
         ),
         SizedBox(height: 10),
       ],
+    ),);
+  }
+
+  Widget getTimeslotsWidget() {
+    /*The StreamBuilder widget,
+    basically this widget will take stream of data (todos)
+    and construct the UI (with state) based on the stream
+    */
+    return StreamBuilder(
+      stream: scheduleBloc.timeslots,
+      builder: (BuildContext context, AsyncSnapshot<List<Timeslot>> timeslots) {
+        return getTodoCardWidget(timeslots);
+      },
     );
+  }
+
+  Widget getTodoCardWidget(AsyncSnapshot<List<Timeslot>> timeslots) {
+    final theme = Theme.of(context);
+    /*Since most of our operations are asynchronous
+    at initial state of the operation there will be no stream
+    so we need to handle it if this was the case
+    by showing users a processing/loading indicator*/
+    if (timeslots.hasData) {
+      /*Also handles whenever there's stream
+      but returned returned 0 records of Todo from DB.
+      If that the case show user that you have empty Todos
+      */
+      return timeslots.data.length != 0
+          ? ListView.builder(
+        itemCount: timeslots.data.length,
+        itemBuilder: (context, itemPosition) {
+          Timeslot timeslot = timeslots.data[itemPosition];
+          return Padding (
+            padding: EdgeInsets.all(6.0),
+            child: Card (
+              //tag: SuggestedTimeSlotWidget.uuid.v4(),
+              child: Text(
+                DateFormatUtil.getFormattedDateWithDateTime(timeslot.startDateTime),
+                //DateFormat().format(timeslot.startDateTime),
+                //'2.00pm 7th July 2021',
+                textAlign: TextAlign.left,
+                style: theme.textTheme.bodyText1,
+              ),
+            ),
+          );
+        },
+      )
+          : Container(
+          child: Center(
+            //this is used whenever there 0 Todo
+            //in the data base
+            child: Container(),
+          ));
+    } else {
+      return Center(
+        /*since most of our I/O operations are done
+        outside the main thread asynchronously
+        we may want to display a loading indicator
+        to let the use know the app is currently
+        processing*/
+        child: LoadingWidget(),
+      );
+    }
   }
 }

@@ -25,6 +25,9 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
   final TextEditingController _costTextController = TextEditingController();
   //final TextEditingController _depositTextController = TextEditingController();
   FocusNode _focusNodeDesc = new FocusNode();
+  FocusNode _focusNodeName = new FocusNode();
+  FocusNode _focusNodeDuration = new FocusNode();
+  FocusNode _focusNodeCost = new FocusNode();
 
   @override
   void initState() {
@@ -47,9 +50,10 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
     final size = MediaQuery.of(context).size;
     return Column(
         mainAxisSize: MainAxisSize.min,
-        crossAxisAlignment: CrossAxisAlignment.stretch,
-        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: 20),
           Column(
             mainAxisSize: MainAxisSize.max,
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -80,13 +84,14 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                         child: TextField(
                           style: theme.textTheme.bodyText2,
                           controller: _nameTextController,
-                          //focusNode: _labourNodeLocation,
+                          focusNode: _focusNodeName,
                           decoration: InputDecoration(
                             labelText: 'Package Name',
                             floatingLabelBehavior: FloatingLabelBehavior.never,
-                            border: OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(30),
-                                borderSide: BorderSide.none),
+                            // border: OutlineInputBorder(
+                            //     borderRadius: BorderRadius.circular(30),
+                            //     borderSide: BorderSide.none),
+                            border: InputBorder.none,
                             hintText: 'Package Name',
                             hintStyle: theme.textTheme.bodyText2,
                             focusedBorder: OutlineInputBorder(
@@ -110,6 +115,9 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                           ),
                           keyboardType: TextInputType.text,
                           textInputAction: TextInputAction.next,
+                          onSubmitted: (val) {
+                            _focusNodeDesc.requestFocus();
+                          },
                         ),
                       ),
                     ),
@@ -148,9 +156,10 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                 // border: OutlineInputBorder(
                 //   borderSide: BorderSide.none,
                 // ),
-                border: OutlineInputBorder(
-                    borderRadius: BorderRadius.circular(30),
-                    borderSide: BorderSide.none),
+                // border: OutlineInputBorder(
+                //     borderRadius: BorderRadius.circular(30),
+                //     borderSide: BorderSide.none),
+                 border: InputBorder.none,
                  hintText: 'Describe this package',
                  hintStyle: theme.textTheme.bodyText2,
                  focusedBorder: OutlineInputBorder(
@@ -176,7 +185,7 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                 //this._keyword = value;
               },
               onSubmitted: (val) {
-
+                _focusNodeDuration.requestFocus();
               },
               textInputAction: TextInputAction.next,
             ),
@@ -212,18 +221,23 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                         child: TextField(
                           style: theme.textTheme.bodyText2,
                           controller: _durationTextController,
+                          focusNode: _focusNodeDuration,
                           decoration: InputDecoration(
                             labelText: 'Hours',
                             floatingLabelBehavior: FloatingLabelBehavior.never,
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide.none,
                             ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                            ),
+                            // border: OutlineInputBorder(
+                            //     borderRadius: BorderRadius.circular(30),
+                            //     borderSide: BorderSide.none),
+                            border: InputBorder.none,
                           ),
                           keyboardType: TextInputType.number,
                           textInputAction: TextInputAction.next,
+                          onSubmitted: (val) {
+                            _focusNodeCost.requestFocus();
+                          },
                         ),
                       ),
                     ),
@@ -261,7 +275,7 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                         alignment: Alignment.centerRight,
                         child: TextField(
                           style: theme.textTheme.bodyText2,
-                          //focusNode: _labourNodeLocation,
+                          focusNode: _focusNodeCost,
                           controller: _costTextController,
                           decoration: InputDecoration(
                             labelText: '£ Amount',
@@ -269,12 +283,13 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                             enabledBorder: OutlineInputBorder(
                               borderSide: BorderSide.none,
                             ),
-                            border: OutlineInputBorder(
-                              borderSide: BorderSide.none,
-                            ),
+                            // border: OutlineInputBorder(
+                            //     borderRadius: BorderRadius.circular(30),
+                            //     borderSide: BorderSide.none),
+                            border: InputBorder.none,
                           ),
                           keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
+                          textInputAction: TextInputAction.done,
                         ),
                       ),
                     ),
@@ -339,6 +354,22 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                           onPrimary: Color.fromRGBO(170, 186, 205, 1),
                         ),
                         onPressed: () {
+                          if (_nameTextController.text.isEmpty) {
+                            _focusNodeName.requestFocus();
+                            return;
+                          }
+                          if (_descTextController.text.isEmpty) {
+                            _focusNodeDesc.requestFocus();
+                            return;
+                          }
+                          if (_durationTextController.text.isEmpty) {
+                            _focusNodeDuration.requestFocus();
+                            return;
+                          }
+                          if (_costTextController.text.isEmpty) {
+                            _focusNodeCost.requestFocus();
+                            return;
+                          }
                           Package package = Package(
                             name: _nameTextController.text,
                             description: _descTextController.text,

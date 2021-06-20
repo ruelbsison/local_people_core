@@ -31,7 +31,7 @@ class Package  extends Equatable implements Comparable {
       this.createdAt,
       this.updatedAt,
       this.optionType = PackageOptionType.VIEW_ONLY,
-      this.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED});
+      this.entityStatus = EntityStatus.ENTIRY_STATUS_NONE});
 
   @override
   List<Object> get props => [id, name, description, traderId,

@@ -20,30 +20,19 @@ class _RequestQuoteWidgetState extends State<RequestQuoteWidget> {
   @override
   Widget build(BuildContext context) {
     context.read<JobBloc>().add(LoadJobs());
-    return Container(
-      //color: Colors.white,
-      width: 345,
-      height: 429,
-      // margin: EdgeInsets.only(left: 12, right: 12),
-      // //padding: EdgeInsets.all(10),
-      // decoration: BoxDecoration(
-      //     border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
-      //     borderRadius: BorderRadius.circular(8.0),
-      //     color: Colors.white),
-        child: BlocProvider.value(
+    return  BlocProvider.value(
           value: context.read<JobBloc>(),
           child: BlocBuilder<JobBloc, JobState>(
             builder: (context, state) {
               if (state is JobLoaded) {
-                return QuoteRequestDetailWidget(jobs: state.jobs, traderId: widget.traderId,);
+                return QuoteRequestDetailWidget(traderId: widget.traderId,);
               } else if (state is JobNotLoaded) {
                 return ErrorWidget('Error $state');
               }
               return const Center(child: CircularProgressIndicator());
             },
           ),
-        ),
-    );
+        );
   }
 
   Widget buildSuggestedTimeSlot(BuildContext context) {}

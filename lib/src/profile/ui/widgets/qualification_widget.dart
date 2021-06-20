@@ -28,7 +28,7 @@ class _QualificationWidgetState extends State<QualificationWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      color: Color(0xfff5f5f5),
+      color: theme.backgroundColor,
       child: Column(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,

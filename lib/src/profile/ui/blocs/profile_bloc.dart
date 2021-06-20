@@ -1,6 +1,7 @@
 import 'dart:async';
 
 import 'package:bloc/bloc.dart';
+import 'package:local_people_core/core.dart';
 import 'package:local_people_core/profile.dart';
 import '../../domain/entities/client_profile.dart';
 import '../../domain/entities/trader_profile.dart';
@@ -13,16 +14,19 @@ import 'package:intl/intl.dart';
 import 'profile_event.dart';
 import 'profile_state.dart';
 import 'package:local_people_core/auth.dart';
+import 'package:local_people_core/jobs.dart';
 
 class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
   final ProfileRepository profileRepository;
   final QualificationRepository qualificationRepository;
+  final PackageRepository packageRepository;
   final AppType appType;
   final AuthLocalDataSource authLocalDataSource;
 
   ProfileBloc({
     @required this.profileRepository,
     @required this.qualificationRepository,
+    @required this.packageRepository,
     @required this.appType,
     @required this.authLocalDataSource,}) :
         super(ProfileInitialState());
@@ -78,6 +82,22 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     return qualifications;
   }
 
+  Future<List<Package>> getTraderPackages(int traderId) async {
+    List<Package> packages = [];
+    try {
+      PackageListResponse packageListResponse = await packageRepository.listTraderPackages(traderId);
+      if (packageListResponse != null && packageListResponse.exception != null) {
+      } else if (packageListResponse != null && packageListResponse.packages == null) {
+      } else if (packageListResponse != null && packageListResponse.packages != null) {
+        packages = packageListResponse.packages;
+      }
+    } catch (e) {
+      print(e.toString());
+    }
+
+    return packages;
+  }
+
   Stream<ProfileState> _mapClientProfileGetToStateWithId(int clientId) async* {
     try {
        ClientResponse response = await profileRepository.getClientProfile(clientId);
@@ -109,6 +129,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         response.profile.fullName = authLocalModel.userFullName;
 
         response.profile.packages = [];
+        response.profile.packages = await getTraderPackages(response.profile.id);
         response.profile.qualifications = [];
         response.profile.qualifications = await getTraderQualifications(response.profile.id);
 
@@ -152,6 +173,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
       response = await profileRepository.getClientProfile(userId);
       if (response != null && response.exception != null) {
+        if (response.exception is ServerException) {
+          ServerException sex = response.exception;
+          if (sex.getErrorCode() != null && sex.getErrorCode() == 404) {
+            yield ProfileDoesNotExists();
+            return;
+          }
+        }
        yield ProfileNotLoaded(response.exception.toString());
       } else if (response != null && response.profile == null) {
         yield  ProfileDoesNotExists();
@@ -203,6 +231,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       }
       response = await profileRepository.getTraderProfile(userId);
       if (response != null && response.exception != null) {
+        if (response.exception is ServerException) {
+          ServerException sex = response.exception;
+          if (sex.getErrorCode() != null && sex.getErrorCode() == 404) {
+            yield ProfileDoesNotExists();
+            return;
+          }
+        }
         yield ProfileNotLoaded(response.exception.toString());
       } else if (response != null && response.profile == null) {
         yield  ProfileDoesNotExists();
@@ -212,6 +247,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         response.profile.fullName = authLocalModel.userFullName;
 
         response.profile.packages = [];
+        response.profile.packages = await getTraderPackages(response.profile.id);
         response.profile.qualifications = [];
         response.profile.qualifications = await getTraderQualifications(response.profile.id);
 
@@ -315,6 +351,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         yield TraderProfileUpdateFailed(response.exception.toString());
       } else if (response.profile != null) {
         response.profile.packages = [];
+        response.profile.packages = await getTraderPackages(response.profile.id);
         response.profile.qualifications = [];
         response.profile.qualifications = await getTraderQualifications(response.profile.id);
         yield TraderProfileUpdated(response.profile);
@@ -335,6 +372,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         var iterator = response.profiles.iterator;
         while(iterator.moveNext()) {
           TraderProfile profile = iterator.current;
+          profile.packages = await getTraderPackages(profile.id);
           profile.qualifications = await getTraderQualifications(profile.id);
         }
         yield ProfileTraderTopRatedCompleted(response.profiles);

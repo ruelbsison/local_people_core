@@ -5,10 +5,19 @@ import 'package_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/core.dart';
 
+typedef OnPackageAdded = void Function(Package);
+typedef OnPackageRemoved = void Function(Package);
+
 class PackageWidget extends StatefulWidget {
   List<Package> packages;
-  PackageWidget({@required this.packages,});
+  PackageWidget({
+    @required this.packages,
+    @required this.onPackageAdded = null,
+    @required this.onPackageRemoved = null,
+  });
 
+  OnPackageAdded onPackageAdded;
+  OnPackageRemoved onPackageRemoved;
   @override
   _PackageWidgetState createState() => _PackageWidgetState();
 }
@@ -18,10 +27,10 @@ class _PackageWidgetState extends State<PackageWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      color: Color(0xfff5f5f5),
+      color: theme.backgroundColor,
       child: Column(
         mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.start,
+        mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Container (
@@ -37,7 +46,13 @@ class _PackageWidgetState extends State<PackageWidget> {
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
-                child: createPackage(widget.packages[index]),
+                child: Container(
+                    color: Colors.white,
+                    margin: EdgeInsets.only(bottom: 10.0),
+                    child: createPackage(
+                        widget.packages[index]
+                    )
+                ),
                 onTap: () {}
               );
             },
@@ -56,7 +71,20 @@ class _PackageWidgetState extends State<PackageWidget> {
         bloc: BlocProvider.of<PackageBloc>(context),
         builder: (BuildContext context, PackageState state) {
           if (state is PackageAdded) {
-            package.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
+            state.package.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
+            int length = widget.packages.length + 1;
+            Package package = Package(
+              id: -1,
+              name: 'Package ' + length.toString(),
+              optionType: PackageOptionType.ADD_NEW,
+              traderId: state.package.traderId,
+            );
+            // setState(() {
+            //   widget.packages.add(package);
+            // });
+            if (widget.onPackageAdded != null) {
+              widget.onPackageAdded(state.package);
+            }
             return createPackageCard(state.package);
           } else if (state is PackageAddFailed) {
             package.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
@@ -69,35 +97,33 @@ class _PackageWidgetState extends State<PackageWidget> {
     } else if (package.entityStatus == EntityStatus.ENTIRY_STATUS_REMOVING) {
       BlocProvider.of<PackageBloc>(context)
           .add(PackageDeleteEvent(id: package.id));
-      return BlocConsumer<PackageBloc, PackageState>(
-          bloc: BlocProvider.of<PackageBloc>(context),
-          listenWhen: (previous, current) {
-            // return true/false to determine whether or not
-            // to invoke listener with state
-            if (previous is PackageDeleting && current is PackageDeleted)
-              return true;
-
-            return false;
-          },
-          listener: (context, state) {
-            // do stuff here based on BlocA's state
-            if (state is PackageDeleted) {
-              int start = widget.packages.indexOf(state.package);
-              widget.packages.removeAt(start);
+      return BlocBuilder<PackageBloc, PackageState>(
+        bloc: BlocProvider.of<PackageBloc>(context),
+        builder: (BuildContext context, PackageState state) {
+          if (state is PackageDeleted) {
+            state.package.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
+            int length = widget.packages.length + 1;
+            Package package = Package(
+              id: -1,
+              name: 'Package ' + length.toString(),
+              optionType: PackageOptionType.ADD_NEW,
+              traderId: state.package.traderId,
+            );
+            setState(() {
+              widget.packages.add(package);
+            });
+            if (widget.onPackageRemoved != null) {
+              widget.onPackageRemoved(state.package);
             }
-          },
-          buildWhen: (previous, current) {
-            // return true/false to determine whether or not
-            // to rebuild the widget with state
-            if (previous is PackageInitial && current is PackageDeleting)
-              return true;
-
-            return false;
-          },
-          builder: (context, state) {
-            // return widget here based on BlocA's state
+            return createPackageCard(state.package);
+          } else if (state is PackageDeleteFailed) {
+            package.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
+            return Text('Error: $state');
+          } else {
             return LoadingWidget();
-          });
+          }
+        },
+      );
     } else {
       return createPackageCard(package);
     }
@@ -109,10 +135,12 @@ class _PackageWidgetState extends State<PackageWidget> {
       onPackageCallback: (packageCallbackType, package) async {
         if (package == null) return;
         if (packageCallbackType == PackageCallbackType.ON_PACKAGE_REMOVE) {
-          int start = widget.packages.indexOf(package);
-          package.entityStatus = EntityStatus.ENTIRY_STATUS_REMOVING;
-          widget.packages.removeAt(start);
-          widget.packages.insert(start, package);
+          setState(() {
+            int start = widget.packages.indexOf(package);
+            package.entityStatus = EntityStatus.ENTIRY_STATUS_REMOVING;
+            widget.packages.removeAt(start);
+            widget.packages.insert(start, package);
+          });
         } else if (packageCallbackType == PackageCallbackType.ON_PACKAGE_CREATE) {
           DialogService _dialogService = sl<DialogService>();
           PackageCreateResponse response =
@@ -121,12 +149,15 @@ class _PackageWidgetState extends State<PackageWidget> {
               packageName: package.name
           );
           if (response != null && response.package != null) {
-            int start = widget.packages.indexOf(package);
-            widget.packages.removeAt(start);
+            setState(() {
+              int start = widget.packages.indexOf(package);
+              widget.packages.removeAt(start);
 
-            response.package.entityStatus = EntityStatus.ENTIRY_STATUS_CREATING;
-            widget.packages.insert(start, response.package);
+              response.package.entityStatus = EntityStatus.ENTIRY_STATUS_CREATING;
+              widget.packages.insert(start, response.package);
+            });
           }
+          Navigator.of(context).pop();
         } else {
           print('Unhandled $packageCallbackType');
         }

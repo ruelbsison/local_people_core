@@ -139,9 +139,9 @@ class _MoreScreenState extends State<MoreScreen> {
                 press: () {
                   AppRouter.pushPage(
                       context,
-                      ProfileScreen(
+                      DialogManager(child: ProfileScreen(
                         profile: widget.profile,
-                      )
+                      ),),
                   );
                 },
               ),

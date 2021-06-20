@@ -15,6 +15,7 @@ class LocalPeopleAppBarWidget extends StatelessWidget implements PreferredSizeWi
   final String packageSvgAssetIcon;
   final String networkIcon;
   Widget image;
+  Widget leading;
   /// you can add more fields that meet your needs
 
   LocalPeopleAppBarWidget({Key key,
@@ -22,6 +23,7 @@ class LocalPeopleAppBarWidget extends StatelessWidget implements PreferredSizeWi
     this.startrDateTime, this.bottom,
     this.appBarPreferredSize = const Size.fromHeight(180.0),
     this.networkIcon,
+    this.leading = null,
   this.packageSvgAssetIcon = 'packages/local_people_core/assets/images/package-orange.svg',})
       : super(key: key);
 
@@ -54,6 +56,7 @@ class LocalPeopleAppBarWidget extends StatelessWidget implements PreferredSizeWi
     return PreferredSize(
       preferredSize: appBarPreferredSize,
       child: AppBar(
+        leading: leading,
         titleSpacing: 0,
         centerTitle: false,
         //automaticallyImplyLeading: false,

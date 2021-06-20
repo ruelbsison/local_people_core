@@ -8,8 +8,11 @@ class LoadingWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: _buildBody(context),
+    return Container(
+      padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+      child: Center(
+        child: _buildBody(context),
+      ),
     );
   }
 

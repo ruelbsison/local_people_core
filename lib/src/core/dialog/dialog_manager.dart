@@ -55,6 +55,19 @@ class _DialogManagerState extends State<DialogManager> {
     );
   }
 
+  void _showBookPackageDialog(PackageCreateRequest request) {
+    showDialog(
+      context: context,
+      builder: (context) => AppDialog(
+        title: 'Create Package',
+        child: PackageDetailWidget(
+          name: request.packageName,
+          traderId: request.traderId,
+        ),
+      ),
+    );
+  }
+
   void _showJobAwardDialog(Job job) {
     showDialog(
       context: context,
@@ -120,7 +133,7 @@ class _DialogManagerState extends State<DialogManager> {
       context: context,
       builder: (context) => AppDialog(
         title: 'Request Quote',
-        child: RequestQuoteWidget(
+        child: QuoteRequestDetailWidget(
           traderId: traderId,
         ),
       ),

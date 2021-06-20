@@ -6,6 +6,7 @@ import 'location_model.dart';
 import 'tag_model.dart';
 import '../../domain/entities/job.dart';
 import '../../domain/entities/tag.dart';
+import 'tag_model.dart';
 import '../../domain/entities/location.dart';
 
 part 'job_model.g.dart';
@@ -31,7 +32,8 @@ class JobModel extends Equatable {
     this.client_id,
     this.trader_id,
     this.location_id,
-    this.tag_ids,
+    this.tag_ids = const [],
+    this.tags = const [],
   })  : assert(id != null);
 
   /// The current JobModel's email address.
@@ -65,6 +67,8 @@ class JobModel extends Equatable {
 
   List<int> tag_ids;
 
+  List<TagModel> tags;
+
   /// Empty JobModel which represents an unauthenticated JobModel.
   static empty() {
     new JobModel(id: -1,
@@ -89,7 +93,7 @@ class JobModel extends Equatable {
       description: job.description,
       date:  DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(job.date), //DateFormat('yyyyy-MM-ddThh:mm.sssZ').format(DateTime.now()), //job.date),
       budget: job.budget,
-      awarded: false,
+      awarded: job.awarded,
       client_id: job.clientId, //authLocalModel.userId,
       trader_id: job.traderId,
         private: job.private,
@@ -110,7 +114,7 @@ class JobModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, title, description, date, budget, created_at, updated_at, client_id, trader_id, location_id, tag_ids, private];
+  List<Object> get props => [id, title, description, date, budget, created_at, updated_at, client_id, trader_id, location_id, tag_ids, tags, private];
 
   factory JobModel.fromJson(Map<String, dynamic> json) => _$JobModelFromJson(json);
   Map<String, dynamic> toJson() => _$JobModelToJson(this);
