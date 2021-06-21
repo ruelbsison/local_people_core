@@ -1,5 +1,6 @@
 library local_people_core;
 
+export './src/core/dialog/book_package_dialog.dart';
 export './src/core/dialog/package_create_dialog.dart';
 export './src/core/dialog/status_dialog.dart';
 export './src/core/dialog/dialog_service.dart';

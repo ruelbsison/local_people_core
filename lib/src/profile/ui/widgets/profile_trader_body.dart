@@ -250,6 +250,7 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
     //    widget.profile.packages.length > 0) {
       final packageWidget = PackageWidget (
         packages: packages,
+        traderName: widget.profile.fullName,
         onPackageAdded: (package) {
           int index = widget.profile.packages.indexOf(package);
           //setState(() {

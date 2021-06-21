@@ -6,6 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 enum PackageCallbackType {
   ON_PACKAGE_CREATE,
   ON_PACKAGE_REMOVE,
+  ON_PACKAGE_BOOKING,
 }
 typedef OnPackageCallback = void Function(PackageCallbackType, Package);
 
@@ -201,7 +202,7 @@ class _PackageCardState extends State<PackageCard> {
                 width: 24,
               ),
               iconSize: 24,
-              onPressed: () async {
+              onPressed: () {
                 if (widget.onPackageCallback == null)
                   return;
                 if (widget.package.optionType == PackageOptionType.REMOVE) {
@@ -236,7 +237,11 @@ class _PackageCardState extends State<PackageCard> {
               primary: Color.fromRGBO(255, 99, 95, 1),
               onPrimary: Color.fromRGBO(170, 186, 205, 1),
             ),
-            onPressed: () => {},
+            onPressed: () {
+              if (widget.onPackageCallback == null)
+                return;
+              widget.onPackageCallback(PackageCallbackType.ON_PACKAGE_BOOKING, widget.package);
+            },
             child: Text(
               'Book Package',
               textAlign: TextAlign.center,

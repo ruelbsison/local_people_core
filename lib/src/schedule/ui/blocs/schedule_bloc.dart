@@ -19,6 +19,12 @@ class ScheduleBloc { //}extends Bloc<ScheduleEvent, ScheduleState> {
 
   get timeslots => _timeslotController.stream;
 
+  DateTime dayStartTime;
+
+  DateTime dayEndTime;
+
+  int lastInterval = -1;
+
   ScheduleBloc(
     //@required this.scheduleRepository,
   ); // : super(ScheduleInitial());
@@ -26,12 +32,14 @@ class ScheduleBloc { //}extends Bloc<ScheduleEvent, ScheduleState> {
   getTimeslots({int interval}) async {
 
     DateTime tomorrow = DateTime.now().add(Duration(days: 1));
-    DateTime dayStartTime = DateTime.parse(DateFormat('dd-MM-yyyy 09:00:00').format(tomorrow));
-    DateTime dayEndTime = DateTime.parse(DateFormat('dd-MM-yyyy 18:00:00').format(tomorrow));
+    if (interval != lastInterval) {
+      dayStartTime = DateTime.parse(DateFormat("yyyy-MM-dd'T'09:00:00.ms'Z'").format(tomorrow)); //DateTime.parse(DateFormat('dd-MM-yyyy 09:00:00').format(tomorrow));
+      dayEndTime = DateTime.parse(DateFormat("yyyy-MM-dd'T'18:00:00.ms'Z'").format(tomorrow)); //DateTime.parse(DateFormat('dd-MM-yyyy 18:00:00').format(tomorrow));
+    }
     DateTime startTime = dayStartTime;
 
     List<Timeslot> list = [];
-    for (int i = 0; i < 100; i++) {
+    for (int i = 0; i < 3; i++) {
       DateTime endTime = startTime.add(Duration(hours: interval));
       Timeslot timeslot = Timeslot(
         startDateTime: startTime,
@@ -42,13 +50,16 @@ class ScheduleBloc { //}extends Bloc<ScheduleEvent, ScheduleState> {
 
       startTime = endTime;
       if (startTime.isAfter(dayEndTime)) {
-        tomorrow = startTime.add(Duration(days: 1));
-        dayStartTime = DateTime.parse(DateFormat('dd-MM-yyyy 09:00:00').format(tomorrow));
-        dayEndTime = DateTime.parse(DateFormat('dd-MM-yyyy 18:00:00').format(tomorrow));
+        tomorrow = startTime.add(Duration(days: interval));
+        dayStartTime = DateTime.parse(DateFormat("yyyy-MM-dd'T'09:00:00.ms'Z'").format(tomorrow));
+        dayEndTime = DateTime.parse(DateFormat("yyyy-MM-dd'T'18:00:00.ms'Z'").format(tomorrow));
 
         startTime = dayStartTime;
       }
     }
+
+    lastInterval = interval;
+
     _timeslotController.sink.add(list);
 
   }

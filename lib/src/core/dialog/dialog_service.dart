@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'status_dialog.dart';
 import 'package_create_dialog.dart';
+import 'book_package_dialog.dart';
 import 'package:local_people_core/jobs.dart';
 
 class DialogService {
@@ -176,5 +177,32 @@ class DialogService {
   void createPackageDialogComplete(PackageCreateResponse reponse) {
     _dialogCreatePackageCompleter.complete(reponse);
     _dialogCreatePackageCompleter = null;
+  }
+
+  /* --------------------------------------------------------------------------------------*/
+  Function(BookPackageRequest) _showBookPackageDialogListener;
+  Completer<BookPackageResponse> _dialogBookPackageCompleter;
+
+  /// Registers a callback function. Typically to show the dialog
+  void registerBookPackageDialogListener(Function(BookPackageRequest) showBookPackageDialogListener) {
+    _showBookPackageDialogListener = showBookPackageDialogListener;
+  }
+
+  Future<BookPackageResponse> showBookPackageDialog({
+    Package package,
+    String traderName,
+  }) {
+    _dialogBookPackageCompleter = Completer<BookPackageResponse>();
+    _showBookPackageDialogListener(BookPackageRequest(
+        package: package,
+        traderName: traderName,
+    ));
+    return _dialogBookPackageCompleter.future;
+  }
+
+  /// Completes the _dialogCompleter to resume the Future's execution call
+  void bookPackageDialogComplete(BookPackageResponse reponse) {
+    _dialogBookPackageCompleter.complete(reponse);
+    _dialogBookPackageCompleter = null;
   }
 }

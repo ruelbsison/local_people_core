@@ -10,8 +10,10 @@ typedef OnPackageRemoved = void Function(Package);
 
 class PackageWidget extends StatefulWidget {
   List<Package> packages;
+  final String traderName;
   PackageWidget({
     @required this.packages,
+    @required this.traderName,
     @required this.onPackageAdded = null,
     @required this.onPackageRemoved = null,
   });
@@ -156,6 +158,18 @@ class _PackageWidgetState extends State<PackageWidget> {
               response.package.entityStatus = EntityStatus.ENTIRY_STATUS_CREATING;
               widget.packages.insert(start, response.package);
             });
+          }
+          Navigator.of(context).pop();
+        } else if (packageCallbackType == PackageCallbackType.ON_PACKAGE_BOOKING) {
+          DialogService _dialogService = sl<DialogService>();
+          BookPackageResponse response =
+          await _dialogService.showBookPackageDialog(
+            package: package,
+          );
+          if (response != null && response.booking != null) {
+            response.booking.entityStatus = EntityStatus.ENTIRY_STATUS_CREATING;
+            BlocProvider.of<BookingBloc>(context)
+                .add(BookingAddEvent(booking: response.booking));
           }
           Navigator.of(context).pop();
         } else {

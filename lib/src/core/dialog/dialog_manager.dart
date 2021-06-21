@@ -4,7 +4,9 @@ import 'dialog_service.dart';
 import 'package:rflutter_alert/rflutter_alert.dart';
 import 'status_dialog.dart';
 import 'package:local_people_core/quote.dart';
+import 'package:local_people_core/core.dart';
 import 'package_create_dialog.dart';
+import 'book_package_dialog.dart';
 import 'package:local_people_core/jobs.dart';
 import 'package:local_people_core/profile.dart';
 import '../widgets/custom_alert.dart';
@@ -33,13 +35,37 @@ class _DialogManagerState extends State<DialogManager> {
         .registerSuccessfulStatusDialogListener(_showSuccessfulStatusDialog);
     _dialogService.registerRequestQuoteDialogListener(_showRequestQuoteDialog);
     _dialogService.registerPlaceBidDialogListener(_showPlaceBidDialog);
-    _dialogService
-        .registerCreatePackageDialogListener(_showCreatePackageDialog);
+    _dialogService.registerCreatePackageDialogListener(_showCreatePackageDialog);
+    _dialogService.registerBookPackageDialogListener(_showBookPackageDialog);
   }
 
   @override
   Widget build(BuildContext context) {
     return widget.child;
+  }
+
+  void _showPlaceBidDialog(Job job) {
+    showDialog(
+      context: context,
+      builder: (context) => AppDialog(
+        title: 'Place Bid',
+        child: PlaceBidWidget(
+          job: job,
+        ),
+      ),
+    );
+  }
+
+  void _showRequestQuoteDialog(int traderId) {
+    showDialog(
+      context: context,
+      builder: (context) => AppDialog(
+        title: 'Request Quote',
+        child: QuoteRequestDetailWidget(
+          traderId: traderId,
+        ),
+      ),
+    );
   }
 
   void _showCreatePackageDialog(PackageCreateRequest request) {
@@ -55,14 +81,14 @@ class _DialogManagerState extends State<DialogManager> {
     );
   }
 
-  void _showBookPackageDialog(PackageCreateRequest request) {
+  void _showBookPackageDialog(BookPackageRequest request) {
     showDialog(
       context: context,
       builder: (context) => AppDialog(
-        title: 'Create Package',
-        child: PackageDetailWidget(
-          name: request.packageName,
-          traderId: request.traderId,
+        title: 'Book ' + request.package.name,
+        child: BookPackageWidget(
+          package: request.package,
+          traderName: request.traderName,
         ),
       ),
     );
@@ -116,69 +142,74 @@ class _DialogManagerState extends State<DialogManager> {
     );
   }
 
-  void _showPlaceBidDialog(Job job) {
-    showDialog(
-      context: context,
-      builder: (context) => AppDialog(
-        title: 'Place Bid',
-        child: PlaceBidWidget(
-          job: job,
-        ),
-      ),
-    );
-  }
-
-  void _showRequestQuoteDialog(int traderId) {
-    showDialog(
-      context: context,
-      builder: (context) => AppDialog(
-        title: 'Request Quote',
-        child: QuoteRequestDetailWidget(
-          traderId: traderId,
-        ),
-      ),
-    );
-  }
-
   void _showStatusDialog(StatusDialogRequest request) {
     final theme = Theme.of(context);
-    Alert(
-      style: AlertStyle(
-        alertBorder:
-            RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
-        backgroundColor: theme.primaryColor,
-        titleTextAlign: TextAlign.left,
-        alertPadding: EdgeInsets.all(12.0),
-        isButtonVisible: false,
-        buttonAreaPadding: EdgeInsets.all(8.0),
-        titleStyle: theme.textTheme.bodyText1,
-      ),
+    showDialog(
       context: context,
-      title: request.title,
-      content: Column(
-        children: <Widget>[
-          SizedBox(
-            height: 20.0,
-          ),
-          Center(
-            child: CircularProgressIndicator(),
-          ),
-          SizedBox(
-            height: 10.0,
-          ),
-          Center(
-            child: Text(
-              request.message,
-              textAlign: TextAlign.center,
-              style: theme.textTheme.bodyText1,
+      builder: (context) => AppDialog(
+        title: request.title,
+        child: Column(
+          children: <Widget>[
+            SizedBox(
+              height: 20.0,
             ),
-          ),
-          SizedBox(
-            height: 20.0,
-          ),
-        ],
+            Center(
+              child: CircularProgressIndicator(),
+            ),
+            SizedBox(
+              height: 10.0,
+            ),
+            Center(
+              child: Text(
+                request.message,
+                textAlign: TextAlign.center,
+                style: theme.textTheme.bodyText1,
+              ),
+            ),
+            SizedBox(
+              height: 20.0,
+            ),
+          ],
+        ),
       ),
-    ).show();
+    );
+    // Alert(
+    //   style: AlertStyle(
+    //     alertBorder:
+    //         RoundedRectangleBorder(borderRadius: BorderRadius.circular(8.0)),
+    //     backgroundColor: theme.primaryColor,
+    //     titleTextAlign: TextAlign.left,
+    //     alertPadding: EdgeInsets.all(12.0),
+    //     isButtonVisible: false,
+    //     buttonAreaPadding: EdgeInsets.all(8.0),
+    //     titleStyle: theme.textTheme.bodyText1,
+    //   ),
+    //   context: context,
+    //   title: request.title,
+    //   content: Column(
+    //     children: <Widget>[
+    //       SizedBox(
+    //         height: 20.0,
+    //       ),
+    //       Center(
+    //         child: CircularProgressIndicator(),
+    //       ),
+    //       SizedBox(
+    //         height: 10.0,
+    //       ),
+    //       Center(
+    //         child: Text(
+    //           request.message,
+    //           textAlign: TextAlign.center,
+    //           style: theme.textTheme.bodyText1,
+    //         ),
+    //       ),
+    //       SizedBox(
+    //         height: 20.0,
+    //       ),
+    //     ],
+    //   ),
+    // ).show();
   }
 
   void _showErrorStatusDialog(String message) {

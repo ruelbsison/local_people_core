@@ -21,7 +21,7 @@ class DateFormatUtil {
 
   static String getFormattedDateWithDateTime(DateTime dt) {
     String dayOfMonthSuffix = getDayOfMonthSuffix(dt.day);
-    return dt.day.toString() + dayOfMonthSuffix + ' ' + DateFormat('MMMM yyyy').format(dt);
+    return DateFormat('h:mma').format(dt) + ' ' + dt.day.toString() + dayOfMonthSuffix + ' ' + DateFormat('MMMM yyyy').format(dt);
   }
 
   static String getDateTimeDiff(DateTime dt1, DateTime dt2) {

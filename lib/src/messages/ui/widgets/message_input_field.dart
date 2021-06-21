@@ -4,6 +4,7 @@ import '../../../core/configs//constants.dart';
 import '../blocs/message_bloc.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/message.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 typedef OnMessageSend = void Function(String);
 
@@ -108,23 +109,31 @@ class _MessageInputFieldState extends State<MessageInputField> {
                         },
                       ),
                     ),
-                    Icon(
-                      Icons.attach_file,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .color
-                          .withOpacity(0.64),
+                    ClipOval(
+                      child: SvgPicture.asset(
+                        'packages/local_people_core/assets/images/camera.svg',
+                        fit: BoxFit.contain,
+                        height: 37,
+                        width: 37,
+                      ),
                     ),
-                    SizedBox(width: kDefaultPadding / 4),
-                    Icon(
-                      Icons.camera_alt_outlined,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .color
-                          .withOpacity(0.64),
-                    ),
+                    // Icon(
+                    //   Icons.attach_file,
+                    //   color: Theme.of(context)
+                    //       .textTheme
+                    //       .bodyText1
+                    //       .color
+                    //       .withOpacity(0.64),
+                    // ),
+                    // SizedBox(width: kDefaultPadding / 4),
+                    // Icon(
+                    //   Icons.camera_alt_outlined,
+                    //   color: Theme.of(context)
+                    //       .textTheme
+                    //       .bodyText1
+                    //       .color
+                    //       .withOpacity(0.64),
+                    // ),
                   ],
                 ),
               ),

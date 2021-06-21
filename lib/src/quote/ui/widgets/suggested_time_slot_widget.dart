@@ -24,6 +24,17 @@ class SuggestedTimeSlotWidget extends StatefulWidget {
 class _SuggestedTimeSlotWidgetState extends State<SuggestedTimeSlotWidget> {
   List<bool> isSelected = [false, false, false];
   final ScheduleBloc scheduleBloc = ScheduleBloc();
+  final TextEditingController _durationController =
+  TextEditingController();
+
+  @override
+  void initState() {
+    _durationController.text = '1';
+    scheduleBloc.getTimeslots(interval:int.parse(_durationController.text) );
+
+    super.initState();
+    //jobs
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -62,6 +73,7 @@ class _SuggestedTimeSlotWidgetState extends State<SuggestedTimeSlotWidget> {
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: TextField(
+                        autofocus: true,
                         style: theme.textTheme.bodyText2,
                         decoration: InputDecoration(
                           labelText: 'hours',
@@ -138,87 +150,6 @@ class _SuggestedTimeSlotWidgetState extends State<SuggestedTimeSlotWidget> {
                     child: Card (
                       child: getTimeslotsWidget(),
                       //padding: EdgeInsets.only(left: 12.0, right: 12.0),
-                      // child: ToggleButtons(
-                      //   direction: Axis.vertical,
-                      //   borderRadius: BorderRadius.circular(35.0),
-                      //   fillColor: Colors.white,
-                      //   borderColor: Color.fromRGBO(255, 99, 95, 1),
-                      //   borderWidth: 1.0,
-                      //   textStyle: theme.textTheme.bodyText1,
-                      //   children: <Widget> [
-                      //     StreamBuilder(
-                      //       stream: scheduleBloc.timeslots,
-                      //       builder: (BuildContext context, AsyncSnapshot<List<Timeslot>> timeslots) {
-                      //         if (timeslots.hasData) {
-                      //           return Padding (
-                      //             padding: EdgeInsets.all(6.0),
-                      //             child: Card (
-                      //               //tag: SuggestedTimeSlotWidget.uuid.v4(),
-                      //               child: Text(
-                      //                 DateFormat().format(timeslots.data.timeslot.startDateTime),
-                      //                 '2.00pm 7th July 2021',
-                      //                 textAlign: TextAlign.left,
-                      //                 style: theme.textTheme.bodyText1,
-                      //               ),
-                      //             ),
-                      //           );
-                      //         } else if (timeslots.hasError) {
-                      //           return Text(timeslots.error.toString());
-                      //         }
-                      //         return Center(child: CircularProgressIndicator());
-                      //       },
-                      //     ),
-                      //   ],
-                      //   //children: <Widget>[
-                      //     // Padding (
-                      //     //   padding: EdgeInsets.all(6.0),
-                      //     //   child: Card (
-                      //     //     //tag: SuggestedTimeSlotWidget.uuid.v4(),
-                      //     //     child: Text(
-                      //     //       '2.00pm 7th July 2021',
-                      //     //       textAlign: TextAlign.left,
-                      //     //       style: theme.textTheme.bodyText1,
-                      //     //     ),
-                      //     //   ),
-                      //     // ),
-                      //     // Padding (
-                      //     //   padding: EdgeInsets.all(6.0),
-                      //     //   child: Card (
-                      //     //     //tag: SuggestedTimeSlotWidget.uuid.v4(),
-                      //     //     child: Text(
-                      //     //       '4.00pm 7th July 2021',
-                      //     //       textAlign: TextAlign.left,
-                      //     //       style: theme.textTheme.bodyText1,
-                      //     //     ),
-                      //     //   ),
-                      //     // ),
-                      //     // Padding (
-                      //     //   padding: EdgeInsets.all(6.0),
-                      //     //   child: Card (
-                      //     //     //tag: SuggestedTimeSlotWidget.uuid.v4(),
-                      //     //     child: Text(
-                      //     //       '6.00pm 7th July 2021',
-                      //     //       textAlign: TextAlign.left,
-                      //     //       style: theme.textTheme.bodyText1,
-                      //     //     ),
-                      //     //   ),
-                      //     // ),
-                      //   //],
-                      //   onPressed: (int index) {
-                      //     setState(() {
-                      //       for (int buttonIndex = 0;
-                      //       buttonIndex < isSelected.length;
-                      //       buttonIndex++) {
-                      //         if (buttonIndex == index) {
-                      //           isSelected[buttonIndex] = true;
-                      //         } else {
-                      //           isSelected[buttonIndex] = false;
-                      //         }
-                      //       }
-                      //     });
-                      //   },
-                      //   isSelected: isSelected,
-                      // ),
                     ),
                   ),
                 ),
@@ -334,26 +265,40 @@ class _SuggestedTimeSlotWidgetState extends State<SuggestedTimeSlotWidget> {
       If that the case show user that you have empty Todos
       */
       return timeslots.data.length != 0
-          ? ListView.builder(
-        itemCount: timeslots.data.length,
-        itemBuilder: (context, itemPosition) {
-          Timeslot timeslot = timeslots.data[itemPosition];
+          ? ToggleButtons(
+        direction: Axis.vertical,
+        borderRadius: BorderRadius.circular(35.0),
+        fillColor: Colors.white,
+        borderColor: Color.fromRGBO(255, 99, 95, 1),
+        borderWidth: 1.0,
+        textStyle: theme.textTheme.bodyText1,
+        onPressed: (int index) {
+          setState(() {
+            for (int buttonIndex = 0;
+              buttonIndex < isSelected.length;
+              buttonIndex++) {
+                if (buttonIndex == index) {
+                  isSelected[buttonIndex] = true;
+                } else {
+                  isSelected[buttonIndex] = false;
+                }
+            }
+          });
+        },
+        isSelected: isSelected,
+        children: timeslots.data.map((Timeslot timeslot) {
           return Padding (
             padding: EdgeInsets.all(6.0),
             child: Card (
               //tag: SuggestedTimeSlotWidget.uuid.v4(),
               child: Text(
                 DateFormatUtil.getFormattedDateWithDateTime(timeslot.startDateTime),
-                //DateFormat().format(timeslot.startDateTime),
-                //'2.00pm 7th July 2021',
                 textAlign: TextAlign.left,
                 style: theme.textTheme.bodyText1,
               ),
             ),
           );
-        },
-      )
-          : Container(
+        }).toList(),) : Container(
           child: Center(
             //this is used whenever there 0 Todo
             //in the data base

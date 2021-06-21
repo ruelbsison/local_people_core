@@ -51,6 +51,7 @@ export './src/jobs/data/repositories/booking_repository_impl.dart';
 export './src/jobs/data/datasources/booking_rest_api_client.dart';
 export './src/jobs/data/datasources/booking_remote_data_source.dart';
 export './src/jobs/data/datasources/booking_remote_data_source_impl.dart';
+export './src/jobs/ui/blocs/booking_bloc.dart';
 
 export './src/jobs/data/datasources/job_rest_api_client.dart';
 export './src/jobs/data/datasources/job_remote_data_source.dart';
