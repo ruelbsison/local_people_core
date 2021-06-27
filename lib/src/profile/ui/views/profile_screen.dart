@@ -90,7 +90,7 @@ class _ProfileScreenState extends State<ProfileScreen> {
                     Container (
                       padding: EdgeInsets.only(left: 10),
                       child: Text(
-                        widget.profile.fullName,
+                        widget.profile != null && widget.profile.fullName != null ? widget.profile.fullName : '',
                         style: theme.textTheme.headline6.copyWith(color: Colors.white),
                         textAlign: TextAlign.left,
                       ),

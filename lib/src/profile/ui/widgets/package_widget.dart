@@ -25,6 +25,8 @@ class PackageWidget extends StatefulWidget {
 }
 
 class _PackageWidgetState extends State<PackageWidget> {
+  DialogService _dialogService = sl<DialogService>();
+
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -35,12 +37,12 @@ class _PackageWidgetState extends State<PackageWidget> {
         mainAxisAlignment: MainAxisAlignment.center,
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container (
+          Container(
             padding: EdgeInsets.only(left: 12.0),
             child: Text(
-            "Packages",
-            style: theme.textTheme.subtitle1,
-          ),
+              "Packages",
+              style: theme.textTheme.subtitle1,
+            ),
           ),
           ListView.builder(
             primary: false,
@@ -48,15 +50,11 @@ class _PackageWidgetState extends State<PackageWidget> {
             shrinkWrap: true,
             itemBuilder: (BuildContext context, int index) {
               return InkWell(
-                child: Container(
-                    color: Colors.white,
-                    margin: EdgeInsets.only(bottom: 10.0),
-                    child: createPackage(
-                        widget.packages[index]
-                    )
-                ),
-                onTap: () {}
-              );
+                  child: Container(
+                      color: Colors.white,
+                      margin: EdgeInsets.only(bottom: 10.0),
+                      child: createPackage(widget.packages[index])),
+                  onTap: () {});
             },
             itemCount: widget.packages == null ? 0 : widget.packages.length,
           ),
@@ -127,7 +125,38 @@ class _PackageWidgetState extends State<PackageWidget> {
         },
       );
     } else {
-      return createPackageCard(package);
+      return BlocProvider.value(
+        value: BlocProvider.of<BookingBloc>(context),
+        child: BlocListener<BookingBloc, BookingState>(
+          listenWhen: (previousState, state) {
+            if (state is BookingAdding) {
+              return true;
+            } else if (state is BookingAddFailed) {
+              return true;
+            } else if (state is BookingAdded) {
+              return true;
+            }
+            return false;
+          },
+          listener: (context, state) {
+            if (state is BookingAdding) {
+              _dialogService.showStatusDialog(
+                title: 'Place Bid',
+                message: 'Sending...',
+              );
+            } else if (state is BookingAddFailed) {
+              Navigator.of(context).pop();
+              _dialogService.showSuccessfulStatusDialog(
+                  message: 'Sending failed!!');
+            } else if (state is BookingAdded) {
+              Navigator.of(context).pop();
+              _dialogService.showSuccessfulStatusDialog(
+                  message: 'Sent successfully!');
+            }
+          },
+          child: createPackageCard(package),
+        ),
+      );
     }
   }
 
@@ -143,27 +172,28 @@ class _PackageWidgetState extends State<PackageWidget> {
             widget.packages.removeAt(start);
             widget.packages.insert(start, package);
           });
-        } else if (packageCallbackType == PackageCallbackType.ON_PACKAGE_CREATE) {
-          DialogService _dialogService = sl<DialogService>();
+        } else if (packageCallbackType ==
+            PackageCallbackType.ON_PACKAGE_CREATE) {
+          //DialogService _dialogService = sl<DialogService>();
           PackageCreateResponse response =
-          await _dialogService.showCreatePackageDialog(
-              traderId: package.traderId,
-              packageName: package.name
-          );
+              await _dialogService.showCreatePackageDialog(
+                  traderId: package.traderId, packageName: package.name);
           if (response != null && response.package != null) {
             setState(() {
               int start = widget.packages.indexOf(package);
               widget.packages.removeAt(start);
 
-              response.package.entityStatus = EntityStatus.ENTIRY_STATUS_CREATING;
+              response.package.entityStatus =
+                  EntityStatus.ENTIRY_STATUS_CREATING;
               widget.packages.insert(start, response.package);
             });
           }
           Navigator.of(context).pop();
-        } else if (packageCallbackType == PackageCallbackType.ON_PACKAGE_BOOKING) {
-          DialogService _dialogService = sl<DialogService>();
+        } else if (packageCallbackType ==
+            PackageCallbackType.ON_PACKAGE_BOOKING) {
+          //DialogService _dialogService = sl<DialogService>();
           BookPackageResponse response =
-          await _dialogService.showBookPackageDialog(
+              await _dialogService.showBookPackageDialog(
             package: package,
           );
           if (response != null && response.booking != null) {
@@ -178,5 +208,4 @@ class _PackageWidgetState extends State<PackageWidget> {
       },
     );
   }
-
 }

@@ -37,12 +37,13 @@ class _PackageCardState extends State<PackageCard> {
     }
     if (widget.package.optionType != PackageOptionType.ADD_NEW) {
       columnChildren.add(SizedBox(height: 10));
-      columnChildren.add(build_package_details(context));
-    }
-    AppType appType = AppConfig.of(context).appType;
-    if (widget.package.optionType == PackageOptionType.VIEW_ONLY || appType == AppType.CLIENT) {
-      columnChildren.add(SizedBox(height: 10));
-      columnChildren.add(build_package_booking_action(context));
+      AppType appType = AppConfig.of(context).appType;
+      if (widget.package.optionType == PackageOptionType.VIEW_ONLY || appType == AppType.CLIENT) {
+        columnChildren.add(build_package_details(context, true));
+      } else {
+        columnChildren.add(build_package_details(context, false));
+      }
+      columnChildren.add(SizedBox(height: 20));
     }
 
     columnChildren.add(SizedBox(height: 20));
@@ -61,7 +62,7 @@ class _PackageCardState extends State<PackageCard> {
     );
   }
 
-  Widget build_package_details(BuildContext context) {
+  Widget build_package_details(BuildContext context, bool showBookingActions) {
     final theme = Theme.of(context);
     Size size = MediaQuery.of(context).size;
       List<Widget> columnChildren = <Widget>[
@@ -128,18 +129,18 @@ class _PackageCardState extends State<PackageCard> {
                 ],
               ),
               SizedBox(height: 10),
+              if (showBookingActions)
+                build_package_booking_action(context),
+              SizedBox(height: 10),
             ],
           ),
-        ),
-        Expanded(
-          flex: 1,
-          child: Container(),
         ),
       ];
 
     return Container(
       color: Colors.white,
       //padding: const EdgeInsets.only(left: 15, right: 18, top: 34, bottom: 56, ),
+      padding: const EdgeInsets.only(right: 12),
       child: Flex (
         direction: Axis.horizontal,
         mainAxisSize: MainAxisSize.max,
@@ -226,12 +227,12 @@ class _PackageCardState extends State<PackageCard> {
   Widget build_package_booking_action(BuildContext context) {
     final theme = Theme.of(context);
     return Row (
-      mainAxisAlignment: MainAxisAlignment.center,
+      mainAxisAlignment: MainAxisAlignment.start,
       mainAxisSize: MainAxisSize.max,
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Container (
-          padding: EdgeInsets.only(left: 10),
+          //padding: EdgeInsets.only(left: 10),
           child: ElevatedButton(
             style: ElevatedButton.styleFrom(
               primary: Color.fromRGBO(255, 99, 95, 1),

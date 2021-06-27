@@ -81,6 +81,7 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                       //padding: EdgeInsets.only(right: 10),
                       child: Align(
                         alignment: Alignment.centerRight,
+                        //child : EnsureVisibleWhenFocused(focusNode: _focusNodeName,child: ,),
                         child: TextField(
                           style: theme.textTheme.bodyText2,
                           controller: _nameTextController,
@@ -218,26 +219,30 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
                       //padding: EdgeInsets.only(right: 10),
                       child: Align(
                         alignment: Alignment.centerRight,
-                        child: TextField(
-                          style: theme.textTheme.bodyText2,
-                          controller: _durationTextController,
-                          focusNode: _focusNodeDuration,
-                          decoration: InputDecoration(
-                            labelText: 'Hours',
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                            enabledBorder: OutlineInputBorder(
-                              borderSide: BorderSide.none,
+                        //child : EnsureVisibleWhenFocused(focusNode: _focusNodeName, ),
+                        child : EnsureVisibleWhenFocused(
+                          focusNode: _focusNodeName,
+                          child: TextField(
+                            style: theme.textTheme.bodyText2,
+                            controller: _durationTextController,
+                            //focusNode: _focusNodeDuration,
+                            decoration: InputDecoration(
+                              labelText: 'Hours',
+                              floatingLabelBehavior: FloatingLabelBehavior.never,
+                              enabledBorder: OutlineInputBorder(
+                                borderSide: BorderSide.none,
+                              ),
+                              // border: OutlineInputBorder(
+                              //     borderRadius: BorderRadius.circular(30),
+                              //     borderSide: BorderSide.none),
+                              border: InputBorder.none,
                             ),
-                            // border: OutlineInputBorder(
-                            //     borderRadius: BorderRadius.circular(30),
-                            //     borderSide: BorderSide.none),
-                            border: InputBorder.none,
+                            keyboardType: TextInputType.number,
+                            textInputAction: TextInputAction.next,
+                            onSubmitted: (val) {
+                              _focusNodeCost.requestFocus();
+                            },
                           ),
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                          onSubmitted: (val) {
-                            _focusNodeCost.requestFocus();
-                          },
                         ),
                       ),
                     ),
