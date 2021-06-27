@@ -79,13 +79,13 @@ class QuoteRequestLoading extends QuoteRequestState {
 }
 
 class QuoteRequestLoaded extends QuoteRequestState {
-  final List<QuoteRequest> quoteRequest;
+  final List<QuoteRequest> quoteRequests;
 
-  const QuoteRequestLoaded(this.quoteRequest);
+  const QuoteRequestLoaded(this.quoteRequests);
 
   @override
   List<Object> get props {
-    return [quoteRequest];
+    return [quoteRequests];
   }
 }
 
@@ -136,3 +136,37 @@ class QuoteRequestUpdateFailed extends QuoteRequestState {
     return 'QuoteRequestUpdateFailed{e: $e}';
   }
 }
+
+class JobQuoteRequestLoading extends QuoteRequestState {
+  @override
+  List<Object> get props => [];
+}
+
+class JobQuoteRequestLoaded extends QuoteRequestState {
+  final List<QuoteRequest> quoteRequests;
+
+  const JobQuoteRequestLoaded(this.quoteRequests);
+
+  @override
+  List<Object> get props {
+    return [quoteRequests];
+  }
+}
+
+class JobQuoteRequestLoadFailed extends QuoteRequestState {
+  final String e;
+
+  const JobQuoteRequestLoadFailed(this.e);
+
+  @override
+  List<Object> get props {
+    return [e];
+  }
+
+  @override
+  String toString() {
+    return 'JobQuoteRequestLoadFailed{e: $e}';
+  }
+}
+
+

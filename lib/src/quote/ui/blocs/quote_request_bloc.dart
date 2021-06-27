@@ -28,13 +28,17 @@ class QuoteRequestBloc extends Bloc<QuoteRequestEvent, QuoteRequestState> {
     } else if (event is QuoteRequestDeleteEvent) {
       yield QuoteRequestDeleting();
       yield* _mapQuoteRequestDeleteToState(event.id);
-    } else if (event is QuoteRequestGetEvent) {
+    } else if (event is QuoteRequestLoadEvent) {
       yield QuoteRequestLoading();
-      yield* _mapQuoteRequestLoadToState(event.id);
+      yield* _mapQuoteRequestLoadToState(event.traderId);
     } else if (event is QuoteRequestUpdateEvent) {
       yield QuoteRequestUpdating();
       yield* _mapQuoteRequestUpdateToState(event.quoteRequest);
+    } else if (event is JobQuoteRequestLoadEvent) {
+      yield JobQuoteRequestLoading();
+      yield* _mapJobQuoteRequestLoadToState(event.jobId);
     }
+
   }
 
   Stream<QuoteRequestState> _mapQuoteRequestAddToState(QuoteRequest quoteRequest) async* {
@@ -95,6 +99,21 @@ class QuoteRequestBloc extends Bloc<QuoteRequestEvent, QuoteRequestState> {
       }
     } catch (e) {
       yield QuoteRequestLoadFailed(e.toString());
+    }
+  }
+
+  Stream<QuoteRequestState> _mapJobQuoteRequestLoadToState(int jobId) async* {
+    try {
+      QuoteRequestListResponse response = await quoteRequestRepository.listJobQuoteRequests(jobId);
+      if (response != null && response.exception != null) {
+        yield JobQuoteRequestLoadFailed(response.exception.toString());
+      } else if (response != null && response.quoteRequests == null) {
+        yield  JobQuoteRequestLoadFailed('');
+      } else if (response != null && response.quoteRequests != null) {
+        yield JobQuoteRequestLoaded(response.quoteRequests);
+      }
+    } catch (e) {
+      yield JobQuoteRequestLoadFailed(e.toString());
     }
   }
 }

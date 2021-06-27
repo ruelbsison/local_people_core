@@ -22,13 +22,13 @@ class QuoteRequestDeleteEvent extends QuoteRequestEvent {
   List<Object> get props => [id];
 }
 
-class QuoteRequestGetEvent extends QuoteRequestEvent {
-  const QuoteRequestGetEvent({@required this.id});
+class QuoteRequestLoadEvent extends QuoteRequestEvent {
+  const QuoteRequestLoadEvent({@required this.traderId});
 
-  final int id;
+  final int traderId;
 
   @override
-  List<Object> get props => [id];
+  List<Object> get props => [traderId];
 }
 
 class QuoteRequestUpdateEvent extends QuoteRequestEvent {
@@ -38,4 +38,13 @@ class QuoteRequestUpdateEvent extends QuoteRequestEvent {
 
   @override
   List<Object> get props => [quoteRequest];
+}
+
+class JobQuoteRequestLoadEvent extends QuoteRequestEvent {
+  const JobQuoteRequestLoadEvent({@required this.jobId});
+
+  final int jobId;
+
+  @override
+  List<Object> get props => [jobId];
 }

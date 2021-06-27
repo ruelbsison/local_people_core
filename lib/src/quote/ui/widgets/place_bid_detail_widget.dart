@@ -4,12 +4,18 @@ import 'package:local_people_core/jobs.dart';
 import 'package:local_people_core/quote.dart';
 import 'package:local_people_core/core.dart';
 
+typedef OnDibDetailsSubmitted = void Function(double, double, double, double);
+
 class PlaceBidDetailWidget extends StatefulWidget {
   PlaceBidDetailWidget({
     Key key,
     this.job,
+    this.pageController,
+    this.onDibDetailsSubmitted,
   }) : super(key: key);
 
+  final PageController pageController;
+  final OnDibDetailsSubmitted onDibDetailsSubmitted;
   final Job job;
   Quote quote = Quote();
   DateTime selectedDate = DateTime.now();
@@ -25,7 +31,7 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
   TextEditingController();
   final TextEditingController _totalCostTextController =
       TextEditingController();
-  final TextEditingController _dateRequiredDayTextController =
+  final TextEditingController _depositRequiredDayTextController =
   TextEditingController();
   final TextEditingController _dateRequiredMonthTextController =
   TextEditingController();
@@ -61,21 +67,21 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
     //_labourTextController.text = '0.0';
     //_materialsCostTextController.text = '0.0';
     //_totalCostTextController.text = '0.0';
-    _labourNodeLocation.addListener(() {
-      if (!_labourNodeLocation.hasFocus) {
-        FocusScope.of(context).requestFocus(_materialNodeLocation);
-      }
-    });
-    _materialNodeLocation.addListener(() {
-      if (!_materialNodeLocation.hasFocus) {
-        FocusScope.of(context).requestFocus(_depositRequiredNodeLocation);
-      }
-    });
-    _depositRequiredNodeLocation.addListener(() {
-      if (!_depositRequiredNodeLocation.hasFocus) {
-        FocusScope.of(context).requestFocus(_dateRequiredDayNodeLocation);
-      }
-    });
+    // _labourNodeLocation.addListener(() {
+    //   if (!_labourNodeLocation.hasFocus) {
+    //     FocusScope.of(context).requestFocus(_materialNodeLocation);
+    //   }
+    // });
+    // _materialNodeLocation.addListener(() {
+    //   if (!_materialNodeLocation.hasFocus) {
+    //     FocusScope.of(context).requestFocus(_depositRequiredNodeLocation);
+    //   }
+    // });
+    // _depositRequiredNodeLocation.addListener(() {
+    //   if (!_depositRequiredNodeLocation.hasFocus) {
+    //     FocusScope.of(context).requestFocus(_dateRequiredDayNodeLocation);
+    //   }
+    // });
     // _dateRequiredDayNodeLocation.addListener(() {
     //   if (_dateRequiredDayNodeLocation.hasFocus) {
     //     _selectDate(context);
@@ -98,7 +104,7 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
     _labourTextController.dispose();
     _materialsCostTextController.dispose();
     _totalCostTextController.dispose();
-    _dateRequiredDayTextController.dispose();
+    _depositRequiredDayTextController.dispose();
     _dateRequiredMonthTextController.dispose();
     _dateRequiredYearTextController.dispose();
 
@@ -119,57 +125,6 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        // Column(
-        //   mainAxisSize: MainAxisSize.min,
-        //   crossAxisAlignment: CrossAxisAlignment.start,
-        //   children: <Widget>[
-        //     Container(
-        //       color: Color.fromRGBO(239, 244, 246, 1),
-        //       child: Row(
-        //         mainAxisSize: MainAxisSize.max,
-        //         children: <Widget>[
-        //           Expanded(
-        //             flex: 3,
-        //             child: Container(
-        //               padding: EdgeInsets.only(left: 12.0),
-        //               child: Align(
-        //                 alignment: Alignment.centerLeft,
-        //                 child: Text(
-        //                   'Place Bid',
-        //                   textAlign: TextAlign.left,
-        //                   style: theme.textTheme.bodyText1,
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //           Expanded(
-        //             flex: 1,
-        //             child: Card(
-        //               color: Color.fromRGBO(239, 244, 246, 1),
-        //               //padding: EdgeInsets.only(right: 10),
-        //               child: Align(
-        //                 alignment: Alignment.centerRight,
-        //                 child: IconButton(
-        //                   padding: EdgeInsets.all(2.0),
-        //                   icon: SvgPicture.asset(
-        //                     'packages/local_people_core/assets/images/minus.svg',
-        //                     height: 24,
-        //                     width: 24,
-        //                   ),
-        //                   iconSize: 24,
-        //                   onPressed: () {
-        //                     DialogService _dialogService = sl<DialogService>();
-        //                     _dialogService.placeBidDialogComplete();
-        //                   },
-        //                 ),
-        //               ),
-        //             ),
-        //           ),
-        //         ],
-        //       ),
-        //     ),
-        //   ],
-        // ),
         Column(
           mainAxisSize: MainAxisSize.min,
           crossAxisAlignment: CrossAxisAlignment.center,
@@ -200,6 +155,7 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
                       child: TextField(
                         style: theme.textTheme.bodyText2,
                         focusNode: _labourNodeLocation,
+                        controller: _labourTextController,
                         decoration: InputDecoration(
                           labelText: '£ Amount',
                           floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -215,13 +171,13 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
                         onSubmitted: (val) {
                           widget.quote.labour = val;
                           setState(() {
-                            _totalCostTextController.clear();
+                            //_totalCostTextController.clear();
                             double materialCosts =
-                                double.tryParse(_labourTextController.text);
-                            double laborCosts =
                                 double.tryParse(_materialsCostTextController.text);
+                            double laborCosts =
+                                double.tryParse(_labourTextController.text);
                             if (materialCosts != null && laborCosts != null) {
-                              _totalCostTextController.text = '£' +
+                              _totalCostTextController.text = '£ ' +
                                   (materialCosts + laborCosts).toString();
                             } else if (materialCosts != null) {
                               _totalCostTextController.text =
@@ -232,6 +188,7 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
                             } else {
                               _totalCostTextController.text = '£ 0.0';
                             }
+                            _materialNodeLocation.requestFocus();
                           });
                         },
                       ),
@@ -288,13 +245,13 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
                         onSubmitted: (val) {
                           widget.quote.materials = val;
                           setState(() {
-                            _totalCostTextController.clear();
+                            //_totalCostTextController.clear();
                             double materialCosts =
-                            double.tryParse(_labourTextController.text);
-                            double laborCosts =
                             double.tryParse(_materialsCostTextController.text);
+                            double laborCosts =
+                            double.tryParse(_labourTextController.text);
                             if (materialCosts != null && laborCosts != null) {
-                              _totalCostTextController.text = '£' +
+                              _totalCostTextController.text = '£ ' +
                                   (materialCosts + laborCosts).toString();
                             } else if (materialCosts != null) {
                               _totalCostTextController.text =
@@ -305,6 +262,7 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
                             } else {
                               _totalCostTextController.text = '£ 0.0';
                             }
+                            _depositRequiredNodeLocation.requestFocus();
                           });
                         },
                       ),
@@ -417,6 +375,7 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
                       child: TextField(
                         style: theme.textTheme.bodyText2,
                         focusNode: _depositRequiredNodeLocation,
+                        controller: _depositRequiredDayTextController,
                         decoration: InputDecoration(
                           labelText: '£ Amount',
                           floatingLabelBehavior: FloatingLabelBehavior.never,
@@ -428,7 +387,7 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
                           ),
                         ),
                         keyboardType: TextInputType.number,
-                        textInputAction: TextInputAction.next,
+                        textInputAction: TextInputAction.done,
                       ),
                     ),
                   ),
@@ -437,88 +396,6 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
             ),
           ],
         ),
-        /*Column(
-          mainAxisSize: MainAxisSize.min,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: <Widget>[
-            Row(
-              mainAxisSize: MainAxisSize.min,
-              children: <Widget>[
-                Expanded(
-                  flex: 1,
-                  child: Container(
-                    padding: EdgeInsets.only(left: 12.0),
-                    child: Align(
-                      alignment: Alignment.centerLeft,
-                      child: Text(
-                        'Date Required',
-                        textAlign: TextAlign.left,
-                        style: theme.textTheme.bodyText2,
-                      ),
-                    ),
-                  ),
-                ),
-                Expanded(
-                  flex: 1,
-                  child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: <Widget>[
-                    Card (
-                      //padding: EdgeInsets.only(right: 10),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: TextField(
-                          style: theme.textTheme.bodyText2,
-                          controller: _dateRequiredDayTextController,
-                          focusNode: _dateRequiredDayNodeLocation,
-                          decoration: InputDecoration(
-                            labelText: 'DD',
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                          ),
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                        ),
-                      ),
-                    ),
-                    Card (
-                      //padding: EdgeInsets.only(right: 10),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: TextField(
-                          style: theme.textTheme.bodyText2,
-                          controller: _dateRequiredMonthTextController,
-                          decoration: InputDecoration(
-                            labelText: 'MM',
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                          ),
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                        ),
-                      ),
-                    ),
-                    Card (
-                      //padding: EdgeInsets.only(right: 10),
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: TextField(
-                          style: theme.textTheme.bodyText2,
-                          controller: _dateRequiredYearTextController,
-                          decoration: InputDecoration(
-                            labelText: 'YYYY',
-                            floatingLabelBehavior: FloatingLabelBehavior.never,
-                          ),
-                          keyboardType: TextInputType.number,
-                          textInputAction: TextInputAction.next,
-                        ),
-                      ),
-                    ),
-                  ]
-                  ),
-                ),
-              ],
-            ),
-          ],
-        ),*/
         SizedBox(height: 10),
         Column(
           mainAxisSize: MainAxisSize.max,
@@ -534,11 +411,16 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
                     padding: EdgeInsets.only(left: 12.0, right: 12.0),
                     child: ElevatedButton(
                       onPressed: () {
-                        DialogService _dialogService = sl<DialogService>();
-                        _dialogService.placeBidDialogComplete();
+                        if (widget.pageController != null && widget.pageController.hasClients) {
+                          widget.pageController.animateToPage(
+                            0,
+                            duration: const Duration(milliseconds: 400),
+                            curve: Curves.easeInOut,
+                          );
+                        }
                       },
                       child: Text(
-                        'Cancel',
+                        'Back',
                         style: theme.textTheme.button
                             .copyWith(color: Colors.white),
                       ),
@@ -555,11 +437,31 @@ class _PlaceBidDetailWidgetState extends State<PlaceBidDetailWidget> {
                         onPrimary: Color.fromRGBO(170, 186, 205, 1),
                       ),
                       onPressed: () {
-                        widget.quote.jobId = widget.job.id;
-                        //widget.quote.deliveryTime = DateTime.parse(formattedString);
-                        BlocProvider.of<QuoteBloc>(context)
-                            .add((QuoteAddEvent(quote: widget.quote)));
-                        //DialogHelper().hide(context);
+                        double dLabour = double.tryParse(_labourTextController.text);
+                        if (dLabour == null) {
+                          _labourNodeLocation.requestFocus();
+                          return;
+                        }
+                        double dMaterials = double.tryParse(_materialsCostTextController.text);
+                        if (dMaterials == null) {
+                          _materialNodeLocation.requestFocus();
+                          return;
+                        }
+
+                        print(_totalCostTextController.text.replaceAll('£', '').replaceAll(' ', ''));
+                        double dTotal = double.tryParse(_totalCostTextController.text.replaceAll('£', '').replaceAll(' ', ''));
+                        if (dTotal == null) {
+                          return;
+                        }
+                        double dDeposit = double.tryParse(_depositRequiredDayTextController.text);
+                        if (dDeposit == null) {
+                          _depositRequiredNodeLocation.requestFocus();
+                          return;
+                        }
+
+                        if (widget.onDibDetailsSubmitted != null) {
+                          widget.onDibDetailsSubmitted(dLabour, dMaterials, dTotal, dDeposit);
+                        }
                       },
                       child: Text(
                         'Send',

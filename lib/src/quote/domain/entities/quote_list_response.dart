@@ -11,10 +11,11 @@ class QuoteListResponse {
     while (listIter.moveNext()) {
       QuoteModel model = listIter.current;
       Quote quote = Quote(
+        id: model.id,
         dureationRequired: model.duration_required,
         labour: model.labour,
         materials: model.materials,
-        totalCost: model.totalCost,
+        totalCost: model.total_cost,
         depositRequired: model.deposit_required,
         deliveryDate: DateTime.parse(model.delivery_date),
         traderId: model.trader_id,

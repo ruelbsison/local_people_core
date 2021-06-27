@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:local_people_core/src/core/dialog/place_bid_dialog.dart';
 import 'suggested_time_slot_widget.dart';
 import 'place_bid_detail_widget.dart';
 //import 'package:overlay_dialog/overlay_dialog.dart';
@@ -6,14 +7,18 @@ import 'package:page_indicator/page_indicator.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/jobs.dart';
 import 'package:local_people_core/quote.dart';
+import 'package:local_people_core/core.dart';
 
 class PlaceBidWidget extends StatefulWidget {
   PlaceBidWidget({
     Key key,
-    this.job,
+    @required this.job,
+    @required this.traderId,
   }) : super(key: key);
 
   final Job job;
+  final int traderId;
+  Quote quote = Quote();
   @override
   _PlaceBidWidgetState createState() => _PlaceBidWidgetState();
 }
@@ -22,31 +27,22 @@ class _PlaceBidWidgetState extends State<PlaceBidWidget> {
   PageController _controller;
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider.value(
-      value: BlocProvider.of<QuoteBloc>(context),
-      child: BlocListener<QuoteBloc, QuoteState>(
-        listener: (context, state) {
-          if (state is QuoteInitial) {
+  void initState() {
+    super.initState();
 
-          } else if (state is QuoteAdded) {
-            // Future
-            //     .delayed(Duration(seconds: 3))
-            //     .then((_) => DialogHelper().hide(context));
-            //Navigator.of(context).popUntil(ModalRoute.withName('/'));
-          } else if (state is QuoteAdding) {
-            // DialogHelper().show(
-            //     context,
-            //     DialogWidget.progress(style: DialogStyle.material)
-            // );
-          }
-        },
-        child: buildDialogContent(context),
-      ),
+    _controller = PageController(
+      initialPage: 0,
     );
   }
 
-  Widget buildDialogContent(BuildContext context) {
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       //color: Colors.white,
       width: 345,
@@ -60,8 +56,28 @@ class _PlaceBidWidgetState extends State<PlaceBidWidget> {
       child: PageIndicatorContainer(
         child: PageView(
           children: <Widget>[
-            SuggestedTimeSlotWidget(),
-            PlaceBidDetailWidget(job: widget.job,),
+            SuggestedTimeSlotWidget(
+              pageController: _controller,
+              onSuggestedTimeSlotSubmitted: (duration, startDateTime) {
+                widget.quote.dureationRequired = duration;
+                widget.quote.deliveryDate = startDateTime;
+              },
+            ),
+            PlaceBidDetailWidget(
+              job: widget.job,
+              pageController: _controller,
+              onDibDetailsSubmitted: (labour, materials, total, deposit){
+                widget.quote.jobId = widget.job.id;
+                widget.quote.traderId = widget.traderId;
+                widget.quote.labour = labour.toString();
+                widget.quote.materials = materials.toString();
+                widget.quote.totalCost = total.toString();
+                widget.quote.depositRequired = deposit.toString();
+
+                DialogService _dialogService = sl<DialogService>();
+                _dialogService.placeBidDialogComplete(PlaceBidResponse(quote: widget.quote));
+              },
+            ),
             //PlaceBidTotallWidget(),
           ],
           controller: _controller,
@@ -81,18 +97,4 @@ class _PlaceBidWidgetState extends State<PlaceBidWidget> {
 
   Widget buildSuggestedTimeSlot(BuildContext context) {}
 
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = PageController(
-      initialPage: 0,
-    );
-  }
-
-  @override
-  void dispose() {
-    _controller.dispose();
-    super.dispose();
-  }
 }

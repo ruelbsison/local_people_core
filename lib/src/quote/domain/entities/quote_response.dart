@@ -8,10 +8,11 @@ class QuoteResponse {
 
   void fromModel(QuoteModel model) {
     quote = Quote(
+      id: model.id,
       dureationRequired: model.duration_required,
       labour: model.labour,
       materials: model.materials,
-      totalCost: model.totalCost,
+      totalCost: model.total_cost,
       depositRequired: model.deposit_required,
       deliveryDate: DateTime.parse(model.delivery_date),
       traderId: model.trader_id,
@@ -21,10 +22,11 @@ class QuoteResponse {
 
   static QuoteModel fromQuote(Quote quote) {
     return QuoteModel (
+      id: quote.id,
       duration_required: quote.dureationRequired,
       labour: quote.labour,
       materials: quote.materials,
-      totalCost: quote.totalCost,
+      total_cost: quote.totalCost,
       deposit_required: quote.depositRequired,
       delivery_date: quote.deliveryDate.toString(),
       trader_id: quote.traderId,

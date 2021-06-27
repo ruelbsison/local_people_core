@@ -2,16 +2,16 @@ part of 'quote_bloc.dart';
 
 abstract class QuoteState extends Equatable {
   const QuoteState();
+
+  @override
+  List<Object> get props => [];
 }
 
 class QuoteInitial extends QuoteState {
-  @override
-  List<Object> get props => [];
 }
 
 class QuoteAdding extends QuoteState {
-  @override
-  List<Object> get props => [];
+
 }
 
 class QuoteAdded extends QuoteState {
@@ -42,8 +42,7 @@ class QuoteAddFailed extends QuoteState {
 }
 
 class QuoteDeleting extends QuoteState {
-  @override
-  List<Object> get props => [];
+
 }
 
 class QuoteDeleted extends QuoteState {
@@ -74,8 +73,7 @@ class QuoteDeleteFailed extends QuoteState {
 }
 
 class QuoteLoading extends QuoteState {
-  @override
-  List<Object> get props => [];
+
 }
 
 class QuoteLoaded extends QuoteState {
@@ -86,6 +84,11 @@ class QuoteLoaded extends QuoteState {
   @override
   List<Object> get props {
     return [quotes];
+  }
+
+  @override
+  String toString() {
+    return 'QuoteLoaded{e: $quotes}';
   }
 }
 
@@ -106,8 +109,7 @@ class QuoteLoadFailed extends QuoteState {
 }
 
 class QuoteUpdating extends QuoteState {
-  @override
-  List<Object> get props => [];
+
 }
 
 class QuoteUpdateed extends QuoteState {
@@ -138,8 +140,7 @@ class QuoteUpdateFailed extends QuoteState {
 }
 
 class QuoteJobLoading extends QuoteState {
-  @override
-  List<Object> get props => [];
+
 }
 
 class QuoteJobLoaded extends QuoteState {
@@ -151,6 +152,11 @@ class QuoteJobLoaded extends QuoteState {
   List<Object> get props {
     return [quotes];
   }
+
+  // @override
+  // String toString() {
+  //   return 'QuoteJobLoaded{response: $quotes}';
+  // }
 }
 
 class QuoteJobLoadFailed extends QuoteState {

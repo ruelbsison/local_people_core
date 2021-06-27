@@ -33,3 +33,4 @@ export './src/quote/ui/widgets/request_visit_widget.dart';
 export './src/quote/ui/widgets/quote_request_detail_widget.dart';
 export './src/quote/ui/widgets/request_quote_widget.dart';
 export './src/quote/ui/widgets/quote_body_widget.dart';
+export './src/quote/ui/widgets/quote_card.dart';

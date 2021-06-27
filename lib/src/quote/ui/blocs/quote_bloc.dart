@@ -8,22 +8,24 @@ import '../../domain/entities/quote_response.dart';
 import '../../domain/entities/quote_list_response.dart';
 import '../../domain/repositories/quote_repository.dart';
 import 'package:local_people_core/auth.dart';
-import 'package:local_people_core/jobs.dart';
-import 'package:local_people_core/profile.dart';
+//import 'package:local_people_core/jobs.dart';
+//import 'package:local_people_core/profile.dart';
+import 'package:rxdart/rxdart.dart';
+import 'package:rxdart/transformers.dart';
 
 part 'quote_event.dart';
 part 'quote_state.dart';
 
 class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
   final QuoteRepository quoteRepository;
-  final ProfileRepository profileRepository;
-  final JobRepository jobRepository;
+ // final ProfileRepository profileRepository;
+ // final JobRepository jobRepository;
   final AuthLocalDataSource authLocalDataSource;
 
   QuoteBloc({
     @required this.quoteRepository,
-    @required this.profileRepository,
-    @required this.jobRepository,
+ //   @required this.profileRepository,
+ //   @required this.jobRepository,
     @required this.authLocalDataSource,
   }) : super(QuoteInitial());
 
@@ -86,6 +88,38 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
     }
   }
 
+  @override
+  void onTransition(Transition<QuoteEvent, QuoteState> transition) {
+    print('onTransition: $transition');
+    super.onTransition(transition);
+  }
+
+  // @override
+  // Stream<Transition<QuoteEvent, QuoteState>> transformEvents(
+  //     Stream<QuoteEvent> events, TransitionFunction<QuoteEvent, QuoteState> transitionFn) {
+  //   final otherStream = events
+  //       .where((event) => event is! QuoteJobLoadEvent);
+  //   final withIntervalStream = events
+  //       .where((event) => event is QuoteJobLoadEvent)
+  //       .interval(const Duration(seconds: 1));
+  //   return super.transformEvents(
+  //       MergeStream<QuoteEvent> ([otherStream, withIntervalStream]),
+  //       transitionFn);
+  // }
+
+  // @override
+  // Stream<Transition<QuoteEvent, QuoteState>> transformTransitions(
+  //     Stream<Transition<QuoteEvent, QuoteState>> transitions) {
+  //   final otherStream = transitions
+  //       .where((event) => event is! QuoteJobLoadEvent);
+  //   final withIntervalStream = transitions
+  //       .where((event) => event is QuoteJobLoadEvent)
+  //       .interval(const Duration(seconds: 1));
+  //   return super.transformTransitions(
+  //       MergeStream<Transition<QuoteEvent, QuoteState>>
+  //         ([otherStream, withIntervalStream]));
+  // }
+
   Stream<QuoteState> _mapQuoteDeleteToState(int id) async* {
     QuoteResponse response = QuoteResponse();
     try {
@@ -110,7 +144,7 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
       } else if (response != null && response.quotes == null) {
         yield  QuoteLoadFailed('');
       } else if (response != null && response.quotes != null) {
-        yield QuoteLoaded(response.quotes);
+        yield QuoteLoaded(response.quotes.toList());
       }
     } catch (e) {
       yield QuoteLoadFailed(e.toString());
@@ -125,27 +159,8 @@ class QuoteBloc extends Bloc<QuoteEvent, QuoteState> {
       } else if (response != null && response.quotes == null) {
         yield  QuoteJobLoadFailed('');
       } else if (response != null && response.quotes != null) {
-        var listIterator = response.quotes.iterator;
-        while (listIterator.moveNext()) {
-          Quote quote = listIterator.current;
-
-          JobResponse jobResponse = await jobRepository.showJob(quote.jobId);
-          if (jobResponse != null && jobResponse.exception != null) {
-          } else if (jobResponse != null && jobResponse.job == null) {
-            yield  QuoteJobLoadFailed('');
-          } else if (jobResponse != null && jobResponse.job != null) {
-            quote.job = jobResponse.job;
-          }
-
-          TraderResponse traderResponse = await profileRepository.getTraderProfile(quote.traderId);
-          if (traderResponse != null && traderResponse.exception != null) {
-          } else if (traderResponse != null && traderResponse.profile == null) {
-            yield  QuoteJobLoadFailed('');
-          } else if (traderResponse != null && traderResponse.profile != null) {
-            quote.traderProfile = traderResponse.profile;
-          }
-        }
-        yield QuoteJobLoaded(response.quotes);
+        //await Future<void>.delayed(const Duration(seconds: 1));
+        yield QuoteJobLoaded(response.quotes.toList());
       }
     } catch (e) {
       yield QuoteJobLoadFailed(e.toString());
