@@ -44,11 +44,11 @@ class _MessageInputFieldState extends State<MessageInputField> {
     final theme = Theme.of(context);
     return Container(
       padding: EdgeInsets.symmetric(
-        horizontal: kDefaultPadding,
-        vertical: kDefaultPadding / 2,
+        horizontal: kDefaultPadding / 3,
+        vertical: kDefaultPadding / 3,
       ),
       decoration: BoxDecoration(
-        color: Theme.of(context).scaffoldBackgroundColor,
+        color: theme.primaryColor, //Theme.of(context).scaffoldBackgroundColor,
         boxShadow: [
           BoxShadow(
             offset: Offset(0, 4),
@@ -60,28 +60,40 @@ class _MessageInputFieldState extends State<MessageInputField> {
       child: SafeArea(
         child: Row(
           children: [
-            Icon(Icons.mic, color: theme.primaryColor),
+            //Icon(Icons.mic, color: theme.primaryColor),
+            IconButton(
+              icon: SvgPicture.asset(
+                'packages/local_people_core/assets/images/camera.svg',
+                fit: BoxFit.contain,
+                height: 30,
+                width: 30,
+              ),
+              iconSize: 30,
+              onPressed: () {
+                // TODO Ruel
+              },
+            ),
             SizedBox(width: kDefaultPadding),
             Expanded(
               child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: kDefaultPadding * 0.75,
-                ),
+                // padding: EdgeInsets.symmetric(
+                //   horizontal: kDefaultPadding * 0.75,
+                // ),
                 decoration: BoxDecoration(
-                  color: theme.primaryColor.withOpacity(0.05),
+                  color: theme.scaffoldBackgroundColor.withOpacity(0.05),
                   borderRadius: BorderRadius.circular(40),
                 ),
                 child: Row(
                   children: [
-                    Icon(
-                      Icons.sentiment_satisfied_alt_outlined,
-                      color: Theme.of(context)
-                          .textTheme
-                          .bodyText1
-                          .color
-                          .withOpacity(0.64),
-                    ),
-                    SizedBox(width: kDefaultPadding / 4),
+                    // Icon(
+                    //   Icons.sentiment_satisfied_alt_outlined,
+                    //   color: Theme.of(context)
+                    //       .textTheme
+                    //       .bodyText1
+                    //       .color
+                    //       .withOpacity(0.64),
+                    // ),
+                    //SizedBox(width: kDefaultPadding / 4),
                     Expanded(
                       child: TextField(
                         focusNode: _focusNodeSendMessage,
@@ -102,20 +114,31 @@ class _MessageInputFieldState extends State<MessageInputField> {
                             if (msg.length > 0) {
                               _focusNodeSendMessage.requestFocus();
                               if (widget.onMessageSend != null)
-                                widget..onMessageSend(msg);
+                                widget.onMessageSend(msg);
                               _sendMessageTextController.clear();
                             }
                           });
                         },
                       ),
                     ),
-                    ClipOval(
-                      child: SvgPicture.asset(
-                        'packages/local_people_core/assets/images/camera.svg',
+                    IconButton(
+                      icon: SvgPicture.asset(
+                        'packages/local_people_core/assets/images/send.svg',
                         fit: BoxFit.contain,
-                        height: 37,
-                        width: 37,
+                        height: 30,
+                        width: 30,
                       ),
+                      iconSize: 30,
+                      onPressed: () {
+                        setState(() {
+                          if (_sendMessageTextController.text.length > 0) {
+                            _focusNodeSendMessage.requestFocus();
+                            if (widget.onMessageSend != null)
+                              widget..onMessageSend(_sendMessageTextController.text);
+                            _sendMessageTextController.clear();
+                          }
+                        });
+                      },
                     ),
                     // Icon(
                     //   Icons.attach_file,

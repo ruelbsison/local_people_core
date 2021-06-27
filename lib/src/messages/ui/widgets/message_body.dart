@@ -58,9 +58,13 @@ class _MessageBodyState extends State<MessageBody> {
                   subject: widget.messageBox.name,
                   senderId: widget.messageBox.senderId,
                   recipientId: widget.messageBox.recipientId,
+                  messageStatus: MessageStatus.not_sent,
                   entityStatus: EntityStatus.ENTIRY_STATUS_CREATING,
+                  isSender: true
                 );
-                widget.messages.add(message);
+                setState(() {
+                  widget.messages.add(message);
+                });
               },
             ),
         ],

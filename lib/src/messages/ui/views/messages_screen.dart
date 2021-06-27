@@ -38,6 +38,8 @@ class _MessageScreenState extends State<MessagesScreen> {
   Widget buildAppBar(BuildContext context) {
     return LocalPeopleAppBarWidget(
       title: widget.messageBox.name != null ? widget.messageBox.name : '',
+      leadingText: LocalPeopleLocalizations.of(context).menuTitleMessages,
+      appBarPreferredSize: Size.fromHeight(120.0),
       networkIcon: widget.messageBox.image,
     );
   }
