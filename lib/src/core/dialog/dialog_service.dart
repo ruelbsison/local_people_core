@@ -5,6 +5,7 @@ import 'book_package_dialog.dart';
 import 'place_bid_dialog.dart';
 import 'package:local_people_core/jobs.dart';
 import 'package:local_people_core/quote.dart';
+import 'job_dialog.dart';
 
 class DialogService {
   // Function _showDialogListener;
@@ -211,4 +212,33 @@ class DialogService {
     _dialogBookPackageCompleter.complete(reponse);
     _dialogBookPackageCompleter = null;
   }
+
+  /* --------------------------------------------------------------------------------------*/
+  Function(JobAwardRequest) _showJobAwardDialogListener;
+  Completer<JobAwardResponse> _jobAwardDialogCompleter;
+
+  /// Registers a callback function. Typically to show the dialog
+  void registerJobAwardDialogListener(Function(JobAwardRequest) showJobAwardDialogListener) {
+    _showJobAwardDialogListener = showJobAwardDialogListener;
+  }
+
+  Future<JobAwardResponse> showJobAwardDialog({
+    String clientName,
+    String traderName,
+  }) {
+    _jobAwardDialogCompleter = Completer<JobAwardResponse>();
+    _showJobAwardDialogListener(JobAwardRequest(
+      clientName: clientName,
+      traderName: traderName,
+    ));
+    return _jobAwardDialogCompleter.future;
+  }
+
+  /// Completes the _dialogCompleter to resume the Future's execution call
+  void jobAwardDialogComplete(JobAwardResponse response) {
+    _jobAwardDialogCompleter.complete(response);
+    _jobAwardDialogCompleter = null;
+  }
+  
+  
 }

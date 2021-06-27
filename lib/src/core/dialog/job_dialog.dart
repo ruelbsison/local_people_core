@@ -2,20 +2,28 @@ import 'package:flutter/widgets.dart';
 //import 'package:local_people_core/core.dart';
 import 'package:local_people_core/jobs.dart';
 
+enum JobAwardStatus {
+  JOB_AWARD,
+  BID_TURN_DOWN
+}
+
 class JobAwardRequest {
-  final int traderId;
-  final String packageName;
+  final String clientName;
+  final String traderName;
 
   JobAwardRequest({
-    @required this.traderId,
-    @required this.packageName,
+    @required this.clientName,
+    @required this.traderName,
   });
 }
 
-class PackageCreateResponse {
-  Package package;
+class JobAwardResponse {
+  JobAwardStatus status;
+  String optionalMessage;
 
-  PackageCreateResponse({
-    this.package,
+  JobAwardResponse({
+    this.status,
+    this.optionalMessage,
   });
 }
+

@@ -13,6 +13,7 @@ import '../widgets/custom_alert.dart';
 import 'dart:async';
 import '../widgets/app_dialog.dart';
 import 'place_bid_dialog.dart';
+import 'job_dialog.dart';
 
 class DialogManager extends StatefulWidget {
   final Widget child;
@@ -38,6 +39,8 @@ class _DialogManagerState extends State<DialogManager> {
     _dialogService.registerPlaceBidDialogListener(_showPlaceBidDialog);
     _dialogService.registerCreatePackageDialogListener(_showCreatePackageDialog);
     _dialogService.registerBookPackageDialogListener(_showBookPackageDialog);
+
+    _dialogService.registerJobAwardDialogListener(_showJobAwardDialog);
   }
 
   @override
@@ -96,13 +99,14 @@ class _DialogManagerState extends State<DialogManager> {
     );
   }
 
-  void _showJobAwardDialog(Job job) {
+  void _showJobAwardDialog(JobAwardRequest request) {
     showDialog(
       context: context,
       builder: (context) => AppDialog(
         title: 'Award Job',
         child: JobAwardWidget(
-          job: job,
+          clientName: request.clientName,
+          traderName: request.traderName,
         ),
       ),
     );
