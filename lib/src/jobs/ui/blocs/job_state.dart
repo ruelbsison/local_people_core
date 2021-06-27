@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import '../../domain/entities/job.dart';
 import 'package:meta/meta.dart';
+import '../../domain/entities/booking.dart';
 
 abstract class JobState extends Equatable {
   const JobState();
@@ -8,6 +9,8 @@ abstract class JobState extends Equatable {
   @override
   List<Object> get props => [];
 }
+
+class JobRefreshing extends JobState {}
 
 class JobLoading extends JobState {}
 
@@ -37,6 +40,8 @@ class JobNotLoaded extends JobState {
     return 'JobNotLoaded{e: $e}';
   }
 }
+
+class OpportunitiesRefreshing extends JobState {}
 
 class OpportunitiesLoading extends JobState {}
 
@@ -84,4 +89,40 @@ class JobGetLoaded extends JobState {
 
   @override
   List<Object> get props => [job];
+}
+
+class JobLoadCompleted extends JobState {
+  final Job job;
+
+  JobLoadCompleted({@required this.job});
+
+  @override
+  List<Object> get props => [job];
+}
+
+class JobAwarding extends JobState {
+  @override
+  List<Object> get props => [];
+}
+
+class JobAwardFailed extends JobState {
+  final String e;
+
+  const JobAwardFailed(this.e);
+
+  @override
+  String toString() {
+    return 'JobAwardFailed{e: $e}';
+  }
+}
+
+class JobAwardComplete extends JobState {
+  final Booking booking;
+
+  const JobAwardComplete(this.booking);
+
+  @override
+  String toString() {
+    return 'JobAwardComplete{e: $booking}';
+  }
 }

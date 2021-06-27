@@ -52,13 +52,22 @@ class _JobBidScreenState extends State<JobBidScreen>
   Widget buildAppBar() {
     final theme = Theme.of(context);
     final Size size = MediaQuery.of(context).size;
+    final appType = AppConfig.of(context).appType;
     return LocalPeopleAppBarWidget(
       title: widget.job.title != null ? widget.job.title : widget.job.description,
       startrDateTime: widget.job.date,
-      packageSvgAssetIcon: 'packages/local_people_core/assets/images/package-grey.svg',
+      //packageSvgAssetIcon: 'packages/local_people_core/assets/images/package-grey.svg',
+      packageSvgAssetIcon: ((widget.job.date != null
+          && (widget.job.date.difference(DateTime.now())).inDays > 0)
+          ? 'packages/local_people_core/assets/images/package-green.svg'
+          : 'packages/local_people_core/assets/images/package-orange.svg'),
+      leadingText: (appType == AppType.TRADER
+          ? LocalPeopleLocalizations.of(context).menuTitleOpportunities
+          : LocalPeopleLocalizations.of(context).menuTitleYourJobs),
       bottom: TabBar(
         controller: _controller,
         //unselectedLabelColor: Color.fromRGBO(239, 244, 246, 1), //theme.primaryColor,
+        unselectedLabelColor: Color.fromRGBO(87, 106, 129, 1), //theme.primaryColor,
         indicatorSize: TabBarIndicatorSize.tab,
         //indicatorColor: Color.fromRGBO(239, 244, 246, 1),
         indicator: BoxDecoration(
@@ -99,22 +108,22 @@ class _JobBidScreenState extends State<JobBidScreen>
             child: Container(
               margin: EdgeInsets.all(12.0),
               padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
-              color: Color.fromRGBO(255, 255, 255, 1),
+              //color: Color.fromRGBO(255, 255, 255, 1),
               child: Flex(
                 direction: Axis.vertical,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   JobViewWidget(job: widget.job),
-                  SizedBox(height: 20.0),
+                  SizedBox(height: 10.0),
                   //PostedByWidget(profile: widget.profile),
                   PostedByWidget(clientId: widget.job.clientId),
-                  SizedBox(height: 50.0),
+                  SizedBox(height: 30.0),
                 ],
               ),
             ),
           ),
-          QuoteBodyWidget(jobId: widget.job.id,),
+          QuoteBodyWidget(job:  widget.job,),
         ],
       ),
     );

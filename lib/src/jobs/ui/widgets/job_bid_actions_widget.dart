@@ -4,12 +4,16 @@ import '../../domain/entities/job.dart';
 //import 'package:overlay_dialog/overlay_dialog.dart';
 //import 'package:local_people_core/quote.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_people_core/quote.dart';
 
 class JobBidActionsWidget extends StatelessWidget {
   final Job job;
+  final int traderId;
   JobBidActionsWidget({
     Key key,
     @required this.job,
+    @required this.traderId,
   }) : super(key: key);
 
   @override
@@ -129,9 +133,14 @@ class JobBidActionsWidget extends StatelessWidget {
     // );
   }
 
-  void _placeBid(BuildContext context) {
+  void _placeBid(BuildContext context) async {
     DialogService _dialogService = sl<DialogService>();
-    _dialogService.showPlaceBidDialog(job: job,);
+    PlaceBidResponse response = await _dialogService.showPlaceBidDialog(job: job, traderId: traderId);
+    if (response != null && response.quote != null) {
+      BlocProvider.of<QuoteBloc>(context)
+          .add((QuoteAddEvent(quote: response.quote )));
+      //DialogHelper().hide(context);
+    }
     // DialogHelper().show(
     //     context,
     //     DialogWidget.custom(

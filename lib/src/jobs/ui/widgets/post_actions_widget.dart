@@ -21,7 +21,10 @@ class _PostActionsWidgetState extends State<PostActionsWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-        color: Colors.white,
+        decoration: BoxDecoration(
+            border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
+            borderRadius: BorderRadius.circular(8.0),
+            color: Colors.white),
         child: Flex(
           direction: Axis.horizontal,
           //mainAxisAlignment: MainAxisAlignment.spaceBetween,

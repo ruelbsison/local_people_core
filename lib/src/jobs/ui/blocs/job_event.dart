@@ -1,6 +1,7 @@
 import 'package:equatable/equatable.dart';
 import 'package:meta/meta.dart';
 import '../../domain/entities/job.dart';
+import 'package:local_people_core/quote.dart';
 
 class JobEvent extends Equatable {
   const JobEvent();
@@ -46,6 +47,16 @@ class JobGetEvent extends JobEvent {
 
   @override
   List<Object> get props => [jobId];
+}
+
+class JobAwardEvent extends JobEvent {
+  final Job job;
+  final Quote quote;
+
+  JobAwardEvent({@required this.job, @required this.quote});
+
+  @override
+  List<Object> get props => [job, quote];
 }
 
 

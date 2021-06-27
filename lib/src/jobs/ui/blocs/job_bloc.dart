@@ -11,9 +11,12 @@ import '../../domain/entities/tag_response.dart';
 import '../../domain/entities/location_response.dart';
 import '../../../core/enum/app_type.dart';
 import '../../domain/entities/job.dart';
+import '../../domain/entities/booking.dart';
+import '../../domain/entities/booking_response.dart';
 import '../../domain/entities/tag.dart';
 import '../../domain/repositories/location_repository.dart';
 import '../../domain/repositories/package_repository.dart';
+import '../../domain/repositories/booking_repository.dart';
 import 'package:local_people_core/auth.dart';
 import 'package:local_people_core/quote.dart';
 
@@ -28,7 +31,15 @@ class JobBloc extends Bloc<JobEvent, JobState> {
   final AuthLocalDataSource authLocalDataSource;
   final QuoteRepository quoteRepository;
   final QuoteRequestRepository quoteRequestRepository;
-  final PackageRepository packageRepository;
+  final BookingRepository bookingRepository;
+  //final PackageRepository packageRepository;
+
+  // Create a broadcast controller that allows this stream to be listened
+  // to multiple times. This is the primary, if not only, type of stream you'll be using.
+  //final _jobsController = StreamController<Job>.broadcast();
+
+  // Output stream. This one will be used within our pages to display the notes.
+  //get jobs => _jobsController.stream;
 
   JobBloc({
     @required this.jobRepository,
@@ -37,9 +48,10 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     @required this.appType,
     @required this.quoteRepository,
     @required this.quoteRequestRepository,
-    @required this.packageRepository,
-    @required this.authLocalDataSource}):
-        super(JobLoading());
+    //@required this.packageRepository,
+    @required this.authLocalDataSource,
+    @required this.bookingRepository,
+  }): super(JobLoading());
 
   @override
   JobState get initialState => JobLoading();
@@ -53,7 +65,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       else
         yield* _mapLoadTraderJobToState();
     } else if (event is RefreshJobs) {
-      yield JobLoading();
+      yield JobRefreshing();
       if (appType == AppType.CLIENT)
         yield* _mapLoadClientJobToState();
       else
@@ -62,12 +74,92 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       yield OpportunitiesLoading();
       yield* _mapLoadOpportunitiesToState();
     } else if (event is RefreshOpportunities) {
-      yield OpportunitiesLoading();
+      yield OpportunitiesRefreshing();
       yield* _mapLoadOpportunitiesToState();
     } else if (event is JobGetEvent) {
       yield JobGetLoading();
       yield* _mapJobGetToState(event.jobId);
+    } else if (event is JobAwardEvent) {
+      yield JobAwarding();
+      yield* _mapJobAwardToState(event.job, event.quote);
     }
+  }
+
+  Stream<JobState> _mapJobAwardToState(Job job, Quote quote) async* {
+
+    job.awarded = true;
+    job.traderId = quote.traderId;
+    try {
+      JobResponse response = await jobRepository.updateJob(job);
+      if (response == null) {
+        yield JobAwardFailed('');
+      } else if (response != null && response.exception != null) {
+        yield JobAwardFailed(response.exception.toString());
+      } else if (response.job != null) {
+        Booking booking = Booking(
+          startTime: quote.deliveryDate,
+          endTime: quote.deliveryDate.add(
+              Duration(hours: quote.dureationRequired)
+          ),
+          traderId: quote.traderId,
+          jobId: quote.jobId,
+          details: quote.details,
+          status: 'Awarded',
+        );
+        BookingResponse bookingResponse = await bookingRepository.createBooking(booking);
+        if (bookingResponse == null) {
+          yield JobAwardFailed('');
+        } else if (bookingResponse != null && bookingResponse.exception != null) {
+          yield JobAwardFailed(bookingResponse.exception.toString());
+        } else if (bookingResponse.booking != null) {
+          yield JobAwardComplete(bookingResponse.booking);
+        }
+      }
+    } catch (e) {
+      print(e.toString());
+      yield JobAwardFailed(e.toString());
+    }
+  }
+
+  Future<Job> getRelatedJobData(Job job) async  {
+    int jobId = job.id;
+
+      QuoteListResponse qlRes = await quoteRepository.listJobQuotes(job.id);
+      if (qlRes == null) {
+        //yield JobGetFailed();
+      } else if (qlRes != null && qlRes.exception != null) {
+        //yield JobGetFailed();
+      } else if (qlRes.quotes != null) {
+        job.bids = qlRes.quotes;
+      }
+
+      QuoteRequestListResponse qrRes = await quoteRequestRepository.listJobQuoteRequests(job.id);
+      if (qrRes == null) {
+        //yield JobGetFailed();
+      } else if (qrRes != null && qrRes.exception != null) {
+        //yield JobGetFailed();
+      } else if (qrRes.quoteRequests != null && qrRes.quoteRequests.length > 0) {
+        job.quoteRequests = qrRes.quoteRequests;
+      }
+      if (job.location != null && job.location.id > 0){
+        try {
+          LocationResponse locResponse = await locationRepository.showLocation(job.location.id);
+          if (locResponse == null) {
+            //yield JobNotLoaded('');
+          } else if (locResponse != null &&
+              locResponse.exception != null) {
+            //yield JobNotLoaded(tagListResponse.exception.toString());
+          } else if (locResponse.location != null) {
+            job.location = locResponse.location;
+          }
+        } catch (e) {
+          print(e.toString());
+          //yield JobNotLoaded(e.toString());
+        }
+      }
+
+    return Future.value(job);
+
   }
 
   Stream<JobState> _mapJobGetToState(int jobId) async* {
@@ -79,37 +171,8 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       } else if (response != null && response.exception != null) {
         yield JobGetFailed();
       } else if (response.job != null) {
-        if (response.job.bids != null && response.job.bids.length == 0 ) {
-          QuoteListResponse qlRes = await quoteRepository.listJobQuotes(jobId);
-          if (qlRes == null) {
-            yield JobGetFailed();
-          } else if (qlRes != null && qlRes.exception != null) {
-            yield JobGetFailed();
-          } else if (qlRes.quotes != null) {
-            response.job.bids = qlRes.quotes;
-          }
-        }
-        if (response.job.private != null && response.job.private == true ) {
-          QuoteRequestListResponse qrRes = await quoteRequestRepository.listJobQuoteRequests(jobId);
-          if (qrRes == null) {
-            yield JobGetFailed();
-          } else if (qrRes != null && qrRes.exception != null) {
-            yield JobGetFailed();
-          } else if (qrRes.quoteRequests != null && qrRes.quoteRequests.length > 0) {
-            response.job.quoteRequest = qrRes.quoteRequests[0];
-          }
-
-          // if (response.job.quoteRequest != null && response.job.quoteRequest.)
-          // PackageResponse pRes = await packageRepository.showPackage(id);
-          // if (pRes == null) {
-          //   yield JobGetFailed();
-          // } else if (pRes != null && pRes.exception != null) {
-          //   yield JobGetFailed();
-          // } else if (pRes.package != null) {
-          //   response.job.package = pRes.package;
-          // }
-        }
-        yield JobGetLoaded(job: response.job);
+        Job job = await getRelatedJobData(response.job);
+        yield JobGetLoaded(job: job);
       }
     } catch (e) {
       print(e.toString());
@@ -127,58 +190,23 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       } else if (response != null && response.exception != null) {
         yield JobNotLoaded(response.exception.toString());
       } else if (response.jobs != null) {
-        // var listIterator = response.jobs.iterator;
-        // while (listIterator.moveNext()) {
-        //   Job job = listIterator.current;
-        //   job.images = [];
-        //   // if (job.tags != null && job.tags.length > 0) {
-        //   //   List<Tag> tagsWithName = [];
-        //   //   var tagIterator = job.tags.iterator;
-        //   //   while (tagIterator.moveNext()) {
-        //   //     Tag tag = tagIterator.current;
-        //   //
-        //   //     try {
-        //   //       TagResponse tagResponse = await tagRepository.showTag(tag.id);
-        //   //       if (tagResponse == null) {
-        //   //         //yield JobNotLoaded('');
-        //   //       } else if (tagResponse != null &&
-        //   //           tagResponse.exception != null) {
-        //   //         //yield JobNotLoaded(tagListResponse.exception.toString());
-        //   //       } else if (tagResponse.tag != null) {
-        //   //         tagsWithName.add(tagResponse.tag);
-        //   //       }
-        //   //     } catch (e) {
-        //   //       print(e.toString());
-        //   //       //yield JobNotLoaded(e.toString());
-        //   //     }
-        //   //
-        //   //     if (tagsWithName.length > 0) {
-        //   //       job.tags = tagsWithName;
-        //   //     }
-        //   //   }
-        //   // }
-        //
-        //   if (job.location != null && job.location.id > 0){
-        //     try {
-        //       LocationResponse locResponse = await locationRepository.showLocation(job.location.id);
-        //       if (locResponse == null) {
-        //         //yield JobNotLoaded('');
-        //       } else if (locResponse != null &&
-        //           locResponse.exception != null) {
-        //         //yield JobNotLoaded(tagListResponse.exception.toString());
-        //       } else if (locResponse.location != null) {
-        //         job.location = locResponse.location;
-        //       }
-        //     } catch (e) {
-        //       print(e.toString());
-        //       //yield JobNotLoaded(e.toString());
-        //     }
-        //   }
-        // }
-        // response.jobs.sort((a, b) {
-        //   return a.compareTo(b);
-        // });
-        yield JobLoaded(response.jobs.reversed.toList());
+        List<Job> jobs = [];
+        var listIterator = response.jobs.iterator;
+        while (listIterator.moveNext()) {
+          Job job = listIterator.current;
+          if (job == null) continue;
+          job.images = [];
+          if (job.id == null || job.id <= 0) continue;
+
+          job = await getRelatedJobData(job);
+          jobs.add(job);
+          //_jobsController.sink.add(job);
+        }
+
+        jobs.sort((a, b) {
+          return a.compareTo(b);
+        });
+        yield JobLoaded(jobs.reversed.toList());
       }
     } catch (e) {
       yield JobNotLoaded(e.toString());
@@ -194,57 +222,22 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       } else if (response != null && response.exception != null) {
         yield JobNotLoaded(response.exception.toString());
       } else if (response.jobs != null) {
-        // var listIterator = response.jobs.iterator;
-        // while (listIterator.moveNext()) {
-        //   Job job = listIterator.current;
-        //   job.images = [];
-        //   // if (job.tags != null && job.tags.length > 0) {
-        //   //   List<Tag> tagsWithName = [];
-        //   //   var tagIterator = job.tags.iterator;
-        //   //   while (tagIterator.moveNext()) {
-        //   //     Tag tag = tagIterator.current;
-        //   //
-        //   //     try {
-        //   //       TagResponse tagResponse = await tagRepository.showTag(tag.id);
-        //   //       if (tagResponse == null) {
-        //   //         //yield JobNotLoaded('');
-        //   //       } else if (tagResponse != null &&
-        //   //           tagResponse.exception != null) {
-        //   //         //yield JobNotLoaded(tagListResponse.exception.toString());
-        //   //       } else if (tagResponse.tag != null) {
-        //   //         tagsWithName.add(tagResponse.tag);
-        //   //       }
-        //   //     } catch (e) {
-        //   //       print(e.toString());
-        //   //       //yield JobNotLoaded(e.toString());
-        //   //     }
-        //   //
-        //   //     if (tagsWithName.length > 0) {
-        //   //       job.tags = tagsWithName;
-        //   //     }
-        //   //   }
-        //   // }
-        //   if (job.location != null && job.location.id > 0){
-        //     try {
-        //       LocationResponse locResponse = await locationRepository.showLocation(job.location.id);
-        //       if (locResponse == null) {
-        //         //yield JobNotLoaded('');
-        //       } else if (locResponse != null &&
-        //           locResponse.exception != null) {
-        //         //yield JobNotLoaded(tagListResponse.exception.toString());
-        //       } else if (locResponse.location != null) {
-        //         job.location = locResponse.location;
-        //       }
-        //     } catch (e) {
-        //       print(e.toString());
-        //       //yield JobNotLoaded(e.toString());
-        //     }
-        //   }
-        // }
-        // response.jobs.sort((a, b) {
-        //   return a.compareTo(b);
-        // });
-        yield JobLoaded(response.jobs.reversed.toList());
+        List<Job> jobs = [];
+        var listIterator = response.jobs.iterator;
+        while (listIterator.moveNext()) {
+          Job job = listIterator.current;
+          if (job == null) continue;
+          job.images = [];
+          if (job.id == null || job.id <= 0) continue;
+
+          job = await getRelatedJobData(job);
+          jobs.add(job);
+        }
+
+        jobs.sort((a, b) {
+          return a.compareTo(b);
+        });
+        yield JobLoaded(jobs.reversed.toList());
       }
     } catch (e) {
       yield JobNotLoaded(e.toString());
@@ -259,57 +252,22 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       } else if (response != null && response.exception != null) {
         yield OpportunitiesNotLoaded(response.exception.toString());
       } else if (response.jobs != null) {
-        // var listIterator = response.jobs.iterator;
-        // while (listIterator.moveNext()) {
-        //   Job job = listIterator.current;
-        //   // job.images = [];
-        //   // if (job.tags != null && job.tags.length > 0) {
-        //   //   List<Tag> tagsWithName = [];
-        //   //   var tagIterator = job.tags.iterator;
-        //   //   while (tagIterator.moveNext()) {
-        //   //     Tag tag = tagIterator.current;
-        //   //
-        //   //     try {
-        //   //       TagResponse tagResponse = await tagRepository.showTag(tag.id);
-        //   //       if (tagResponse == null) {
-        //   //         //yield JobNotLoaded('');
-        //   //       } else if (tagResponse != null &&
-        //   //           tagResponse.exception != null) {
-        //   //         //yield JobNotLoaded(tagListResponse.exception.toString());
-        //   //       } else if (tagResponse.tag != null) {
-        //   //         tagsWithName.add(tagResponse.tag);
-        //   //       }
-        //   //     } catch (e) {
-        //   //       print(e.toString());
-        //   //       //yield JobNotLoaded(e.toString());
-        //   //     }
-        //   //
-        //   //     if (tagsWithName.length > 0) {
-        //   //       job.tags = tagsWithName;
-        //   //     }
-        //   //   }
-        //   // }
-        //   if (job.location != null && job.location.id > 0){
-        //     try {
-        //       LocationResponse locResponse = await locationRepository.showLocation(job.location.id);
-        //       if (locResponse == null) {
-        //         //yield JobNotLoaded('');
-        //       } else if (locResponse != null &&
-        //           locResponse.exception != null) {
-        //         //yield JobNotLoaded(tagListResponse.exception.toString());
-        //       } else if (locResponse.location != null) {
-        //         job.location = locResponse.location;
-        //       }
-        //     } catch (e) {
-        //       print(e.toString());
-        //       //yield JobNotLoaded(e.toString());
-        //     }
-        //   }
-        // }
-        // response.jobs.sort((a, b) {
-        //   return a.compareTo(b);
-        // });
-        yield OpportunitiesLoaded(response.jobs.reversed.toList());
+        List<Job> jobs = [];
+        var listIterator = response.jobs.iterator;
+        while (listIterator.moveNext()) {
+          Job job = listIterator.current;
+          if (job == null) continue;
+          job.images = [];
+          if (job.id == null || job.id <= 0) continue;
+
+          job = await getRelatedJobData(job);
+          jobs.add(job);
+        }
+
+        jobs.sort((a, b) {
+          return a.compareTo(b);
+        });
+        yield OpportunitiesLoaded(jobs.reversed.toList());
         //yield OpportunitiesLoaded(response.jobs);
       }
     } catch (e) {

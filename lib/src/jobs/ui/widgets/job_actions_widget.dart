@@ -6,13 +6,21 @@ import '../../domain/entities/job.dart';
 import 'package:local_people_core/profile.dart';
 //import 'package:flutter_bloc/flutter_bloc.dart';
 
+typedef OnJobAwardPressed = void Function(String message);
+
 class JobActionsWidget extends StatefulWidget {
   JobActionsWidget({
     Key key,
     @required this.job,
+    @required this.traderName,
+    @required this.clientName,
+    this.onJobAwardPressed,
   }) : super(key: key);
 
   final Job job;
+  final String traderName;
+  final String clientName;
+  final OnJobAwardPressed onJobAwardPressed;
 
   @override
   _JobActionsWidgetState createState() => _JobActionsWidgetState();
@@ -22,20 +30,25 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      color: Colors.white,
-      padding: EdgeInsets.all(12.0),
-      margin: EdgeInsets.only(top: 12.0),
+      // color: Colors.white,
+      // padding: EdgeInsets.all(12.0),
+      // margin: EdgeInsets.only(top: 12.0),
+      decoration: BoxDecoration(
+          border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
+          borderRadius: BorderRadius.circular(8.0),
+          color: Colors.white),
       child: Flex(
         direction: Axis.vertical,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: 20.0),
           Container(
             color: Colors.white,
             child: Flex(
                 direction: Axis.horizontal,
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
                     flex: 7,
@@ -49,7 +62,7 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
                     flex: 2,
                     child: Text(
                       LocalPeopleLocalizations.of(context).titleDeleteJob,
-                      textAlign: TextAlign.left,
+                      textAlign: TextAlign.right,
                       style: theme.textTheme.subtitle2,
                     ),
                   ),
@@ -71,7 +84,7 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
                 ]
             ),
           ),
-          SizedBox(height: 30.0),
+          SizedBox(height: 20.0),
           Container(
               color: Colors.white,
               child: Flex(
@@ -89,6 +102,7 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
                         child: Text(
                             LocalPeopleLocalizations.of(context)
                                 .btnTitleSendMesssage,
+                          textAlign: TextAlign.center,
                           style: theme.textTheme.button.copyWith(color: Colors.white),
                         ),
                       ),
@@ -108,6 +122,7 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
                         child: Text(
                             LocalPeopleLocalizations.of(context)
                                 .btnTitleAwardJob,
+                          textAlign: TextAlign.center,
                           style: theme.textTheme.button.copyWith(color: Colors.white),
                         ),
                       ),
@@ -115,7 +130,7 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
                   ),
                 ],
               )),
-          SizedBox(height: 10.0),
+          //SizedBox(height: 10.0),
         ],
       ),
     );
@@ -160,7 +175,17 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
     );
   }
 
-  void _awardJob(BuildContext context) {
-
+  void _awardJob(BuildContext context) async {
+    DialogService _dialogService = sl<DialogService>();
+    JobAwardResponse response = await  _dialogService.showJobAwardDialog(
+        clientName: widget.clientName,
+        traderName: widget.traderName
+    );
+    if (response != null
+        && response.status == JobAwardStatus.JOB_AWARD) {
+      if (widget.onJobAwardPressed != null) {
+        widget.onJobAwardPressed(response.optionalMessage);
+      }
+    }
   }
 }

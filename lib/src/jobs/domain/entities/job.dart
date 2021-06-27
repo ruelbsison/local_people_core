@@ -29,7 +29,7 @@ class Job extends Object implements Comparable {
   bool isConfirmed;
   bool isCompleted;
   List<Quote> bids;
-  QuoteRequest quoteRequest;
+  List<QuoteRequest> quoteRequests;
   Package package;
 
   Job({
@@ -51,8 +51,8 @@ class Job extends Object implements Comparable {
     this.isPosted = true,
     this.isConfirmed = false,
     this.isCompleted = false,
-    this.bids = const [],
-    this.quoteRequest = null,
+    this.bids = null,
+    this.quoteRequests = null,
     this.package = null,
     this.entityStatus = EntityStatus.ENTIRY_STATUS_NONE,
   });

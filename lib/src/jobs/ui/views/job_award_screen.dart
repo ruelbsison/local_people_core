@@ -1,24 +1,35 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_icons/flutter_icons.dart';
+//import 'package:flutter_icons/flutter_icons.dart';
 import 'package:local_people_core/core.dart';
 import 'package:local_people_core/auth.dart';
 import 'package:local_people_core/messages.dart';
 import 'package:local_people_core/quote.dart';
+import 'package:local_people_core/profile.dart';
 
 import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
 import '../widgets/job_view_widget.dart';
 import '../widgets/job_actions_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import '../blocs/job_bloc.dart';
+import '../blocs/job_event.dart';
+import '../blocs/job_state.dart';
+
+//import 'package:flutter_svg/flutter_svg.dart';
 
 class JobAwardScreen extends StatefulWidget {
   JobAwardScreen({
     Key key,
+    @required this.job,
     @required this.quote,
+    @required this.traderProfile,
+    @required this.clientProfile,
   }) : super(key: key);
 
+  final Job job;
   final Quote quote;
+  final TraderProfile traderProfile;
+  final ClientProfile clientProfile;
 
   @override
   _JobAwardScreenState createState() => _JobAwardScreenState();
@@ -53,94 +64,26 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     );
   }
 
-  AppBar buildAppBar() {
+  Widget buildAppBar() {
     final theme = Theme.of(context);
-    return AppBar(
-      /*leading: Text(
-        LocalPeopleLocalizations.of(context).menuTitleOpportunities,
-      ),*/
-      toolbarHeight: 220.0,
-      centerTitle: false,
-      titleSpacing: 0,
-      title: Container(
-        padding: EdgeInsets.only(bottom: 12.0),
-        child: Flex(
-          direction: Axis.horizontal,
-          mainAxisSize: MainAxisSize.max,
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: <Widget>[
-            Expanded(
-              flex: 1,
-              child: Flex(
-                direction: Axis.vertical,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  CircleAvatar(
-                    //backgroundColor: Color.fromRGBO(255, 166, 0, 1),
-                    radius: 15,
-                    child: SvgPicture.asset(
-                      'packages/local_people_core/assets/images/package-orange.svg',
-                    ),
-                    // child: Center(
-                    //     child: Image.asset(
-                    //   'packages/local_people_core/assets/images/package-icon.png',
-                    //   fit: BoxFit.contain,
-                    //   height: 19,
-                    //   width: 19,
-                    // )),
-                  ),
-                  Text(
-                    // (widget.quote.job.minutesLeft / 60).toString() + ' hrs left',
-                    widget.quote.job.minutesLeft.toString() + ' hrs left',
-                    textAlign: TextAlign.center,
-                    style: TextStyle(
-                        color: Color.fromRGBO(0, 63, 92, 1),
-                        fontSize: 10,
-                        fontWeight: FontWeight.w500,
-                        fontFamily: 'RedHatDisplay'),
-                  ),
-                ],
-              ),
-            ),
-            Expanded(
-              flex: 4,
-              child: Flex(
-                direction: Axis.vertical,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: <Widget>[
-                  //Expanded(
-                  //  flex: 2,
-                  //child: Text(
-                  Text(
-                    widget.quote.job.title != null
-                        ? widget.quote.job.title
-                        : widget.quote.job.description,
-                    textAlign: TextAlign.left,
-                    style: theme.textTheme.headline6,
-                  ),
-                  //),
-                  //Expanded(
-                  //  flex: 1,
-                  //child: Text(
-                  Text(
-                    'Trader Name',
-                    textAlign: TextAlign.left,
-                    style: theme.textTheme.bodyText1,
-                  ),
-                  //),
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-      elevation: 0.0,
+    final Size size = MediaQuery.of(context).size;
+    final appType = AppConfig.of(context).appType;
+    return LocalPeopleAppBarWidget(
+      //title: widget.job.title != null ? widget.job.title : widget.job.description,
+      title: widget.traderProfile != null && widget.traderProfile.fullName != null ? widget.traderProfile.fullName : '',
+      startrDateTime: widget.job.date,
+      //packageSvgAssetIcon: 'packages/local_people_core/assets/images/package-grey.svg',
+      packageSvgAssetIcon: ((widget.job.date != null
+          && (widget.job.date.difference(DateTime.now())).inDays > 0)
+          ? 'packages/local_people_core/assets/images/package-green.svg'
+          : 'packages/local_people_core/assets/images/package-orange.svg'),
+      leadingText: (appType == AppType.TRADER
+          ? LocalPeopleLocalizations.of(context).menuTitleOpportunities
+          : LocalPeopleLocalizations.of(context).menuTitleYourJobs),
       bottom: TabBar(
         controller: _controller,
         //unselectedLabelColor: Color.fromRGBO(239, 244, 246, 1), //theme.primaryColor,
+        unselectedLabelColor: Color.fromRGBO(87, 106, 129, 1), //theme.primaryColor,
         indicatorSize: TabBarIndicatorSize.tab,
         //indicatorColor: Color.fromRGBO(239, 244, 246, 1),
         indicator: BoxDecoration(
@@ -170,6 +113,26 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     );
   }
 
+  void _showJobAwardProgressDialog(DialogService _dialogService) async {
+    StatusDialogResponse dialogResult = await _dialogService.showStatusDialog(
+      title: 'Job Award',
+      message: 'Sending ...',
+    );
+    if (dialogResult.status == StatusDialogStatus.SUCCESSFUL) {
+      //Future
+      //    .delayed(Duration(seconds: 5))
+      //    .then((_) => _dialogService.successfulStatusDialogComplete());
+      await _dialogService.showSuccessfulStatusDialog(message: 'Job Awarded Successfully!');
+      Navigator.of(context).pop();
+    } else {
+      //Future
+      //    .delayed(Duration(seconds: 5))
+      //    .then((_) => _dialogService.errorStatusDialogComplete());
+      await _dialogService.showErrorStatusDialog(message: 'Job Award Failed!');
+      Navigator.of(context).pop();
+    }
+  }
+
   Widget buildBody(BuildContext context) {
     final theme = Theme.of(context);
     final appType = AppConfig.of(context).appType;
@@ -181,19 +144,78 @@ class _JobAwardScreenState extends State<JobAwardScreen>
             child: Container(
               margin: EdgeInsets.all(12.0),
               padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
-              color: Color.fromRGBO(255, 255, 255, 1),
+              //color: Color.fromRGBO(255, 255, 255, 1),
               child: Flex(
                 direction: Axis.vertical,
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.stretch,
                 children: <Widget>[
-                  JobViewWidget(job: widget.quote.job),
+                  JobViewWidget(job: widget.job),
                   SizedBox(height: 20.0),
-                  //PostedByWidget(profile: widget.profile),
-                  PostedByWidget(clientId: widget.quote.job.clientId),
+                  //PostedByWidget(profile: widget.traderProfile),
+                  //PostedByWidget(clientId: widget.job.clientId),
+                  Container(
+                    //color: Colors.white,
+                    padding: EdgeInsets.all(12.0),
+                      child: Text(
+                        'Posted By',
+                        textAlign: TextAlign.left,
+                        style: theme.textTheme.subtitle1,
+                      ),
+                  ),
+                  //SizedBox(height: 10.0),
+                  QuoteCard(
+                    job: widget.job,
+                    quote: widget.quote,
+                    traderProfile: widget.traderProfile,
+                    backgroundColor: Colors.white,
+                    onQuotePressed: (job, quote, trader) {
+                      AppRouter.pushPage(
+                          context,
+                          DialogManager(
+                            child: ProfileScreen(
+                              profile: trader,
+                            ),
+                          ),
+                      );
+                    },
+                  ),
+                  SizedBox(height: 30.0),
+                  BlocProvider.value(
+                  value: BlocProvider.of<JobBloc>(context),
+                  child: BlocListener<JobBloc, JobState>(
+                    listener: (context, state) {
+                      DialogService _dialogService = sl<DialogService>();
+                      if (state is JobAwardComplete) {
+                        _dialogService.statusDialogComplete(
+                            StatusDialogResponse(
+                                status: StatusDialogStatus.SUCCESSFUL
+                            )
+                        );
+                      } else if (state is JobAwardFailed){
+                        _dialogService.statusDialogComplete(
+                            StatusDialogResponse(
+                                status: StatusDialogStatus.FAILED
+                            )
+                        );
+                      } else if (state is JobAwarding){
+                        _showJobAwardProgressDialog(_dialogService);
+                      }
+                    },
+                    child: JobActionsWidget(
+                      job: widget.job,
+                      traderName: widget.traderProfile.fullName,
+                      clientName: widget.clientProfile.fullName,
+                      onJobAwardPressed: (message) {
+                        BlocProvider.of<JobBloc>(context)
+                            .add(JobAwardEvent(
+                            job: widget.job,
+                            quote: widget.quote));
+                      },
+                    ),
+                  ),
+                ),
                   SizedBox(height: 10.0),
-                  JobActionsWidget(job: widget.quote.job,),
-                  SizedBox(height: 20.0),
                 ],
               ),
             ),
@@ -204,7 +226,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                   RepositoryProvider.of<MessageRepository>(context),
               appType: appType,
               authLocalDataSource: sl<AuthLocalDataSource>(),
-            )..add(LoadJobMessagesEvent(jobId: widget.quote.job.id)),
+            )..add(LoadJobMessagesEvent(jobId: widget.quote.jobId)),
             child: BlocBuilder<MessageBloc, MessageState>(
               builder: (context, state) {
                 if (state is MessageInitial) {
@@ -215,14 +237,14 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                   return ErrorWidget('Unhandle State $state');
                 } else if (state is JobMessageLoaded) {
                   return MessageBody(
-                    messageBox: new MessageBox(
-                      name: widget.quote.job.title,
-                      jobId: widget.quote.job.id,
-                      traderId: widget.quote.job.traderId,
-                      clientId: widget.quote.job.clientId,
-                      senderId: appType == AppType.TRADER ? widget.quote.traderId : widget.quote.job.clientId,
-                      recipientId: appType == AppType.TRADER ? widget.quote.job.clientId : widget.quote.job.traderId,
-                    ),
+                    // messageBox: new MessageBox(
+                    //   name: widget.quote.job.title,
+                    //   jobId: widget.quote.job.id,
+                    //   traderId: widget.quote.job.traderId,
+                    //   clientId: widget.quote.job.clientId,
+                    //   senderId: appType == AppType.TRADER ? widget.quote.traderId : widget.quote.job.clientId,
+                    //   recipientId: appType == AppType.TRADER ? widget.quote.job.clientId : widget.quote.job.traderId,
+                    // ),
                     messages: state.messages,
                   );
                 }
