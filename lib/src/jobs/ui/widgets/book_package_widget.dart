@@ -211,7 +211,7 @@ class _BookPackageWidgetState extends State<BookPackageWidget> {
                   }
                   Booking booking = Booking(
                     details: widget.package.description,
-                    date: DateFormat("yyyy-MM-dd'T'HH:mm:ss.ms'Z'").format(earliest),
+                    startTime: earliest,
                     jobId: -1,
                     traderId: widget.package.traderId,
                     //optionType: PackageOptionType.REMOVE,

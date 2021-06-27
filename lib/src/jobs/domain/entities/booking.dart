@@ -5,7 +5,8 @@ import 'package:local_people_core/core.dart';
 class Booking extends Equatable {
   int id;
   String details;
-  String date;
+  DateTime startTime;
+  DateTime endTime;
   String status;
   int traderId;
   int jobId;
@@ -16,20 +17,21 @@ class Booking extends Equatable {
   Booking(
       {this.id,
         @required this.details,
-        @required  this.date,
+        @required  this.startTime,
+        @required  this.endTime,
         @required this.status,
         @required this.traderId,
         @required this.jobId,
         this.entityStatus = EntityStatus.ENTIRY_STATUS_NONE,
         this.createdAt,
         this.updatedAt}):
-        assert(details != null),
-        assert(date != null),
+        assert(startTime != null),
+        assert(endTime != null),
         assert(traderId != null),
         assert(jobId != null);
 
   @override
   List<Object> get props =>
-      [id, details, date, status, traderId, jobId, createdAt, updatedAt, entityStatus];
+      [id, details, startTime, endTime, status, traderId, jobId, createdAt, updatedAt, entityStatus];
 
 }

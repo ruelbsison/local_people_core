@@ -13,14 +13,15 @@ class BookingListResponse {
     while(listIter.moveNext() ) {
       BookingModel model = listIter.current;
       Booking booking = Booking(
-          id : model.id ,
-          date : model.date ,
-          details : model.details ,
-          status : model.status ,
-          traderId : model.traderId ,
-          jobId : model.jobId ,
-          createdAt : model.createdAt ,
-          updatedAt: model.updatedAt ,
+        id : model.id ,
+        startTime : DateTime.parse(model.start_time),
+        endTime : DateTime.parse(model.end_time),
+        details : model.details ,
+        status : model.status ,
+        traderId : model.trader_id ,
+        jobId : model.job_id ,
+        createdAt : model.created_at ,
+        updatedAt: model.updated_at ,
       );
       bookings.add(booking);
     }
