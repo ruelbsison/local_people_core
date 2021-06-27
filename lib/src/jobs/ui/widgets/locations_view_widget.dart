@@ -10,7 +10,7 @@ class LocationsViewWidget extends StatefulWidget {
   LocationsViewWidget(
       {@required this.location,
         this.minTagViewHeight = 0,
-        this.maxTagViewHeight = 80,
+        this.maxTagViewHeight = 60,
         this.tagBackgroundColor})
       : assert(location != null,
   'Tags can\'t be empty\n'
@@ -66,7 +66,7 @@ class _LocationsViewWidgetState extends State<LocationsViewWidget> {
           ),
           Text(
             locationTitle,
-            style: textTheme.overline,
+            style: textTheme.caption,
           ),
         ],
       ),

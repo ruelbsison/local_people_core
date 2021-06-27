@@ -1,6 +1,13 @@
 import 'package:flutter/material.dart';
 import '../../domain/entities/tag.dart';
 
+Map<String, Color> colorMap = {
+  'Job Awarded' : Color.fromRGBO(170, 186, 205, 1.0),
+  'Confirmed' : Color.fromRGBO(142, 209, 90, 1.0),
+  'Job Posted' : Color.fromRGBO(170, 186, 205, 1.0),
+  'Awaiting Response' : Color.fromRGBO(170, 186, 205, 1.0),
+};
+
 class TagsViewWidget extends StatefulWidget {
   List<Tag> tags;
   double maxTagViewHeight;
@@ -10,7 +17,7 @@ class TagsViewWidget extends StatefulWidget {
   TagsViewWidget({
     @required this.tags,
     this.minTagViewHeight = 0,
-    this.maxTagViewHeight = 80,
+    this.maxTagViewHeight = 60,
     this.tagBackgroundColor});
   //     : assert(tags != null,
   // 'Tags can\'t be empty\n'
@@ -56,7 +63,11 @@ class _TagWidgetState extends State<TagsViewWidget> {
     return Container(
       padding: EdgeInsets.all(4.0),
       decoration: BoxDecoration(
-        color: (widget.tagBackgroundColor == null ? Color.fromRGBO(170, 186, 205, 1) : widget.tagBackgroundColor),
+        color: (colorMap[tagTitle] != null
+            ? colorMap[tagTitle]
+            : (widget.tagBackgroundColor != null
+            ? widget.tagBackgroundColor
+            : Color.fromRGBO(170, 186, 205, 1) )),
         borderRadius: BorderRadius.circular(2.0),
       ),
       child: Text(

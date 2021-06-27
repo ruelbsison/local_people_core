@@ -93,19 +93,19 @@ class _JobViewWidgetState extends State<JobViewWidget> {
     final size = MediaQuery.of(context).size;
     return Container(
       //color: Colors.white,
-      padding: EdgeInsets.all(12.0),
+      padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
       //margin: EdgeInsets.all(12.0),
       child: Flex(
         direction: Axis.vertical,
         mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.stretch,
         children: <Widget>[
           Text(
             LocalPeopleLocalizations.of(context).titleJobInfo,
             style: theme.textTheme.subtitle1,
             textAlign: TextAlign.left,
           ),
-          SizedBox(height: 5.0),
+          SizedBox(height: 10.0),
           Text(
             widget.job.preview,
             style: theme.textTheme.bodyText2,
@@ -114,22 +114,22 @@ class _JobViewWidgetState extends State<JobViewWidget> {
           SizedBox(height: 20.0),
           Text(
             LocalPeopleLocalizations.of(context).titleDate + ' ' + DateFormat('EEE, MMM dd, yyyy').format(widget.job.date),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
             style: theme.textTheme.subtitle1,
           ),
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
           Text(
             LocalPeopleLocalizations.of(context).titleTime + ' '  + DateFormat('HH::mm').format(widget.job.date),
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
             style: theme.textTheme.subtitle1,
           ),
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
           Text(
             LocalPeopleLocalizations.of(context).titleBudget + ' ' + widget.job.budget,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
             style: theme.textTheme.subtitle1,
           ),
-          SizedBox(height: 5.0),
+          SizedBox(height: 10.0),
           TagsViewWidget(
           tags: widget.job.tags != null ? widget.job.tags : [],
           ),
@@ -156,18 +156,20 @@ class _JobViewWidgetState extends State<JobViewWidget> {
           // ),
           SizedBox(height: 20.0),
           Container(
-            height: 130.0,
+            height: 90.0,
             alignment: Alignment.centerLeft,
             child: ImagesViewWidget(images: widget.job.images, maxTagViewHeight: double.infinity,),
           ),
           SizedBox(height: 20.0),
-          Text(
+          Container(
+            padding: EdgeInsets.only(top: 10.0),
+          child: Text(
             LocalPeopleLocalizations.of(context).titleLocation,
-            textAlign: TextAlign.center,
+            textAlign: TextAlign.left,
             style: theme.textTheme.subtitle1,
           ),
+          ),
           Container(
-            color: Colors.white,
             child: Flex(
               direction: Axis.vertical,
               mainAxisAlignment: MainAxisAlignment.start,
@@ -198,7 +200,7 @@ class _JobViewWidgetState extends State<JobViewWidget> {
                   textAlign: TextAlign.left,
                   style: theme.textTheme.bodyText2,
                 ),
-                SizedBox(height: 60.0),
+                SizedBox(height: 20.0),
               ],
             ),
           ),

@@ -355,7 +355,7 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
               ],
             ),
           ),
-          QuoteBodyWidget(jobId: widget.job.id,),
+          QuoteBodyWidget(job:  widget.job),
         ],
       ),
     );

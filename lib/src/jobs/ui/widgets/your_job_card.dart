@@ -8,10 +8,9 @@ import '../../domain/entities/tag.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/location_bloc.dart';
-// import '../blocs/tag_bloc.dart';
-// import '../blocs/job_bloc.dart';
-// import '../blocs/job_event.dart';
-// import '../blocs/job_state.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:local_people_core/quote.dart';
+import 'package:flutter_tags/flutter_tags.dart';
 
 class YourJobCard extends StatefulWidget {
   YourJobCard({
@@ -19,59 +18,370 @@ class YourJobCard extends StatefulWidget {
     @required this.job,
   }) : super(key: key);
 
-   Job job;
+  Job job;
 
   @override
   _YourJobCardState createState() => _YourJobCardState();
 }
 
 class _YourJobCardState extends State<YourJobCard> {
+  List<Tag> tags = [];
+  List<Tag> statusTags = [];
+  //List<Quote> bids = [];
 
+  Map<String, Color> colorMap = {
+    'Job Awarded' : Color.fromRGBO(170, 186, 205, 1.0),
+    'Confirmed' : Color.fromRGBO(142, 209, 90, 1.0),
+    'Job Posted' : Color.fromRGBO(170, 186, 205, 1.0),
+    'Awaiting Response' : Color.fromRGBO(170, 186, 205, 1.0),
+};
+
+  @override
+  void initState() {
+    super.initState();
+
+    print('YourJobCard.initState');
+  }
+
+  @override
+  void didChangeDependencies() {
+    print('YourJobCard.didChangeDependencies');
+  }
+
+  void initJobStatus() {
+    tags.clear();
+    statusTags.clear();
+    if (widget.job != null) {
+      if (widget.job.tags != null) {
+        tags.addAll(widget.job.tags);
+        tags.forEach((element) {
+          colorMap.addAll(<String, Color>{
+            element.name: Color.fromRGBO(170, 186, 205, 1.0)
+          });
+        });
+      }
+      if (widget.job.isConfirmed != null && widget.job.isConfirmed == true) {
+        tags.add(Tag(id: 0, name: 'Awarded'));
+      } else
+      if (widget.job.isConfirmed != null && widget.job.isConfirmed == true) {
+        tags.add(Tag(id: 0, name: 'Confirmed'));
+      } else if (widget.job.bids != null && widget.job.bids.length > 0) {
+        tags.add(
+            Tag(id: 0, name: widget.job.bids.length.toString() + ' Bids'));
+      } else if (widget.job.isPosted == true) {
+        tags.add(Tag(id: 0, name: 'Job Posted'));
+      }
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    BlocProvider.of<LocationBloc>(context)
-        .add(GetLocationEvent(id: widget.job.id));
-    return BlocBuilder<LocationBloc, LocationState>(
-      bloc: BlocProvider.of<LocationBloc>(context),
-      builder: (BuildContext context, LocationState state) {
-        //final appCType = AppConfig.of(context).appType;
-        if (state is GetLocationLoaded) {
-          //setState(() {
-          widget.job.location = state.location;
-          widget.job.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
-          //});
-          return buildBody(context);
-        } else if (state is GetLocationFailed) {
-          //setState(() {
-          //widget.job = state.job;
-          widget.job.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
-          //});
-
-          return buildBody(context);
-        } else {
-          return LoadingWidget();
-        }
-      },
+    print('YourJobCard.build');
+    BlocProvider.of<QuoteBloc>(context).add(QuoteJobLoadEvent(id: widget.job.id));
+    return BlocProvider.value(
+      value: BlocProvider.of<QuoteBloc>(context),
+      child: BlocBuilder<QuoteBloc, QuoteState>(
+        builder: (context, state) {
+          final appType = AppConfig.of(context).appType;
+          if (state is QuoteJobLoaded) {
+            widget.job.bids.clear();
+            widget.job.bids.addAll(state.quotes);
+            initJobStatus();
+            return buildBody(context);
+          } else if (state is QuoteJobLoadFailed) {
+            return buildBody(context);
+          } else {
+            //return const Center(child: CircularProgressIndicator());
+            return LoadingWidget();
+          }
+        },
+      ),
     );
+    // BlocProvider.of<LocationBloc>(context)
+    //     .add(GetLocationEvent(id: widget.job.id));
+    // return BlocBuilder<LocationBloc, LocationState>(
+    //   bloc: BlocProvider.of<LocationBloc>(context),
+    //   builder: (BuildContext context, LocationState state) {
+    //     //final appCType = AppConfig.of(context).appType;
+    //     if (state is GetLocationLoaded) {
+    //       //setState(() {
+    //       widget.job.location = state.location;
+    //       widget.job.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
+    //       //});
+    //       return buildBody(context);
+    //     } else if (state is GetLocationFailed) {
+    //       //setState(() {
+    //       //widget.job = state.job;
+    //       widget.job.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
+    //       //});
+    //
+    //       return buildBody(context);
+    //     } else {
+    //       return LoadingWidget();
+    //     }
+    //   },
+    // );
   }
 
   Widget buildBody(BuildContext context) {
     final textTheme = Theme.of(context).textTheme;
-    // return InkWell(
-    //   onTap: () {
-    //     //if (widget.onPressedOpportunity != null)
-    //     //  widget.onPressedOpportunity(widget.opportunityItem);
-    //     AppRouter.pushPage(
-    //         context,
-    //       DialogManager(
-    //       child: JobBidScreen(
-    //         job: widget.job,
-    //       ),
-    //     ),);
-    //   },
+    return InkWell(
+        onTap: () {
+          //if (widget.onPressedOpportunity != null)
+          //  widget.onPressedOpportunity(widget.opportunityItem);
+          AppRouter.pushPage(
+            context,
+            DialogManager(
+              child: JobBidScreen(
+                job: widget.job,
+              ),
+            ),);
+        },
+        //   child: Container(
+        child: Container(
+      padding: EdgeInsets.only(top: 12.0, bottom: 12.0, right: 12.0), //EdgeInsets.all(12.0),
+      margin: EdgeInsets.only(top: 12.0, bottom: 12.0),
+      decoration: BoxDecoration(
+        color: Color.fromRGBO(255, 255, 255, 1.0),
+        borderRadius: BorderRadius.circular(10.0),
+      ),
+      child: Flex(
+        direction: Axis.horizontal,
+        mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.start,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+        Expanded(
+          flex: 1,
+          child: Flex(
+            direction: Axis.vertical,
+            mainAxisSize: MainAxisSize.max,
+            mainAxisAlignment: MainAxisAlignment.center,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Container(
+                //padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                //color: Colors.blue,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                child: ClipOval(
+                   child: SvgPicture.asset(
+                     ((widget.job.date != null
+                         && (widget.job.date.difference(DateTime.now())).inDays > 0)
+                         ? 'packages/local_people_core/assets/images/package-green.svg'
+                         : 'packages/local_people_core/assets/images/package-orange.svg'),
+                    fit: BoxFit.contain,
+                    height: 38,
+                    width: 38,
+                  ),
+                ),
+                ),
+              ),
+              Container(
+                //padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                //color: Colors.green,
+                child: Align(
+                  alignment: Alignment.topCenter,
+                child: Text(
+                  (widget.job.date != null
+                      ? DateFormatUtil.getDateTimeDiff(
+                          DateTime.now(), widget.job.date)
+                      : ''),
+                  textAlign: TextAlign.center,
+                  style: textTheme.overline,
+                  maxLines: 2,
+                ),
+                ),
+              ),
+            ],
+          ),
+        ),
+          Expanded(
+            flex: 4,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  widget.job.title != null
+                      ? widget.job.title
+                      : widget.job.description,
+                  textAlign: TextAlign.left,
+                  style: textTheme.subtitle1,
+                  overflow: TextOverflow.ellipsis,
+                  softWrap: true,
+                  maxLines: 2,
+                ),
+                SizedBox(height: 10.0),
+                Text(
+                  (widget.job.date != null
+                          ? DateFormat('dd MMMM yyyy').format(widget.job.date)
+                          : '') +
+                      (widget.job.date != null
+                          ? ' | ' +
+                              DateFormatUtil.getDateTimeDiff(
+                                  DateTime.now(), widget.job.date)
+                          : ''),
+                  textAlign: TextAlign.left,
+                  style: textTheme.subtitle2,
+                ),
+                SizedBox(height: 5.0),
+                TagsViewWidget(
+                  tags: tags,
+                ),
+              // Tags(
+              //   //key: _tagStateKey,
+              //   //symmetry: _symmetry,
+              //   columns: 3,
+              //   alignment: WrapAlignment.start,
+              //   //horizontalScroll: _horizontalScroll,
+              //   //verticalDirection: VerticalDirection.up, textDirection: TextDirection.rtl,
+              //   //heightHorizontalScroll: 60 * (_fontSize / 14),
+              //   itemCount: tags.length,
+              //   itemBuilder: (index) {
+              //     final item = tags[index];
+              //
+              //     return ItemTags(
+              //       key: Key(index.toString()),
+              //       index: index,
+              //       title: item.name,
+              //       pressEnabled: false,
+              //       elevation: 2,
+              //       borderRadius: BorderRadius.circular(2.0),
+              //       //border: ,
+              //       activeColor: colorMap[item.name] == null
+              //           ? Color.fromRGBO(255, 99, 97, 1.0):
+              //       colorMap[item.name], //Colors.blueGrey[600],
+              //       //singleItem: _singleItem,
+              //       splashColor: Colors.green,
+              //       combine: ItemTagsCombine.onlyText,
+              //       textStyle: textTheme.overline,
+              //
+              //     );
+              //   }
+              // ),
+                SizedBox(height: 5.0),
+                //buildTags(context),
+                TagsViewWidget(
+                  tags: statusTags,
+                ),
+                // Tags(
+                //   //key: _tagStateKey,
+                //   //symmetry: _symmetry,
+                //     columns: 3,
+                //     alignment: WrapAlignment.start,
+                //     //horizontalScroll: _horizontalScroll,
+                //     //verticalDirection: VerticalDirection.up, textDirection: TextDirection.rtl,
+                //     //heightHorizontalScroll: 60 * (_fontSize / 14),
+                //     itemCount: statusTags.length,
+                //     itemBuilder: (index) {
+                //       final item = statusTags[index];
+                //
+                //       return ItemTags(
+                //         key: Key(index.toString()),
+                //         index: index,
+                //         title: item.name,
+                //         pressEnabled: false,
+                //         elevation: 2,
+                //         borderRadius: BorderRadius.circular(2.0),
+                //         //border: ,
+                //         activeColor: colorMap[item.name] == null
+                //             ? Color.fromRGBO(255, 99, 97, 1.0):
+                //         colorMap[item.name], //Colors.blueGrey[600],
+                //         //singleItem: _singleItem,
+                //         splashColor: Colors.green,
+                //         combine: ItemTagsCombine.onlyText,
+                //         textStyle: textTheme.overline,
+                //       );
+                //     }
+                // ),
+                SizedBox(height: 10.0),
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 1,
+            child: Column(
+              mainAxisSize: MainAxisSize.max,
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.stretch,
+              children: [
+                Text(
+                  '£' + widget.job.budget,
+                  textAlign: TextAlign.center,
+                  style: textTheme.bodyText1,
+                )
+              ],
+            ),
+          ),
+        ],
+      ),
+        ),
+        );
+
+  }
+
+  // Widget buildTags(BuildContext context) {
+  //   BlocProvider.of<QuoteBloc>(context).add(QuoteJobLoadEvent(id: widget.job.id));
+  //   return BlocProvider.value(
+  //     value: BlocProvider.of<QuoteBloc>(context),
+  //     child: BlocBuilder<QuoteBloc, QuoteState>(
+  //       builder: (context, state) {
+  //         if (state is QuoteJobLoaded) {
+  //           widget.job.bids = state.quotes;
+  //           return buildTagsContnt(context);
+  //         } else if (state is QuoteJobLoadFailed) {
+  //           return buildTagsContnt(context);
+  //         } else {
+  //           return const Center(child: CircularProgressIndicator());
+  //         }
+  //       },
+  //     ),
+  //   );
+  // }
+  //
+  // Widget buildTagsContnt(BuildContext context) {
+  //   tags.clear();
+  //   statusTags.clear();
+  //   if (widget.job != null) {
+  //     if (widget.job.tags != null) {
+  //       tags.addAll(widget.job.tags);
+  //       tags.forEach((element) {
+  //         colorMap.addAll(<String,Color>{element.name: Color.fromRGBO(170, 186, 205, 1.0)});
+  //       });
+  //     }
+  //     if (widget.job.isConfirmed != null && widget.job.isConfirmed == true) {
+  //       tags.add(Tag(id: 0, name: 'Awarded'));
+  //     } else if (widget.job.isConfirmed != null && widget.job.isConfirmed == true) {
+  //       tags.add(Tag(id: 0, name: 'Confirmed'));
+  //     } else if (widget.job.bids != null && widget.job.bids.length > 0) {
+  //       tags.add(Tag(id: 0, name: widget.job.bids.length.toString() + ' Bids'));
+  //     } else if (widget.job.isPosted == true) {
+  //       tags.add(Tag(id: 0, name: 'Job Posted'));
+  //     }
+  //   }
+  //   return TagsViewWidget(
+  //     tags: tags,
+  //   );
+  // }
+
+  Widget buildBody2(BuildContext context) {
+    final textTheme = Theme.of(context).textTheme;
+    return InkWell(
+      onTap: () {
+        //if (widget.onPressedOpportunity != null)
+        //  widget.onPressedOpportunity(widget.opportunityItem);
+        AppRouter.pushPage(
+            context,
+          DialogManager(
+          child: JobBidScreen(
+            job: widget.job,
+          ),
+        ),);
+      },
     //   child: Container(
-    return Container(
+    child: Container(
       padding: EdgeInsets.all(12.0),
       margin: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
@@ -111,7 +421,7 @@ class _YourJobCardState extends State<YourJobCard> {
                       Text(
                         (widget.job.date != null
                             ? DateFormatUtil.getDateTimeDiff(
-                            DateTime.now(), widget.job.date)
+                                DateTime.now(), widget.job.date)
                             : ''),
                         textAlign: TextAlign.center,
                         style: textTheme.overline,
@@ -123,8 +433,8 @@ class _YourJobCardState extends State<YourJobCard> {
                 Expanded(
                   flex: 3,
                   child: Column(
-                    mainAxisSize: MainAxisSize.max,
-                      crossAxisAlignment: CrossAxisAlignment.start,
+                      mainAxisSize: MainAxisSize.max,
+                      crossAxisAlignment: CrossAxisAlignment.stretch,
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: <Widget>[
                         Text(
@@ -138,13 +448,13 @@ class _YourJobCardState extends State<YourJobCard> {
                         SizedBox(height: 15.0),
                         Text(
                           (widget.job.date != null
-                              ? DateFormat('dd MMMM yyyy')
-                              .format(widget.job.date)
-                              : '') +
+                                  ? DateFormat('dd MMMM yyyy')
+                                      .format(widget.job.date)
+                                  : '') +
                               (widget.job.date != null
                                   ? ' | ' +
-                                  DateFormatUtil.getDateTimeDiff(
-                                      DateTime.now(), widget.job.date)
+                                      DateFormatUtil.getDateTimeDiff(
+                                          DateTime.now(), widget.job.date)
                                   : ''),
                           textAlign: TextAlign.left,
                           style: textTheme.subtitle2,
@@ -187,16 +497,7 @@ class _YourJobCardState extends State<YourJobCard> {
               ]),
         ],
       ),
-      //),
+      ),
     );
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    if (widget.job.isPosted == true) {
-      widget.job.tags.add(Tag(id: 0, name:'Job Posted'));
-    }
   }
 }
