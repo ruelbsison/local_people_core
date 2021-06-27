@@ -8,7 +8,7 @@ import '../../domain/entities/quote.dart';
 import 'package:smooth_star_rating/smooth_star_rating.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-typedef OnQuotePressed = void Function(Quote quote, TraderProfile traderProfile);
+typedef OnQuotePressed = void Function(Job job, Quote quote, TraderProfile traderProfile);
 
 class QuoteCard extends StatefulWidget {
   QuoteCard({
@@ -73,16 +73,11 @@ class _QuoteCardState extends State<QuoteCard> {
         if (widget.withTap == false)
           return;
         if (widget.onQuotePressed != null)
-          widget.onQuotePressed(widget.quote, widget.traderProfile);
-        else {
-          AppRouter.pushPage(
-              context,
-              JobAwardScreen(
-                job: widget.job,
-                quote: widget.quote,
-                traderProfile: widget.traderProfile,
-              ));
-        }
+          widget.onQuotePressed(
+              widget.job,
+              widget.quote,
+              widget.traderProfile
+          );
       },
       // child: Container (
       //   width: 361,

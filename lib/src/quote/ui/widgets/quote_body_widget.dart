@@ -82,6 +82,25 @@ class _QuoteBodyWidgetState extends State<QuoteBodyWidget> {
                     job: widget.job,
                     quote: quote,
                     traderProfile: state.profile,
+                    onQuotePressed: (job, quote, trader) {
+                      BlocProvider.of<ProfileBloc>(context)
+                          .add(ClientProfileGetEvent(id: job.clientId));
+                      BlocProvider.value(
+                          value: BlocProvider.of<ProfileBloc>(context),
+                          child: BlocListener<ProfileBloc, ProfileState>(
+                              listener: (context, state) {
+                        if (state is ClientProfileGetLoaded) {
+                          AppRouter.pushPage(
+                              context,
+                              JobAwardScreen(
+                                job: job,
+                                quote: quote,
+                                traderProfile: trader,
+                                clientProfile: state.profile,
+                              ));
+                        }
+                      }));
+                    },
                   );
                 } else if (state is TraderProfileGetFailed) {
                   return ErrorWidget('Error $state');
