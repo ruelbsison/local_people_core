@@ -1,5 +1,6 @@
 library local_people_core;
 
+//export './src/jobs/domain/job_provider.dart';
 export './src/jobs/domain/entities/updates.dart';
 export './src/jobs/domain/entities/updates_list_response.dart';
 export './src/jobs/domain/entities/updates_response.dart';
