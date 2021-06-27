@@ -16,13 +16,13 @@ class AppThemeConfig {
       ),
       subtitle1: base.subtitle1.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w700,
         fontSize: 16,
       ),
       subtitle2: base.subtitle2.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.w500,
-        fontSize: 14,
+        fontWeight: FontWeight.w400,
+        fontSize: 13,
       ),
       caption: base.caption.copyWith(
         fontFamily: 'RedHatDisplay',
@@ -31,7 +31,7 @@ class AppThemeConfig {
       ),
       bodyText1: base.bodyText1.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.bold,
+        fontWeight: FontWeight.w700,
         fontSize: 14,
       ),
       bodyText2: base.bodyText2.copyWith(
@@ -196,26 +196,28 @@ class AppThemeConfig {
       //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
       // ),
       bottomNavigationBarTheme: base.bottomNavigationBarTheme.copyWith(
-        backgroundColor: base.primaryColor,
-        selectedItemColor: base.accentColor,
-        unselectedItemColor: Colors.grey[500],
-        elevation: 20,
+        //backgroundColor: base.primaryColor,
+        //selectedItemColor: base.accentColor,
+        //unselectedItemColor: Colors.grey[500],
+        elevation: base.bottomNavigationBarTheme.elevation,
           selectedLabelStyle: TextStyle(
             fontFamily: 'RedHatDisplay',
             fontWeight: FontWeight.normal,
+            color: Colors.blueAccent,
             fontSize: 8,
           ),
         unselectedLabelStyle: TextStyle(
           fontFamily: 'RedHatDisplay',
-          fontWeight: FontWeight.normal,
+          fontWeight: FontWeight.bold,
+          color: Colors.blueAccent,
           fontSize: 8,
         ),
-        selectedIconTheme: IconThemeData (
-          size: 24,
-        ),
-        unselectedIconTheme: IconThemeData (
-          size: 24,
-        ),
+        // selectedIconTheme: IconThemeData (
+        //   size: 24,
+        // ),
+        // unselectedIconTheme: IconThemeData (
+        //   size: 24,
+        // ),
       ),
       buttonTheme: ButtonThemeData(
         buttonColor: themeMaterialColor.shade500,

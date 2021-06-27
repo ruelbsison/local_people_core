@@ -12,6 +12,7 @@ import 'package:local_people_core/profile.dart';
 import '../widgets/custom_alert.dart';
 import 'dart:async';
 import '../widgets/app_dialog.dart';
+import 'place_bid_dialog.dart';
 
 class DialogManager extends StatefulWidget {
   final Widget child;
@@ -44,13 +45,14 @@ class _DialogManagerState extends State<DialogManager> {
     return widget.child;
   }
 
-  void _showPlaceBidDialog(Job job) {
+  void _showPlaceBidDialog(PlaceBidRequest request) {
     showDialog(
       context: context,
       builder: (context) => AppDialog(
         title: 'Place Bid',
         child: PlaceBidWidget(
-          job: job,
+          job: request.job,
+          traderId: request.traderId,
         ),
       ),
     );

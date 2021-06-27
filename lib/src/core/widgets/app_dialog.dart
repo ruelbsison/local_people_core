@@ -132,7 +132,7 @@ class AppDialog extends StatelessWidget {
                         ),
                         iconSize: 24,
                         onPressed: () {
-                          Navigator.pop(context);
+                          Navigator.of(context).pop();
                         },
                       ),
                     ),
@@ -146,7 +146,10 @@ class AppDialog extends StatelessWidget {
             child: Card (
               elevation: 0,
               margin: EdgeInsets.all(0.0),
-              child: child,
+              child: Padding(
+                padding: EdgeInsets.all(12.0),
+                child: child,
+              ),
             ),
           ),
         ],

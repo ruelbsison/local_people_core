@@ -1,10 +1,17 @@
 import 'package:meta/meta.dart';
 import 'package:dio/dio.dart';
+import 'package:dio_http_cache/dio_http_cache.dart';
 
 class RestAPIConfig {
-  String get baseURL => 'http://r-sison.ngrok.io/api/v1'; // ./ngrok http -region=us -hostname=r-sison.ngrok.io 3001
+  String get baseURL => 'http://r-sison.ngrok.io/api/v1';
+  //// 'http://192.168.254.133:3001/api/v1/';
+  // 'https://staging.localpeople.app/api/v1';
+  // 'http://192.168.254.133:3001/api/v1/';
+  //'http://r-sison.ngrok.io/api/v1';
+  // ./ngrok http -region=us -hostname=r-sison.ngrok.io 3001
   // 'http://192.168.1.5:3001/api/v1/';
   // 'http://localhost:3001/api/v1/';
+
 
   static const String client = '/clients';
 
@@ -115,10 +122,12 @@ class RestAPIConfig {
   static const String qualificationWithTraderId = '/traders/{id}/qualifications';
 
   static Dio getDioOptions() {
-    final dio = Dio();   // Provide a dio instance
-    dio.options.headers["Authorization"] = 'Bearer ' + "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjZ5Sl81RW9zYWpkVzh1SFJSTVktZyJ9.eyJpc3MiOiJodHRwczovL2xvY2FsLXBlb3BsZS5ldS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTQ5OTc5MTg3NDkxMTY3OTEzMzMiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbHBlb3BsZS1hcGkiLCJodHRwczovL2xvY2FsLXBlb3BsZS5ldS5hdXRoMC5jb20vdXNlcmluZm8iXSwiaWF0IjoxNjIyOTk0MTc4LCJleHAiOjE2MjMwODA1NzgsImF6cCI6IlBKb2tmRWxLaDQ0Y3QyQUZrSjBYeFZxdUh2dDVmdHcxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCJ9.YmvKhcKlHQqHEj9b535zDnkWiXPX69BynnLqLdd-2sNTFxrPMHh6N-lHoO1FWBhGzzpqrVmpPSWJ4gimmml-Nad3sQcwjXTRRTmat1RD7opp6lCV2SvlV4264-THeIwHg847FOTWZBDZ0oHIs6GZeVxoQB_FjEhhwBTfkEXPOhC6YgLhzWaTR-AjRfa_e3O55A4ObcRpN00LrYxZG4EhRkC-BKlVEmYeFmusTfD72VI-obKSxXmMUNqwmUlQdj5IOUU8ugo6I4ERieOOuMYSj3PcGPK7-QFv7s2VQpeMbgtjoDLehpS6YetgHMIHb0zJUypun00X6wOW01wNmfogdg";
-    //dio.options.headers["contentType"] = "application/json";
 
+    Options _cacheOptions = buildCacheOptions(Duration(minutes: 30));
+    final dio = Dio();   // Provide a dio instance
+    //dio.options.headers["Authorization"] = 'Bearer ' + "eyJhbGciOiJSUzI1NiIsInR5cCI6IkpXVCIsImtpZCI6IjZ5Sl81RW9zYWpkVzh1SFJSTVktZyJ9.eyJpc3MiOiJodHRwczovL2xvY2FsLXBlb3BsZS5ldS5hdXRoMC5jb20vIiwic3ViIjoiZ29vZ2xlLW9hdXRoMnwxMTQ5OTc5MTg3NDkxMTY3OTEzMzMiLCJhdWQiOlsiaHR0cHM6Ly9sb2NhbHBlb3BsZS1hcGkiLCJodHRwczovL2xvY2FsLXBlb3BsZS5ldS5hdXRoMC5jb20vdXNlcmluZm8iXSwiaWF0IjoxNjIyOTk0MTc4LCJleHAiOjE2MjMwODA1NzgsImF6cCI6IlBKb2tmRWxLaDQ0Y3QyQUZrSjBYeFZxdUh2dDVmdHcxIiwic2NvcGUiOiJvcGVuaWQgcHJvZmlsZSBlbWFpbCJ9.YmvKhcKlHQqHEj9b535zDnkWiXPX69BynnLqLdd-2sNTFxrPMHh6N-lHoO1FWBhGzzpqrVmpPSWJ4gimmml-Nad3sQcwjXTRRTmat1RD7opp6lCV2SvlV4264-THeIwHg847FOTWZBDZ0oHIs6GZeVxoQB_FjEhhwBTfkEXPOhC6YgLhzWaTR-AjRfa_e3O55A4ObcRpN00LrYxZG4EhRkC-BKlVEmYeFmusTfD72VI-obKSxXmMUNqwmUlQdj5IOUU8ugo6I4ERieOOuMYSj3PcGPK7-QFv7s2VQpeMbgtjoDLehpS6YetgHMIHb0zJUypun00X6wOW01wNmfogdg";
+    //dio.options.headers["contentType"] = "application/json";
+    //dio.options. = _cacheOptions;
     return dio;
   }
 

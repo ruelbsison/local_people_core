@@ -2,7 +2,9 @@ import 'dart:async';
 import 'status_dialog.dart';
 import 'package_create_dialog.dart';
 import 'book_package_dialog.dart';
+import 'place_bid_dialog.dart';
 import 'package:local_people_core/jobs.dart';
+import 'package:local_people_core/quote.dart';
 
 class DialogService {
   // Function _showDialogListener;
@@ -128,27 +130,31 @@ class DialogService {
   }
 
   /* --------------------------------------------------------------------------------------*/
-  Function(Job) _showPlaceBidDialogListener;
-  Completer _dialogPlaceBidCompleter;
+  Function(PlaceBidRequest) _showPlaceBidDialogListener;
+  Completer<PlaceBidResponse> _dialogPlaceBidCompleter;
 
   /// Registers a callback function. Typically to show the dialog
-  void registerPlaceBidDialogListener(Function(Job) showPlaceBidDialogListener) {
+  void registerPlaceBidDialogListener(Function(PlaceBidRequest) showPlaceBidDialogListener) {
     _showPlaceBidDialogListener = showPlaceBidDialogListener;
   }
 
   Future showPlaceBidDialog({
     Job job,
+    int traderId,
   }) {
-    _dialogPlaceBidCompleter = Completer();
-    _showPlaceBidDialogListener(
-      job,
+    _dialogPlaceBidCompleter = Completer<PlaceBidResponse>();
+    _showPlaceBidDialogListener(PlaceBidRequest(
+      job: job,
+      traderId: traderId,
+    )
+
     );
     return _dialogPlaceBidCompleter.future;
   }
 
   /// Completes the _dialogCompleter to resume the Future's execution call
-  void placeBidDialogComplete() {
-    _dialogPlaceBidCompleter.complete();
+  void placeBidDialogComplete(PlaceBidResponse response) {
+    _dialogPlaceBidCompleter.complete(response);
     _dialogPlaceBidCompleter = null;
   }
 

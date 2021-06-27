@@ -18,18 +18,22 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final List<String> filterItems;
   final String filterValue;
   final FilterValueChanged onFilterValueChanged;
+
   /// you can add more fields that meet your needs
 
-  const AppBarWidget({Key key, 
-    this.title, this.appBar, this.actions,
-    this.subTitle, this.bottom,
-  this.appBarPreferredSize = const Size.fromHeight(116.0),
-  this.showFilter = false,
-  this.filterItems = const [],
-  this.filterValue = '',
+  const AppBarWidget({
+    Key key,
+    this.title,
+    this.appBar,
+    this.actions,
+    this.subTitle,
+    this.bottom,
+    this.appBarPreferredSize = const Size.fromHeight(110.0),
+    this.showFilter = false,
+    this.filterItems = const [],
+    this.filterValue = '',
     this.onFilterValueChanged = null,
-  })
-      : super(key: key);
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -43,48 +47,59 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         titleSpacing: 0,
         centerTitle: false,
         //actions: actions,
-        bottom: PreferredSize (
+        flexibleSpace: PreferredSize(
           preferredSize: Size(size.width, appBarPreferredSize.height),
-          child: Flex (
+          child: Flex(
             direction: Axis.vertical,
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
-            children: <Widget> [
-              Row (
+            children: <Widget>[
+              Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Expanded(
-                      child: Align(
+                    flex: 2,
+                    child: Stack(
+                      children: [
+                        Align(
                           alignment: Alignment.centerLeft,
-                            child: Container (
-                              padding: EdgeInsets.only(left: 10),
-                              //padding: EdgeInsets.only(left: 12, top: 40),
-                              child: LogoWidget(
-                                fit: BoxFit.contain,
-                                height: 40,
-                                //width: 105 * mediaQueryData.devicePixelRatio,
-                              ),
-                              //color: Colors.green,
+                          child: Container(
+                            padding: EdgeInsets.only(
+                              left: 10,
+                              top: 12,
+                            ),
+                            child: LogoWidget(
+                              fit: BoxFit.contain,
+                              //height: 30,
+                              //width: 105 * mediaQueryData.devicePixelRatio,
+                            ),
+                            //color: Colors.green,
                           ),
-                      ),
-                  ),
-                    Expanded(
-                      child: Align(
-                        alignment: Alignment.centerRight,
-                        child: Padding (
-                          padding: EdgeInsets.only(right: 14),
-                          child: (actions != null && actions.length > 0) ? actions[0] : Container(),
-                        )
-                      ),
+                        ),
+                      ],
                     ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Padding(
+                          padding: EdgeInsets.only(right: 14),
+                          child: (actions != null && actions.length > 0)
+                              ? actions[0]
+                              : Container(),
+                        )),
+                  ),
                 ],
               ),
               //SizedBox(height: 10),
               buildTitleContent(context),
-              SizedBox(height: 10),
+              //SizedBox(height: 10),
             ],
           ),
         ),
+        bottom: bottom,
         //bottom: bottom,
         // title: Flex (
         //   direction: Axis.vertical,
@@ -114,7 +129,6 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         //   ],
         // ),
         elevation: 0.0,
-        //bottom: bottom,
       ),
     );
   }
@@ -122,28 +136,29 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   Widget buildTitleContent(BuildContext context) {
     final theme = Theme.of(context).textTheme;
     if (showFilter == true) {
-      return Container (
-        child: Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Expanded(
-              flex: 2,
-              child: Container (
-                padding: EdgeInsets.only(left: 12),
-                child: Text(
-                  subTitle,
-                  textAlign: TextAlign.left,
-                  style: theme.headline6,
-                ),
-                //color: Colors.yellow,
+      return Row(
+        mainAxisSize: MainAxisSize.min,
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: <Widget>[
+          Expanded(
+            flex: 2,
+            child: Container(
+              padding: EdgeInsets.only(left: 12),
+              child: Text(
+                subTitle,
+                textAlign: TextAlign.left,
+                style: theme.headline6,
               ),
+              //color: Colors.yellow,
             ),
-            Expanded(
-              flex: 1,
-              //SingleChildScrollView
-              child: SingleChildScrollView (
-                padding: EdgeInsets.only(right: 12),
-                child: DropdownButtonHideUnderline(
+          ),
+          Expanded(
+            flex: 1,
+            //SingleChildScrollView
+            child: SingleChildScrollView(
+              padding: EdgeInsets.only(right: 12),
+              child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   isExpanded: true,
                   hint: Text("Filter by"),
@@ -151,8 +166,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   items: filterItems.map((String value) {
                     return DropdownMenuItem(
                       value: value,
-                      child: Text(value,
-                          style: theme.bodyText1),
+                      child: Text(value, style: theme.subtitle2),
                     );
                   }).toList(),
                   value: filterValue,
@@ -166,13 +180,12 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   },
                 ),
               ),
-              ),
             ),
-          ],
-        ),
+          ),
+        ],
       );
     } else {
-      return Container (
+      return Container(
         padding: EdgeInsets.only(left: 12),
         child: Text(
           subTitle,

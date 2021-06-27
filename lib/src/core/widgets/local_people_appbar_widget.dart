@@ -16,6 +16,7 @@ class LocalPeopleAppBarWidget extends StatelessWidget implements PreferredSizeWi
   final String networkIcon;
   Widget image;
   Widget leading;
+  String leadingText;
   /// you can add more fields that meet your needs
 
   LocalPeopleAppBarWidget({Key key,
@@ -24,7 +25,8 @@ class LocalPeopleAppBarWidget extends StatelessWidget implements PreferredSizeWi
     this.appBarPreferredSize = const Size.fromHeight(180.0),
     this.networkIcon,
     this.leading = null,
-  this.packageSvgAssetIcon = 'packages/local_people_core/assets/images/package-orange.svg',})
+  this.packageSvgAssetIcon = 'packages/local_people_core/assets/images/package-orange.svg',
+  this.leadingText = null})
       : super(key: key);
 
   @override
@@ -34,14 +36,16 @@ class LocalPeopleAppBarWidget extends StatelessWidget implements PreferredSizeWi
     if (networkIcon != null) {
       image = CachedNetworkImage(
         imageUrl: networkIcon,
-        width: 60,
-        height: 60,
+        height: 37,
+        width: 37,
         placeholder: (context, url) => LoadingWidget(
           isImage: true,
         ),
         errorWidget: (context, url, error) => Image.asset(
           'packages/local_people_core/assets/images/trader-profile-photo.png',
           fit: BoxFit.cover,
+          height: 37,
+          width: 37,
         ),
         fit: BoxFit.cover,
       );
@@ -56,10 +60,10 @@ class LocalPeopleAppBarWidget extends StatelessWidget implements PreferredSizeWi
     return PreferredSize(
       preferredSize: appBarPreferredSize,
       child: AppBar(
-        leading: leading,
+        leading: buildLeading(context),
         titleSpacing: 0,
         centerTitle: false,
-        //automaticallyImplyLeading: false,
+        automaticallyImplyLeading: false,
         flexibleSpace: PreferredSize(
           preferredSize: Size(size.width, appBarPreferredSize.height),
           child: Flex(
@@ -85,7 +89,7 @@ class LocalPeopleAppBarWidget extends StatelessWidget implements PreferredSizeWi
                     child: Text(
                         (startrDateTime != null ? DateFormatUtil.getDateTimeDiff(DateTime.now(), startrDateTime) : ''),
                       textAlign: TextAlign.center,
-                      style: theme.textTheme.overline,
+                      style: theme.textTheme.overline.copyWith(fontSize: 9),
                     ),
                   ),
                 ],
@@ -114,6 +118,35 @@ class LocalPeopleAppBarWidget extends StatelessWidget implements PreferredSizeWi
         actions: actions,
         bottom: bottom,
       ),
+    );
+  }
+
+  Widget buildLeading(BuildContext context) {
+    if (leadingText == null)
+      return leading;
+
+    final theme = Theme.of(context);
+    return Column (
+      //direction: Axis.vertical,
+      mainAxisSize: MainAxisSize.min,
+      mainAxisAlignment: MainAxisAlignment.center,
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: <Widget>[
+        IconButton(
+          icon: Icon(
+            Icons.arrow_back,
+          ),
+          onPressed: () {
+            Navigator.of(context).pop();
+          },
+        ),
+        //SizedBox(width: 20),
+        // Text(
+        //   leadingText,
+        //   style: theme.textTheme.overline,
+        //   textAlign: TextAlign.right,
+        // ),
+      ],
     );
   }
 
