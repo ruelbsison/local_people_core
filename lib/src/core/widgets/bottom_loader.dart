@@ -7,7 +7,10 @@ class BottomLoader extends StatelessWidget {
       child: SizedBox(
         height: 24,
         width: 24,
-        child: CircularProgressIndicator(strokeWidth: 1.5),
+        child: CircularProgressIndicator(
+            strokeWidth: 1.5,
+          color: Color.fromRGBO(255, 99, 95, 1),
+        ),
       ),
     );
   }

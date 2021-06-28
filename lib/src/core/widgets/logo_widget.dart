@@ -12,15 +12,15 @@ class LogoWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SvgPicture.asset(
-      'packages/local_people_core/assets/images/app-logo.svg',
-      fit: fit,
-      height: height,
-      width: width,
-      //color: Colors.green,
-      //color: backgroundColor,
-      alignment: Alignment.center,
-    );
+    // return SvgPicture.asset(
+    //   'packages/local_people_core/assets/images/app-logo.svg',
+    //   fit: fit,
+    //   height: height,
+    //   width: width,
+    //   //color: Colors.green,
+    //   //color: backgroundColor,
+    //   alignment: Alignment.center,
+    // );
     return Image.asset(
       'packages/local_people_core/assets/images/local-people-logo.png',
       fit: fit,

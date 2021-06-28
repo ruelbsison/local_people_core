@@ -40,7 +40,9 @@ class LoginScreenState extends State<LoginScreen> {
     var loading = Row(
       mainAxisAlignment: MainAxisAlignment.center,
       children: <Widget>[
-        CircularProgressIndicator(),
+        CircularProgressIndicator(
+          color: Color.fromRGBO(255, 99, 95, 1),
+        ),
         Text(" Authenticating ... Please wait")
       ],
     );
