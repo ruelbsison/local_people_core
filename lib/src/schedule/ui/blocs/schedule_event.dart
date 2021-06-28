@@ -1,6 +1,5 @@
-//part of 'schedule_bloc.dart';
-import 'package:equatable/equatable.dart';
-import 'package:meta/meta.dart';
+part of 'schedule_bloc.dart';
+
 class ScheduleEvent extends Equatable {
   const ScheduleEvent();
 
@@ -8,11 +7,18 @@ class ScheduleEvent extends Equatable {
   List<Object> get props => [];
 }
 
-class ScheduleTimeSlotEvent extends ScheduleEvent {
-  const ScheduleTimeSlotEvent({@required this.interval});
+class TimeSlotLoadEvent extends ScheduleEvent {
+  const TimeSlotLoadEvent({@required this.interval});
 
   final int interval;
 
   @override
   List<Object> get props => [interval];
+}
+
+class ScheduleLoadEvent extends ScheduleEvent {
+  const ScheduleLoadEvent();
+
+  @override
+  List<Object> get props => [];
 }
