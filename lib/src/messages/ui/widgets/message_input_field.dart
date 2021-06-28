@@ -103,6 +103,7 @@ class _MessageInputFieldState extends State<MessageInputField> {
                           border: InputBorder.none,
                         ),
                         //keyboardType: K,
+                        textCapitalization: TextCapitalization.sentences,
                         textInputAction: msgText.length > 0 ? TextInputAction.go : TextInputAction.done,
                         onChanged: (msg) {
                           setState(() {

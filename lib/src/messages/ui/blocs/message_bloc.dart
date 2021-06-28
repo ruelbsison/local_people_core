@@ -102,12 +102,12 @@ class MessageBloc extends Bloc<MessageEvent, MessageState> {
 
       MessageResponse response = await messageRepository.createMessage(message);
       if (response == null || response.exception != null) {
-        yield SendMessageFailed();
+        yield SendMessageFailed(message: message);
       } else if (response.message != null) {
         yield MessageSent(message: response.message);
       }
     } catch (e) {
-      yield SendMessageFailed();
+      yield SendMessageFailed(message: message);
     }
   }
 }

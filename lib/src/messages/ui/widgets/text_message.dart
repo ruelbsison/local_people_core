@@ -8,8 +8,7 @@ import '../../domain/repositories/message_repository.dart';
 import 'package:local_people_core/core.dart';
 import 'package:local_people_core/auth.dart';
 
-
-class TextMessage extends StatelessWidget {
+class TextMessage extends StatefulWidget {
   const TextMessage({
     Key key,
     this.message,
@@ -18,32 +17,52 @@ class TextMessage extends StatelessWidget {
   final Message message;
 
   @override
+  _TextMessageState createState() =>
+      _TextMessageState();
+}
+
+class _TextMessageState extends State<TextMessage> {
+  @override
   Widget build(BuildContext context) {
-    final appType = AppConfig.of(context).appType;
-    if (message.entityStatus == EntityStatus.ENTIRY_STATUS_CREATING) {
-      BlocProvider.of<MessageBloc>(context).add(SendMessageEvent(message: message));
-      return BlocProvider(
-        create: (context) =>
-            MessageBloc(
-              messageRepository: RepositoryProvider.of<MessageRepository>(
-                  context),
-              appType: appType,
-              authLocalDataSource: sl<AuthLocalDataSource>(),
-            ),
-        child: BlocBuilder<MessageBloc, MessageState>(
-          builder: (context, state) {
-            if (state is SendMessageFailed) {
-              message.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
-              return ErrorWidget('Unhandle State $state');
-            } else if (state is MessageSent) {
-              message.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
-              return buildBody(context);
-            }
-            return LoadingWidget();
-          },
-        ),
-      );
-    }
+    // final appType = AppConfig.of(context).appType;
+    // if (widget.message.entityStatus == EntityStatus.ENTIRY_STATUS_CREATING) {
+    //   widget.message.text = '...';
+    //   BlocProvider.of<MessageBloc>(context).add(SendMessageEvent(message: widget.message));
+    //   return BlocProvider(
+    //     create: (context) =>
+    //         MessageBloc(
+    //           messageRepository: RepositoryProvider.of<MessageRepository>(
+    //               context),
+    //           appType: appType,
+    //           authLocalDataSource: sl<AuthLocalDataSource>(),
+    //         ),
+    //     //child: BlocBuilder<MessageBloc, MessageState>(
+    //    //   builder: (context, state) {
+    //       child: BlocListener<MessageBloc, MessageState>(
+    //         listener: (context, state) {
+    //         if (state is SendMessageFailed) {
+    //           setState(() {
+    //             widget.message.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
+    //             widget.message.messageStatus = MessageStatus.not_sent;
+    //             widget.message.text = state.message.text;
+    //           });
+    //           //return ErrorWidget('Unhandle State $state');
+    //         } else if (state is MessageSent) {
+    //           setState(() {
+    //             widget.message.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
+    //             widget.message.messageStatus = MessageStatus.not_view;
+    //             widget.message.text = state.message.text;
+    //           });
+    //           //return buildBody(context);
+    //         } else {
+    //           setState(() {
+    //             widget.message.text = '...';
+    //           });
+    //         }
+    //       }, child: buildBody(context),
+    //     ),
+    //   );
+    // }
 
     return buildBody(context);
   }
@@ -59,7 +78,7 @@ class TextMessage extends StatelessWidget {
         vertical: kDefaultPadding / 2,
       ),
       decoration: BoxDecoration(
-        color: theme.primaryColor.withOpacity(message.isSender ? 1 : 0.1),
+        color: theme.primaryColor.withOpacity(widget.message.isSender ? 1 : 0.1),
         borderRadius: BorderRadius.circular(30),
       ),
       width: size.width - 130,
@@ -68,10 +87,10 @@ class TextMessage extends StatelessWidget {
       //   borderRadius: BorderRadius.circular(5.0),
       // ),
       child:Text(
-        message.text,
+        widget.message.text,
         maxLines: 250,
         style: TextStyle(
-          color: message.isSender
+          color: widget.message.isSender
               ? Colors.black
               : Theme.of(context).textTheme.bodyText1.color,
         ),

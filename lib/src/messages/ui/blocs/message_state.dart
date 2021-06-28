@@ -15,8 +15,12 @@ class MessageSending extends MessageState {
 }
 
 class SendMessageFailed extends MessageState {
+  final Message message;
+
+  SendMessageFailed({@required this.message});
+
   @override
-  List<Object> get props => [];
+  List<Object> get props => [message];
 }
 
 class MessageSent extends MessageState {

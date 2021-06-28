@@ -7,9 +7,9 @@ enum MessageStatus { not_sent, not_view, viewed }
 class Message implements Comparable {
   final int id;
   int clientId;
-  final String text;
+  String text;
   final MessageType messageType;
-  final MessageStatus messageStatus;
+  MessageStatus messageStatus;
   bool isSender;
   String subject;
   final DateTime createdAt;
@@ -20,12 +20,12 @@ class Message implements Comparable {
   EntityStatus entityStatus;
 
   Message({
-    @required this.id,
+    this.id,
     @required this.clientId,
     @required this.traderId,
     @required this.subject,
     @required this.text,
-    @required this.createdAt,
+    this.createdAt,
     @required this.messageType,
     @required this.messageStatus,
     @required this.jobId,
