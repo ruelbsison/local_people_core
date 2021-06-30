@@ -8,6 +8,10 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/jobs.dart';
 import 'package:local_people_core/quote.dart';
 import 'package:local_people_core/core.dart';
+import 'package:local_people_core/schedule.dart';
+import 'package:local_people_core/core.dart';
+import 'package:local_people_core/jobs.dart';
+import 'package:local_people_core/auth.dart';
 
 class PlaceBidWidget extends StatefulWidget {
   PlaceBidWidget({
@@ -43,6 +47,14 @@ class _PlaceBidWidgetState extends State<PlaceBidWidget> {
 
   @override
   Widget build(BuildContext context) {
+    final appType = AppConfig.of(context).appType;
+    ScheduleBloc scheduleBloc = ScheduleBloc(
+      appType: AppConfig.of(context).appType,
+      jobRepository: RepositoryProvider.of<JobRepository>(context),
+      quoteRepository: RepositoryProvider.of<QuoteRepository>(context),
+      bookingRepository: RepositoryProvider.of<BookingRepository>(context),
+      authLocalDataSource: sl<AuthLocalDataSource>(),
+    );
     return Container(
       //color: Colors.white,
       width: 345,
@@ -58,6 +70,7 @@ class _PlaceBidWidgetState extends State<PlaceBidWidget> {
           children: <Widget>[
             SuggestedTimeSlotWidget(
               pageController: _controller,
+              scheduleBloc: scheduleBloc,
               onSuggestedTimeSlotSubmitted: (duration, startDateTime) {
                 widget.quote.dureationRequired = duration;
                 widget.quote.deliveryDate = startDateTime;
@@ -76,6 +89,9 @@ class _PlaceBidWidgetState extends State<PlaceBidWidget> {
 
                 DialogService _dialogService = sl<DialogService>();
                 _dialogService.placeBidDialogComplete(PlaceBidResponse(quote: widget.quote));
+              },
+              onGetTimeslot: () {
+                return widget.quote.deliveryDate;
               },
             ),
             //PlaceBidTotallWidget(),

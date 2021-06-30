@@ -214,7 +214,7 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       .firstWhere((quotetimeslot) => quotetimeslot.startDateTime.isAfter(timeslot.startDateTime)
       && quotetimeslot.endDateTime.isBefore(timeslot.endDateTime));
 
-  Future<List<Timeslot>> getTimeslots({int interval}) async {
+   getTimeslots({int interval}) async {
     DateTime tomorrow = DateTime.now().add(Duration(days: 1));
     if (interval != lastInterval) {
       dayStartTime = DateTime.parse(DateFormat("yyyy-MM-dd'T'09:00:00.ms'Z'").format(tomorrow)); //DateTime.parse(DateFormat('dd-MM-yyyy 09:00:00').format(tomorrow));
@@ -238,8 +238,11 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
       );
 
       Timeslot quoteTimeslot;
-      if (quotedTimeslotsList != null && quotedTimeslotsList.length > 0)
-        quoteTimeslot = findTimeslot(timeslot);
+      if (quotedTimeslotsList != null && quotedTimeslotsList.length > 0) {
+        try {
+          quoteTimeslot = findTimeslot(timeslot);
+        } catch(e) {}
+      }
       if (quoteTimeslot == null)
         list.add(timeslot);
 
@@ -257,6 +260,6 @@ class ScheduleBloc extends Bloc<ScheduleEvent, ScheduleState> {
 
     _timeslotController.sink.add(list);
 
-    return Future.value(list);
+    //return Future.value(list);
   }
 }

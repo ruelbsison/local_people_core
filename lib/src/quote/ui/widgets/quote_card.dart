@@ -72,12 +72,21 @@ class _QuoteCardState extends State<QuoteCard> {
       onTap: () {
         if (widget.withTap == false)
           return;
-        if (widget.onQuotePressed != null)
+        if (widget.onQuotePressed != null) {
           widget.onQuotePressed(
               widget.job,
               widget.quote,
               widget.traderProfile
           );
+        } else {
+          AppRouter.pushPage(
+              context,
+              JobAwardScreen(
+                job: widget.job,
+                quote: widget.quote,
+                traderProfile: widget.traderProfile,
+              ));
+        }
       },
       // child: Container (
       //   width: 361,

@@ -107,7 +107,11 @@ class _QuoteRequestDetailWidgetState extends State<QuoteRequestDetailWidget> {
           } else if (state is JobNotLoaded) {
             return ErrorWidget('Error $state');
           }
-          return const Center(child: CircularProgressIndicator());
+          return const Center(
+              child: CircularProgressIndicator(
+                color: Color.fromRGBO(255, 99, 95, 1),
+              )
+          );
         },
       ),
     ),
