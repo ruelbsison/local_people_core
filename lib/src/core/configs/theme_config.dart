@@ -14,6 +14,11 @@ class AppThemeConfig {
         fontWeight: FontWeight.w900,
         fontSize: 24,
       ),
+      headline1: base.headline1.copyWith(
+        fontFamily: 'RedHatDisplay',
+        fontWeight: FontWeight.w500,
+        fontSize: 18,
+      ),
       subtitle1: base.subtitle1.copyWith(
         fontFamily: 'RedHatDisplay',
         fontWeight: FontWeight.w700,
@@ -36,7 +41,7 @@ class AppThemeConfig {
       ),
       bodyText2: base.bodyText2.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.normal,
+        fontWeight: FontWeight.w500,
         fontSize: 14,
       ),
       button: base.button.copyWith(

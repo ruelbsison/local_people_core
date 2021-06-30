@@ -21,14 +21,17 @@ class LogoWidget extends StatelessWidget {
     //   //color: backgroundColor,
     //   alignment: Alignment.center,
     // );
-    return Image.asset(
-      'packages/local_people_core/assets/images/local-people-logo.png',
-      fit: fit,
-      height: height,
-      width: width,
-      //color: Colors.green,
-      //color: backgroundColor,
-      alignment: Alignment.center,
+    return Container (
+      padding: EdgeInsets.only(left: 8.0),
+      child: Image.asset(
+        'packages/local_people_core/assets/images/local-people-logo.png',
+        fit: fit,
+        height: height,
+        width: width,
+        //color: Colors.green,
+        //color: backgroundColor,
+        alignment: Alignment.centerLeft,
+      ),
     );
   }
 }
