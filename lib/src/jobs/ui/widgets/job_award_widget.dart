@@ -6,11 +6,11 @@ import 'package:local_people_core/profile.dart';
 import 'package:local_people_core/core.dart';
 
 class JobAwardWidget extends StatefulWidget {
-  final String clientName;
+  final String jobName;
   final String traderName;
   JobAwardWidget({
     Key key,
-    @required this.clientName,
+    @required this.jobName,
     @required this.traderName,
   }) : super(key: key);
 
@@ -31,66 +31,49 @@ class _JobAwardWidgetState extends State<JobAwardWidget> {
       crossAxisAlignment: CrossAxisAlignment.stretch,
       mainAxisAlignment: MainAxisAlignment.start,
       children: <Widget>[
-        SizedBox(height: 20),
-        Row(
-          mainAxisSize: MainAxisSize.max,
-          children: <Widget>[
-            Expanded(
-              flex: 3,
-              child: Container(
-                padding: EdgeInsets.only(left: 12.0),
-                child: Align(
-                  alignment: Alignment.centerLeft,
-                  child: Text(
-                    'Are you sure you want to award [Insert job name] to [insert trader name]?',
-                    textAlign: TextAlign.left,
-                    style: theme.textTheme.caption,
-                  ),
+        Container(
+          padding: EdgeInsets.only(left: 12.0),
+          child: Text(
+            'Are you sure you want to award ' + widget.jobName +' to ' + widget.traderName + '?',
+            textAlign: TextAlign.left,
+            style: theme.textTheme.bodyText1,
+          ),
+        ),
+        SizedBox(height: 10),
+        Card (
+          //padding: EdgeInsets.only(right: 10),
+          child: TextField (
+            autofocus: true,
+            controller: _messageTextController,
+            keyboardType: TextInputType.multiline,
+            minLines: 5,//Normal textInputField will be displayed
+            maxLines: 9,// when user presses enter it will adapt to it
+            decoration: InputDecoration(
+              floatingLabelBehavior: FloatingLabelBehavior.never,
+              border: InputBorder.none,
+              hintText: 'Would you like to add a message?',
+              hintStyle: theme.textTheme.bodyText2,
+              focusedBorder: OutlineInputBorder(
+                borderSide:
+                BorderSide(color: Colors.grey.shade300, width: 2),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(5),
+                  topLeft: Radius.circular(5),
+                ),
+              ),
+              fillColor: Colors.white,
+              filled: true,
+              enabledBorder: OutlineInputBorder(
+                borderSide:
+                BorderSide(color: Colors.grey.shade300, width: 2),
+                borderRadius: BorderRadius.only(
+                  topRight: Radius.circular(5),
+                  topLeft: Radius.circular(5),
                 ),
               ),
             ),
-            Expanded(
-              flex: 1,
-              child: Card (
-                //padding: EdgeInsets.only(right: 10),
-                child: Align(
-                  alignment: Alignment.centerRight,
-                  child: TextField (
-                    autofocus: true,
-                    controller: _messageTextController,
-                    keyboardType: TextInputType.multiline,
-                    minLines: 5,//Normal textInputField will be displayed
-                    maxLines: 9,// when user presses enter it will adapt to it
-                    decoration: InputDecoration(
-                      floatingLabelBehavior: FloatingLabelBehavior.never,
-                      border: InputBorder.none,
-                      hintText: 'Would you like to add a message?',
-                      hintStyle: theme.textTheme.bodyText2,
-                      focusedBorder: OutlineInputBorder(
-                        borderSide:
-                        BorderSide(color: Colors.grey.shade300, width: 2),
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(5),
-                          topLeft: Radius.circular(5),
-                        ),
-                      ),
-                      fillColor: Colors.white,
-                      filled: true,
-                      enabledBorder: OutlineInputBorder(
-                        borderSide:
-                        BorderSide(color: Colors.grey.shade300, width: 2),
-                        borderRadius: BorderRadius.only(
-                          topRight: Radius.circular(5),
-                          topLeft: Radius.circular(5),
-                        ),
-                      ),
-                    ),
-                    textInputAction: TextInputAction.done,
-                  ),
-                ),
-                ),
-              ),
-          ],
+            textInputAction: TextInputAction.done,
+          ),
         ),
         SizedBox(height: 10),
         Flex(
@@ -112,6 +95,7 @@ class _JobAwardWidgetState extends State<JobAwardWidget> {
                       optionalMessage: _messageTextController.text,
                     );
                     _dialogService.jobAwardDialogComplete(response);
+                    Navigator.of(context).pop();
                   },
                   child: Text(
                     'Award Job',

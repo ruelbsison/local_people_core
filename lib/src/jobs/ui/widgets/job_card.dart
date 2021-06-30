@@ -43,7 +43,7 @@ class _JobCardState extends State<JobCard> {
   //QuoteBloc _quoteBloc;
 
   Map<String, Color> colorMap = {
-    'Job Awarded' : Color.fromRGBO(170, 186, 205, 1.0),
+    'Awarded' : Color.fromRGBO(142, 209, 90, 1.0),
     'Confirmed' : Color.fromRGBO(142, 209, 90, 1.0),
     'Job Posted' : Color.fromRGBO(170, 186, 205, 1.0),
     'Awaiting Response' : Color.fromRGBO(170, 186, 205, 1.0),
@@ -62,147 +62,152 @@ class _JobCardState extends State<JobCard> {
   @override
   void didChangeDependencies() {
     print('JobCaed.didChangeDependencies');
+    //initJobStatus();
   }
 
   void initJobStatus() {
+    //final appType = AppConfig.of(context).appType;
     tags.clear();
     statusTags.clear();
     if (widget.job != null) {
-      if (widget.job.tags != null) {
-        tags.addAll(widget.job.tags);
-        tags.forEach((element) {
-          colorMap.addAll(<String, Color>{
-            element.name: Color.fromRGBO(170, 186, 205, 1.0)
+      //if (appType == AppType.TRADER) {
+        if (widget.job.tags != null) {
+          tags.addAll(widget.job.tags);
+          tags.forEach((element) {
+            colorMap.addAll(<String, Color>{
+              element.name: Color.fromRGBO(170, 186, 205, 1.0)
+            });
           });
-        });
-      }
-      if (widget.job.isConfirmed != null && widget.job.isConfirmed == true) {
-        tags.add(Tag(id: 0, name: 'Awarded'));
-      } else
-      if (widget.job.isConfirmed != null && widget.job.isConfirmed == true) {
-        tags.add(Tag(id: 0, name: 'Confirmed'));
-      } else if (widget.job.bids != null && widget.job.bids.length > 0) {
-        tags.add(
-            Tag(id: 0, name: widget.job.bids.length.toString() + ' Bids'));
-      } else if (widget.job.isPosted == true) {
-        tags.add(Tag(id: 0, name: 'Job Posted'));
-      }
+        }
+      //} else {
+      //   if (widget.job.awarded != null && widget.job.awarded == true) {
+      //     tags.add(Tag(id: 0, name: 'Awarded'));
+      //   } else
+      //   if (widget.job.isConfirmed != null && widget.job.isConfirmed == true) {
+      //     tags.add(Tag(id: 0, name: 'Confirmed'));
+      //   } else if (widget.job.bids != null && widget.job.bids.length > 0) {
+      //     tags.add(
+      //         Tag(id: 0, name: widget.job.bids.length.toString() + ' Bids'));
+      //   } else if (widget.job.isPosted == true) {
+      //     tags.add(Tag(id: 0, name: 'Job Posted'));
+      //   }
+      //}
     }
   }
 
-  Widget buildJobStatus() {
-    // if (widget.job.id != 3) {
-    //   return TagsViewWidget(
-    //     tags: [], //[Tag(id: 0, name: 'Not Available')],
-    //   );
-    // }
-    //_quoteBloc = BlocProvider.of<QuoteBloc>(context, listen: true);
-    BlocProvider.of<QuoteBloc>(context).add(QuoteJobLoadEvent(id: widget.job.id));
-    final textTheme = Theme.of(context).textTheme;
-    return BlocBuilder<QuoteBloc, QuoteState>(
-      bloc: BlocProvider.of<QuoteBloc>(context),
-          builder: (context, state) {
-            final appType = AppConfig.of(context).appType;
-            if (state is QuoteJobLoaded) {
-              if (widget.onJobBidsUpdateCallback != null) {
-                widget.onJobBidsUpdateCallback(widget.job.id, state.quotes);
-              }
+  // Widget buildJobStatus() {
+  //   // if (widget.job.id != 3) {
+  //   //   return TagsViewWidget(
+  //   //     tags: [], //[Tag(id: 0, name: 'Not Available')],
+  //   //   );
+  //   // }
+  //   //_quoteBloc = BlocProvider.of<QuoteBloc>(context, listen: true);
+  //   BlocProvider.of<QuoteBloc>(context).add(QuoteJobLoadEvent(id: widget.job.id));
+  //   final textTheme = Theme.of(context).textTheme;
+  //   return BlocBuilder<QuoteBloc, QuoteState>(
+  //     bloc: BlocProvider.of<QuoteBloc>(context),
+  //         builder: (context, state) {
+  //           final appType = AppConfig.of(context).appType;
+  //           if (state is QuoteJobLoaded) {
+  //             if (widget.onJobBidsUpdateCallback != null) {
+  //               widget.onJobBidsUpdateCallback(widget.job.id, state.quotes);
+  //             }
+  //
+  //             //setState(() {
+  //             if (widget.job.bids == null)
+  //               widget.job.bids = [];
+  //             else
+  //               widget.job.bids.clear();
+  //             if (state.quotes != null && state.quotes.length > 0)
+  //               print('state.quotes.length: ' + state.quotes.length.toString());
+  //             widget.job.bids = state.quotes;
+  //             initJobStatus();
+  //             //});
+  //
+  //             // return TagsViewWidget(
+  //             //   tags: statusTags,
+  //             // );
+  //             return Tags(
+  //               //key: _tagStateKey,
+  //               //symmetry: _symmetry,
+  //                 columns: 2,
+  //                 alignment: WrapAlignment.start,
+  //                 //horizontalScroll: _horizontalScroll,
+  //                 //verticalDirection: VerticalDirection.up, textDirection: TextDirection.rtl,
+  //                 //heightHorizontalScroll: 60 * (_fontSize / 14),
+  //                 runAlignment: WrapAlignment.start,
+  //                 itemCount: tags.length,
+  //                 itemBuilder: (index) {
+  //                   final item = tags[index];
+  //                   return ItemTags(
+  //                     key: Key(index.toString()),
+  //                     index: index,
+  //                     title: item.name,
+  //                     pressEnabled: false,
+  //                     elevation: 0,
+  //                     borderRadius: BorderRadius.circular(2.0),
+  //                     // border: BoxBorder(
+  //                     //     RoundedRectangleBorder(
+  //                     //   borderRadius: BorderRadius.all(Radius.circular(2)),
+  //                     // )),
+  //                     activeColor: colorMap[item.name] == null
+  //                         ? Color.fromRGBO(255, 99, 97, 1.0):
+  //                     colorMap[item.name], //Colors.blueGrey[600],
+  //                     //singleItem: _singleItem,
+  //                     splashColor: Colors.green,
+  //                     combine: ItemTagsCombine.onlyText,
+  //                     textStyle: textTheme.overline.copyWith(
+  //                         color: Colors.white,
+  //                     ),
+  //                     alignment: MainAxisAlignment.start,
+  //                   );
+  //                 }
+  //             );
+  //           } else if (state is QuoteJobLoadFailed) {
+  //             return TagsViewWidget(
+  //               tags: [], //[Tag(id: 0, name: 'Not Available')],
+  //             );
+  //           } else {
+  //             //return const Center(child: CircularProgressIndicator());
+  //             return LoadingWidget();
+  //           }
+  //         }
+  //     );
+  // }
 
-              //setState(() {
-              if (widget.job.bids == null)
-                widget.job.bids = [];
-              else
-                widget.job.bids.clear();
-              if (state.quotes != null && state.quotes.length > 0)
-                print('state.quotes.length: ' + state.quotes.length.toString());
-              widget.job.bids = state.quotes;
-              initJobStatus();
-              //});
-
-              // return TagsViewWidget(
-              //   tags: statusTags,
-              // );
-              return Tags(
-                //key: _tagStateKey,
-                //symmetry: _symmetry,
-                  columns: 2,
-                  alignment: WrapAlignment.start,
-                  //horizontalScroll: _horizontalScroll,
-                  //verticalDirection: VerticalDirection.up, textDirection: TextDirection.rtl,
-                  //heightHorizontalScroll: 60 * (_fontSize / 14),
-                  runAlignment: WrapAlignment.start,
-                  itemCount: tags.length,
-                  itemBuilder: (index) {
-                    final item = tags[index];
-                    return ItemTags(
-                      key: Key(index.toString()),
-                      index: index,
-                      title: item.name,
-                      pressEnabled: false,
-                      elevation: 0,
-                      borderRadius: BorderRadius.circular(2.0),
-                      // border: BoxBorder(
-                      //     RoundedRectangleBorder(
-                      //   borderRadius: BorderRadius.all(Radius.circular(2)),
-                      // )),
-                      activeColor: colorMap[item.name] == null
-                          ? Color.fromRGBO(255, 99, 97, 1.0):
-                      colorMap[item.name], //Colors.blueGrey[600],
-                      //singleItem: _singleItem,
-                      splashColor: Colors.green,
-                      combine: ItemTagsCombine.onlyText,
-                      textStyle: textTheme.overline.copyWith(
-                          color: Colors.white,
-                      ),
-                      alignment: MainAxisAlignment.start,
-                    );
-                  }
-              );
-            } else if (state is QuoteJobLoadFailed) {
-              return TagsViewWidget(
-                tags: [], //[Tag(id: 0, name: 'Not Available')],
-              );
-            } else {
-              //return const Center(child: CircularProgressIndicator());
-              return LoadingWidget();
-            }
-          }
-      );
-  }
-
-  Widget buildLocation() {
-    BlocProvider.of<LocationBloc>(context)
-        .add(GetLocationEvent(id: widget.job.id));
-    return BlocBuilder<LocationBloc, LocationState>(
-      bloc: BlocProvider.of<LocationBloc>(context),
-      builder: (BuildContext context, LocationState state) {
-        //final appCType = AppConfig.of(context).appType;
-        if (state is GetLocationLoaded) {
-          //setState(() {
-            widget.job.location = state.location;
-            widget.job.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
-          //});
-          if (widget.onJobLocationUpdateCallback != null) {
-            widget.onJobLocationUpdateCallback(widget.job.id, state.location);
-          }
-          return LocationsViewWidget(
-            location: (widget.job.location != null && widget.job.location.name != null)
-                ? widget.job.location.name : '',
-            maxTagViewHeight: 50,
-          );
-        } else if (state is GetLocationFailed) {
-          widget.job.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
-          return LocationsViewWidget(
-            location: (widget.job.location != null && widget.job.location.name != null)
-                ? widget.job.location.name : 'Not Available',
-            maxTagViewHeight: 50,
-          );
-        } else {
-          return LoadingWidget();
-        }
-      },
-    );
-  }
+  // Widget buildLocation() {
+  //   BlocProvider.of<LocationBloc>(context)
+  //       .add(GetLocationEvent(id: widget.job.id));
+  //   return BlocBuilder<LocationBloc, LocationState>(
+  //     bloc: BlocProvider.of<LocationBloc>(context),
+  //     builder: (BuildContext context, LocationState state) {
+  //       //final appCType = AppConfig.of(context).appType;
+  //       if (state is GetLocationLoaded) {
+  //         //setState(() {
+  //           widget.job.location = state.location;
+  //           widget.job.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
+  //         //});
+  //         if (widget.onJobLocationUpdateCallback != null) {
+  //           widget.onJobLocationUpdateCallback(widget.job.id, state.location);
+  //         }
+  //         return LocationsViewWidget(
+  //           location: (widget.job.location != null && widget.job.location.name != null)
+  //               ? widget.job.location.name : '',
+  //           maxTagViewHeight: 50,
+  //         );
+  //       } else if (state is GetLocationFailed) {
+  //         widget.job.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
+  //         return LocationsViewWidget(
+  //           location: (widget.job.location != null && widget.job.location.name != null)
+  //               ? widget.job.location.name : 'Not Available',
+  //           maxTagViewHeight: 50,
+  //         );
+  //       } else {
+  //         return LoadingWidget();
+  //       }
+  //     },
+  //   );
+  // }
   @override
   Widget build(BuildContext context) {
     print('JobCaed.build');
@@ -284,7 +289,13 @@ class _JobCardState extends State<JobCard> {
                             DateTime.now(), widget.job.date)
                             : ''),
                         textAlign: TextAlign.center,
-                        style: textTheme.overline.copyWith(fontSize: 9),
+                        style: textTheme.overline.copyWith(
+                            fontSize: 9,
+                          color: ((widget.job.date != null
+                              && (widget.job.date.difference(DateTime.now())).inDays > 0)
+                              ? Color.fromRGBO(142, 209, 90, 1.0)
+                              : Colors.orange),
+                        ),
                         maxLines: 2,
                       ),
                     ),

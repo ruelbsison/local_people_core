@@ -23,13 +23,11 @@ class JobAwardScreen extends StatefulWidget {
     @required this.job,
     @required this.quote,
     @required this.traderProfile,
-    @required this.clientProfile,
   }) : super(key: key);
 
   final Job job;
   final Quote quote;
   final TraderProfile traderProfile;
-  final ClientProfile clientProfile;
 
   @override
   _JobAwardScreenState createState() => _JobAwardScreenState();
@@ -58,6 +56,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
 
   @override
   Widget build(BuildContext context) {
+    final appType = AppConfig.of(context).appType;
     return Scaffold(
       appBar: buildAppBar(),
       body: buildBody(context),
@@ -133,9 +132,28 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     }
   }
 
+  Widget buildClientActionWidget(BuildContext context) {
+    if (widget.job.awarded == false) {
+      return JobActionsWidget(
+        job: widget.job,
+        traderName: widget.traderProfile.fullName,
+        onJobAwardPressed: (message) {
+          BlocProvider.of<JobBloc>(context)
+              .add(JobAwardEvent(
+              job: widget.job,
+              quote: widget.quote));
+        },
+      );
+    }
+
+    return SizedBox(height: 5.0);
+  }
+
   Widget buildBody(BuildContext context) {
     final theme = Theme.of(context);
     final appType = AppConfig.of(context).appType;
+    BlocProvider.of<ProfileBloc>(context)
+        .add(ClientProfileGetEvent(id: widget.job.clientId));
     return SafeArea(
       child: TabBarView(
         controller: _controller,
@@ -202,17 +220,35 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                         _showJobAwardProgressDialog(_dialogService);
                       }
                     },
-                    child: JobActionsWidget(
-                      job: widget.job,
-                      traderName: widget.traderProfile.fullName,
-                      clientName: widget.clientProfile.fullName,
-                      onJobAwardPressed: (message) {
-                        BlocProvider.of<JobBloc>(context)
-                            .add(JobAwardEvent(
-                            job: widget.job,
-                            quote: widget.quote));
-                      },
-                    ),
+                    child: buildClientActionWidget(context),
+                    // child: BlocProvider(
+                    //   create: (context) => ProfileBloc(
+                    //     profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+                    //     appType: appType,
+                    //     authLocalDataSource: sl<AuthLocalDataSource>(),
+                    //   )..add(ClientProfileGetEvent(id: widget.job.clientId)),
+                    //   child: BlocBuilder<ProfileBloc, ProfileState>(
+                    //       builder: (context, state) {
+                    //         if (state is ClientProfileGetLoaded) {
+                    //           return JobActionsWidget(
+                    //             job: widget.job,
+                    //             traderName: widget.traderProfile.fullName,
+                    //             clientName: state.profile.fullName,
+                    //             onJobAwardPressed: (message) {
+                    //               BlocProvider.of<JobBloc>(context)
+                    //                   .add(JobAwardEvent(
+                    //                   job: widget.job,
+                    //                   quote: widget.quote));
+                    //             },
+                    //           );
+                    //         } else if (state is ClientProfileGetFailed) {
+                    //           return ErrorWidget('Error $state');
+                    //         } else {
+                    //           return LoadingWidget();
+                    //         }
+                    //       }
+                    //   ),
+                    // ),
                   ),
                 ),
                   SizedBox(height: 10.0),
@@ -237,14 +273,18 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                   return ErrorWidget('Unhandle State $state');
                 } else if (state is JobMessageLoaded) {
                   return MessageBody(
-                    // messageBox: new MessageBox(
-                    //   name: widget.quote.job.title,
-                    //   jobId: widget.quote.job.id,
-                    //   traderId: widget.quote.job.traderId,
-                    //   clientId: widget.quote.job.clientId,
-                    //   senderId: appType == AppType.TRADER ? widget.quote.traderId : widget.quote.job.clientId,
-                    //   recipientId: appType == AppType.TRADER ? widget.quote.job.clientId : widget.quote.job.traderId,
-                    // ),
+                    messageBox: new MessageBox(
+                      name: widget.job.title,
+                      jobId: widget.job.id,
+                      traderId: widget.traderProfile.id,
+                      clientId: widget.job.clientId,
+                      senderId: appType == AppType.TRADER
+                          ? widget.traderProfile.id
+                          : widget.job.clientId,
+                      recipientId: appType == AppType.TRADER
+                          ? widget.job.clientId
+                          : widget.traderProfile.id,
+                    ),
                     messages: state.messages,
                   );
                 }

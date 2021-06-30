@@ -13,13 +13,11 @@ class JobActionsWidget extends StatefulWidget {
     Key key,
     @required this.job,
     @required this.traderName,
-    @required this.clientName,
     this.onJobAwardPressed,
   }) : super(key: key);
 
   final Job job;
   final String traderName;
-  final String clientName;
   final OnJobAwardPressed onJobAwardPressed;
 
   @override
@@ -178,7 +176,9 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
   void _awardJob(BuildContext context) async {
     DialogService _dialogService = sl<DialogService>();
     JobAwardResponse response = await  _dialogService.showJobAwardDialog(
-        clientName: widget.clientName,
+        jobName: widget.job.title != null
+            ? widget.job.title
+            : widget.job.description,
         traderName: widget.traderName
     );
     if (response != null

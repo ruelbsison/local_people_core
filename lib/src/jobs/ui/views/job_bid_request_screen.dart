@@ -7,7 +7,7 @@ import 'package:local_people_core/messages.dart';
 import 'package:local_people_core/core.dart';
 import 'package:local_people_core/auth.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/flutter_svg.dart';
+import 'package:local_people_core/profile.dart';
 
 class JobBidScreen extends StatefulWidget {
   JobBidScreen({
@@ -25,10 +25,19 @@ class _JobBidScreenState extends State<JobBidScreen>
     with TickerProviderStateMixin {
   TabController _controller;
   int _tab = 0;
+  int traderId;
 
   @override
   void initState() {
     super.initState();
+
+    try {
+      TraderProfile traderProfile = sl<TraderProfile>();
+      if (traderProfile != null)
+        traderId = traderProfile.id;
+    } catch (e) {
+      print(e.toString());
+    }
 
     _controller = TabController(length: 2, vsync: this);
     // _controller.addListener(() {
@@ -247,10 +256,14 @@ class _JobBidScreenState extends State<JobBidScreen>
                     messageBox: new MessageBox(
                       name: widget.job.title,
                       jobId: widget.job.id,
-                      traderId: widget.job.traderId,
+                      traderId: traderId,
                       clientId: widget.job.clientId,
-                      senderId: appType == AppType.TRADER ? widget.job.traderId : widget.job.clientId,
-                      recipientId: appType == AppType.TRADER ? widget.job.clientId : widget.job.traderId,
+                      senderId: appType == AppType.TRADER
+                          ? traderId
+                          : widget.job.clientId,
+                      recipientId: appType == AppType.TRADER
+                          ? widget.job.clientId
+                          : traderId,
                     ),
                     messages: state.messages,
                   );

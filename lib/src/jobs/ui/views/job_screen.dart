@@ -20,6 +20,7 @@ import 'package:local_people_core/core.dart';
 import '../views/job_detail_screen.dart';
 import '../views/job_bid_screen.dart';
 import 'package:provider/provider.dart';
+import '../widgets/job_body_container.dart';
 
 class JobScreen extends StatefulWidget {
   JobScreen({
@@ -38,6 +39,7 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
   int traderId = 0;
   String lastJobsFilter;
   String lastRequestedJobsFilter;
+  int totalJobsOppurtunities = 0;
 
   //Completer<void> _refreshCompleter;
   final _scrollController = ScrollController();
@@ -165,9 +167,12 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
             ? _traderFilterItem
             : _clientFilterItem),
         onFilterValueChanged: onFilterValueChanged,
-        subTitle: (appCType == AppType.TRADER
+        title: (appCType == AppType.TRADER
             ? LocalPeopleLocalizations.of(context).menuTitleOpportunities
             : LocalPeopleLocalizations.of(context).menuTitleYourJobs),
+        subTitle: totalJobsOppurtunities != null
+            ? totalJobsOppurtunities.toString() + " Opportunities in your area today" : '',
+        searchTitle: 'Search Opportunities',
         appBar: AppBar(),
         bottom: buildAppBarBottom(context),
         // bottom: PreferredSize(
@@ -183,12 +188,12 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
         //     ),
         //   ),
         // ),
-        actions: [
-          IconButton(
-            icon: Icon(Icons.search),
-            onPressed: () {},
-          ),
-        ],
+        // actions: [
+        //   IconButton(
+        //     icon: Icon(Icons.search),
+        //     onPressed: () {},
+        //   ),
+        // ],
       ),
       body: buildBody(context),
       // body: MultiBlocProvider(
@@ -345,6 +350,11 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
     requestedJobs.clear();
     requestedJobs = filterJobs(allRequestedJobs);
     lastRequestedJobsFilter = filterValue;
+    if (_controller.index == 0) {
+      //setState(() {
+        totalJobsOppurtunities = requestedJobs.length;
+      //});
+    }
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
@@ -375,10 +385,16 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
     jobs = filterJobs(allJobs);
     lastJobsFilter = filterValue;
 
+    if (_controller.index == 0) {
+      //setState(() {
+        totalJobsOppurtunities = jobs.length;
+      //});
+    }
     final appCType = AppConfig.of(context).appType;
     //var jobProvider = context.watch<JobProvider>();
     //var jobProvider = Provider.of<JobProvider>(context, listen: false);
     return SafeArea(
+      child: JobBodyContainer(
       child: RefreshIndicator(
         onRefresh: () async {
           setState(() {
@@ -393,9 +409,14 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
         child: ListView.builder(
             itemCount:  jobs != null ? jobs.length : 0,
             itemBuilder: (context, index) {
+              Job job = jobs[index];
               final appType = AppConfig
                   .of(context)
                   .appType;
+              if (appType == AppType.TRADER)
+                return JobCard(job: job);
+              else
+                return YourJobCard(job: job);
               // return BlocProvider(
               //   create: (context) =>
               //       QuoteBloc(
@@ -404,52 +425,53 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
               //         authLocalDataSource: sl<AuthLocalDataSource>(),
               //       ),
               //   child: JobCard(
-              return JobCard(
-                  job: jobs[index],
-                  onJobLocationUpdateCallback: (jobId, location) {
-                    if (location == null || jobId == null || jobId < 0)
-                      return;
-
-                    //Job findJob(int id) => jobs.firstWhere((job) => job.id == id);
-                    Job job = findJob(jobId);
-                    if (job != null) {
-                      //setState(() {
-                      job.location = location;
-                      int index = jobs.indexOf(job);
-                      if (index >= 0) {
-                        jobs[index] = job;
-                      }
-                      //});
-                    }
-                  },
-                  onJobBidsUpdateCallback: (jobId, bids) {
-                    if (jobId == null || jobId < 0 || bids == null ||
-                        bids.length == 0)
-                      return;
-
-                    //Job findJob(int id) => jobs.firstWhere((job) => job.id == id);
-                    Job job = findJob(jobId);
-                    if (job != null) {
-                      if (bids != null) {
-                        //setState(() {
-                        if (job.bids == null)
-                          job.bids = [];
-                        else
-                          job.bids.clear();
-                        job.bids = bids;
-                        int index = jobs.indexOf(job);
-                        if (index >= 0) {
-                          jobs[index] = job;
-                        }
-                        //});
-                      }
-                    }
-                  },
-                //),
-              );
+              // return JobCard(
+              //     job: jobs[index],
+              //     onJobLocationUpdateCallback: (jobId, location) {
+              //       if (location == null || jobId == null || jobId < 0)
+              //         return;
+              //
+              //       //Job findJob(int id) => jobs.firstWhere((job) => job.id == id);
+              //       Job job = findJob(jobId);
+              //       if (job != null) {
+              //         //setState(() {
+              //         job.location = location;
+              //         int index = jobs.indexOf(job);
+              //         if (index >= 0) {
+              //           jobs[index] = job;
+              //         }
+              //         //});
+              //       }
+              //     },
+              //     onJobBidsUpdateCallback: (jobId, bids) {
+              //       if (jobId == null || jobId < 0 || bids == null ||
+              //           bids.length == 0)
+              //         return;
+              //
+              //       //Job findJob(int id) => jobs.firstWhere((job) => job.id == id);
+              //       Job job = findJob(jobId);
+              //       if (job != null) {
+              //         if (bids != null) {
+              //           //setState(() {
+              //           if (job.bids == null)
+              //             job.bids = [];
+              //           else
+              //             job.bids.clear();
+              //           job.bids = bids;
+              //           int index = jobs.indexOf(job);
+              //           if (index >= 0) {
+              //             jobs[index] = job;
+              //           }
+              //           //});
+              //         }
+              //       }
+              //     },
+              //   //),
+              // );
             }),
             //}
               ),
+      ),
       );
     //);
   }

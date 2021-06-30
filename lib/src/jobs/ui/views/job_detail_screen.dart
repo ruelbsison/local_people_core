@@ -14,6 +14,7 @@ import 'package:snapping_sheet/snapping_sheet.dart';
 import '../widgets/job_bid_actions_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:local_people_core/quote.dart';
+import '../widgets/bid_pending_action_widget.dart';
 
 class JobDetailScreen extends StatefulWidget {
   JobDetailScreen(
@@ -33,12 +34,21 @@ class _JobDetailScreenState extends State<JobDetailScreen>
     with TickerProviderStateMixin {
   TabController _controller;
   int _tab = 0;
+  int traderId = 0;
 
   DialogService _dialogService = sl<DialogService>();
 
   @override
   void initState() {
     super.initState();
+
+    try {
+      TraderProfile traderProfile = sl<TraderProfile>();
+      if (traderProfile != null)
+        traderId = traderProfile.id;
+    } catch (e) {
+      print(e.toString());
+    }
 
     _controller = TabController(length: 2, vsync: this);
     // _controller.addListener(() {
@@ -227,38 +237,38 @@ class _JobDetailScreenState extends State<JobDetailScreen>
     // );
   }
 
+  Quote findTraderBid(int traderId) => widget.job.bids.firstWhere((quote) => quote.traderId == traderId);
+
+  Widget buildTradeAction(BuildContext context) {
+    if (widget.job != null && widget.job.awarded == false) {
+      if (widget.job.bids != null
+          && widget.job.bids.length > 0) {
+        Quote quote = findTraderBid(traderId);
+        if (quote != null) {
+          return BidPendingActionWidget();
+        } else {
+          return JobBidActionsWidget(
+            job: widget.job,
+            traderId: traderId,
+          );
+        }
+      } else {
+        return JobBidActionsWidget(
+          job: widget.job,
+          traderId: traderId,
+        );
+      }
+    }
+    return SizedBox(height: 5.0);
+  }
+
   Widget buildBody(BuildContext context) {
     final theme = Theme.of(context);
     final appType = AppConfig.of(context).appType;
-    int traderId = 0;
-    try {
-      if (appType == AppType.TRADER) {
-        TraderProfile traderProfile = sl<TraderProfile>();
-        if (traderProfile != null) {
-          traderId = traderProfile.id;
-        }
-      }
-    } catch (e) {
-      print(e.toString());
-    }
     return SafeArea(
       child: TabBarView(
         controller: _controller,
         children: <Widget>[
-          //   SnappingSheet(
-          //   // TODO: Add your content that is placed
-          //   // behind the sheet. (Can be left empty)
-          //   child: MyOwnPageContent(),
-          //   grabbingHeight: 75,
-          //   // TODO: Add your grabbing widget here,
-          //   grabbing: MyOwnGrabbingWidget(),
-          //   sheetBelow: SnappingSheetContent(
-          //     draggable: true,
-          //     // TODO: Add your sheet content here
-          //     child: MyOwnSheetContent(),
-          //   ),
-          // ),
-          // );
           SingleChildScrollView(
             child: Container(
               margin: EdgeInsets.all(12.0),
@@ -271,7 +281,6 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                 children: <Widget>[
                   JobViewWidget(job: widget.job),
                   SizedBox(height: 10.0),
-                  //PostedByWidget(profile: widget.profile),
                   PostedByWidget(
                     clientId: widget.job.clientId,
                   ),
@@ -327,12 +336,14 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                           Navigator.of(context).pop();
                           _dialogService.showSuccessfulStatusDialog(
                               message: 'Sent successfully!');
+                          setState(() {
+                            if (widget.job.bids == null)
+                              widget.job.bids = null;
+                            widget.job.bids.add(state.quote);
+                          });
                         }
                       },
-                      child: JobBidActionsWidget(
-                        job: widget.job,
-                        traderId: traderId,
-                      ),
+                      child: buildTradeAction(context),
                       //SizedBox(height: 5.0),
                     ),
                   ),
@@ -387,14 +398,14 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                       messageBox: new MessageBox(
                         name: widget.job.title,
                         jobId: widget.job.id,
-                        traderId: widget.job.traderId,
+                        traderId: traderId,
                         clientId: widget.job.clientId,
                         senderId: appType == AppType.TRADER
-                            ? widget.job.traderId
+                            ? traderId
                             : widget.job.clientId,
                         recipientId: appType == AppType.TRADER
                             ? widget.job.clientId
-                            : widget.job.traderId,
+                            : traderId,
                       ),
                       messages: state.messages,
                     );
@@ -434,12 +445,12 @@ class _JobDetailScreenState extends State<JobDetailScreen>
     MessageBox messageBox = new MessageBox(
       name: widget.job.title,
       jobId: widget.job.id,
-      traderId: widget.job.traderId,
+      traderId: traderId,
       clientId: widget.job.clientId,
       senderId: userId,
       recipientId: (appType == AppType.TRADER
           ? widget.job.clientId
-          : widget.job.traderId),
+          : traderId),
       image: photo,
     );
     AppRouter.pushPage(

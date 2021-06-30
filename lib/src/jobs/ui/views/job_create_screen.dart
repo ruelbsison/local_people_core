@@ -237,9 +237,7 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
     final theme = Theme.of(context);
     return AppBarWidget(
       //appBarPreferredSize: Size.fromHeight(60.0),
-      title: Text(
-        AppLocalizations.of(context).appTitle,
-      ),
+      title: AppLocalizations.of(context).appTitle,
       appBar: AppBar(),
       subTitle: LocalPeopleLocalizations.of(context).menuTitlePostJob,
       actions: <Widget>[
