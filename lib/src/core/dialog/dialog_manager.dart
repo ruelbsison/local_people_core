@@ -105,7 +105,7 @@ class _DialogManagerState extends State<DialogManager> {
       builder: (context) => AppDialog(
         title: 'Award Job',
         child: JobAwardWidget(
-          clientName: request.clientName,
+          jobName: request.jobName,
           traderName: request.traderName,
         ),
       ),
@@ -160,7 +160,9 @@ class _DialogManagerState extends State<DialogManager> {
               height: 20.0,
             ),
             Center(
-              child: CircularProgressIndicator(),
+              child: CircularProgressIndicator(
+                color: Color.fromRGBO(255, 99, 95, 1),
+              ),
             ),
             SizedBox(
               height: 10.0,

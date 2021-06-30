@@ -8,11 +8,11 @@ enum JobAwardStatus {
 }
 
 class JobAwardRequest {
-  final String clientName;
+  final String jobName;
   final String traderName;
 
   JobAwardRequest({
-    @required this.clientName,
+    @required this.jobName,
     @required this.traderName,
   });
 }

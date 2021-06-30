@@ -51,8 +51,10 @@ class DialogService {
 
   /// Completes the _dialogCompleter to resume the Future's execution call
   void statusDialogComplete(StatusDialogResponse response) {
-    _dialogStatusCompleter.complete(response);
-    _dialogStatusCompleter = null;
+    if (_dialogStatusCompleter != null) {
+      _dialogStatusCompleter.complete(response);
+      _dialogStatusCompleter = null;
+    }
   }
 
   /* --------------------------------------------------------------------------------------*/
@@ -76,8 +78,10 @@ class DialogService {
 
   /// Completes the _dialogCompleter to resume the Future's execution call
   void errorStatusDialogComplete() {
-    _dialogErrorStatusCompleter.complete();
-    _dialogErrorStatusCompleter = null;
+    if (_dialogErrorStatusCompleter != null) {
+      _dialogErrorStatusCompleter.complete();
+      _dialogErrorStatusCompleter = null;
+    }
   }
 
   /* --------------------------------------------------------------------------------------*/
@@ -101,8 +105,10 @@ class DialogService {
 
   /// Completes the _dialogCompleter to resume the Future's execution call
   void successfulStatusDialogComplete() {
-    _dialogSuccessfulStatusCompleter.complete();
-    _dialogSuccessfulStatusCompleter = null;
+    if (_dialogSuccessfulStatusCompleter != null) {
+      _dialogSuccessfulStatusCompleter.complete();
+      _dialogSuccessfulStatusCompleter = null;
+    }
   }
 
   /* --------------------------------------------------------------------------------------*/
@@ -126,8 +132,10 @@ class DialogService {
 
   /// Completes the _dialogCompleter to resume the Future's execution call
   void requestQuoteDialogComplete() {
-    _dialogRequestQuoteCompleter.complete();
-    _dialogRequestQuoteCompleter = null;
+    if (_dialogRequestQuoteCompleter != null) {
+      _dialogRequestQuoteCompleter.complete();
+      _dialogRequestQuoteCompleter = null;
+    }
   }
 
   /* --------------------------------------------------------------------------------------*/
@@ -155,8 +163,10 @@ class DialogService {
 
   /// Completes the _dialogCompleter to resume the Future's execution call
   void placeBidDialogComplete(PlaceBidResponse response) {
-    _dialogPlaceBidCompleter.complete(response);
-    _dialogPlaceBidCompleter = null;
+    if (_dialogPlaceBidCompleter != null) {
+      _dialogPlaceBidCompleter.complete(response);
+      _dialogPlaceBidCompleter = null;
+    }
   }
 
   /* --------------------------------------------------------------------------------------*/
@@ -182,8 +192,10 @@ class DialogService {
 
   /// Completes the _dialogCompleter to resume the Future's execution call
   void createPackageDialogComplete(PackageCreateResponse reponse) {
-    _dialogCreatePackageCompleter.complete(reponse);
-    _dialogCreatePackageCompleter = null;
+    if (_dialogCreatePackageCompleter != null) {
+      _dialogCreatePackageCompleter.complete(reponse);
+      _dialogCreatePackageCompleter = null;
+    }
   }
 
   /* --------------------------------------------------------------------------------------*/
@@ -209,8 +221,10 @@ class DialogService {
 
   /// Completes the _dialogCompleter to resume the Future's execution call
   void bookPackageDialogComplete(BookPackageResponse reponse) {
-    _dialogBookPackageCompleter.complete(reponse);
-    _dialogBookPackageCompleter = null;
+    if (_dialogBookPackageCompleter != null) {
+      _dialogBookPackageCompleter.complete(reponse);
+      _dialogBookPackageCompleter = null;
+    }
   }
 
   /* --------------------------------------------------------------------------------------*/
@@ -223,12 +237,12 @@ class DialogService {
   }
 
   Future<JobAwardResponse> showJobAwardDialog({
-    String clientName,
+    String jobName,
     String traderName,
   }) {
     _jobAwardDialogCompleter = Completer<JobAwardResponse>();
     _showJobAwardDialogListener(JobAwardRequest(
-      clientName: clientName,
+      jobName: jobName,
       traderName: traderName,
     ));
     return _jobAwardDialogCompleter.future;
@@ -236,9 +250,11 @@ class DialogService {
 
   /// Completes the _dialogCompleter to resume the Future's execution call
   void jobAwardDialogComplete(JobAwardResponse response) {
-    _jobAwardDialogCompleter.complete(response);
-    _jobAwardDialogCompleter = null;
+    if (_jobAwardDialogCompleter != null) {
+      _jobAwardDialogCompleter.complete(response);
+      _jobAwardDialogCompleter = null;
+    }
   }
   
-  
+
 }
