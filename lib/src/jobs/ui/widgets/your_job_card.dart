@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:local_people_core/core.dart';
 import 'tags_view_widget.dart';
+import '../views/job_detail_screen.dart';
 import '../views/job_bid_screen.dart';
 import 'package:intl/intl.dart';
 import '../../domain/entities/job.dart';
@@ -41,6 +42,7 @@ class _YourJobCardState extends State<YourJobCard> {
     super.initState();
 
     print('YourJobCard.initState');
+    initJobStatus();
   }
 
   @override
@@ -52,15 +54,15 @@ class _YourJobCardState extends State<YourJobCard> {
     tags.clear();
     statusTags.clear();
     if (widget.job != null) {
-      if (widget.job.tags != null) {
-        tags.addAll(widget.job.tags);
-        tags.forEach((element) {
-          colorMap.addAll(<String, Color>{
-            element.name: Color.fromRGBO(170, 186, 205, 1.0)
-          });
-        });
-      }
-      if (widget.job.isConfirmed != null && widget.job.isConfirmed == true) {
+      // if (widget.job.tags != null) {
+      //   tags.addAll(widget.job.tags);
+      //   tags.forEach((element) {
+      //     colorMap.addAll(<String, Color>{
+      //       element.name: Color.fromRGBO(170, 186, 205, 1.0)
+      //     });
+      //   });
+      // }
+      if (widget.job.awarded != null && widget.job.awarded == true) {
         tags.add(Tag(id: 0, name: 'Awarded'));
       } else
       if (widget.job.isConfirmed != null && widget.job.isConfirmed == true) {
@@ -77,26 +79,217 @@ class _YourJobCardState extends State<YourJobCard> {
   @override
   Widget build(BuildContext context) {
     print('YourJobCard.build');
-    BlocProvider.of<QuoteBloc>(context).add(QuoteJobLoadEvent(id: widget.job.id));
-    return BlocProvider.value(
-      value: BlocProvider.of<QuoteBloc>(context),
-      child: BlocBuilder<QuoteBloc, QuoteState>(
-        builder: (context, state) {
+    final textTheme = Theme.of(context).textTheme;
+    return InkWell(
+      onTap: (){
+        //if (widget.onJobPressed != null) {
+        //  widget.onJobPressed(widget.job);
+        //} else {
           final appType = AppConfig.of(context).appType;
-          if (state is QuoteJobLoaded) {
-            widget.job.bids.clear();
-            widget.job.bids.addAll(state.quotes);
-            initJobStatus();
-            return buildBody(context);
-          } else if (state is QuoteJobLoadFailed) {
-            return buildBody(context);
+          if (appType == AppType.TRADER) {
+            AppRouter.pushPage(
+              context,
+              DialogManager(
+                child: JobDetailScreen(
+                  job: widget.job,
+                ),
+              ),
+            );
           } else {
-            //return const Center(child: CircularProgressIndicator());
-            return LoadingWidget();
+            AppRouter.pushPage(
+              context,
+              DialogManager(
+                child: JobBidScreen(
+                  job: widget.job,
+                ),
+              ),
+            );
           }
-        },
+        //}
+      },
+      child: Container(
+        padding: EdgeInsets.only(top: 12.0, bottom: 12.0, right: 12.0), //EdgeInsets.all(12.0),
+        margin: EdgeInsets.only(top: 12.0, bottom: 12.0),
+        decoration: BoxDecoration(
+          color: Color.fromRGBO(255, 255, 255, 1.0),
+          borderRadius: BorderRadius.circular(10.0),
+        ),
+        child: Flex(
+          direction: Axis.horizontal,
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: <Widget>[
+            Expanded(
+              flex: 1,
+              child: Flex(
+                direction: Axis.vertical,
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  Container(
+                    //padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                    //color: Colors.blue,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: ClipOval(
+                        child: SvgPicture.asset(
+                          ((widget.job.date != null
+                              && (widget.job.date.difference(DateTime.now())).inDays > 0)
+                              ? 'packages/local_people_core/assets/images/package-green.svg'
+                              : 'packages/local_people_core/assets/images/package-orange.svg'),
+                          fit: BoxFit.contain,
+                          height: 38,
+                          width: 38,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Container(
+                    //padding: EdgeInsets.only(left: 8.0, right: 8.0),
+                    //color: Colors.green,
+                    child: Align(
+                      alignment: Alignment.topCenter,
+                      child: Text(
+                        (widget.job.date != null
+                            ? DateFormatUtil.getDateTimeDiff(
+                            DateTime.now(), widget.job.date)
+                            : ''),
+                        textAlign: TextAlign.center,
+                        style: textTheme.overline.copyWith(
+                          fontSize: 9,
+                          color: ((widget.job.date != null
+                              && (widget.job.date.difference(DateTime.now())).inDays > 0)
+                              ? Color.fromRGBO(142, 209, 90, 1.0)
+                              : Colors.orange),
+                        ),
+                        maxLines: 2,
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 3,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: <Widget> [
+                  Text(
+                    widget.job.title != null
+                        ? widget.job.title
+                        : widget.job.description,
+                    textAlign: TextAlign.left,
+                    style: textTheme.subtitle1,
+                    overflow: TextOverflow.ellipsis,
+                    softWrap: true,
+                    maxLines: 2,
+                  ),
+                  SizedBox(height: 10.0),
+                  Text(
+                    (widget.job.date != null
+                        ? DateFormat('dd MMMM yyyy').format(widget.job.date)
+                        : '') +
+                        (widget.job.date != null
+                            ? ' | ' +
+                            DateFormatUtil.getDateTimeDiff(
+                                DateTime.now(), widget.job.date)
+                            : ''),
+                    textAlign: TextAlign.left,
+                    style: textTheme.subtitle2,
+                  ),
+                  //SizedBox(height: 5.0),
+                  //buildLocation(),
+                  // LocationsViewWidget(
+                  //   location: (widget.job.location != null && widget.job.location.name != null)
+                  //       ? widget.job.location.name : '',
+                  //   maxTagViewHeight: 45,
+                  // ),
+                  SizedBox(height: 5.0),
+                  //buildJobStatus(),
+                  Tags(
+                    //key: _tagStateKey,
+                    //symmetry: _symmetry,
+                      columns: 2,
+                      alignment: WrapAlignment.start,
+                      //horizontalScroll: _horizontalScroll,
+                      //verticalDirection: VerticalDirection.up, textDirection: TextDirection.rtl,
+                      //heightHorizontalScroll: 60 * (_fontSize / 14),
+                      runAlignment: WrapAlignment.start,
+                      itemCount: tags.length,
+                      itemBuilder: (index) {
+                        final item = tags[index];
+                        return ItemTags(
+                          key: Key(index.toString()),
+                          index: index,
+                          title: item.name,
+                          pressEnabled: false,
+                          elevation: 0,
+                          borderRadius: BorderRadius.circular(2.0),
+                          // border: BoxBorder(
+                          //     RoundedRectangleBorder(
+                          //   borderRadius: BorderRadius.all(Radius.circular(2)),
+                          // )),
+                          activeColor: colorMap[item.name] == null
+                              ? Color.fromRGBO(255, 99, 97, 1.0):
+                          colorMap[item.name], //Colors.blueGrey[600],
+                          //singleItem: _singleItem,
+                          splashColor: Colors.green,
+                          combine: ItemTagsCombine.onlyText,
+                          textStyle: textTheme.caption.copyWith(
+                            color: Colors.white,
+                            fontSize: 10,
+                          ),
+                          alignment: MainAxisAlignment.start,
+                        );
+                      }
+                  ),
+                  //SizedBox(height: 10.0),
+                ],
+              ),
+            ),
+            Expanded(
+              flex: 1,
+              child: Column(
+                mainAxisSize: MainAxisSize.max,
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.stretch,
+                children: [
+                  Text(
+                    '£' + widget.job.budget,
+                    textAlign: TextAlign.center,
+                    style: textTheme.bodyText1,
+                  )
+                ],
+              ),
+            ),
+          ],
+        ),
       ),
     );
+    // BlocProvider.of<QuoteBloc>(context).add(QuoteJobLoadEvent(id: widget.job.id));
+    // return BlocProvider.value(
+    //   value: BlocProvider.of<QuoteBloc>(context),
+    //   child: BlocBuilder<QuoteBloc, QuoteState>(
+    //     builder: (context, state) {
+    //       final appType = AppConfig.of(context).appType;
+    //       if (state is QuoteJobLoaded) {
+    //         widget.job.bids.clear();
+    //         widget.job.bids.addAll(state.quotes);
+    //         initJobStatus();
+    //         return buildBody(context);
+    //       } else if (state is QuoteJobLoadFailed) {
+    //         return buildBody(context);
+    //       } else {
+    //         //return const Center(child: CircularProgressIndicator());
+    //         return LoadingWidget();
+    //       }
+    //     },
+    //   ),
+    // );
     // BlocProvider.of<LocationBloc>(context)
     //     .add(GetLocationEvent(id: widget.job.id));
     // return BlocBuilder<LocationBloc, LocationState>(
