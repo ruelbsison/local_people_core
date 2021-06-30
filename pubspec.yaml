@@ -21,7 +21,7 @@ dependencies:
   meta: ^1.1.6
   flutter_bloc: ^7.0.1
   formz: ^0.4.0
-  # rxdart: ^0.23.0
+  rxdart: ^0.23.0
   # UI
   http: ^0.12.2 # ^0.13.3
   # Auth0
@@ -43,7 +43,7 @@ dependencies:
   #splash screen
   #splashscreen: 1.2.0
   flutter_icons: ^1.1.0
-  uuid: ^3.0.4
+  # uuid: ^3.0.4
   cached_network_image: ^2.3.3
   google_place: ^0.3.3 # ^0.4.0
   image_picker: ^0.6.7+22 # ^0.6.2 # ^0.7.0
@@ -62,7 +62,7 @@ dependencies:
   flutter_tags: ^0.4.9+1
   mime: ^1.0.0
   progressive_image: ^2.0.0
-  flutter_svg: ^0.22.0
+  flutter_svg: any #^0.22.0
   flutter_svg_provider: ^0.1.8
   flutter_inappwebview: ^5.3.2
   permission_handler: 5.1.0+2 # ^6.0.1 # ^5.1.0+2 # ^6.0.0
@@ -78,7 +78,10 @@ dependencies:
   flutter_typeahead: ^2.0.0
   snapping_sheet: ^3.1.0
   page_indicator: ^0.4.1
-  sqflite: ^2.0.0+3
+  sqflite: ^1.1.6
+  dio_http_cache: ^0.2.11
+  localstorage: ^4.0.0+1
+  sizer: ^2.0.10
   # scrollable_positioned_list: ^0.1.10
   # shamsi_date: ^0.12.0
 
@@ -155,6 +158,7 @@ flutter:
     - packages/local_people_core/assets/images/package-grey.svg
     - packages/local_people_core/assets/images/package-orange.svg
     - packages/local_people_core/assets/images/success.png
+    - packages/local_people_core/assets/images/package-green.svg
   # To add custom fonts to your package, add a fonts section here,
   # in this "flutter" section. Each entry in this list should have a
   # "family" key with the font family name, and a "fonts" key with a

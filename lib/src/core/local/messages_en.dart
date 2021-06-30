@@ -54,10 +54,13 @@ class MessageLookup extends MessageLookupByLibrary {
     'titleJobBid': MessageLookupByLibrary.simpleMessage('Job Bid'),
     'titlePlaceBid': MessageLookupByLibrary.simpleMessage('Place Bid'),
     'titleRequestVisit': MessageLookupByLibrary.simpleMessage('Request Visit'),
+    'titleBidPlaced': MessageLookupByLibrary.simpleMessage('Bid Placed'),
     'btnTitleCancel': MessageLookupByLibrary.simpleMessage('Cancel'),
     'btnTitlePost': MessageLookupByLibrary.simpleMessage('Post'),
     'btnTitleSave': MessageLookupByLibrary.simpleMessage('Save'),
     'btnTitleSendMesssage': MessageLookupByLibrary.simpleMessage('Send Messsage'),
     'btnTitleAwardJob': MessageLookupByLibrary.simpleMessage('Award Job'),
+    'btnTitleCancelBid': MessageLookupByLibrary.simpleMessage('Cancel Bid'),
+    'btnTitleResponsePending': MessageLookupByLibrary.simpleMessage('Response Pending'),
   };
 }

@@ -310,6 +310,27 @@ class LocalPeopleLocalizations {
     args: [],
     locale: locale.toString(),
   );
+
+  String get titleBidPlaced => Intl.message(
+    'Bid Placed',
+    name: 'titleBidPlaced',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitleCancelBid => Intl.message(
+    'Cancel Bid',
+    name: 'btnTitleCancelBid',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitleResponsePending => Intl.message(
+    'Response Pending',
+    name: 'btnTitleResponsePending',
+    args: [],
+    locale: locale.toString(),
+  );
 }
 
 class LocalPeopleLocalizationsDelegate
