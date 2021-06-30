@@ -38,13 +38,13 @@ class MessageWidget extends StatelessWidget {
     }
 
     final appType = AppConfig.of(context).appType;
-    if (message.senderId == message.traderId) {
-      BlocProvider.of<ProfileBloc>(context)
-          .add((TraderProfileGetEvent(id: message.senderId)));
-    } else if (message.senderId == message.clientId) {
-      BlocProvider.of<ProfileBloc>(context)
-          .add((ClientProfileGetEvent(id: message.senderId)));
-    }
+    // if (message.senderId == message.traderId) {
+    //   BlocProvider.of<ProfileBloc>(context)
+    //       .add((TraderProfileGetEvent(id: message.senderId)));
+    // } else if (message.senderId == message.clientId) {
+    //   BlocProvider.of<ProfileBloc>(context)
+    //       .add((ClientProfileGetEvent(id: message.senderId)));
+    // }
     return Padding(
       padding: const EdgeInsets.only(top: kDefaultPadding),
       child: Row(
@@ -52,24 +52,25 @@ class MessageWidget extends StatelessWidget {
         message.isSender ? MainAxisAlignment.end : MainAxisAlignment.start,
         children: [
           if (!message.isSender) ...[
-          BlocProvider(
-            create: (context) => ProfileBloc(
-              profileRepository: RepositoryProvider.of<ProfileRepository>(context),
-              appType: appType,
-              authLocalDataSource: sl<AuthLocalDataSource>(),
-            ),
-            child: BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
-              if (state is TraderProfileGetLoaded) {
-                return buildProfileAvatar(state.profile.photo);
-              } else if (state is ClientProfileGetLoaded) {
-                return buildProfileAvatar(state.profile.photo);
-              } else if (state is TraderProfileGetFailed || state is ClientProfileGetFailed) {
-                return ErrorWidget('');
-              } else {
-                return LoadingWidget();
-              }
-            }),
-          ),
+          // BlocProvider(
+          //   create: (context) => ProfileBloc(
+          //     profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+          //     appType: appType,
+          //     authLocalDataSource: sl<AuthLocalDataSource>(),
+          //   ),
+          //   child: BlocBuilder<ProfileBloc, ProfileState>(builder: (context, state) {
+          //     if (state is TraderProfileGetLoaded) {
+          //       return buildProfileAvatar(state.profile.photo);
+          //     } else if (state is ClientProfileGetLoaded) {
+          //       return buildProfileAvatar(state.profile.photo);
+          //     } else if (state is TraderProfileGetFailed || state is ClientProfileGetFailed) {
+          //       return ErrorWidget('');
+          //     } else {
+          //       return LoadingWidget();
+          //     }
+          //   }),
+          // ),
+            buildProfileAvatar(''),
             SizedBox(width: kDefaultPadding / 2),
           ],
           messageContaint(message),
@@ -84,16 +85,17 @@ class MessageWidget extends StatelessWidget {
       radius: 12,
       child:  CachedNetworkImage(
         imageUrl: photoUrl,
+        fit: BoxFit.contain,
         width: 60,
         height: 60,
         placeholder: (context, url) => LoadingWidget(
           isImage: true,
         ),
         errorWidget: (context, url, error) => Image.asset(
-          'packages/local_people_core/assets/images/trader-profile-photo.png',
-          fit: BoxFit.cover,
+          'packages/local_people_core/assets/images/company-logo.png',
+          fit: BoxFit.contain,
         ),
-        fit: BoxFit.cover,
+        //fit: BoxFit.cover,
       ),
     );
   }

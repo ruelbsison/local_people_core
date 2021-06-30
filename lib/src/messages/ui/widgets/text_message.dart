@@ -78,7 +78,8 @@ class _TextMessageState extends State<TextMessage> {
         vertical: kDefaultPadding / 2,
       ),
       decoration: BoxDecoration(
-        color: theme.primaryColor.withOpacity(widget.message.isSender ? 1 : 0.1),
+        //color: theme.primaryColor.withOpacity(widget.message.isSender ? 1 : 0.1),
+        color: theme.primaryColor.withOpacity( 1),
         borderRadius: BorderRadius.circular(30),
       ),
       width: size.width - 130,

@@ -39,7 +39,9 @@ class _MessageBodyState extends State<MessageBody> {
                 itemCount: widget.messages.length,
                 itemBuilder: (context, index) {
                   Message message = widget.messages[index];
-                  Message copyMsg = Message(
+                  final appType = AppConfig.of(context).appType;
+                  if (message.entityStatus == EntityStatus.ENTIRY_STATUS_CREATING) {
+                    Message copyMsg = Message(
                       jobId: message.jobId,
                       clientId: message.clientId,
                       traderId: message.traderId,
@@ -51,9 +53,7 @@ class _MessageBodyState extends State<MessageBody> {
                       entityStatus: message.entityStatus,
                       messageType: message.messageType,
                       isSender: message.isSender,
-                  );
-                  final appType = AppConfig.of(context).appType;
-                  if (message.entityStatus == EntityStatus.ENTIRY_STATUS_CREATING) {
+                    );
                     MessageBloc messageBloc = MessageBloc(
                       messageRepository: RepositoryProvider.of<MessageRepository>(
                           context),

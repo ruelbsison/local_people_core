@@ -54,27 +54,28 @@ class _MessageBoxScreenState extends State<MessageBoxScreen> {
       /*title: Text(
             AppLocalizations.of(context).appTitle,
           ),*/
-      subTitle: LocalPeopleLocalizations.of(context).menuTitleMessages,
+      appBarPreferredSize: Size.fromHeight(110.0),
+      title: LocalPeopleLocalizations.of(context).menuTitleMessages,
       appBar: AppBar(),
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(1.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(
-              bottom: BorderSide(
-                color: Color.fromRGBO(186, 207, 216, 1),
-              ),
-            ),
-          ),
-        ),
-      ),
-      actions: [
-        IconButton(
-          icon: Icon(Icons.search),
-          onPressed: () {},
-        ),
-      ],
+      // bottom: PreferredSize(
+      //   preferredSize: Size.fromHeight(1.0),
+      //   child: Container(
+      //     decoration: BoxDecoration(
+      //       color: Colors.white,
+      //       border: Border(
+      //         bottom: BorderSide(
+      //           color: Color.fromRGBO(186, 207, 216, 1),
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      // actions: [
+      //   IconButton(
+      //     icon: Icon(Icons.search),
+      //     onPressed: () {},
+      //   ),
+      // ],
     );
   }
 
