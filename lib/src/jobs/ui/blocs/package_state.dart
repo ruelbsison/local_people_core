@@ -47,13 +47,13 @@ class PackageDeleting extends PackageState {
 }
 
 class PackageDeleted extends PackageState {
-  final Package package;
+  final int id;
 
-  const PackageDeleted(this.package);
+  const PackageDeleted(this.id);
 
   @override
   List<Object> get props {
-    return [package];
+    return [id];
   }
 }
 

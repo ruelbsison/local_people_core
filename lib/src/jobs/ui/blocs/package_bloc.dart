@@ -74,14 +74,12 @@ class PackageBloc extends Bloc<PackageEvent, PackageState> {
     try {
       response.exception = await packageRepository.deletePackage(id);
       if (response != null && response.exception != null) {
-        yield PackageUpdateFailed(response.exception.toString());
-      } else if (response != null && response.package == null) {
-        yield  PackageUpdateFailed('');
-      } else if (response != null && response.package != null) {
-        yield PackageUpdateed(response.package);
+        yield PackageDeleteFailed(response.exception.toString());
+      } else  {
+        yield PackageDeleted(id);
       }
     } catch (e) {
-      yield PackageUpdateFailed(e.toString());
+      yield PackageDeleteFailed(e.toString());
     }
   }
 
