@@ -216,7 +216,7 @@ class AuthenticationDataSourceImpl extends AuthenticationDataSource {
       headers: <String, String>{'Authorization': 'Bearer $accessToken'},
     );
 
-    if (response.statusCode == 200) {
+    if (response != null && response.statusCode == 200) {
       return jsonDecode(response.body);
     } else {
       throw GetUserDetailsFailure();
