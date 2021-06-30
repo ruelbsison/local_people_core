@@ -101,7 +101,9 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
             children: <Widget>[
               Expanded(
                 flex: 1,
-                child: ClipOval(
+                child: CircleAvatar(
+                  backgroundColor: Color(0x00000000),
+                  radius: 8,
                   child: SvgPicture.asset(
                     'packages/local_people_core/assets/images/verified.svg',
                     fit: BoxFit.contain,
@@ -133,7 +135,9 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
             children: <Widget>[
               Expanded(
                 flex: 1,
-                child: ClipOval(
+                child: CircleAvatar(
+                  backgroundColor: Color(0x00000000),
+                  radius: 8,
                   child: SvgPicture.asset(
                     'packages/local_people_core/assets/images/verified.svg',
                     fit: BoxFit.contain,
@@ -175,7 +179,9 @@ class _ProfileClientBodyState extends State<ProfileClientBody> {
             children: <Widget>[
               Expanded(
                 flex: 1,
-                child: ClipOval(
+                child: CircleAvatar(
+                  backgroundColor: Color(0x00000000),
+                  radius: 8,
                   child: SvgPicture.asset(
                     'packages/local_people_core/assets/images/verified.svg',
                     fit: BoxFit.contain,

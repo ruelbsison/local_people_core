@@ -79,14 +79,12 @@ class QualificationBloc extends Bloc<QualificationEvent, QualificationState> {
     try {
       response.exception = await qualificationRepository.deleteQualification(id);
       if (response != null && response.exception != null) {
-        yield QualificationUpdateFailed(response.exception.toString());
-      } else if (response != null && response.qualification == null) {
-        yield  QualificationUpdateFailed('');
-      } else if (response != null && response.qualification != null) {
-        yield QualificationUpdateed(response.qualification);
+        yield QualificationDeleteFailed(response.exception.toString());
+      } else {
+        yield QualificationDeleted(id);
       }
     } catch (e) {
-      yield QualificationUpdateFailed(e.toString());
+      yield QualificationDeleteFailed(e.toString());
     }
   }
 

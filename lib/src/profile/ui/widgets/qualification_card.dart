@@ -2,11 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../../domain/entities/qualification.dart';
-import '../../domain/repositories/qualification_repository.dart';
-import '../blocs/qualification_bloc.dart';
 import 'package:flutter_typeahead/flutter_typeahead.dart';
-import 'package:local_people_core/core.dart';
-import 'package:local_people_core/auth.dart';
+import '../blocs/qualification_bloc.dart';
 
 class QualificationCard extends StatefulWidget {
   QualificationCard({
@@ -40,61 +37,55 @@ class _QualificationCardState extends State<QualificationCard> {
     super.dispose();
   }
 
-  void _showProgressDialog(DialogService _dialogService) async {
-    StatusDialogResponse dialogResult = await _dialogService.showStatusDialog(
-      title: 'Qualification',
-      message: 'Adding ...',
-    );
-    if (dialogResult.status == StatusDialogStatus.SUCCESSFUL) {
-      //Future
-      //    .delayed(Duration(seconds: 5))
-      //    .then((_) => _dialogService.successfulStatusDialogComplete());
-      Navigator.of(context).pop();
-      await _dialogService.showSuccessfulStatusDialog(message: 'Added Successfully!');
-      Navigator.of(context).pop();
-    } else {
-      //Future
-      //    .delayed(Duration(seconds: 5))
-      //    .then((_) => _dialogService.errorStatusDialogComplete());
-      await _dialogService.showErrorStatusDialog(message: 'Add Failed!');
-      Navigator.of(context).pop();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
-    //return buildBody();
-    DialogService _dialogService = sl<DialogService>();
-    return BlocProvider(
-      create: (context) => QualificationBloc(
-        qualificationRepository: RepositoryProvider.of<QualificationRepository>(context),
-        authLocalDataSource: sl<AuthLocalDataSource>(),
-      ),
-      child: BlocListener<QualificationBloc, QualificationState>(
-        listener: (context, state) {
-          // do stuff here based on BlocA's state
-          if (state is QualificationAdded) {
-            _dialogService.statusDialogComplete(
-                StatusDialogResponse(
-                    status: StatusDialogStatus.SUCCESSFUL
-                )
-            );
-          } else if (state is QualificationAddFailed){
-            _dialogService.statusDialogComplete(
-                StatusDialogResponse(
-                    status: StatusDialogStatus.FAILED
-                )
-            );
-          } else if (state is QualificationAdding){
-            _showProgressDialog(_dialogService);
-          }
-        },
-        child: buildBody(),
-      ),
-    );
+    // //return buildBody();
+    // DialogService _dialogService = sl<DialogService>();
+    // return BlocProvider.value(
+    //   value: BlocProvider.of<QualificationBloc>(context),
+    //   child: BlocListener<QualificationBloc, QualificationState>(
+    //     listener: (context, state) {
+    //       // do stuff here based on BlocA's state
+    //       if (state is QualificationAdded) {
+    //         _dialogService.statusDialogComplete(
+    //             StatusDialogResponse(
+    //                 status: StatusDialogStatus.SUCCESSFUL
+    //             )
+    //         );
+    //         if (widget.onQualificationAdded != null) {
+    //           widget.onQualificationAdded(state.qualification, widget.q);
+    //         }
+    //       } else if (state is QualificationAddFailed){
+    //         _dialogService.statusDialogComplete(
+    //             StatusDialogResponse(
+    //                 status: StatusDialogStatus.FAILED
+    //             )
+    //         );
+    //       } else if (state is QualificationAdding){
+    //         _showQualificationAddProgressDialog(_dialogService);
+    //       } else if (state is QualificationDeleted) {
+    //         _dialogService.statusDialogComplete(
+    //             StatusDialogResponse(
+    //                 status: StatusDialogStatus.SUCCESSFUL
+    //             )
+    //         );
+    //       } else if (state is QualificationDeleteFailed){
+    //         _dialogService.statusDialogComplete(
+    //             StatusDialogResponse(
+    //                 status: StatusDialogStatus.FAILED
+    //             )
+    //         );
+    //       } else if (state is QualificationDeleting){
+    //         _showQualificationDeleteProgressDialog(_dialogService);
+    //       }
+    //     },
+    //     child: buildBody(),
+    //   ),
+    // );
+    return buildBody(context);
   }
 
-  Widget buildBody() {
+  Widget buildBody(BuildContext context) {
     if (widget.qualification == null)
       return Container();
     if (widget.qualification.optionType == QualificationOptionType.ADD_DEFAULT) {
@@ -120,7 +111,8 @@ class _QualificationCardState extends State<QualificationCard> {
         Expanded(
           flex: 1,
           child: CircleAvatar(
-            radius: 12,
+            backgroundColor: Color(0x00000000),
+            radius: 8,
             child: Center(
               child: SvgPicture.asset(
                 'packages/local_people_core/assets/images/verified.svg',
@@ -173,7 +165,8 @@ class _QualificationCardState extends State<QualificationCard> {
         Expanded(
           flex: 1,
           child: CircleAvatar(
-            radius: 12,
+            backgroundColor: Color(0x00000000),
+            radius: 8,
             child: Center(
               child: SvgPicture.asset(
                 'packages/local_people_core/assets/images/verified.svg',
@@ -210,8 +203,8 @@ class _QualificationCardState extends State<QualificationCard> {
             onSuggestionSelected: (suggestion) {
               widget.qualification.title = suggestion.toString();
               // TODO: Ruel
-              BlocProvider.of<QualificationBloc>(context)
-                  .add(QualificationAddEvent(qualification: widget.qualification));
+              //BlocProvider.of<QualificationBloc>(context)
+              //    .add(QualificationAddEvent(qualification: widget.qualification));
             },
           ),
         ),
@@ -251,7 +244,8 @@ class _QualificationCardState extends State<QualificationCard> {
         Expanded(
           flex: 1,
           child: CircleAvatar(
-            radius: 12,
+            backgroundColor: Color(0x00000000),
+            radius: 8,
             child: Center(
               child: SvgPicture.asset(
                 'packages/local_people_core/assets/images/verified.svg',
@@ -305,7 +299,8 @@ class _QualificationCardState extends State<QualificationCard> {
         Expanded(
           flex: 1,
           child: CircleAvatar(
-            radius: 12,
+            backgroundColor: Color(0x00000000),
+            radius: 8,
             child: Center(
               child: SvgPicture.asset(
                 'packages/local_people_core/assets/images/verified.svg',

@@ -116,9 +116,9 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
     }
   }
 
-  Stream<ProfileState> _mapTraderProfileGetToStateWithId(int clientId) async* {
+  Stream<ProfileState> _mapTraderProfileGetToStateWithId(int traderId) async* {
     try {
-      TraderResponse response = await profileRepository.getTraderProfile(clientId);
+      TraderResponse response = await profileRepository.getTraderProfile(traderId);
       if (response != null && response.exception != null) {
         yield TraderProfileGetFailed(response.exception.toString());
       } else if (response != null && response.profile == null) {
@@ -128,10 +128,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         response.profile.photo = authLocalModel.userPhoto;
         response.profile.fullName = authLocalModel.userFullName;
 
-        response.profile.packages = [];
         response.profile.packages = await getTraderPackages(response.profile.id);
-        response.profile.qualifications = [];
+        if (response.profile.packages == null)
+          response.profile.packages = [];
         response.profile.qualifications = await getTraderQualifications(response.profile.id);
+        if (response.profile.qualifications == null)
+          response.profile.qualifications = [];
 
         yield TraderProfileGetLoaded(response.profile);
       }
@@ -246,10 +248,13 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         response.profile.photo = authLocalModel.userPhoto;
         response.profile.fullName = authLocalModel.userFullName;
 
-        response.profile.packages = [];
+
         response.profile.packages = await getTraderPackages(response.profile.id);
-        response.profile.qualifications = [];
+        if (response.profile.packages == null)
+          response.profile.packages = [];
         response.profile.qualifications = await getTraderQualifications(response.profile.id);
+        if (response.profile.qualifications == null)
+          response.profile.qualifications = [];
 
         yield TraderProfileLoaded(response.profile);
       }
@@ -350,10 +355,12 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
       } else if (response.exception != null) {
         yield TraderProfileUpdateFailed(response.exception.toString());
       } else if (response.profile != null) {
-        response.profile.packages = [];
         response.profile.packages = await getTraderPackages(response.profile.id);
-        response.profile.qualifications = [];
+        if (response.profile.packages == null)
+          response.profile.packages = [];
         response.profile.qualifications = await getTraderQualifications(response.profile.id);
+        if (response.profile.qualifications == null)
+          response.profile.qualifications = [];
         yield TraderProfileUpdated(response.profile);
       }
     } catch (e) {
@@ -373,7 +380,11 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         while(iterator.moveNext()) {
           TraderProfile profile = iterator.current;
           profile.packages = await getTraderPackages(profile.id);
+          if (profile.packages == null)
+            profile.packages = [];
           profile.qualifications = await getTraderQualifications(profile.id);
+          if (profile.qualifications == null)
+            profile.qualifications = [];
         }
         yield ProfileTraderTopRatedCompleted(response.profiles);
       }

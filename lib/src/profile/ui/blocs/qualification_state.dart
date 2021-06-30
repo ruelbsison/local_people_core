@@ -47,13 +47,13 @@ class QualificationDeleting extends QualificationState {
 }
 
 class QualificationDeleted extends QualificationState {
-  final Qualification qualification;
+  final int id;
 
-  const QualificationDeleted(this.qualification);
+  const QualificationDeleted(this.id);
 
   @override
   List<Object> get props {
-    return [qualification];
+    return [id];
   }
 }
 

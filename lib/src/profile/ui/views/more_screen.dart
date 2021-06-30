@@ -33,25 +33,23 @@ class _MoreScreenState extends State<MoreScreen> {
 
   AppBarWidget buildAppBar() {
     return AppBarWidget(
-      //appBarPreferredSize: Size.fromHeight(80.0),
-      title: Text(
-        AppLocalizations.of(context).appTitle,
-      ),
-      subTitle: LocalPeopleLocalizations.of(context).menuTitleMore,
+      appBarPreferredSize: Size.fromHeight(100.0),
+      title: LocalPeopleLocalizations.of(context).menuTitleMore,
+      //subTitle: LocalPeopleLocalizations.of(context).menuTitleMore,
       appBar: AppBar(),
-      bottom: PreferredSize(
-        preferredSize: Size.fromHeight(1.0),
-        child: Container(
-          decoration: BoxDecoration(
-            color: Colors.white,
-            border: Border(
-              bottom: BorderSide(
-                color: Color.fromRGBO(186, 207, 216, 1),
-              ),
-            ),
-          ),
-        ),
-      ),
+      // bottom: PreferredSize(
+      //   preferredSize: Size.fromHeight(1.0),
+      //   child: Container(
+      //     decoration: BoxDecoration(
+      //       color: Colors.white,
+      //       border: Border(
+      //         bottom: BorderSide(
+      //           color: Color.fromRGBO(186, 207, 216, 1),
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // ),
     );
   }
 
@@ -106,6 +104,7 @@ class _MoreScreenState extends State<MoreScreen> {
               );
               return _buildBodyContent();
             } if (state is TraderProfileLoaded) {
+              sl.unregister<TraderProfile>();
               locatorAddTraderProfile(state.profile);
               widget.profile = state.profile;
               widget.profileItem = ProfileItem(
@@ -137,11 +136,29 @@ class _MoreScreenState extends State<MoreScreen> {
               child: ProfileCard(
                 profileItem: widget.profileItem,
                 press: () {
+                  final appType = AppConfig.of(context).appType;
+                  try {
+                    if (appType == AppType.CLIENT) {
+                      ClientProfile clientProfile = sl<ClientProfile>();
+                      if (clientProfile  != null) {
+                        widget.profile = clientProfile;
+                      }
+                    } else {
+                      TraderProfile traderProfile = sl<TraderProfile>();
+                      if (traderProfile != null) {
+                        widget.profile = traderProfile;
+                      }
+                    }
+                  } catch (e) {
+                    print(e.toString());
+                  }
                   AppRouter.pushPage(
                       context,
-                      DialogManager(child: ProfileScreen(
+                      DialogManager(
+                        child: ProfileScreen(
                         profile: widget.profile,
-                      ),),
+                      ),
+                      ),
                   );
                 },
               ),

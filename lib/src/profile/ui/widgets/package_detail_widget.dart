@@ -34,14 +34,6 @@ class _PackageDetailWidgetState extends State<PackageDetailWidget> {
     super.initState();
 
     _nameTextController.text = widget.name;
-
-    _descTextController.addListener(() {
-    if (_descTextController.text.length != _descTextController.text.trim().length) {
-      _descTextController.text = _descTextController.text.trim();
-    }
-    _descTextController.selection =
-      TextSelection.collapsed(offset: _descTextController.text.length);
-    });
   }
 
   @override

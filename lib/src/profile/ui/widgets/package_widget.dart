@@ -4,9 +4,12 @@ import 'package:local_people_core/jobs.dart';
 import 'package_card.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:local_people_core/core.dart';
+import '../blocs/profile_bloc.dart';
+import '../blocs/profile_event.dart';
+import '../blocs/profile_state.dart';
 
-typedef OnPackageAdded = void Function(Package);
-typedef OnPackageRemoved = void Function(Package);
+typedef OnPackageAdded = void Function(Package, int);
+typedef OnPackageRemoved = void Function(Package, int);
 
 class PackageWidget extends StatefulWidget {
   List<Package> packages;
@@ -63,66 +66,128 @@ class _PackageWidgetState extends State<PackageWidget> {
     );
   }
 
+  void _showPackageRemoveProgressDialog(DialogService dialogService) async {
+    StatusDialogResponse dialogResult = await dialogService.showStatusDialog(
+      title: 'Package',
+      message: 'Romoving...',
+    );
+    Navigator.of(context).pop();
+    if (dialogResult.status == StatusDialogStatus.SUCCESSFUL) {
+      await dialogService.showSuccessfulStatusDialog(
+          message: 'Package Removed Successfully!');
+      Navigator.of(context).pop();
+    } else {
+      await dialogService.showErrorStatusDialog(
+          message: 'Package Remove Failed!');
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _showPackageAddProgressDialog(DialogService dialogService) async {
+    StatusDialogResponse dialogResult = await dialogService.showStatusDialog(
+      title: 'Package',
+      message: 'Saving...',
+    );
+    if (dialogResult.status == StatusDialogStatus.SUCCESSFUL) {
+      await _dialogService.showSuccessfulStatusDialog(
+          message: 'Package Saved Successfully!');
+      Navigator.of(context).pop();
+    } else {
+      await _dialogService.showErrorStatusDialog(
+          message: 'Package Saving Failed!');
+      Navigator.of(context).pop();
+    }
+  }
+
   Widget createPackage(Package package) {
-    if (package.entityStatus == EntityStatus.ENTIRY_STATUS_CREATING) {
-      BlocProvider.of<PackageBloc>(context)
-          .add(PackageAddEvent(package: package));
-      return BlocBuilder<PackageBloc, PackageState>(
-        bloc: BlocProvider.of<PackageBloc>(context),
-        builder: (BuildContext context, PackageState state) {
-          if (state is PackageAdded) {
-            state.package.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
-            int length = widget.packages.length + 1;
-            Package package = Package(
-              id: -1,
-              name: 'Package ' + length.toString(),
-              optionType: PackageOptionType.ADD_NEW,
-              traderId: state.package.traderId,
-            );
-            // setState(() {
-            //   widget.packages.add(package);
-            // });
-            if (widget.onPackageAdded != null) {
-              widget.onPackageAdded(state.package);
-            }
-            return createPackageCard(state.package);
-          } else if (state is PackageAddFailed) {
-            package.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
-            return Text('Error: $state');
-          } else {
-            return LoadingWidget();
-          }
-        },
+    if (package == null) return Container();
+    DialogService _dialogService = sl<DialogService>();
+    if (package.optionType == PackageOptionType.REMOVE) {
+      return BlocProvider.value(
+          value: BlocProvider.of<PackageBloc>(context),
+          child: BlocListener<PackageBloc, PackageState>(
+              listener: (BuildContext context, PackageState state) async {
+                if (state is PackageDeleted) {
+                  setState(() {
+                    if (widget.packages == null)
+                      widget.packages = [];
+
+                    if (widget.packages != null && widget.packages.length > 0) {
+                      Package findPackage(int id) => widget.packages
+                          .firstWhere((package) => package.id == id);
+                      Package package = findPackage(state.id);
+                      int index = widget.packages.indexOf(package);
+                      if (index >= 0) {
+                        widget.packages.removeAt(index);
+
+                        if (widget.onPackageRemoved != null) {
+                          widget.onPackageRemoved(package, index);
+                        }
+                      }
+                    }
+                  });
+
+                  _dialogService.statusDialogComplete(
+                      StatusDialogResponse(
+                          status: StatusDialogStatus.SUCCESSFUL
+                      )
+                  );
+
+                  //BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
+                } else if (state is PackageDeleteFailed) {
+                  _dialogService.statusDialogComplete(
+                      StatusDialogResponse(
+                          status: StatusDialogStatus.FAILED
+                      )
+                  );
+                } else if (state is PackageDeleting) {
+                  _showPackageRemoveProgressDialog(_dialogService);
+                }
+              },
+              child: createPackageCard(package),
+          ),
       );
-    } else if (package.entityStatus == EntityStatus.ENTIRY_STATUS_REMOVING) {
-      BlocProvider.of<PackageBloc>(context)
-          .add(PackageDeleteEvent(id: package.id));
-      return BlocBuilder<PackageBloc, PackageState>(
-        bloc: BlocProvider.of<PackageBloc>(context),
-        builder: (BuildContext context, PackageState state) {
-          if (state is PackageDeleted) {
-            state.package.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
-            int length = widget.packages.length + 1;
-            Package package = Package(
-              id: -1,
-              name: 'Package ' + length.toString(),
-              optionType: PackageOptionType.ADD_NEW,
-              traderId: state.package.traderId,
-            );
-            setState(() {
-              widget.packages.add(package);
-            });
-            if (widget.onPackageRemoved != null) {
-              widget.onPackageRemoved(state.package);
-            }
-            return createPackageCard(state.package);
-          } else if (state is PackageDeleteFailed) {
-            package.entityStatus = EntityStatus.ENTIRY_STATUS_ERROR;
-            return Text('Error: $state');
-          } else {
-            return LoadingWidget();
-          }
-        },
+    } else if (package.optionType == PackageOptionType.ADD_NEW) {
+      return BlocProvider.value(
+        value: BlocProvider.of<PackageBloc>(context),
+        child: BlocListener<PackageBloc, PackageState>(
+            listener: (BuildContext context, PackageState state) async {
+              if (state is PackageAdded) {
+                setState(() {
+                  if (widget.packages == null)
+                    widget.packages = [];
+                  int index = widget.packages.length - 1;
+                  if (index >= 0) {
+                    Package addNew = widget.packages.elementAt(index);
+                    addNew.name =
+                        'Pavkage ' + (widget.packages.length + 1).toString();
+                    widget.packages.insert(index, state.package);
+                  } else {
+                    widget.packages.add(state.package);
+                  }
+                  if (widget.onPackageAdded != null) {
+                    widget.onPackageAdded(state.package, index - 1);
+                  }
+                });
+                //BlocProvider.of<ProfileBloc>(context).add(ProfileGetEvent());
+                _dialogService.statusDialogComplete(
+                    StatusDialogResponse(
+                        status: StatusDialogStatus.SUCCESSFUL
+                    )
+                );
+              } else if (state is PackageAddFailed) {
+                _dialogService.statusDialogComplete(
+                    StatusDialogResponse(
+                        status: StatusDialogStatus.FAILED
+                    )
+                );
+              } else if (state is PackageAdding) {
+                Navigator.of(context).pop();
+                _showPackageAddProgressDialog(_dialogService);
+              }
+            },
+            child: createPackageCard(package),
+        ),
       );
     } else {
       return BlocProvider.value(
@@ -166,29 +231,30 @@ class _PackageWidgetState extends State<PackageWidget> {
       onPackageCallback: (packageCallbackType, package) async {
         if (package == null) return;
         if (packageCallbackType == PackageCallbackType.ON_PACKAGE_REMOVE) {
-          setState(() {
-            int start = widget.packages.indexOf(package);
-            package.entityStatus = EntityStatus.ENTIRY_STATUS_REMOVING;
-            widget.packages.removeAt(start);
-            widget.packages.insert(start, package);
-          });
+          int index = widget.packages.indexOf(package);
+          package.entityStatus = EntityStatus.ENTIRY_STATUS_COMPLETED;
+          // if (widget.onPackageRemoved != null) {
+          //   widget.onPackageRemoved(package, index);
+          // }
+          BlocProvider.of<PackageBloc>(context)
+              .add(PackageDeleteEvent(id: package.id));
         } else if (packageCallbackType ==
             PackageCallbackType.ON_PACKAGE_CREATE) {
+          PackageBloc packageBloc = BlocProvider.of<PackageBloc>(context);
           //DialogService _dialogService = sl<DialogService>();
           PackageCreateResponse response =
               await _dialogService.showCreatePackageDialog(
                   traderId: package.traderId, packageName: package.name);
           if (response != null && response.package != null) {
-            setState(() {
-              int start = widget.packages.indexOf(package);
-              widget.packages.removeAt(start);
-
-              response.package.entityStatus =
-                  EntityStatus.ENTIRY_STATUS_CREATING;
-              widget.packages.insert(start, response.package);
-            });
+            int index = widget.packages.length - 1;
+            response.package.entityStatus =
+                EntityStatus.ENTIRY_STATUS_CREATING;
+            packageBloc.add(PackageAddEvent(package: response.package,));
+            // if (widget.onPackageAdded != null) {
+            //   widget.onPackageAdded(response.package, index);
+            // }
           }
-          Navigator.of(context).pop();
+          //Navigator.of(context).pop();
         } else if (packageCallbackType ==
             PackageCallbackType.ON_PACKAGE_BOOKING) {
           //DialogService _dialogService = sl<DialogService>();

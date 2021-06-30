@@ -9,6 +9,7 @@ import 'package:local_people_core/core.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package_widget.dart';
 import 'package:local_people_core/jobs.dart';
+import 'package:local_people_core/auth.dart';
 import 'package_card.dart';
 import 'qualification_card.dart';
 import 'qualification_widget.dart';
@@ -16,6 +17,11 @@ import 'trader_contact_actions.dart';
 import '../../domain/entities/qualification.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter/src/widgets/framework.dart';
+import '../blocs/profile_bloc.dart';
+import '../blocs/profile_event.dart';
+import '../blocs/profile_state.dart';
+import '../../domain/repositories/profile_repository.dart';
+import '../../domain/repositories/qualification_repository.dart';
 
 class ProfileTraderBody extends StatefulWidget {
   ProfileTraderBody({
@@ -34,6 +40,9 @@ class ProfileTraderBody extends StatefulWidget {
 }
 
 class _ProfileTraderBodyState extends State<ProfileTraderBody> {
+  //ProfileBloc profileBloc;
+  DialogService _dialogService = sl<DialogService>();
+
   @override
   Widget build(BuildContext context) {
     //return buildContent(context);
@@ -52,66 +61,93 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
       print(e.toString());
     }
     //context.read<TagBloc>().add(LoadTagsEvent());
+
+    final appType = AppConfig.of(context).appType;
+    // profileBloc = ProfileBloc(
+    //   profileRepository: RepositoryProvider.of<ProfileRepository>(context),
+    //   appType: appType,
+    //   authLocalDataSource: sl<AuthLocalDataSource>(),
+    //   qualificationRepository: RepositoryProvider.of<QualificationRepository>(context),
+    //   packageRepository: RepositoryProvider.of<PackageRepository>(context),
+    // );
+
     return BlocProvider.value(
-      value: BlocProvider.of<TagBloc>(context),
-      child: BlocConsumer<TagBloc, TagState>(
-          listenWhen: (previous, current) {
-            // return true/false to determine whether or not
-            // to invoke listener with state
-            // List<Tag> tags = sl<List<Tag>>();
-            return false;
-          },
-          listener: (context, state) {
-            // do stuff here based on BlocA's state
-          },
-          buildWhen: (previous, current) {
-            // return true/false to determine whether or not
-            // to rebuild the widget with state
-            if (widget.tags != null && widget.tags.length > 0)
-              return false;
-
-            try {
-              List<Tag> tags = sl<List<Tag>>();
-              if (tags != null && tags.length > 0)
+        value: BlocProvider.of<ProfileBloc>(context),
+        child: BlocListener<ProfileBloc, ProfileState>(
+      listener:  (context, state) {
+        if (state is TraderProfileLoaded) {
+          sl.unregister<TraderProfile>();
+          locatorAddTraderProfile(state.profile);
+          setState(() {
+            widget.profile = state.profile;
+          });
+        }
+      }, child: BlocProvider.value(
+          value: BlocProvider.of<TagBloc>(context),
+          child: BlocConsumer<TagBloc, TagState>(
+              listenWhen: (previous, current) {
+                // return true/false to determine whether or not
+                // to invoke listener with state
+                // List<Tag> tags = sl<List<Tag>>();
                 return false;
-            } catch(e) {
-            }
-            if (previous is TagsLoading &&
-                current is TagsLoaded) {
-              return true;
-            }
-            if (previous is TagsLoading &&
-                current is LoadTagsFailed) {
-              return true;
-            }
-            return false;
-          },
-          builder: (context, state) {
-            // return widget here based on BlocA's state
-            if (state is TagsLoaded) {
-              if (state.tags != null && state.tags.length > 0) {
-                //locatorAddListTag(state.tags);
-                List<Tag> tags = sl<List<Tag>>();
-                tags.clear();
-                tags.addAll(state.tags);
+              },
+              listener: (context, state) {
+                // do stuff here based on BlocA's state
+              },
+              buildWhen: (previous, current) {
+                // return true/false to determine whether or not
+                // to rebuild the widget with state
+                if (widget.tags != null && widget.tags.length > 0)
+                  return false;
 
-                widget.tags = state.tags;
-              } else {
-                widget.tags = Tag.defaultTags;
+                try {
+                  List<Tag> tags = sl<List<Tag>>();
+                  if (tags != null && tags.length > 0)
+                    return false;
+                } catch(e) {
+                }
+                if (previous is TagsLoading &&
+                    current is TagsLoaded) {
+                  return true;
+                }
+                if (previous is TagsLoading &&
+                    current is LoadTagsFailed) {
+                  return true;
+                }
+                return false;
+              },
+              builder: (context, state) {
+                // return widget here based on BlocA's state
+                if (state is TagsLoaded) {
+                  if (state.tags != null && state.tags.length > 0) {
+                    //locatorAddListTag(state.tags);
+                    List<Tag> tags = sl<List<Tag>>();
+                    tags.clear();
+                    tags.addAll(state.tags);
+
+                    widget.tags = state.tags;
+                  } else {
+                    widget.tags = Tag.defaultTags;
+                  }
+                  widget.qualifications.addAll(List.generate(widget.tags.length, (index) => widget.tags[index].name));
+                  return buildContent(context);
+                } else if (state is LoadTagsFailed) {
+                  return SliverToBoxAdapter(
+                    child: ErrorWidget('Error $state'),
+                  );
+                }
+                return SliverToBoxAdapter(
+                  child: LoadingWidget(),
+                );
               }
-              widget.qualifications.addAll(List.generate(widget.tags.length, (index) => widget.tags[index].name));
-              return buildContent(context);
-            } else if (state is LoadTagsFailed) {
-              return SliverToBoxAdapter(
-                child: ErrorWidget('Error $state'),
-              );
-            }
-            return SliverToBoxAdapter(
-              child: LoadingWidget(),
-            );
-          }
-      ),
-    );
+          ),
+        ),
+          //),
+          //),
+    //     ),
+    // ),
+          ),
+        );
   }
 
   Widget buildContent(BuildContext context) {
@@ -180,38 +216,107 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
     // columnChildren.add(SizedBox(height: 20));
 
     // Qualifications
-    if (widget.profile.qualifications != null && widget.profile.qualifications.length > 0)
-      widget.profile.qualifications.clear();
+    if (widget.profile.qualifications == null)
+      widget.profile.qualifications = [];
+    //if (widget.profile.qualifications != null && widget.profile.qualifications.length > 0)
+    //  widget.profile.qualifications.clear();
+    List<Qualification> qualifications = [];
     if (appType == AppType.TRADER) {
-      widget.profile.qualifications.forEach((qualification) {
-        qualification.optionType = QualificationOptionType.REMOVE;
-        qualification.traderId = widget.profile.id;
-      });
-      widget.qualifications.forEach((element) {
-        Qualification qualification = Qualification(
+      if (widget.profile.qualifications != null) {
+        widget.profile.qualifications.forEach((qualification) {
+          if (qualification.id > 0) {
+            qualification.optionType = QualificationOptionType.REMOVE;
+            qualification.traderId = widget.profile.id;
+            qualifications.add(qualification);
+          }
+        });
+      }
+      if (widget.qualifications != null) {
+        widget.qualifications.forEach((element) {
+          Qualification qualification = Qualification(
             id: -1,
             title: element,
             optionType: QualificationOptionType.ADD_DEFAULT,
+            traderId: widget.profile.id,
+          );
+          Qualification exists;
+          if (widget.profile.qualifications != null && widget.profile.qualifications.length > 0) {
+            Qualification findqualification(String title) => widget.profile.qualifications.firstWhere((qualification) => qualification.title.compareTo(title) == 0);
+            try {
+              exists = findqualification(qualification.title);
+            } catch(e) {
+              exists = null;
+            }
+          }
+          if (exists == null)
+            qualifications.add(qualification);
+        });
+      }
+
+      if (qualifications.length < widget.profile.qualifications.length) {
+        int length = widget.profile.qualifications.length + 1;
+        Qualification qualification = Qualification(
+          id: -1,
+          title: 'Qualification ' + length.toString(),
+          optionType: QualificationOptionType.ADD_NEW,
           traderId: widget.profile.id,
         );
-        if (widget.profile.qualifications.contains(qualification) == false) {
-          widget.profile.qualifications.add(qualification);
-        }
-      });
-      int length = widget.profile.qualifications.length + 1;
-      Qualification qualification = Qualification(
-        id: -1,
-        title: 'Qualification ' + length.toString(),
-        optionType: QualificationOptionType.ADD_NEW,
-        traderId: widget.profile.id,
-      );
-      widget.profile.qualifications.add(qualification);
+        qualifications.add(qualification);
+      }
+
     }
     // if (widget.profile.qualifications != null &&
     //     widget.profile.qualifications.length > 0) {
       final qualificationWidget = QualificationWidget (
-        qualifications: widget.profile.qualifications,
+        qualifications: qualifications,
         sugesstions: widget.qualifications,
+        onQualificationAdded: (qualification, index){
+          if (widget.profile.qualifications == null) {
+            widget.profile.qualifications = [];
+          }
+          if (index >= 0)
+            widget.profile.qualifications.insert(index, qualification);
+          else
+            widget.profile.qualifications.add(qualification);
+
+          Qualification exists;
+          if (widget.profile.qualifications != null && widget.profile.qualifications.length > 0) {
+            Qualification findqualification(String title) =>
+                widget.profile.qualifications
+                  .firstWhere((qualification) => qualification.title.compareTo(title) == 0);
+            try {
+              exists = findqualification(qualification.title);
+            } catch(e) {
+              exists = null;
+            }
+          }
+          if (exists != null) {
+            //setState(() {
+              exists.optionType = QualificationOptionType.REMOVE;
+            //});
+          }
+
+          sl.unregister<TraderProfile>();
+          locatorAddTraderProfile(widget.profile);
+        },
+        onQualificationRemoved: (qualification, id){
+          if (widget.profile.qualifications != null
+              && widget.profile.qualifications.length > 0) {
+
+              Qualification findqualification(int id) => widget.profile.qualifications.firstWhere((qualification) => qualification.id == id);
+              Qualification qualification = findqualification(id);
+
+              if (qualification != null) {
+                qualification.optionType = QualificationOptionType.ADD_DEFAULT;
+              }
+              //int index = widget.profile.qualifications.indexOf(qualification);
+              //if (index >= 0) {
+                //widget.profile.qualifications.removeAt(index);
+                sl.unregister<TraderProfile>();
+                locatorAddTraderProfile(widget.profile);
+            //}
+          }
+        }
       );
     //   columnChildren.add(qualificationWidget);
     //   columnChildren.add(SizedBox(height: 20));
@@ -220,6 +325,9 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
     // Packages
     //if (widget.profile.packages != null && widget.profile.packages.length > 0)
       //widget.profile.packages.clear();
+    if (widget.profile.packages == null)
+      widget.profile.packages = [];
+
     List<Package> packages = [];
     if (appType == AppType.TRADER) {
       //List<Package> packages = widget.profile.packages;
@@ -251,19 +359,28 @@ class _ProfileTraderBodyState extends State<ProfileTraderBody> {
       final packageWidget = PackageWidget (
         packages: packages,
         traderName: widget.profile.fullName,
-        onPackageAdded: (package) {
-          int index = widget.profile.packages.indexOf(package);
-          //setState(() {
-            widget.profile.packages.removeAt(index);
-          locatorAddTraderProfile(widget.profile);
-          //});
-        },
-        onPackageRemoved: (package) {
-          int index = widget.profile.packages.indexOf(package);
-          //setState(() {
+        onPackageAdded: (package, index) {
+          if (widget.profile.packages == null) {
+            widget.profile.packages = [];
+          }
+          if (index >= 0)
             widget.profile.packages.insert(index, package);
-            locatorAddTraderProfile(widget.profile);
-          //});
+          else
+            widget.profile.packages.add(package);
+
+          sl.unregister<TraderProfile>();
+          locatorAddTraderProfile(widget.profile);
+        },
+        onPackageRemoved: (package, index) {
+          if (widget.profile.packages != null
+              && widget.profile.packages.length > 0) {
+            if (index >= 0) {
+              widget.profile.packages.removeAt(index);
+
+              sl.unregister<TraderProfile>();
+              locatorAddTraderProfile(widget.profile);
+            }
+          }
         },
       );
      // columnChildren.add(packageWidget);
