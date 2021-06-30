@@ -3,7 +3,8 @@ import 'package:dio/dio.dart';
 import 'package:dio_http_cache/dio_http_cache.dart';
 
 class RestAPIConfig {
-  String get baseURL => 'http://r-sison.ngrok.io/api/v1';
+  String get baseURL => 'https://staging.localpeople.app/api/v1';
+  // 'http://r-sison.ngrok.io/api/v1';
   //// 'http://192.168.254.133:3001/api/v1/';
   // 'https://staging.localpeople.app/api/v1';
   // 'http://192.168.254.133:3001/api/v1/';
@@ -79,11 +80,11 @@ class RestAPIConfig {
 
   static const String booking = '/bookings';
 
-  static const String bookingWithId = '/booking/{id}';
+  static const String bookingWithId = '/bookings/{id}';
 
-  static const String bookingWithTraderId = '/traders/{id}/booking';
+  static const String bookingWithTraderId = '/traders/{id}/bookings';
 
-  static const String bookingWithJobId = '/jobs/{id}/booking';
+  static const String bookingWithJobId = '/jobs/{id}/bookings';
 
   static const String changeRequest = '/change_requests';
 
