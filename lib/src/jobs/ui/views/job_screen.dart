@@ -160,7 +160,8 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
     final appCType = AppConfig.of(context).appType;
     return Scaffold(
       appBar: AppBarWidget(
-        //appBarPreferredSize: Size.fromHeight(60.0),
+        appBarPreferredSize: (appCType == AppType.TRADER
+            ? Size.fromHeight(260.0) : Size.fromHeight(210.0)),
         showFilter: true,
         filterValue: filterValue,
         filterItems: (appCType == AppType.TRADER
@@ -333,6 +334,7 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
             });
             //requestedJobs = filterJobs(allRequestedJobs);
             //lastRequestedJobsFilter = filterValue;
+            totalJobsOppurtunities = requestedJobs.length;
             return buildRequestedJobList(context);
           } else if (state is QuoteRequestLoadFailed) {
             print('Error $state');
@@ -361,6 +363,7 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
           setState(() {
             allRequestedJobs.clear();
             requestedJobs.clear();
+            totalJobsOppurtunities = requestedJobs.length;
           });
           try {
             TraderProfile traderProfile = sl<TraderProfile>();
@@ -394,12 +397,13 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
     //var jobProvider = context.watch<JobProvider>();
     //var jobProvider = Provider.of<JobProvider>(context, listen: false);
     return SafeArea(
-      child: JobBodyContainer(
+      //child: JobBodyContainer(
       child: RefreshIndicator(
         onRefresh: () async {
           setState(() {
             allJobs.clear();
             jobs.clear();
+            totalJobsOppurtunities = jobs.length;
           });
           if (appCType == AppType.CLIENT)
             context.read<JobBloc>().add(RefreshJobs());
@@ -471,7 +475,7 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
             }),
             //}
               ),
-      ),
+      //),
       );
     //);
   }
@@ -503,6 +507,7 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
             //   //BlocProvider.of<QuoteBloc>(context)
             //   //    .add(QuoteJobLoadEvent(id: job.id));
             // }
+            totalJobsOppurtunities = jobs.length;
             return buildJobList(context);
           } else if (state is OpportunitiesLoaded) {
             allJobs.clear();
@@ -515,6 +520,7 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
             //   BlocProvider.of<QuoteBloc>(context)
             //       .add(QuoteJobLoadEvent(id: job.id));
             // }
+            totalJobsOppurtunities = jobs.length;
             return buildJobList(context);
           } else if (state is JobNotLoaded) {
             print('Error $state');

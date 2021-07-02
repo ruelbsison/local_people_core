@@ -13,6 +13,7 @@ import '../widgets/post_actions_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:overlay_dialog/overlay_dialog.dart';
 import 'package:local_people_core/quote.dart';
+import '../widgets/job_body_container.dart';
 
 class JobPreviewScreen extends StatefulWidget {
   JobPreviewScreen({
@@ -332,6 +333,7 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
 
   Widget buildTabBody(BuildContext context) {
     return SafeArea(
+        //child: JobBodyContainer(
       child: TabBarView(
         controller: _controller,
         children: <Widget>[
@@ -358,15 +360,18 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
           QuoteBodyWidget(job:  widget.job),
         ],
       ),
+      //  ),
     );
   }
 
   Widget _jobPostActions(BuildContext context) {
     final theme = Theme.of(context);
+    // return JobBodyContainer(
+    // child: Container(
     return Container(
       color: Colors.white,
-      padding: EdgeInsets.all(12.0),
-      //margin: EdgeInsets.all(12.0),
+      padding: EdgeInsets.all(20.0),
+      margin: EdgeInsets.all(20.0),
       child: Flex(
         direction: Axis.vertical,
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -414,6 +419,7 @@ class _JobPreviewScreenState extends State<JobPreviewScreen>
           SizedBox(height: 30.0),
         ],
       ),
+    //),
     );
   }
 

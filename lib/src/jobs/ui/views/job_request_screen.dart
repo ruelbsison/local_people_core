@@ -34,7 +34,7 @@ class _JobRequestScreenState extends State<JobRequestScreen>
   AppBarWidget buildAppBar() {
     final theme = Theme.of(context);
     return AppBarWidget(
-      //appBarPreferredSize: Size.fromHeight(120.0),
+      appBarPreferredSize: Size.fromHeight(110.0),
       //automaticallyImplyLeading: false,
       //toolbarHeight: 120.0,
       //centerTitle: false,
@@ -44,7 +44,7 @@ class _JobRequestScreenState extends State<JobRequestScreen>
       //   textAlign: TextAlign.left,
       //   style: theme.textTheme.headline6,
       // ),
-      subTitle: LocalPeopleLocalizations.of(context).menuTitleOpportunities,
+      title: LocalPeopleLocalizations.of(context).menuTitleOpportunities,
       appBar: AppBar(),
       bottom: TabBar(
         controller: _controller,

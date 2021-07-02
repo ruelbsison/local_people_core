@@ -56,7 +56,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         //   height: 40,
         //   //width: 105 * mediaQueryData.devicePixelRatio,
         // ),
-        //leadingWidth: 110,
+        leadingWidth: 40,
         title: LogoWidget(
           fit: BoxFit.contain,
           height: 40,
@@ -69,14 +69,14 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         flexibleSpace: PreferredSize(
           preferredSize: Size(size.width, appBarPreferredSize.height),
           child: Container(
-          padding: EdgeInsets.only(top: statusbarHeight + 40),
+          padding: EdgeInsets.only(top: statusbarHeight + 50),
           child: Flex(
             direction: Axis.vertical,
             mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.start,
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
-              SizedBox(height: 3),
+              SizedBox(height: 5),
               if (title != null || subTitle != null || showFilter == true)
                 buildTitleContent(context),
               if (title != null || subTitle != null || showFilter == true)
@@ -133,26 +133,26 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           decoration: InputDecoration(
             hintStyle: theme.textTheme.bodyText2,
             hintText: searchTitle, //'Search Opportunities',
-            // suffixIcon: Icon(
-            //     Icons.search,
-            //   color: Color(0xffff6361),
-            // ),
-            suffix:  Stack (
-              children: [
-                Container(
-                  width: 30,
-                  height: 30,
-                  decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(35),
-                    color: Color(0xffff6361),
-                  ),
-                  child: Icon(
-                    Icons.search,
-                    color: Color(0xffff6361),
-                  ),
-                ),
-              ],
+            suffixIcon: Icon(
+                Icons.search,
+              color: Color(0xffff6361),
             ),
+            // suffix:  Stack (
+            //   children: [
+            //     Container(
+            //       width: 30,
+            //       height: 30,
+            //       decoration: BoxDecoration(
+            //         borderRadius: BorderRadius.circular(35),
+            //         color: Color(0xffff6361),
+            //       ),
+            //       child: Icon(
+            //         Icons.search,
+            //         color: Color(0xffff6361),
+            //       ),
+            //     ),
+            //   ],
+            // ),
             border: InputBorder.none,
             contentPadding: EdgeInsets.all(12),
             ),

@@ -236,18 +236,17 @@ class _JobCreateScreenState extends State<JobCreateScreen>{
   AppBarWidget buildAppBar(BuildContext context) {
     final theme = Theme.of(context);
     return AppBarWidget(
-      //appBarPreferredSize: Size.fromHeight(60.0),
-      title: AppLocalizations.of(context).appTitle,
+      appBarPreferredSize: Size.fromHeight(100.0),
+      title: LocalPeopleLocalizations.of(context).menuTitlePostJob,
       appBar: AppBar(),
-      subTitle: LocalPeopleLocalizations.of(context).menuTitlePostJob,
       actions: <Widget>[
-        TextButton(
+        OutlinedButton(
           child: Text(
             LocalPeopleLocalizations.of(context).btnTitleCancel,
             style: theme.textTheme.button,
+            textAlign: TextAlign.center,
           ),
           onPressed: () {
-            //AppRouter.pushPage(context, JobCreateScreen());
             Navigator.pop(context);
           },
         ),
