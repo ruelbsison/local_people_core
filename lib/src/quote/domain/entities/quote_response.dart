@@ -17,6 +17,7 @@ class QuoteResponse {
       deliveryDate: DateTime.parse(model.delivery_date),
       traderId: model.trader_id,
       jobId: model.job_id,
+      createdAt: DateTime.parse(model.created_at),
     );
   }
 
@@ -31,6 +32,7 @@ class QuoteResponse {
       delivery_date: quote.deliveryDate.toString(),
       trader_id: quote.traderId,
       job_id: quote.jobId,
+      created_at: quote.createdAt.toString(),
     );
   }
 }

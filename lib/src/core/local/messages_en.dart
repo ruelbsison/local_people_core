@@ -62,5 +62,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'btnTitleAwardJob': MessageLookupByLibrary.simpleMessage('Award Job'),
     'btnTitleCancelBid': MessageLookupByLibrary.simpleMessage('Cancel Bid'),
     'btnTitleResponsePending': MessageLookupByLibrary.simpleMessage('Response Pending'),
+    'btnTitleJobAwarded': MessageLookupByLibrary.simpleMessage('Job Awarded'),
+    'btnTitleAwaitingDeposit': MessageLookupByLibrary.simpleMessage('Awaiting Deposit'),
   };
 }

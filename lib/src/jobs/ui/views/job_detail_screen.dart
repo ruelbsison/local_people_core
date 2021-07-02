@@ -15,6 +15,7 @@ import '../widgets/job_bid_actions_widget.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:local_people_core/quote.dart';
 import '../widgets/bid_pending_action_widget.dart';
+import '../widgets/bid_pending_deposit_action_widget.dart';
 
 class JobDetailScreen extends StatefulWidget {
   JobDetailScreen(
@@ -138,103 +139,6 @@ class _JobDetailScreenState extends State<JobDetailScreen>
         ],
       ),
     ); //
-    // return PreferredSize(
-    //     preferredSize: widget.appBarPreferredSize,
-    //     child: AppBar(
-    //     titleSpacing: 0,
-    //     centerTitle: false,
-    //     //automaticallyImplyLeading: false,
-    //     flexibleSpace: PreferredSize(
-    //       preferredSize: Size(size.width, widget.appBarPreferredSize.height),
-    //       child: Flex(
-    //         direction: Axis.horizontal,
-    //         mainAxisSize: MainAxisSize.max,
-    //         mainAxisAlignment: MainAxisAlignment.start,
-    //         crossAxisAlignment: CrossAxisAlignment.center,
-    //         children: [
-    //           Flex(
-    //             direction: Axis.vertical,
-    //             mainAxisSize: MainAxisSize.max,
-    //             mainAxisAlignment: MainAxisAlignment.center,
-    //             crossAxisAlignment: CrossAxisAlignment.center,
-    //             children: [
-    //               // Container(
-    //               //   child: Align(
-    //               //     alignment: Alignment.center,
-    //               //     child: BackButton(),
-    //               //   ),
-    //               // ),
-    //               Container(
-    //                 child: ClipOval(
-    //                   child: SvgPicture.asset(
-    //                     'packages/local_people_core/assets/images/package-orange.svg',
-    //                     fit: BoxFit.contain,
-    //                     height: 37,
-    //                     width: 37,
-    //                   ),
-    //                 ),
-    //               ),
-    //               Container(
-    //                 child: Text(
-    //                   widget.job.minutesLeft.toString() + ' hrs left',
-    //                   textAlign: TextAlign.center,
-    //                   style: theme.textTheme.overline,
-    //                 ),
-    //               ),
-    //             ],
-    //           ),
-    //           Expanded(
-    //             flex: 3,
-    //             child: Column(
-    //               mainAxisSize: MainAxisSize.max,
-    //               mainAxisAlignment: MainAxisAlignment.center,
-    //               crossAxisAlignment: CrossAxisAlignment.stretch,
-    //               children: [
-    //                 Text(
-    //                   widget.job.title != null
-    //                       ? widget.job.title
-    //                       : widget.job.description,
-    //                   style: theme.textTheme.headline6,
-    //                   maxLines: 2,
-    //                 ),
-    //               ],
-    //             ),
-    //           ),
-    //       ],
-    //       ),
-    //     ),
-    //     elevation: 0.0,
-    //     bottom: TabBar(
-    //       controller: _controller,
-    //       //unselectedLabelColor: Color.fromRGBO(239, 244, 246, 1), //theme.primaryColor,
-    //       indicatorSize: TabBarIndicatorSize.tab,
-    //       //indicatorColor: Color.fromRGBO(239, 244, 246, 1),
-    //       indicator: BoxDecoration(
-    //           borderRadius: BorderRadius.circular(5),
-    //           color: Color.fromRGBO(239, 244, 246, 1)),
-    //       tabs: [
-    //         Tab(
-    //           child: Align(
-    //             alignment: Alignment.center,
-    //             child: Text(
-    //               "DETAILS",
-    //               style: theme.textTheme.bodyText2,
-    //             ),
-    //           ),
-    //         ),
-    //         Tab(
-    //           child: Align(
-    //             alignment: Alignment.center,
-    //             child: Text(
-    //               "MESSAGES",
-    //               style: theme.textTheme.bodyText2,
-    //             ),
-    //           ),
-    //         ),
-    //       ],
-    //     ),
-    //   ),
-    // );
   }
 
   Quote findTraderBid(int traderId) => widget.job.bids.firstWhere((quote) => quote.traderId == traderId);
@@ -256,6 +160,17 @@ class _JobDetailScreenState extends State<JobDetailScreen>
         return JobBidActionsWidget(
           job: widget.job,
           traderId: traderId,
+        );
+      }
+    } else if (widget.job != null
+        && widget.job.awarded == true
+        && widget.job.traderId != null
+        && widget.job.traderId == traderId) {
+      if (widget.job.bids != null
+          && widget.job.bids.length > 0) {
+        Quote quote = findTraderBid(traderId);
+        return BidPendingDepositActionWidget(
+          createdAt: quote.createdAt,
         );
       }
     }

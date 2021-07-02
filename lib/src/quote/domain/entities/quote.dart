@@ -13,6 +13,7 @@ class Quote extends Object {
   DateTime deliveryDate;
   int traderId;
   int jobId;
+  DateTime createdAt;
 
   //Job job;
   //TraderProfile traderProfile;
@@ -26,7 +27,8 @@ class Quote extends Object {
     this.depositRequired,
     this.deliveryDate,
     this.traderId,
-    this.jobId,});
+    this.jobId,
+  this.createdAt});
 
   @override
   bool operator ==(Object other) =>
@@ -37,6 +39,6 @@ class Quote extends Object {
 
   @override
   List<Object> get props => [id, dureationRequired, details, labour, materials,
-    totalCost, depositRequired, deliveryDate, traderId, jobId];
+    totalCost, depositRequired, deliveryDate, traderId, jobId, createdAt];
 
 }

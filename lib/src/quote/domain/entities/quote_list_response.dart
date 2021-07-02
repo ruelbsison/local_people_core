@@ -20,6 +20,7 @@ class QuoteListResponse {
         deliveryDate: DateTime.parse(model.delivery_date),
         traderId: model.trader_id,
         jobId: model.job_id,
+        createdAt: DateTime.parse(model.created_at),
       );
       quotes.add(quote);
     }

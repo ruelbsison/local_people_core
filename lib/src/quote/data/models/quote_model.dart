@@ -21,6 +21,7 @@ class QuoteModel extends Equatable {
   String delivery_date;
   int trader_id;
   int job_id;
+  String created_at;
 
   QuoteModel(
       {
@@ -33,11 +34,13 @@ class QuoteModel extends Equatable {
         this.deposit_required,
         this.delivery_date,
         this.trader_id,
-        this.job_id});
+        this.job_id,
+        this.created_at});
 
   @override
   List<Object> get props => [id, duration_required, details, labour,
-    materials, total_cost, deposit_required, delivery_date, trader_id, job_id];
+    materials, total_cost, deposit_required, delivery_date, trader_id,
+    job_id, created_at];
 
   factory QuoteModel.fromJson(Map<String, dynamic> json) => _$QuoteModelFromJson(json);
   Map<String, dynamic> toJson() => _$QuoteModelToJson(this);

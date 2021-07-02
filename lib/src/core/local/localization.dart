@@ -331,6 +331,20 @@ class LocalPeopleLocalizations {
     args: [],
     locale: locale.toString(),
   );
+
+  String get btnTitleJobAwarded => Intl.message(
+    'Job Awarded',
+    name: 'btnTitleJobAwarded',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitleAwaitingDeposit => Intl.message(
+    'Awaiting Deposit',
+    name: 'btnTitleAwaitingDeposit',
+    args: [],
+    locale: locale.toString(),
+  );
 }
 
 class LocalPeopleLocalizationsDelegate
