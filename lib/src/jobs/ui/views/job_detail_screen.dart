@@ -144,7 +144,11 @@ class _JobDetailScreenState extends State<JobDetailScreen>
   Quote findTraderBid(int traderId) => widget.job.bids.firstWhere((quote) => quote.traderId == traderId);
 
   Widget buildTradeAction(BuildContext context) {
-    if (widget.job != null && widget.job.awarded == false) {
+    if (widget.job == null)
+      return SizedBox(height: 5.0);
+
+    if (widget.job.awarded != null
+        && widget.job.awarded == false) {
       if (widget.job.bids != null
           && widget.job.bids.length > 0) {
         Quote quote = findTraderBid(traderId);
@@ -162,7 +166,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
           traderId: traderId,
         );
       }
-    } else if (widget.job != null
+    } else if (widget.job.awarded != null
         && widget.job.awarded == true
         && widget.job.traderId != null
         && widget.job.traderId == traderId) {
@@ -185,10 +189,13 @@ class _JobDetailScreenState extends State<JobDetailScreen>
         controller: _controller,
         children: <Widget>[
           SingleChildScrollView(
-            child: Container(
+            child: Column(
+            children: <Widget> [
+            Container(
               margin: EdgeInsets.all(12.0),
               padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
               //color: Color.fromRGBO(255, 255, 255, 1),
+              //padding: EdgeInsets.all(12.0),
               child: Flex(
                 direction: Axis.vertical,
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -212,7 +219,7 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                               .copyWith(color: Colors.white),
                         )),
                   ),
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 10.0),
                   // BlocProvider(
                   //   create: (context) => QuoteBloc(
                   //     quoteRepository:
@@ -223,47 +230,49 @@ class _JobDetailScreenState extends State<JobDetailScreen>
                   //         RepositoryProvider.of<JobRepository>(context),
                   //     authLocalDataSource: sl<AuthLocalDataSource>(),
                   //   ),
-                  BlocProvider.value(
-                    value: BlocProvider.of<QuoteBloc>(context),
-                    child: BlocListener<QuoteBloc, QuoteState>(
-                      listenWhen: (previousState, state) {
-                        if (state is QuoteAdding) {
-                          return true;
-                        } else if (state is QuoteAddFailed) {
-                          return true;
-                        } else if (state is QuoteAdded) {
-                          return true;
-                        }
-                        return false;
-                      },
-                      listener: (context, state) {
-                        if (state is QuoteAdding) {
-                          Navigator.of(context).pop();
-                          _dialogService.showStatusDialog(
-                            title: 'Place Bid',
-                            message: 'Sending...',
-                          );
-                        } else if (state is QuoteAddFailed) {
-                          Navigator.of(context).pop();
-                          _dialogService.showSuccessfulStatusDialog(
-                              message: 'Sending failed!!');
-                        } else if (state is QuoteAdded) {
-                          Navigator.of(context).pop();
-                          _dialogService.showSuccessfulStatusDialog(
-                              message: 'Sent successfully!');
-                          setState(() {
-                            if (widget.job.bids == null)
-                              widget.job.bids = null;
-                            widget.job.bids.add(state.quote);
-                          });
-                        }
-                      },
-                      child: buildTradeAction(context),
-                      //SizedBox(height: 5.0),
-                    ),
-                  ),
                 ],
               ),
+            ),
+              BlocProvider.value(
+                value: BlocProvider.of<QuoteBloc>(context),
+                child: BlocListener<QuoteBloc, QuoteState>(
+                  listenWhen: (previousState, state) {
+                    if (state is QuoteAdding) {
+                      return true;
+                    } else if (state is QuoteAddFailed) {
+                      return true;
+                    } else if (state is QuoteAdded) {
+                      return true;
+                    }
+                    return false;
+                  },
+                  listener: (context, state) {
+                    if (state is QuoteAdding) {
+                      Navigator.of(context).pop();
+                      _dialogService.showStatusDialog(
+                        title: 'Place Bid',
+                        message: 'Sending...',
+                      );
+                    } else if (state is QuoteAddFailed) {
+                      Navigator.of(context).pop();
+                      _dialogService.showSuccessfulStatusDialog(
+                          message: 'Sending failed!!');
+                    } else if (state is QuoteAdded) {
+                      Navigator.of(context).pop();
+                      _dialogService.showSuccessfulStatusDialog(
+                          message: 'Sent successfully!');
+                      setState(() {
+                        if (widget.job.bids == null)
+                          widget.job.bids = null;
+                        widget.job.bids.add(state.quote);
+                      });
+                    }
+                  },
+                  child: buildTradeAction(context),
+                  //SizedBox(height: 5.0),
+                ),
+              ),
+            ]
             ),
           ),
           BlocProvider(
@@ -273,33 +282,6 @@ class _JobDetailScreenState extends State<JobDetailScreen>
               appType: appType,
               authLocalDataSource: sl<AuthLocalDataSource>(),
             )..add(LoadJobMessagesEvent(jobId: widget.job.id)),
-            // child: BlocListener<MessageBloc, MessageState>(
-            //   listenWhen: (previousState, state) {
-            //     if (state is MessageSending) {
-            //       return true;
-            //     } else if (state is SendMessageFailed) {
-            //       return true;
-            //     } else if (state is MessageSent) {
-            //       return true;
-            //     }
-            //     return false;
-            //   },
-            //   listener: (context, state) {
-            //     if (state is MessageSending) {
-            //       _dialogService.showStatusDialog(
-            //         title: 'Message',
-            //         message: 'Sending...',
-            //       );
-            //     } else if (state is SendMessageFailed) {
-            //       Navigator.of(context).pop();
-            //       _dialogService.showSuccessfulStatusDialog(
-            //           message: 'Sending failed!!');
-            //     } else if (state is MessageSent) {
-            //       Navigator.of(context).pop();
-            //       _dialogService.showSuccessfulStatusDialog(
-            //           message: 'Sent successfully!');
-            //     }
-            //   },
               child: BlocBuilder<MessageBloc, MessageState>(
                 builder: (context, state) {
                   if (state is MessageInitial) {

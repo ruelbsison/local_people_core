@@ -22,7 +22,7 @@ class JobBidActionsWidget extends StatelessWidget {
     return Container(
       //color: Colors.white,
       //margin: EdgeInsets.all(12.0),
-      //padding: EdgeInsets.all(12.0),
+      padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
                 border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
                 borderRadius: BorderRadius.circular(8.0),
@@ -39,7 +39,7 @@ class JobBidActionsWidget extends StatelessWidget {
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  SizedBox(height: 30.0),
+                  //SizedBox(height: 30.0),
                   Expanded(
                     flex: 7,
                     child: Text(
@@ -74,7 +74,7 @@ class JobBidActionsWidget extends StatelessWidget {
                 ]
             ),
           ),
-          SizedBox(height: 30.0),
+          SizedBox(height: 20.0),
           Container(
               color: Colors.white,
               child: Flex(

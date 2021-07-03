@@ -15,7 +15,7 @@ class _BidPendingActionWidgetState extends State<BidPendingActionWidget> {
     final theme = Theme.of(context);
     return Container(
       // color: Colors.white,
-      // padding: EdgeInsets.all(12.0),
+      padding: EdgeInsets.all(12.0),
       // margin: EdgeInsets.only(top: 12.0),
       decoration: BoxDecoration(
           border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
@@ -26,7 +26,7 @@ class _BidPendingActionWidgetState extends State<BidPendingActionWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
           Container(
             color: Colors.white,
             child: Flex(
@@ -50,21 +50,6 @@ class _BidPendingActionWidgetState extends State<BidPendingActionWidget> {
                       style: theme.textTheme.subtitle2,
                     ),
                   ),
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: CircleAvatar(
-                  //     backgroundColor: Color(0xbbd0d9),
-                  //     radius: 16,
-                  //     child: Center (
-                  //       child: SvgPicture.asset(
-                  //         'packages/local_people_core/assets/images/dis-approved.svg',
-                  //         fit: BoxFit.contain,
-                  //         height: 25,
-                  //         width: 25,
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
                 ]
             ),
           ),
@@ -79,8 +64,8 @@ class _BidPendingActionWidgetState extends State<BidPendingActionWidget> {
                   Expanded(
                     flex: 1,
                     child: Container(
-                      padding:
-                      EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding:
+                      //EdgeInsets.only(left: 12.0, right: 12.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Color.fromRGBO(87, 106, 129, 1),
@@ -99,8 +84,8 @@ class _BidPendingActionWidgetState extends State<BidPendingActionWidget> {
                   Expanded(
                     flex: 1,
                     child: Container(
-                      padding:
-                      EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding:
+                      //EdgeInsets.only(left: 12.0, right: 12.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Colors.white,

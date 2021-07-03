@@ -118,7 +118,7 @@ class _JobBidScreenState extends State<JobBidScreen>
                   SizedBox(height: 10.0),
                   //PostedByWidget(profile: widget.profile),
                   PostedByWidget(clientId: widget.job.clientId),
-                  SizedBox(height: 30.0),
+                  SizedBox(height: 10.0),
                 ],
               ),
             ),

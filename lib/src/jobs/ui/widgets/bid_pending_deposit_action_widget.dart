@@ -19,7 +19,7 @@ class _BidPendingDepositActionWidgetState extends State<BidPendingDepositActionW
     final theme = Theme.of(context);
     return Container(
       // color: Colors.white,
-      // padding: EdgeInsets.all(12.0),
+      padding: EdgeInsets.all(12.0),
       // margin: EdgeInsets.only(top: 12.0),
       decoration: BoxDecoration(
           border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
@@ -30,24 +30,31 @@ class _BidPendingDepositActionWidgetState extends State<BidPendingDepositActionW
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
           Container(
             color: Colors.white,
             child: Flex(
-                direction: Axis.vertical,
+                direction: Axis.horizontal,
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
                   Expanded(
-                    flex: 7,
+                    flex: 3,
                     child: Text(
-                      LocalPeopleLocalizations.of(context).titleBidPlaced + ' '
-                          + (widget.createdAt != null
-                          ? DateFormatUtil.getDateTimeDiff(
-                          DateTime.now(), widget.createdAt)
-                          : ''),
+                      LocalPeopleLocalizations.of(context).titleBidPlaced,
                       textAlign: TextAlign.left,
                       style: theme.textTheme.bodyText1,
+                    ),
+                  ),
+                  Expanded(
+                    flex: 4,
+                    child: Text(
+                          widget.createdAt != null
+                          ? DateFormatUtil.getDateTimeDiff(
+                          DateTime.now(), widget.createdAt)
+                          : '',
+                      textAlign: TextAlign.left,
+                      style: theme.textTheme.bodyText2,
                     ),
                   ),
                   Expanded(
@@ -72,8 +79,8 @@ class _BidPendingDepositActionWidgetState extends State<BidPendingDepositActionW
                   Expanded(
                     flex: 1,
                     child: Container(
-                      padding:
-                      EdgeInsets.only(left: 12.0, right: 12.0),
+                      //padding:
+                      //EdgeInsets.only(left: 12.0, right: 12.0),
                       child: ElevatedButton(
                         style: ElevatedButton.styleFrom(
                           primary: Color.fromRGBO(87, 106, 129, 1),
@@ -89,28 +96,39 @@ class _BidPendingDepositActionWidgetState extends State<BidPendingDepositActionW
                       ),
                     ),
                   ),
-                  Expanded(
-                    flex: 1,
-                    child: Container(
-                      padding:
-                      EdgeInsets.only(left: 12.0, right: 12.0),
-                      child: ElevatedButton(
-                        style: ElevatedButton.styleFrom(
-                          primary: Colors.white,
-                          onPrimary: Color.fromRGBO(170, 186, 205, 1),
-                        ),
-                        onPressed: () { },
-                        child: Text(
-                          LocalPeopleLocalizations.of(context)
-                              .btnTitleAwaitingDeposit,
-                          textAlign: TextAlign.center,
-                          style: theme.textTheme.button.copyWith(color: Color.fromRGBO(87, 106, 129, 1)),
-                        ),
+                ],
+              ),
+          ),
+          Container(
+            color: Colors.white,
+            child: Flex(
+              direction: Axis.horizontal,
+              //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              //crossAxisAlignment: CrossAxisAlignment.start,
+              children: <Widget>[
+                Expanded(
+                  flex: 1,
+                  child: Container(
+                    //padding:
+                    //EdgeInsets.only(left: 12.0, right: 12.0),
+                    child: ElevatedButton(
+                      style: ElevatedButton.styleFrom(
+                        primary: Colors.white,
+                        onPrimary: Color.fromRGBO(170, 186, 205, 1),
+                      ),
+                      onPressed: () { },
+                      child: Text(
+                        LocalPeopleLocalizations.of(context)
+                            .btnTitleAwaitingDeposit,
+                        textAlign: TextAlign.center,
+                        style: theme.textTheme.button.copyWith(color: Color.fromRGBO(255, 99, 95, 1)),
                       ),
                     ),
                   ),
-                ],
-              )),
+                ),
+              ],
+            ),
+          ),
           //SizedBox(height: 10.0),
         ],
       ),
