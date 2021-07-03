@@ -10,10 +10,13 @@ import '../widgets/posted_by_widget.dart';
 import '../../domain/entities/job.dart';
 import '../widgets/job_view_widget.dart';
 import '../widgets/job_actions_widget.dart';
+import '../widgets/job_confirmed_action_widget.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/job_bloc.dart';
 import '../blocs/job_event.dart';
 import '../blocs/job_state.dart';
+import '../../domain/entities/change_request.dart';
+import '../blocs/change_request_bloc.dart';
 
 //import 'package:flutter_svg/flutter_svg.dart';
 
@@ -37,6 +40,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     with TickerProviderStateMixin {
   TabController _controller;
   int _tab = 0;
+  DialogService _dialogService = sl<DialogService>();
 
   @override
   void initState() {
@@ -112,8 +116,28 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     );
   }
 
-  void _showJobAwardProgressDialog(DialogService _dialogService) async {
-    StatusDialogResponse dialogResult = await _dialogService.showStatusDialog(
+  void _showJobChnageRequestProgressDialog(DialogService dialogService) async {
+    StatusDialogResponse dialogResult = await dialogService.showStatusDialog(
+      title: 'Job Change Request',
+      message: 'Sending ...',
+    );
+    if (dialogResult.status == StatusDialogStatus.SUCCESSFUL) {
+      //Future
+      //    .delayed(Duration(seconds: 5))
+      //    .then((_) => _dialogService.successfulStatusDialogComplete());
+      await dialogService.showSuccessfulStatusDialog(message: 'Change Request Sent Successfully!');
+      Navigator.of(context).pop();
+    } else {
+      //Future
+      //    .delayed(Duration(seconds: 5))
+      //    .then((_) => _dialogService.errorStatusDialogComplete());
+      await dialogService.showErrorStatusDialog(message: 'Change Request Send Failed!');
+      Navigator.of(context).pop();
+    }
+  }
+
+  void _showJobAwardProgressDialog(DialogService dialogService) async {
+    StatusDialogResponse dialogResult = await dialogService.showStatusDialog(
       title: 'Job Award',
       message: 'Sending ...',
     );
@@ -121,29 +145,123 @@ class _JobAwardScreenState extends State<JobAwardScreen>
       //Future
       //    .delayed(Duration(seconds: 5))
       //    .then((_) => _dialogService.successfulStatusDialogComplete());
-      await _dialogService.showSuccessfulStatusDialog(message: 'Job Awarded Successfully!');
+      await dialogService.showSuccessfulStatusDialog(message: 'Job Awarded Successfully!');
       Navigator.of(context).pop();
     } else {
       //Future
       //    .delayed(Duration(seconds: 5))
       //    .then((_) => _dialogService.errorStatusDialogComplete());
-      await _dialogService.showErrorStatusDialog(message: 'Job Award Failed!');
+      await dialogService.showErrorStatusDialog(message: 'Job Award Failed!');
       Navigator.of(context).pop();
     }
   }
 
+  Quote findTraderBid(int traderId) => widget.job.bids.firstWhere((quote) => quote.traderId == traderId);
+
   Widget buildClientActionWidget(BuildContext context) {
-    if (widget.job.awarded == false) {
-      return JobActionsWidget(
-        job: widget.job,
-        traderName: widget.traderProfile.fullName,
-        onJobAwardPressed: (message) {
-          BlocProvider.of<JobBloc>(context)
-              .add(JobAwardEvent(
-              job: widget.job,
-              quote: widget.quote));
-        },
+    if (widget.job == null)
+      return SizedBox(height: 5.0);
+
+    if (widget.job.awarded != null
+        && widget.job.awarded == false) {
+        return BlocProvider.value(
+        value: BlocProvider.of<JobBloc>(context),
+        child: BlocListener<JobBloc, JobState>(
+          listener: (context, state) {
+            if (state is JobAwardComplete) {
+              _dialogService.statusDialogComplete(
+                  StatusDialogResponse(
+                      status: StatusDialogStatus.SUCCESSFUL
+                  )
+              );
+              setState(() {
+                widget.job.traderId = state.booking.traderId;
+                widget.job.awarded = true;
+              });
+            } else if (state is JobAwardFailed){
+              _dialogService.statusDialogComplete(
+                  StatusDialogResponse(
+                      status: StatusDialogStatus.FAILED
+                  )
+              );
+            } else if (state is JobAwarding){
+              _showJobAwardProgressDialog(_dialogService);
+            }
+          },
+          child: JobActionsWidget(
+            job: widget.job,
+            traderName: widget.traderProfile.fullName,
+            onJobAwardPressed: (message) {
+              BlocProvider.of<JobBloc>(context)
+                  .add(JobAwardEvent(
+                  job: widget.job,
+                  quote: widget.quote));
+            },
+          ),
+        ),
       );
+    } else if (widget.job.awarded != null
+        && widget.job.awarded == true) {
+      if (widget.job.bids != null
+          && widget.job.bids.length > 0
+      && widget.job.traderId != null
+      && widget.job.traderId > 0) {
+        Quote quote = findTraderBid(widget.job.traderId);
+        if (quote != null) {
+          return BlocProvider.value(
+            value: BlocProvider.of<ChangeRequestBloc>(context),
+            child: BlocListener<ChangeRequestBloc, ChangeRequestState>(
+              listener: (context, state) {
+                if (state is ChangeRequestAdded) {
+                  _dialogService.statusDialogComplete(
+                      StatusDialogResponse(
+                          status: StatusDialogStatus.SUCCESSFUL
+                      )
+                  );
+                  setState(() {
+                    if (widget.job.changeRequests == null)
+                      widget.job.changeRequests = [];
+                    widget.job.changeRequests.add(state.changeRequest);
+                  });
+                } else if (state is ChangeRequestAddFailed){
+                  _dialogService.statusDialogComplete(
+                      StatusDialogResponse(
+                          status: StatusDialogStatus.FAILED
+                      )
+                  );
+                } else if (state is ChangeRequestAdding){
+                  _showJobChnageRequestProgressDialog(_dialogService);
+                }
+              },
+              child: JobConfirmedActionWidget(
+                quote: quote,
+                onJobChange: (quote) async {
+                  JobChangeResponse response = await _dialogService.showJobChangeDialog(
+                    startDateTime: quote.deliveryDate,
+                    durationInHours: quote.dureationRequired,
+                    price: double.parse(quote.totalCost),
+                  );
+                  if (response != null && response.startDateTime != null
+                      && response.durationInHours != null && response.price != null) {
+                    ChangeRequest changeRequest = ChangeRequest(
+                      date: response.startDateTime,
+                      duration: response.durationInHours,
+                      traderId: quote.traderId,
+                      jobId: quote.jobId,
+                      status: 'Change Required',
+                    );
+                    BlocProvider.of<ChangeRequestBloc>(context)
+                        .add((ChangeRequestAddEvent(changeRequest: changeRequest )));
+                  }
+                },
+                onJobCencel: (quote) {
+
+                },
+              ),
+            ),
+          );
+        }
+      }
     }
 
     return SizedBox(height: 5.0);
@@ -159,101 +277,82 @@ class _JobAwardScreenState extends State<JobAwardScreen>
         controller: _controller,
         children: <Widget>[
           SingleChildScrollView(
-            child: Container(
-              margin: EdgeInsets.all(12.0),
-              padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
-              //color: Color.fromRGBO(255, 255, 255, 1),
-              child: Flex(
-                direction: Axis.vertical,
-                mainAxisAlignment: MainAxisAlignment.start,
-                crossAxisAlignment: CrossAxisAlignment.stretch,
-                children: <Widget>[
-                  JobViewWidget(job: widget.job),
-                  SizedBox(height: 20.0),
-                  //PostedByWidget(profile: widget.traderProfile),
-                  //PostedByWidget(clientId: widget.job.clientId),
-                  Container(
-                    //color: Colors.white,
-                    padding: EdgeInsets.all(12.0),
-                      child: Text(
-                        'Posted By',
-                        textAlign: TextAlign.left,
-                        style: theme.textTheme.subtitle1,
-                      ),
-                  ),
-                  //SizedBox(height: 10.0),
-                  QuoteCard(
-                    job: widget.job,
-                    quote: widget.quote,
-                    traderProfile: widget.traderProfile,
-                    backgroundColor: Colors.white,
-                    onQuotePressed: (job, quote, trader) {
-                      AppRouter.pushPage(
-                          context,
-                          DialogManager(
-                            child: ProfileScreen(
-                              profile: trader,
+            child: Column(
+            children: <Widget> [
+              Container(
+                margin: EdgeInsets.all(12.0),
+                padding: EdgeInsets.only(top: 12.0, bottom: 12.0),
+                //color: Color.fromRGBO(255, 255, 255, 1),
+                child: Flex(
+                  direction: Axis.vertical,
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  crossAxisAlignment: CrossAxisAlignment.stretch,
+                  children: <Widget>[
+                    JobViewWidget(job: widget.job),
+                    SizedBox(height: 10.0),
+                    //PostedByWidget(profile: widget.traderProfile),
+                    //PostedByWidget(clientId: widget.job.clientId),
+                    Container(
+                      //color: Colors.white,
+                      padding: EdgeInsets.all(12.0),
+                        child: Text(
+                          appType == AppType.TRADER
+                              ? LocalPeopleLocalizations.of(context).titlePostedBy
+                              : LocalPeopleLocalizations.of(context).titleAcceptedBid,
+                          textAlign: TextAlign.left,
+                          style: theme.textTheme.subtitle1,
+                        ),
+                    ),
+                    //SizedBox(height: 10.0),
+                    QuoteCard(
+                      job: widget.job,
+                      quote: widget.quote,
+                      traderProfile: widget.traderProfile,
+                      backgroundColor: Colors.white,
+                      onQuotePressed: (job, quote, trader) {
+                        AppRouter.pushPage(
+                            context,
+                            DialogManager(
+                              child: ProfileScreen(
+                                profile: trader,
+                              ),
                             ),
-                          ),
-                      );
-                    },
-                  ),
-                  SizedBox(height: 30.0),
-                  BlocProvider.value(
-                  value: BlocProvider.of<JobBloc>(context),
-                  child: BlocListener<JobBloc, JobState>(
-                    listener: (context, state) {
-                      DialogService _dialogService = sl<DialogService>();
-                      if (state is JobAwardComplete) {
-                        _dialogService.statusDialogComplete(
-                            StatusDialogResponse(
-                                status: StatusDialogStatus.SUCCESSFUL
-                            )
                         );
-                      } else if (state is JobAwardFailed){
-                        _dialogService.statusDialogComplete(
-                            StatusDialogResponse(
-                                status: StatusDialogStatus.FAILED
-                            )
-                        );
-                      } else if (state is JobAwarding){
-                        _showJobAwardProgressDialog(_dialogService);
-                      }
-                    },
-                    child: buildClientActionWidget(context),
-                    // child: BlocProvider(
-                    //   create: (context) => ProfileBloc(
-                    //     profileRepository: RepositoryProvider.of<ProfileRepository>(context),
-                    //     appType: appType,
-                    //     authLocalDataSource: sl<AuthLocalDataSource>(),
-                    //   )..add(ClientProfileGetEvent(id: widget.job.clientId)),
-                    //   child: BlocBuilder<ProfileBloc, ProfileState>(
-                    //       builder: (context, state) {
-                    //         if (state is ClientProfileGetLoaded) {
-                    //           return JobActionsWidget(
-                    //             job: widget.job,
-                    //             traderName: widget.traderProfile.fullName,
-                    //             clientName: state.profile.fullName,
-                    //             onJobAwardPressed: (message) {
-                    //               BlocProvider.of<JobBloc>(context)
-                    //                   .add(JobAwardEvent(
-                    //                   job: widget.job,
-                    //                   quote: widget.quote));
-                    //             },
-                    //           );
-                    //         } else if (state is ClientProfileGetFailed) {
-                    //           return ErrorWidget('Error $state');
-                    //         } else {
-                    //           return LoadingWidget();
-                    //         }
-                    //       }
-                    //   ),
-                    // ),
-                  ),
+                      },
+                    ),
+                    SizedBox(height: 10.0),
+                  ],
                 ),
-                  SizedBox(height: 10.0),
-                ],
               ),
+              buildClientActionWidget(context),
+              // BlocProvider.value(
+              //   value: BlocProvider.of<JobBloc>(context),
+              //   child: BlocListener<JobBloc, JobState>(
+              //     listener: (context, state) {
+              //       if (state is JobAwardComplete) {
+              //         _dialogService.statusDialogComplete(
+              //             StatusDialogResponse(
+              //                 status: StatusDialogStatus.SUCCESSFUL
+              //             )
+              //         );
+              //         setState(() {
+              //           widget.job.traderId = state.booking.traderId;
+              //           widget.job.awarded = true;
+              //         });
+              //       } else if (state is JobAwardFailed){
+              //         _dialogService.statusDialogComplete(
+              //             StatusDialogResponse(
+              //                 status: StatusDialogStatus.FAILED
+              //             )
+              //         );
+              //       } else if (state is JobAwarding){
+              //         _showJobAwardProgressDialog(_dialogService);
+              //       }
+              //     },
+              //     child: buildClientActionWidget(context),
+              //   ),
+              // ),
+            ]
             ),
           ),
           BlocProvider(

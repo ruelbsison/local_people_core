@@ -13,6 +13,8 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import '../blocs/location_bloc.dart';
 import 'package:local_people_core/quote.dart';
 import 'package:flutter_tags/flutter_tags.dart';
+import 'package:local_people_core/profile.dart';
+import '../../domain/entities/change_request.dart';
 
 typedef OnJobPressed<Job> = void Function(Job job);
 typedef OnJobLocationUpdateCallback<Location> = void Function(int jobId, Location location);
@@ -41,6 +43,7 @@ class _JobCardState extends State<JobCard> {
   List<Tag> statusTags = [];
   //List<Quote> bids = [];
   //QuoteBloc _quoteBloc;
+  int traderId = 0;
 
   Map<String, Color> colorMap = {
     'Awarded' : Color.fromRGBO(142, 209, 90, 1.0),
@@ -55,6 +58,14 @@ class _JobCardState extends State<JobCard> {
 
     print('JobCaed.initState');
 
+    try {
+      TraderProfile traderProfile = sl<TraderProfile>();
+      if (traderProfile != null)
+        traderId = traderProfile.id;
+    } catch (e) {
+      print(e.toString());
+    }
+
     initJobStatus();
     //_quoteBloc = BlocProvider.of<QuoteBloc>(context);
   }
@@ -65,6 +76,7 @@ class _JobCardState extends State<JobCard> {
     //initJobStatus();
   }
 
+  ChangeRequest findTraderChangeRequest(int traderId) => widget.job.changeRequests.firstWhere((changeRequest) => changeRequest.traderId == traderId);
   void initJobStatus() {
     //final appType = AppConfig.of(context).appType;
     tags.clear();
@@ -78,6 +90,16 @@ class _JobCardState extends State<JobCard> {
               element.name: Color.fromRGBO(170, 186, 205, 1.0)
             });
           });
+        }
+        if (widget.job.changeRequests != null
+            && widget.job.changeRequests.length > 0
+            && traderId > 0) {
+          ChangeRequest changeRequest = findTraderChangeRequest(traderId);
+          if (changeRequest != null
+              && changeRequest.status != null
+              && changeRequest.status.compareTo('Change Required') == 0) {
+            tags.add(Tag(id: tags.length, name: changeRequest.status));
+          }
         }
       //} else {
       //   if (widget.job.awarded != null && widget.job.awarded == true) {

@@ -1,6 +1,6 @@
 class ChangeRequest {
   int id;
-  String date;
+  DateTime date;
   int duration;
   String status;
   int traderId;
@@ -17,10 +17,7 @@ class ChangeRequest {
       this.jobId,
       this.createdAt,
       this.updatedAt})
-      : assert(date != null),
-        assert(duration != null),
-        assert(status != null),
-        assert(traderId != null),
+      : assert(traderId != null),
         assert(jobId != null);
 
 }

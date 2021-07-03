@@ -232,6 +232,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.4"
+  date_time_picker:
+    dependency: "direct main"
+    description:
+      name: date_time_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "2.0.0"
   deeply:
     dependency: transitive
     description:
@@ -450,6 +457,13 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_time_date_picker:
+    dependency: "direct main"
+    description:
+      name: flutter_time_date_picker
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "0.0.2"
   flutter_typeahead:
     dependency: "direct main"
     description:
@@ -1069,6 +1083,13 @@ packages:
       url: "https://pub.dartlang.org"
     source: hosted
     version: "0.3.15"
+  time_picker_widget:
+    dependency: "direct main"
+    description:
+      name: time_picker_widget
+      url: "https://pub.dartlang.org"
+    source: hosted
+    version: "1.0.0+9"
   timing:
     dependency: transitive
     description:

@@ -5,6 +5,7 @@ import 'package:meta/meta.dart';
 import 'tag.dart';
 import 'location.dart';
 import 'package.dart';
+import 'change_request.dart';
 import 'package:local_people_core/quote.dart';
 import 'package:local_people_core/core.dart';
 
@@ -31,6 +32,7 @@ class Job extends Object implements Comparable {
   List<Quote> bids;
   List<QuoteRequest> quoteRequests;
   Package package;
+  List<ChangeRequest> changeRequests;
 
   Job({
     @required this.id,
@@ -51,9 +53,10 @@ class Job extends Object implements Comparable {
     this.isPosted = true,
     this.isConfirmed = false,
     this.isCompleted = false,
-    this.bids = null,
-    this.quoteRequests = null,
-    this.package = null,
+    this.bids = const [],
+    this.quoteRequests = const [],
+    this.package,
+    this.changeRequests = const [],
     this.entityStatus = EntityStatus.ENTIRY_STATUS_NONE,
   });
 

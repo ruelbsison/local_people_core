@@ -318,6 +318,48 @@ class LocalPeopleLocalizations {
     locale: locale.toString(),
   );
 
+  String get titleJobConfirmed => Intl.message(
+    'Job Confirmed',
+    name: 'titleJobConfirmed',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleStart => Intl.message(
+    'Start',
+    name: 'titleStart',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleDuration => Intl.message(
+    'Duration',
+    name: 'titleDuration',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleDepositRequired => Intl.message(
+    'Deposit Required',
+    name: 'titleDepositRequired',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titlePostedBy => Intl.message(
+    'Posted By',
+    name: 'titlePostedBy',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get titleAcceptedBid => Intl.message(
+    'Accepted Bid',
+    name: 'titleAcceptedBid',
+    args: [],
+    locale: locale.toString(),
+  );
+
   String get btnTitleCancelBid => Intl.message(
     'Cancel Bid',
     name: 'btnTitleCancelBid',
@@ -342,6 +384,20 @@ class LocalPeopleLocalizations {
   String get btnTitleAwaitingDeposit => Intl.message(
     'Awaiting Deposit',
     name: 'btnTitleAwaitingDeposit',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitleEditJob => Intl.message(
+    'Edit Job',
+    name: 'btnTitleEditJob',
+    args: [],
+    locale: locale.toString(),
+  );
+
+  String get btnTitleCancelJob => Intl.message(
+    'Cancel Job',
+    name: 'btnTitleCancelJob',
     args: [],
     locale: locale.toString(),
   );

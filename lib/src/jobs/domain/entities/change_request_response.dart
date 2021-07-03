@@ -8,7 +8,7 @@ class ChangeRequestResponse {
   void fromModel(ChangeRequestModel model) {
     changeRequest = ChangeRequest (
       id : model.id ,
-      date : model.date ,
+      date : DateTime.parse(model.date),
       duration : model.duration ,
       status : model.status ,
       traderId : model.traderId ,
@@ -21,7 +21,7 @@ class ChangeRequestResponse {
   static ChangeRequestModel fromChangeRequest(ChangeRequest changeRequest) {
     return ChangeRequestModel (
       id : changeRequest.id ,
-      date : changeRequest.date ,
+      date : changeRequest.date.toString(),
       duration : changeRequest.duration ,
       status : changeRequest.status ,
       traderId : changeRequest.traderId ,

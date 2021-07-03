@@ -27,3 +27,27 @@ class JobAwardResponse {
   });
 }
 
+class JobChangeRequest {
+  final DateTime startDateTime;
+  final int durationInHours;
+  final double price;
+
+  JobChangeRequest({
+    @required this.startDateTime,
+    @required this.durationInHours,
+    @required this.price,
+  });
+}
+
+class JobChangeResponse {
+  final DateTime startDateTime;
+  final int durationInHours;
+  final double price;
+
+  JobChangeResponse({
+    @required this.startDateTime,
+    @required this.durationInHours,
+    @required this.price,
+  });
+}
+

@@ -255,6 +255,36 @@ class DialogService {
       _jobAwardDialogCompleter = null;
     }
   }
-  
+
+  /* --------------------------------------------------------------------------------------*/
+  Function(JobChangeRequest) _showJobChangeDialogListener;
+  Completer<JobChangeResponse> _jobChangeDialogCompleter;
+
+  /// Registers a callback function. Typically to show the dialog
+  void registerJobChangeDialogListener(Function(JobChangeRequest) showJobChangeDialogListener) {
+    _showJobChangeDialogListener = showJobChangeDialogListener;
+  }
+
+  Future<JobChangeResponse> showJobChangeDialog({
+    DateTime startDateTime,
+    int durationInHours,
+    double price,
+  }) {
+    _jobChangeDialogCompleter = Completer<JobChangeResponse>();
+    _showJobChangeDialogListener(JobChangeRequest(
+      startDateTime: startDateTime,
+      durationInHours: durationInHours,
+      price: price,
+    ));
+    return _jobChangeDialogCompleter.future;
+  }
+
+  /// Completes the _dialogCompleter to resume the Future's execution call
+  void jobChangeDialogComplete(JobChangeResponse response) {
+    if (_jobChangeDialogCompleter != null) {
+      _jobChangeDialogCompleter.complete(response);
+      _jobChangeDialogCompleter = null;
+    }
+  }
 
 }

@@ -55,6 +55,12 @@ class MessageLookup extends MessageLookupByLibrary {
     'titlePlaceBid': MessageLookupByLibrary.simpleMessage('Place Bid'),
     'titleRequestVisit': MessageLookupByLibrary.simpleMessage('Request Visit'),
     'titleBidPlaced': MessageLookupByLibrary.simpleMessage('Bid Placed'),
+    'titleJobConfirmed': MessageLookupByLibrary.simpleMessage('Job Confirmed'),
+    'titleStart': MessageLookupByLibrary.simpleMessage('Start'),
+    'titleDuration': MessageLookupByLibrary.simpleMessage('Duration'),
+    'titleDepositRequired': MessageLookupByLibrary.simpleMessage('Deposit Required'),
+    'titlePostedBy': MessageLookupByLibrary.simpleMessage('Posted By'),
+    'titleAcceptedBid': MessageLookupByLibrary.simpleMessage('Accepted Bid'),
     'btnTitleCancel': MessageLookupByLibrary.simpleMessage('Cancel'),
     'btnTitlePost': MessageLookupByLibrary.simpleMessage('Post'),
     'btnTitleSave': MessageLookupByLibrary.simpleMessage('Save'),
@@ -64,5 +70,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'btnTitleResponsePending': MessageLookupByLibrary.simpleMessage('Response Pending'),
     'btnTitleJobAwarded': MessageLookupByLibrary.simpleMessage('Job Awarded'),
     'btnTitleAwaitingDeposit': MessageLookupByLibrary.simpleMessage('Awaiting Deposit'),
+    'btnTitleEditJob': MessageLookupByLibrary.simpleMessage('Edit Job'),
+    'btnTitleCancelJob': MessageLookupByLibrary.simpleMessage('Cancel Job'),
   };
 }

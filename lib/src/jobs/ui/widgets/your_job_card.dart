@@ -31,7 +31,7 @@ class _YourJobCardState extends State<YourJobCard> {
   //List<Quote> bids = [];
 
   Map<String, Color> colorMap = {
-    'Job Awarded' : Color.fromRGBO(142, 209, 90, 1.0),
+    'Awarded' : Color.fromRGBO(142, 209, 90, 1.0),
     'Confirmed' : Color.fromRGBO(142, 209, 90, 1.0),
     'Job Posted' : Color.fromRGBO(170, 186, 205, 1.0),
     'Awaiting Response' : Color.fromRGBO(170, 186, 205, 1.0),
@@ -108,8 +108,9 @@ class _YourJobCardState extends State<YourJobCard> {
         //}
       },
       child: Container(
-        padding: EdgeInsets.only(top: 12.0, bottom: 12.0, right: 12.0), //EdgeInsets.all(12.0),
-        margin: EdgeInsets.only(top: 12.0, bottom: 12.0),
+        //padding: EdgeInsets.all(12),
+        padding: EdgeInsets.only(top: 8.0, bottom: 8.0), //EdgeInsets.all(12.0),
+        margin: EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4, right: 4),
         decoration: BoxDecoration(
           color: Color.fromRGBO(255, 255, 255, 1.0),
           borderRadius: BorderRadius.circular(10.0),

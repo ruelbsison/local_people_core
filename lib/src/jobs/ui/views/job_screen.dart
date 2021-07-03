@@ -77,6 +77,9 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
   //LocationBloc _locationBloc;
   QuoteBloc _quoteBloc;
 
+  bool firstBuild = true;
+
+  AppBarWidget appBarWidget;
   @override
   void didChangeDependencies() {
     // try {
@@ -95,6 +98,7 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
     // } catch (e) {
     //   print(e.toString());
     // }
+    //firstBuild = false;
     print('JobScreen.didChangeDependencies');
   }
 
@@ -113,19 +117,15 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
     _controller = TabController(length: 2, vsync: this);
     // _controller.addListener(() {
     //   if (_controller.index == 0) {
-    //     if (lastJobsFilter.compareTo(filterValue) != 0) {
+    //     if (firstBuild == true) {
     //       setState(() {
-    //         jobs.clear();
-    //         jobs = filterJobs(allJobs);
-    //         lastJobsFilter = filterValue;
+    //         totalJobsOppurtunities = jobs.length;
     //       });
     //     }
     //   } else {
-    //     if (lastRequestedJobsFilter.compareTo(filterValue) != 0) {
+    //     if (firstBuild == true) {
     //       setState(() {
-    //         requestedJobs.clear();
-    //         requestedJobs = filterJobs(allRequestedJobs);
-    //         lastRequestedJobsFilter = filterValue;
+    //         totalJobsOppurtunities = requestedJobs.length;
     //       });
     //     }
     //   }
@@ -137,99 +137,103 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
     print('JobScreen.build');
-    // if (lastJobsFilter.compareTo(filterValue) != 0) {
-    //   setState(() {
-    //     if (_controller.index == 0) {
-    //       jobs.clear();
-    //       jobs = filterJobs(allJobs);
-    //       lastJobsFilter = filterValue;
-    //     }
-    //   });
+    print('this.mounted: ' + this.mounted.toString());
+    // if (_controller.index == 0) {
+    //   if (firstBuild == true) {
+    //     totalJobsOppurtunities = jobs.length;
+    //   } else {
+    //     setState(() {
+    //       totalJobsOppurtunities = jobs.length;
+    //     });
+    //   }
     // }
-    // if (lastRequestedJobsFilter.compareTo(filterValue) != 0) {
-    //   setState(() {
-    //     if (_controller.index == 1) {
-    //       requestedJobs.clear();
-    //       requestedJobs = filterJobs(allRequestedJobs);
-    //       lastRequestedJobsFilter = filterValue;
-    //     }
-    //   });
+    // if (_controller.index == 0) {
+    //   totalJobsOppurtunities = jobs.length;
+    // } else {
+    //   totalJobsOppurtunities = requestedJobs.length;
     // }
-
+    //firstBuild = false;
+    // if (_controller.index == 0) {
+    //       totalJobsOppurtunities = jobs.length;
+    // } else {
+    //       totalJobsOppurtunities = requestedJobs.length;
+    // }
     //final headline6Style = Theme.of(context).textTheme.headline6;
-    final appCType = AppConfig.of(context).appType;
+
+    // return BlocProvider.value(
+    //   value: BlocProvider.of<JobBloc>(context),
+    //   child: BlocListener<JobBloc, JobState>(
+    //       listener: (BuildContext context, JobState state) async {
+    //         if (state is JobLoaded) {
+    //           List<Job> jobList = filterJobs(state.jobs);
+    //           totalJobsOppurtunities = jobList.length;
+    //           //setState(() {
+    //             appBarWidget.subTitle = totalJobsOppurtunities.toString() + " Opportunities in your area today";
+    //           //});
+    //         } else if (state is OpportunitiesLoaded) {
+    //           List<Job> jobList = filterJobs(state.jobs);
+    //           totalJobsOppurtunities = jobList.length;
+    //           //setState(() {
+    //             appBarWidget.subTitle = totalJobsOppurtunities.toString() + " Opportunities in your area today";
+    //           //});
+    //         }
+    //       },
+    //       child: Scaffold(
+    //         appBar: buildAppBar(context),
+    //         body: buildBody(context),
+    //       ),
+    //   ),
+    // );
     return Scaffold(
-      appBar: AppBarWidget(
-        appBarPreferredSize: (appCType == AppType.TRADER
-            ? Size.fromHeight(260.0) : Size.fromHeight(210.0)),
-        showFilter: true,
-        filterValue: filterValue,
-        filterItems: (appCType == AppType.TRADER
-            ? _traderFilterItem
-            : _clientFilterItem),
-        onFilterValueChanged: onFilterValueChanged,
-        title: (appCType == AppType.TRADER
-            ? LocalPeopleLocalizations.of(context).menuTitleOpportunities
-            : LocalPeopleLocalizations.of(context).menuTitleYourJobs),
-        subTitle: totalJobsOppurtunities != null
-            ? totalJobsOppurtunities.toString() + " Opportunities in your area today" : '',
-        searchTitle: 'Search Opportunities',
-        appBar: AppBar(),
-        bottom: buildAppBarBottom(context),
-        // bottom: PreferredSize(
-        //   preferredSize: Size.fromHeight(1.0),
-        //   child: Container(
-        //     decoration: BoxDecoration(
-        //       color: Colors.white,
-        //       border: Border(
-        //         bottom: BorderSide(
-        //           color: Color.fromRGBO(186, 207, 216, 1),
-        //         ),
-        //       ),
-        //     ),
-        //   ),
-        // ),
-        // actions: [
-        //   IconButton(
-        //     icon: Icon(Icons.search),
-        //     onPressed: () {},
-        //   ),
-        // ],
-      ),
+      appBar: buildAppBar(context),
       body: buildBody(context),
-      // body: MultiBlocProvider(
-      //   providers: [
-      //     BlocProvider(
-      //       create: (context) => JobBloc(
-      //         jobRepository: RepositoryProvider.of<JobRepository>(context),
-      //         tagRepository: RepositoryProvider.of<TagRepository>(context),
-      //         locationRepository: RepositoryProvider.of<LocationRepository>(context),
-      //         quoteRepository: RepositoryProvider.of<QuoteRepository>(context),
-      //         quoteRequestRepository: RepositoryProvider.of<QuoteRequestRepository>(context),
-      //         appType: AppConfig.of(context).appType,
-      //         authLocalDataSource: sl<AuthLocalDataSource>(),
-      //       ),
-      //     ),
-      //     // BlocProvider(
-      //     //   create: (context) => QuoteBloc(
-      //     //     quoteRepository: RepositoryProvider.of<QuoteRepository>(context),
-      //     //     authLocalDataSource: sl<AuthLocalDataSource>(),
-      //     //   ),
-      //     // ),
-      //     BlocProvider(
-      //       create: (context) => QuoteRequestBloc(
-      //         quoteRequestRepository: RepositoryProvider.of<QuoteRequestRepository>(context),
-      //       ),
-      //     ),
-      //   ],
-      //   child: buildBody(context),
-      // ),
-      // body: BlocProvider.value(value: context.read<JobBloc>(),
-      //   child: BlocProvider.value(value: context.read<QuoteRequestBloc>(),
-      //     child: buildBody(context),
-      //   )
-      // ),
     );
+  }
+
+  Widget buildAppBar(BuildContext context) {
+    print('JobScreen.buildAppBar');
+    final appCType = AppConfig.of(context).appType;
+    appBarWidget = AppBarWidget(
+      appBarPreferredSize: (appCType == AppType.TRADER
+          ? Size.fromHeight(240.0) : Size.fromHeight(188.0)),
+      showFilter: true,
+      filterValue: filterValue,
+      filterItems: (appCType == AppType.TRADER
+          ? _traderFilterItem
+          : _clientFilterItem),
+      onFilterValueChanged: onFilterValueChanged,
+      title: (appCType == AppType.TRADER
+          ? LocalPeopleLocalizations.of(context).menuTitleOpportunities
+          : LocalPeopleLocalizations.of(context).menuTitleYourJobs),
+      subTitle: totalJobsOppurtunities.toString() + " Opportunities in your area today",
+      //subTitle: (_controller.index == 0
+      //    ? jobs.length.toString() : _controller.index == 1
+      //    ? requestedJobs.length.toString() : '')
+      //    + " Opportunities in your area today",
+      searchTitle: 'Search Opportunities',
+      appBar: AppBar(),
+      bottom: buildAppBarBottom(context),
+      // bottom: PreferredSize(
+      //   preferredSize: Size.fromHeight(1.0),
+      //   child: Container(
+      //     decoration: BoxDecoration(
+      //       color: Colors.white,
+      //       border: Border(
+      //         bottom: BorderSide(
+      //           color: Color.fromRGBO(186, 207, 216, 1),
+      //         ),
+      //       ),
+      //     ),
+      //   ),
+      // ),
+      // actions: [
+      //   IconButton(
+      //     icon: Icon(Icons.search),
+      //     onPressed: () {},
+      //   ),
+      // ],
+    );
+    return appBarWidget;
   }
 
   PreferredSizeWidget buildAppBarBottom(BuildContext context) {
@@ -289,6 +293,7 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
   }
 
   Widget buildBody(BuildContext context) {
+    print('JobScreen.buildBody');
     final theme = Theme.of(context);
     final appType = AppConfig.of(context).appType;
     return SafeArea(
@@ -305,9 +310,13 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
   }
 
   Widget buildRequestedJobsBody(BuildContext context) {
-    if (requestedJobs != null && requestedJobs.length > 0)
+    print('JobScreen.buildRequestedJobsBody');
+    if (requestedJobs != null && requestedJobs.length > 0) {
+      //firstBuild = true;
       return buildRequestedJobList(context);
-
+    }
+    //if (_controller.index == 1)
+   //   firstBuild = false;
     BlocProvider.of<QuoteRequestBloc>(context)
       .add(QuoteRequestLoadEvent(traderId: traderId));
     return BlocProvider.value(
@@ -332,9 +341,6 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
                 }
               }
             });
-            //requestedJobs = filterJobs(allRequestedJobs);
-            //lastRequestedJobsFilter = filterValue;
-            totalJobsOppurtunities = requestedJobs.length;
             return buildRequestedJobList(context);
           } else if (state is QuoteRequestLoadFailed) {
             print('Error $state');
@@ -349,14 +355,16 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
   }
 
   Widget buildRequestedJobList(BuildContext context) {
+    print('JobScreen.buildRequestedJobList');
     requestedJobs.clear();
     requestedJobs = filterJobs(allRequestedJobs);
     lastRequestedJobsFilter = filterValue;
-    if (_controller.index == 0) {
-      //setState(() {
-        totalJobsOppurtunities = requestedJobs.length;
-      //});
-    }
+
+    // if (_controller.index == 1 && totalJobsOppurtunities != requestedJobs.length) {
+    //   totalJobsOppurtunities = requestedJobs.length;
+    //   //appBarWidget.setSubTitle(totalJobsOppurtunities.toString() + " Opportunities in your area today");
+    // }
+
     return SafeArea(
       child: RefreshIndicator(
         onRefresh: () async {
@@ -364,6 +372,7 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
             allRequestedJobs.clear();
             requestedJobs.clear();
             totalJobsOppurtunities = requestedJobs.length;
+            firstBuild = true;
           });
           try {
             TraderProfile traderProfile = sl<TraderProfile>();
@@ -384,16 +393,19 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
   }
 
   Widget buildJobList(BuildContext context) {
+    print('JobScreen.buildJobList');
     jobs.clear();
     jobs = filterJobs(allJobs);
     lastJobsFilter = filterValue;
+    print('this.mounted: ' + this.mounted.toString());
+    //print('appBarWidget.mounted: ' + appBarWidget.mounted.toString());
 
-    if (_controller.index == 0) {
-      //setState(() {
-        totalJobsOppurtunities = jobs.length;
-      //});
-    }
-    final appCType = AppConfig.of(context).appType;
+    // if (_controller.index == 0 && totalJobsOppurtunities != jobs.length) {
+    //   totalJobsOppurtunities = jobs.length;
+    //   //appBarWidget.setSubTitle(totalJobsOppurtunities.toString() + " Opportunities in your area today");
+    // }
+
+    final appType = AppConfig.of(context).appType;
     //var jobProvider = context.watch<JobProvider>();
     //var jobProvider = Provider.of<JobProvider>(context, listen: false);
     return SafeArea(
@@ -404,8 +416,9 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
             allJobs.clear();
             jobs.clear();
             totalJobsOppurtunities = jobs.length;
+            firstBuild = true;
           });
-          if (appCType == AppType.CLIENT)
+          if (appType == AppType.CLIENT)
             context.read<JobBloc>().add(RefreshJobs());
           else
             context.read<JobBloc>().add(RefreshOpportunities());
@@ -481,9 +494,13 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
   }
 
   Widget buildJobBody(BuildContext context) {
-    if (allJobs != null && allJobs.length > 0)
+    print('JobScreen.buildJobBody');
+    if (allJobs != null && allJobs.length > 0) {
+      firstBuild = true;
       return buildJobList(context);
-
+    }
+    //if (_controller.index == 0)
+    //  firstBuild = false;
     final appCType = AppConfig.of(context).appType;
     if (appCType == AppType.CLIENT) {
       //if (Provider.of<JobProvider>(context, listen: false).filteredJobs.length == 0)
@@ -499,28 +516,12 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
           if (state is JobLoaded) {
             allJobs.clear();
             allJobs.addAll(state.jobs);
-            // jobs.clear();
-            // jobs = filterJobs(allJobs);
-            // lastJobsFilter = filterValue;
-            // if (jobs.length > 0) {
-            //   Job job = jobs[0];
-            //   //BlocProvider.of<QuoteBloc>(context)
-            //   //    .add(QuoteJobLoadEvent(id: job.id));
-            // }
-            totalJobsOppurtunities = jobs.length;
+            //firstBuild = false;
             return buildJobList(context);
           } else if (state is OpportunitiesLoaded) {
             allJobs.clear();
             allJobs.addAll(state.jobs);
-            // jobs.clear();
-            // jobs = filterJobs(allJobs);
-            // lastJobsFilter = filterValue;
-            // if (jobs.length > 0) {
-            //   Job job = jobs[0];
-            //   BlocProvider.of<QuoteBloc>(context)
-            //       .add(QuoteJobLoadEvent(id: job.id));
-            // }
-            totalJobsOppurtunities = jobs.length;
+            //firstBuild = false;
             return buildJobList(context);
           } else if (state is JobNotLoaded) {
             print('Error $state');

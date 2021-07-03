@@ -30,6 +30,7 @@ export './src/jobs/data/repositories/change_request_repository_impl.dart';
 export './src/jobs/data/datasources/change_request_rest_api_client.dart';
 export './src/jobs/data/datasources/change_request_remote_data_source.dart';
 export './src/jobs/data/datasources/change_request_remote_data_source_impl.dart';
+export './src/jobs/ui/blocs/change_request_bloc.dart';
 
 export './src/jobs/domain/entities/package.dart';
 export './src/jobs/domain/entities/package_list_response.dart';

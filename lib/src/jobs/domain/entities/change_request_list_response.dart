@@ -14,7 +14,7 @@ class ChangeRequestListResponse {
       ChangeRequestModel model = listIter.current;
       ChangeRequest changeRequest = ChangeRequest(
           id : model.id ,
-          date : model.date ,
+          date : DateTime.parse(model.date) ,
           duration : model.duration ,
           status : model.status ,
           traderId : model.traderId ,

@@ -41,6 +41,7 @@ class _DialogManagerState extends State<DialogManager> {
     _dialogService.registerBookPackageDialogListener(_showBookPackageDialog);
 
     _dialogService.registerJobAwardDialogListener(_showJobAwardDialog);
+    _dialogService.registerJobChangeDialogListener(_showJobChangeDialog);
   }
 
   @override
@@ -136,13 +137,15 @@ class _DialogManagerState extends State<DialogManager> {
     );
   }
 
-  void _showJobChangeDialog(Job job) {
+  void _showJobChangeDialog(JobChangeRequest request) {
     showDialog(
       context: context,
       builder: (context) => AppDialog(
         title: 'Change Job Details',
         child: JobChangeWidget(
-          job: job,
+          startDateTime: request.startDateTime,
+          durationInHours: request.durationInHours,
+          price: request.price,
         ),
       ),
     );

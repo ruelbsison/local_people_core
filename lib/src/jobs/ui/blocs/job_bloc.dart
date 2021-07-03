@@ -6,6 +6,7 @@ import '../../domain/repositories/job_repository.dart';
 import '../../domain/entities/job_response.dart';
 import '../../domain/entities/package_response.dart';
 import '../../domain/entities/job_list_response.dart';
+import '../../domain/entities/change_request_list_response.dart';
 import '../../domain/repositories/tag_repository.dart';
 import '../../domain/entities/tag_response.dart';
 import '../../domain/entities/location_response.dart';
@@ -17,6 +18,7 @@ import '../../domain/entities/tag.dart';
 import '../../domain/repositories/location_repository.dart';
 import '../../domain/repositories/package_repository.dart';
 import '../../domain/repositories/booking_repository.dart';
+import '../../domain/repositories/change_request_repository.dart';
 import 'package:local_people_core/auth.dart';
 import 'package:local_people_core/quote.dart';
 
@@ -32,7 +34,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
   final QuoteRepository quoteRepository;
   final QuoteRequestRepository quoteRequestRepository;
   final BookingRepository bookingRepository;
-  //final PackageRepository packageRepository;
+  final ChangeRequestRepository changeRequestRepository;
 
   // Create a broadcast controller that allows this stream to be listened
   // to multiple times. This is the primary, if not only, type of stream you'll be using.
@@ -51,6 +53,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
     //@required this.packageRepository,
     @required this.authLocalDataSource,
     @required this.bookingRepository,
+    @required this.changeRequestRepository,
   }): super(JobLoading());
 
   @override
@@ -124,6 +127,7 @@ class JobBloc extends Bloc<JobEvent, JobState> {
   Future<Job> getRelatedJobData(Job job) async  {
     int jobId = job.id;
 
+    try {
       QuoteListResponse qlRes = await quoteRepository.listJobQuotes(job.id);
       if (qlRes == null) {
         //yield JobGetFailed();
@@ -132,7 +136,12 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       } else if (qlRes.quotes != null) {
         job.bids = qlRes.quotes;
       }
+    } catch (e) {
+      print(e.toString());
+      //yield JobChangeRequestFailed(e.toString());
+    }
 
+    try {
       QuoteRequestListResponse qrRes = await quoteRequestRepository.listJobQuoteRequests(job.id);
       if (qrRes == null) {
         //yield JobGetFailed();
@@ -141,6 +150,26 @@ class JobBloc extends Bloc<JobEvent, JobState> {
       } else if (qrRes.quoteRequests != null && qrRes.quoteRequests.length > 0) {
         job.quoteRequests = qrRes.quoteRequests;
       }
+    } catch (e) {
+    print(e.toString());
+    //yield JobChangeRequestFailed(e.toString());
+    }
+
+    try {
+      ChangeRequestListResponse changeResponse = await changeRequestRepository.listJobChangeRequests(jobId);
+      if (changeResponse == null) {
+        //yield JobChangeRequestFailed('');
+      } else if (changeResponse.exception != null) {
+        //yield JobChangeRequestFailed(response.exception.toString());
+      } else if (changeResponse.changeRequests != null) {
+        job.changeRequests = changeResponse.changeRequests;
+        //yield JobChangeRequestLoaded(response.changeRequests);
+      }
+    } catch (e) {
+      print(e.toString());
+      //yield JobChangeRequestFailed(e.toString());
+    }
+
       if (job.location != null && job.location.id > 0){
         try {
           LocationResponse locResponse = await locationRepository.showLocation(job.location.id);
