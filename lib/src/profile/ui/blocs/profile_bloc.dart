@@ -178,7 +178,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (response.exception is ServerException) {
           ServerException sex = response.exception;
           if (sex.getErrorCode() != null && sex.getErrorCode() == 404) {
-            yield ProfileDoesNotExists();
+            yield ProfileAccessExpired();
             return;
           }
         }
@@ -236,7 +236,7 @@ class ProfileBloc extends Bloc<ProfileEvent, ProfileState> {
         if (response.exception is ServerException) {
           ServerException sex = response.exception;
           if (sex.getErrorCode() != null && sex.getErrorCode() == 404) {
-            yield ProfileDoesNotExists();
+            yield ProfileAccessExpired();
             return;
           }
         }

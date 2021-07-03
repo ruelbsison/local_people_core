@@ -199,3 +199,5 @@ class TraderProfileGetFailed extends ProfileState {
     return 'ClientProfileGetFailed{e: $e}';
   }
 }
+
+class ProfileAccessExpired extends ProfileState {}
