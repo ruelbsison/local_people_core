@@ -96,6 +96,7 @@ class _MessageInputFieldState extends State<MessageInputField> {
                     //SizedBox(width: kDefaultPadding / 4),
                     Expanded(
                       child: TextField(
+                        autofocus: true,
                         focusNode: _focusNodeSendMessage,
                         controller: _sendMessageTextController,
                         decoration: InputDecoration(
