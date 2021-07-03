@@ -3,13 +3,14 @@ import 'package:flutter/material.dart';
 import 'logo_widget.dart';
 import '../utils/date_format.dart';
 import 'spacer_widget.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 typedef FilterValueChanged = void Function(String);
 
-class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
+class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final Color backgroundColor = Colors.white;
   final String title;
-  final String subTitle;
+  String subTitle;
   final AppBar appBar;
   final List<Widget> actions;
   final PreferredSizeWidget bottom;
@@ -19,10 +20,10 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   final String filterValue;
   final FilterValueChanged onFilterValueChanged;
   final String searchTitle;
-
+  Size preferredSize;// = const Size.fromHeight(260.0);
   /// you can add more fields that meet your needs
 
-  const AppBarWidget({
+  AppBarWidget({
     Key key,
     this.title = null,
     this.appBar,
@@ -35,8 +36,15 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
     this.filterValue = '',
     this.onFilterValueChanged = null,
     this.searchTitle = null,
-  }) : super(key: key);
+  }) : super(key: key) {
+    preferredSize = appBarPreferredSize;
+  }
 
+  @override
+  _AppBarWidgetState createState() => _AppBarWidgetState();
+}
+
+class _AppBarWidgetState extends State<AppBarWidget> {
   @override
   Widget build(BuildContext context) {
     final theme = Theme.of(context);
@@ -48,7 +56,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         .padding
         .top;
     return PreferredSize(
-      preferredSize: appBarPreferredSize,
+      preferredSize: widget.appBarPreferredSize,
       child: AppBar(
         //automaticallyImplyLeading: false, // Don't show the leading button
         // leading: LogoWidget(
@@ -64,12 +72,12 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         ),
         titleSpacing: 0,
         centerTitle: false,
-        actions: actions,
+        actions: widget.actions,
         //expandedHeight: 300.0,
         flexibleSpace: PreferredSize(
-          preferredSize: Size(size.width, appBarPreferredSize.height),
+          preferredSize: Size(size.width, widget.appBarPreferredSize.height),
           child: Container(
-          padding: EdgeInsets.only(top: statusbarHeight + 50),
+          padding: EdgeInsets.only(top: statusbarHeight + 40),
           child: Flex(
             direction: Axis.vertical,
             mainAxisSize: MainAxisSize.max,
@@ -77,20 +85,20 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               SizedBox(height: 5),
-              if (title != null || subTitle != null || showFilter == true)
+              if (widget.title != null || widget.subTitle != null || widget.showFilter == true)
                 buildTitleContent(context),
-              if (title != null || subTitle != null || showFilter == true)
+              if (widget.title != null || widget.subTitle != null || widget.showFilter == true)
                 SizedBox(height: 3),
-              if (subTitle != null)
+              if (widget.subTitle != null)
                 buildSubTitle(context),
-              if (subTitle != null)
+              if (widget.subTitle != null)
                 SizedBox(height: 3),
-              if (searchTitle != null)
+              if (widget.searchTitle != null)
                 buildSearchContent(context),
-              if (searchTitle != null)
+              if (widget.searchTitle != null)
                 SizedBox(height: 3),
-              if (bottom != null)
-                bottom,
+              if (widget.bottom != null)
+                widget.bottom,
               //SizedBox(height: 10),
             ],
           ),
@@ -110,7 +118,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
         color: Colors.white,
       ),
       child: Text(
-        subTitle, //"140 Opportunities in your area today  ",
+        widget.subTitle, //"140 Opportunities in your area today  ",
         style: theme.textTheme.bodyText1,
       ),
     );
@@ -119,42 +127,38 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   Widget buildSearchContent(BuildContext context) {
     final theme = Theme.of(context);
     return Container(
-      padding: EdgeInsets.all(12),
+      padding: EdgeInsets.all(8),
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(8),
         color: Colors.white,
       ),
       child: Container(
         decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(14),
+          borderRadius: BorderRadius.circular(8),
           color: Color(0xffeff4f6),
         ),
         child: TextField(
           decoration: InputDecoration(
             hintStyle: theme.textTheme.bodyText2,
-            hintText: searchTitle, //'Search Opportunities',
-            suffixIcon: Icon(
-                Icons.search,
-              color: Color(0xffff6361),
+            hintText: widget.searchTitle, //'Search Opportunities',
+            suffixIcon: SvgPicture.asset(
+              'packages/local_people_core/assets/images/search-pink.svg',
+              fit: BoxFit.scaleDown,
+              height: 30,
+              width: 30,
             ),
-            // suffix:  Stack (
-            //   children: [
-            //     Container(
-            //       width: 30,
-            //       height: 30,
-            //       decoration: BoxDecoration(
-            //         borderRadius: BorderRadius.circular(35),
-            //         color: Color(0xffff6361),
-            //       ),
-            //       child: Icon(
-            //         Icons.search,
-            //         color: Color(0xffff6361),
-            //       ),
-            //     ),
-            //   ],
+            // suffixIcon: Icon(
+            //     Icons.search,
+            //   color: Color(0xffff6361),
+            // ),
+            // suffix: Center (
+            //   child: Icon(
+            //     Icons.search,
+            //     color: Color(0xffff6361),
+            //   ),
             // ),
             border: InputBorder.none,
-            contentPadding: EdgeInsets.all(12),
+            contentPadding: EdgeInsets.all(14),
             ),
           //textAlign: TextAlign.center,
           style: theme.textTheme.bodyText2,
@@ -165,7 +169,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
 
   Widget buildTitleContent(BuildContext context) {
     final theme = Theme.of(context).textTheme;
-    if (showFilter == true) {
+    if (widget.showFilter == true) {
       return Row(
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.center,
@@ -176,7 +180,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
             child: Container(
               padding: EdgeInsets.only(left: 12),
               child: Text(
-                title,
+                widget.title,
                 textAlign: TextAlign.left,
                 style: theme.headline6,
               ),
@@ -193,16 +197,16 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
                   isExpanded: true,
                   hint: Text("Filter by"),
                   focusColor: Color.fromRGBO(96, 106, 129, 1.0),
-                  items: filterItems.map((String value) {
+                  items: widget.filterItems.map((String value) {
                     return DropdownMenuItem(
                       value: value,
                       child: Text(value, style: theme.subtitle2),
                     );
                   }).toList(),
-                  value: filterValue,
+                  value: widget.filterValue,
                   onChanged: (newValue) {
-                    if (onFilterValueChanged != null) {
-                      onFilterValueChanged(newValue);
+                    if (widget.onFilterValueChanged != null) {
+                      widget.onFilterValueChanged(newValue);
                     }
                     // setState(() {
                     //   _sortValue = newValue;
@@ -214,11 +218,11 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
           ),
         ],
       );
-    } else if (subTitle != null) {
+    } else if (widget.subTitle != null) {
       return Container(
         padding: EdgeInsets.only(left: 12),
         child: Text(
-          subTitle != null ? subTitle : '',
+          widget.subTitle != null ? widget.subTitle : '',
           textAlign: TextAlign.left,
           style: theme.headline6,
         ),
@@ -228,7 +232,7 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
       return Container(
         padding: EdgeInsets.only(left: 12),
         child: Text(
-          title,
+          widget.title,
           textAlign: TextAlign.left,
           style: theme.headline6,
         ),
@@ -238,5 +242,5 @@ class AppBarWidget extends StatelessWidget implements PreferredSizeWidget {
   }
 
   @override
-  Size get preferredSize => appBarPreferredSize;
+  Size get preferredSize => widget.appBarPreferredSize;
 }

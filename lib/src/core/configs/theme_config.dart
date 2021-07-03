@@ -393,6 +393,27 @@ class AppThemeConfig {
       //   base.colorScheme.copyWith(secondary: Colors.black), // Text color
       //   shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(3.0)),
       // ),
+      bottomNavigationBarTheme: base.bottomNavigationBarTheme.copyWith(
+        //backgroundColor: base.primaryColor,
+        //selectedItemColor: base.accentColor,
+        //unselectedItemColor: Colors.grey[500],
+        elevation: base.bottomNavigationBarTheme.elevation,
+        selectedLabelStyle: TextStyle(
+          fontFamily: 'RedHatDisplay',
+          fontSize: 11,
+        ),
+        unselectedLabelStyle: TextStyle(
+          fontFamily: 'RedHatDisplay',
+          fontSize: 11,
+        ),
+        // selectedIconTheme: IconThemeData (
+        //   size: 24,
+        // ),
+        // unselectedIconTheme: IconThemeData (
+        //   size: 24,
+        // ),
+      ),
+
       buttonTheme: ButtonThemeData(
         buttonColor: themeMaterialColor.shade500,
         disabledColor: themeMaterialColor.withRed(200),
@@ -422,7 +443,7 @@ class AppThemeConfig {
           borderSide: BorderSide.none,
         ),
         labelStyle: TextStyle(
-          fontFamily: 'Inter',
+          fontFamily: 'RedHatDisplay',
           fontSize: 12,
           fontWeight: FontWeight.normal,
           letterSpacing: 0.4,
