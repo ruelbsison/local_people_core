@@ -17,7 +17,7 @@ import '../blocs/job_event.dart';
 import '../blocs/job_state.dart';
 import '../../domain/entities/change_request.dart';
 import '../blocs/change_request_bloc.dart';
-
+import 'package:snapping_sheet/snapping_sheet.dart';
 //import 'package:flutter_svg/flutter_svg.dart';
 
 class JobAwardScreen extends StatefulWidget {
@@ -64,6 +64,28 @@ class _JobAwardScreenState extends State<JobAwardScreen>
     return Scaffold(
       appBar: buildAppBar(),
       body: buildBody(context),
+    // body: SnappingSheet (
+    //     // TODO: Add your content that is placed
+    //     // behind the sheet. (Can be left empty)
+    //   initialSnappingPosition: SnappingPosition.pixels(
+    //     positionPixels: 160,
+    //     snappingCurve: Curves.bounceOut,
+    //     snappingDuration: Duration(seconds: 1),
+    //     grabbingContentOffset: GrabbingContentOffset.bottom,
+    //   ),
+    //     child: buildBody(context),
+    //     grabbingHeight: 20.0,
+    //   lockOverflowDrag: true,
+    //   //grabbing: DefaultGrabbing(),
+    //     sheetBelow: SnappingSheetContent(
+    //       //sizeBehavior: SheetSizeStatic(size: 100),
+    //       // Pass in the scroll controller here!
+    //       //childScrollController: _myScrollController,
+    //       draggable: false,
+    //       // TODO: Add your sheet content here
+    //       child: buildClientActionWidget(context),
+    //     ),
+    //   ),
     );
   }
 
@@ -249,6 +271,7 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                       traderId: quote.traderId,
                       jobId: quote.jobId,
                       status: 'Change Required',
+                      clinetId: widget.job.clientId,
                     );
                     BlocProvider.of<ChangeRequestBloc>(context)
                         .add((ChangeRequestAddEvent(changeRequest: changeRequest )));
@@ -296,9 +319,10 @@ class _JobAwardScreenState extends State<JobAwardScreen>
                       //color: Colors.white,
                       padding: EdgeInsets.all(12.0),
                         child: Text(
-                          appType == AppType.TRADER
-                              ? LocalPeopleLocalizations.of(context).titlePostedBy
-                              : LocalPeopleLocalizations.of(context).titleAcceptedBid,
+                            (widget.job != null && widget.job.awarded != null
+                                && widget.job.traderId != null  && widget.job.awarded == true )
+                              ? LocalPeopleLocalizations.of(context).titleAcceptedBid
+                              : LocalPeopleLocalizations.of(context).titlePostedBy,
                           textAlign: TextAlign.left,
                           style: theme.textTheme.subtitle1,
                         ),

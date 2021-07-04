@@ -77,7 +77,7 @@ class LocationModel extends Equatable {
   }
 
   @override
-  List<Object> get props => [id, name, address, created_at, updated_at, client_id, trader_id, job_id];
+  List<Object> get props => [id, name, latitude, longitude, address, created_at, updated_at, client_id, trader_id, job_id];
 
   factory LocationModel.fromJson(Map<String, dynamic> json) => _$LocationModelFromJson(json);
   Map<String, dynamic> toJson() => _$LocationModelToJson(this);

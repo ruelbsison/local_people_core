@@ -24,55 +24,57 @@ class JobBidActionsWidget extends StatelessWidget {
       //margin: EdgeInsets.all(12.0),
       padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
-                border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
-                borderRadius: BorderRadius.circular(8.0),
-                color: Colors.white),
+          border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
+          borderRadius: BorderRadius.circular(8.0),
+          color: Colors.white),
       child: Flex(
         direction: Axis.vertical,
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
+          SizedBox(height: 10.0),
           Container(
             color: Colors.white,
             child: Flex(
                 direction: Axis.horizontal,
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                //crossAxisAlignment: CrossAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
                   //SizedBox(height: 30.0),
                   Expanded(
-                    flex: 7,
-                    child: Text(
-                      LocalPeopleLocalizations.of(context).titleJobBid,
-                      textAlign: TextAlign.left,
-                      style: theme.textTheme.bodyText1,
-                    ),
-                  ),
-                  // Expanded(
-                  //   flex: 2,
-                  //   child: Text(
-                  //     LocalPeopleLocalizations.of(context).titleDeleteJob,
-                  //     textAlign: TextAlign.left,
-                  //     style: theme.textTheme.subtitle2,
-                  //   ),
-                  // ),
-                  Expanded(
                     flex: 1,
-                    child: CircleAvatar(
-                      backgroundColor: Color(0xbbd0d9),
-                      radius: 16,
-                      child: Center (
-                        child: SvgPicture.asset(
-                          'packages/local_people_core/assets/images/dis-approved.svg',
-                          fit: BoxFit.contain,
-                          height: 25,
-                          width: 25,
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          LocalPeopleLocalizations.of(context).titleJobBid,
+                          textAlign: TextAlign.left,
+                          style: theme.textTheme.bodyText1,
                         ),
                       ),
                     ),
                   ),
-                ]
-            ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: CircleAvatar(
+                          backgroundColor: Color(0xbbd0d9),
+                          radius: 16,
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'packages/local_people_core/assets/images/dis-approved.svg',
+                              fit: BoxFit.contain,
+                              height: 25,
+                              width: 25,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ]),
           ),
           SizedBox(height: 20.0),
           Container(
@@ -82,21 +84,6 @@ class JobBidActionsWidget extends StatelessWidget {
                 //mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 //crossAxisAlignment: CrossAxisAlignment.start,
                 children: <Widget>[
-                  // Expanded(
-                  //   flex: 1,
-                  //   child: Container(
-                  //     //padding: EdgeInsets.only(left: 12.0, right: 12.0),
-                  //     child: ElevatedButton(
-                  //       onPressed: () => _requestVisit(context),
-                  //       child: Text(
-                  //           LocalPeopleLocalizations.of(context)
-                  //               .titleRequestVisit,
-                  //         style: theme.textTheme.button.copyWith(color: Colors.white),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // ),
-                  // SizedBox(width: 12.0),
                   Expanded(
                     flex: 1,
                     child: Container(
@@ -108,9 +95,9 @@ class JobBidActionsWidget extends StatelessWidget {
                         ),
                         onPressed: () => _placeBid(context),
                         child: Text(
-                            LocalPeopleLocalizations.of(context)
-                                .titlePlaceBid,
-                          style: theme.textTheme.button.copyWith(color: Colors.white),
+                          LocalPeopleLocalizations.of(context).titlePlaceBid,
+                          style: theme.textTheme.button
+                              .copyWith(color: Colors.white),
                         ),
                       ),
                     ),
@@ -135,10 +122,11 @@ class JobBidActionsWidget extends StatelessWidget {
 
   void _placeBid(BuildContext context) async {
     DialogService _dialogService = sl<DialogService>();
-    PlaceBidResponse response = await _dialogService.showPlaceBidDialog(job: job, traderId: traderId);
+    PlaceBidResponse response =
+        await _dialogService.showPlaceBidDialog(job: job, traderId: traderId);
     if (response != null && response.quote != null) {
       BlocProvider.of<QuoteBloc>(context)
-          .add((QuoteAddEvent(quote: response.quote )));
+          .add((QuoteAddEvent(quote: response.quote)));
       //DialogHelper().hide(context);
     }
     // DialogHelper().show(

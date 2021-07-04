@@ -20,7 +20,7 @@ class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
   final String filterValue;
   final FilterValueChanged onFilterValueChanged;
   final String searchTitle;
-  Size preferredSize;// = const Size.fromHeight(260.0);
+  final Size preferredSize;// = const Size.fromHeight(260.0);
   /// you can add more fields that meet your needs
 
   AppBarWidget({
@@ -36,9 +36,7 @@ class AppBarWidget extends StatefulWidget implements PreferredSizeWidget {
     this.filterValue = '',
     this.onFilterValueChanged = null,
     this.searchTitle = null,
-  }) : super(key: key) {
-    preferredSize = appBarPreferredSize;
-  }
+  }) : preferredSize = appBarPreferredSize, super(key: key);
 
   @override
   _AppBarWidgetState createState() => _AppBarWidgetState();
@@ -51,33 +49,48 @@ class _AppBarWidgetState extends State<AppBarWidget> {
     final headline6Style = Theme.of(context).textTheme.headline6;
     final MediaQueryData mediaQueryData = MediaQuery.of(context);
     final Size size = MediaQuery.of(context).size;
-    final double statusbarHeight = MediaQuery
+    double statusbarHeight = MediaQuery
         .of(context)
         .padding
         .top;
+    NavigatorState state = Navigator.of(context);
+    print('NavigatorState: ' + state.canPop().toString());
+    if (state.canPop() == true) {
+      statusbarHeight = statusbarHeight * 3;
+    }
     return PreferredSize(
       preferredSize: widget.appBarPreferredSize,
       child: AppBar(
         //automaticallyImplyLeading: false, // Don't show the leading button
-        // leading: LogoWidget(
-        //   fit: BoxFit.contain,
-        //   height: 40,
-        //   //width: 105 * mediaQueryData.devicePixelRatio,
-        // ),
-        leadingWidth: 40,
-        title: LogoWidget(
-          fit: BoxFit.contain,
-          height: 40,
-          //width: 105 * mediaQueryData.devicePixelRatio,
-        ),
+        // title: Builder(
+        // builder: (BuildContext context) {
+        //   NavigatorState state = Navigator.of(context);
+        //   //print('NavigatorState: ' + state.canPop().toString());
+        //   if (state.canPop() == false)
+        //     return Container(height: 0,width: 0,);
+        //   return Row(
+        //     mainAxisAlignment: MainAxisAlignment.start,
+        //     crossAxisAlignment: CrossAxisAlignment.center,
+        //     children: <Widget>[
+        //       IconButton(
+        //         onPressed: () => Navigator.pop(context),
+        //         icon: Icon(Icons.arrow_back, color: Colors.black),
+        //       ),
+        //       // Your widgets here
+        //     ],
+        //   );
+        // },),
+        leadingWidth: 30,
         titleSpacing: 0,
         centerTitle: false,
-        actions: widget.actions,
+        //actions: widget.actions,
         //expandedHeight: 300.0,
         flexibleSpace: PreferredSize(
           preferredSize: Size(size.width, widget.appBarPreferredSize.height),
           child: Container(
-          padding: EdgeInsets.only(top: statusbarHeight + 40),
+          padding: EdgeInsets.only(top: statusbarHeight, right: 10.0),
+          //width: size.width,
+          //height: widget.appBarPreferredSize.height,
           child: Flex(
             direction: Axis.vertical,
             mainAxisSize: MainAxisSize.max,
@@ -85,6 +98,43 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             crossAxisAlignment: CrossAxisAlignment.stretch,
             children: <Widget>[
               SizedBox(height: 5),
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: LogoWidget(
+                          fit: BoxFit.fitHeight,
+                          height: 40,
+                        ),
+                      ),
+                    ),
+                  ),
+                  if (widget.actions != null && widget.actions.length > 0)
+                    widget.actions[0]
+                  // Expanded(
+                  //   flex: 1,
+                  //   child: Align(
+                  //       alignment: Alignment.centerRight,
+                  //       child: Padding(
+                  //         padding: EdgeInsets.only(right: 12),
+                  //         child: Row(
+                  //           mainAxisSize: MainAxisSize.min,
+                  //           crossAxisAlignment: CrossAxisAlignment.stretch,
+                  //           mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  //           children: widget.actions != null && widget.actions.length > 0
+                  //               ?  widget.actions : [Container(height: 0,width: 0,)],
+                  //         )
+                  //       )
+                  //   ),
+                  // ),
+                ],
+              ),
               if (widget.title != null || widget.subTitle != null || widget.showFilter == true)
                 buildTitleContent(context),
               if (widget.title != null || widget.subTitle != null || widget.showFilter == true)
@@ -144,21 +194,25 @@ class _AppBarWidgetState extends State<AppBarWidget> {
             suffixIcon: SvgPicture.asset(
               'packages/local_people_core/assets/images/search-pink.svg',
               fit: BoxFit.scaleDown,
-              height: 30,
-              width: 30,
+              //clipBehavior: Clip.hardEdge,
+              //height: 24,
+              //width: 24,
             ),
             // suffixIcon: Icon(
             //     Icons.search,
             //   color: Color(0xffff6361),
             // ),
-            // suffix: Center (
-            //   child: Icon(
-            //     Icons.search,
-            //     color: Color(0xffff6361),
+            // suffix: FittedBox (
+            //   clipBehavior: Clip.hardEdge,
+            //   child: SvgPicture.asset(
+            //     'packages/local_people_core/assets/images/search-pink.svg',
+            //     fit: BoxFit.cover,
+            //     height: 28,
+            //     width: 28,
             //   ),
             // ),
             border: InputBorder.none,
-            contentPadding: EdgeInsets.all(14),
+            contentPadding: EdgeInsets.all(12),
             ),
           //textAlign: TextAlign.center,
           style: theme.textTheme.bodyText2,
@@ -195,12 +249,13 @@ class _AppBarWidgetState extends State<AppBarWidget> {
               child: DropdownButtonHideUnderline(
                 child: DropdownButton<String>(
                   isExpanded: true,
+                  elevation: 1,
                   hint: Text("Filter by"),
-                  focusColor: Color.fromRGBO(96, 106, 129, 1.0),
+                  //dropdownColor: Color.fromRGBO(96, 106, 129, 1.0),
                   items: widget.filterItems.map((String value) {
                     return DropdownMenuItem(
                       value: value,
-                      child: Text(value, style: theme.subtitle2),
+                      child: Text(value, style: theme.bodyText1),
                     );
                   }).toList(),
                   value: widget.filterValue,
@@ -208,10 +263,15 @@ class _AppBarWidgetState extends State<AppBarWidget> {
                     if (widget.onFilterValueChanged != null) {
                       widget.onFilterValueChanged(newValue);
                     }
-                    // setState(() {
-                    //   _sortValue = newValue;
-                    // });
                   },
+                  // selectedItemBuilder: (BuildContext context) {
+                  //   return widget.filterItems.map ((String item) {
+                  //     return Container(
+                  //       color: Color.fromRGBO(96, 106, 129, 1.0),
+                  //         child: Text(item, style: theme.bodyText1),
+                  //     );
+                  //   }).toList();
+                  // },
                 ),
               ),
             ),

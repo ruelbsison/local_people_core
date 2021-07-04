@@ -234,6 +234,13 @@ class LocalPeopleLocalizations {
     locale: locale.toString(),
   );
 
+  String get titleDeleteBid => Intl.message(
+    'Delete Bid',
+    name: 'titleDeleteBid',
+    args: [],
+    locale: locale.toString(),
+  );
+
   String get titleJobInfo => Intl.message(
     'Job Information',
     name: 'titleJobInfo',

@@ -31,6 +31,7 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
       // color: Colors.white,
       // padding: EdgeInsets.all(12.0),
       // margin: EdgeInsets.only(top: 12.0),
+      padding: EdgeInsets.all(12.0),
       decoration: BoxDecoration(
           border: Border.all(color: Color.fromRGBO(239, 244, 246, 1), width: 2),
           borderRadius: BorderRadius.circular(8.0),
@@ -40,48 +41,104 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         mainAxisAlignment: MainAxisAlignment.center,
         children: <Widget>[
-          SizedBox(height: 20.0),
+          SizedBox(height: 10.0),
           Container(
             color: Colors.white,
             child: Flex(
                 direction: Axis.horizontal,
-                //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                mainAxisAlignment: MainAxisAlignment.center,
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: <Widget>[
+                  //SizedBox(height: 30.0),
                   Expanded(
-                    flex: 7,
-                    child: Text(
-                      LocalPeopleLocalizations.of(context).titleJobBid,
-                      textAlign: TextAlign.left,
-                      style: theme.textTheme.bodyText1,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 2,
-                    child: Text(
-                      LocalPeopleLocalizations.of(context).titleDeleteJob,
-                      textAlign: TextAlign.right,
-                      style: theme.textTheme.subtitle2,
-                    ),
-                  ),
-                  Expanded(
-                    flex: 1,
-                    child: CircleAvatar(
-                      backgroundColor: Color(0xbbd0d9),
-                      radius: 16,
-                      child: Center (
-                        child: SvgPicture.asset(
-                          'packages/local_people_core/assets/images/dis-approved.svg',
-                          fit: BoxFit.contain,
-                          height: 25,
-                          width: 25,
+                    flex: 3,
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          LocalPeopleLocalizations.of(context).titleJobBid,
+                          textAlign: TextAlign.left,
+                          style: theme.textTheme.bodyText1,
                         ),
                       ),
                     ),
                   ),
-                ]
-            ),
+                  Expanded(
+                    flex: 3,
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: Text(
+                          LocalPeopleLocalizations.of(context).titleDeleteBid,
+                          textAlign: TextAlign.right,
+                          style: theme.textTheme.overline,
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    flex: 1,
+                    child: Container(
+                      child: Align(
+                        alignment: Alignment.centerRight,
+                        child: CircleAvatar(
+                          backgroundColor: Color(0xbbd0d9),
+                          radius: 16,
+                          child: Center(
+                            child: SvgPicture.asset(
+                              'packages/local_people_core/assets/images/dis-approved.svg',
+                              fit: BoxFit.contain,
+                              height: 25,
+                              width: 25,
+                            ),
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ]),
           ),
+          // Container(
+          //   color: Colors.white,
+          //   child: Flex(
+          //       direction: Axis.horizontal,
+          //       //mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          //       crossAxisAlignment: CrossAxisAlignment.center,
+          //       children: <Widget>[
+          //         Expanded(
+          //           flex: 7,
+          //           child: Text(
+          //             LocalPeopleLocalizations.of(context).titleJobBid,
+          //             textAlign: TextAlign.left,
+          //             style: theme.textTheme.bodyText1,
+          //           ),
+          //         ),
+          //         Expanded(
+          //           flex: 2,
+          //           child: Text(
+          //             LocalPeopleLocalizations.of(context).titleDeleteJob,
+          //             textAlign: TextAlign.right,
+          //             style: theme.textTheme.subtitle2,
+          //           ),
+          //         ),
+          //         Expanded(
+          //           flex: 1,
+          //           child: CircleAvatar(
+          //             backgroundColor: Color(0xbbd0d9),
+          //             radius: 16,
+          //             child: Center (
+          //               child: SvgPicture.asset(
+          //                 'packages/local_people_core/assets/images/dis-approved.svg',
+          //                 fit: BoxFit.contain,
+          //                 height: 25,
+          //                 width: 25,
+          //               ),
+          //             ),
+          //           ),
+          //         ),
+          //       ]
+          //   ),
+          // ),
           SizedBox(height: 20.0),
           Container(
               color: Colors.white,
@@ -178,7 +235,10 @@ class _JobActionsWidgetState extends State<JobActionsWidget> {
     JobAwardResponse response = await  _dialogService.showJobAwardDialog(
         jobName: widget.job.title != null
             ? widget.job.title
-            : widget.job.description,
+            : widget.job.tags != null && widget.job.tags.length > 0
+            ? widget.job.tags[0].name : 'Job' + ' ' +
+            (widget.job.location != null && widget.job.location.name != null
+        ?  widget.job.location.name : widget.job.description),
         traderName: widget.traderName
     );
     if (response != null

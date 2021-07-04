@@ -434,57 +434,6 @@ class _JobScreenState extends State<JobScreen> with TickerProviderStateMixin {
                 return JobCard(job: job);
               else
                 return YourJobCard(job: job);
-              // return BlocProvider(
-              //   create: (context) =>
-              //       QuoteBloc(
-              //         quoteRepository: RepositoryProvider.of<QuoteRepository>(
-              //             context),
-              //         authLocalDataSource: sl<AuthLocalDataSource>(),
-              //       ),
-              //   child: JobCard(
-              // return JobCard(
-              //     job: jobs[index],
-              //     onJobLocationUpdateCallback: (jobId, location) {
-              //       if (location == null || jobId == null || jobId < 0)
-              //         return;
-              //
-              //       //Job findJob(int id) => jobs.firstWhere((job) => job.id == id);
-              //       Job job = findJob(jobId);
-              //       if (job != null) {
-              //         //setState(() {
-              //         job.location = location;
-              //         int index = jobs.indexOf(job);
-              //         if (index >= 0) {
-              //           jobs[index] = job;
-              //         }
-              //         //});
-              //       }
-              //     },
-              //     onJobBidsUpdateCallback: (jobId, bids) {
-              //       if (jobId == null || jobId < 0 || bids == null ||
-              //           bids.length == 0)
-              //         return;
-              //
-              //       //Job findJob(int id) => jobs.firstWhere((job) => job.id == id);
-              //       Job job = findJob(jobId);
-              //       if (job != null) {
-              //         if (bids != null) {
-              //           //setState(() {
-              //           if (job.bids == null)
-              //             job.bids = [];
-              //           else
-              //             job.bids.clear();
-              //           job.bids = bids;
-              //           int index = jobs.indexOf(job);
-              //           if (index >= 0) {
-              //             jobs[index] = job;
-              //           }
-              //           //});
-              //         }
-              //       }
-              //     },
-              //   //),
-              // );
             }),
             //}
               ),

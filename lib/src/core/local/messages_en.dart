@@ -48,6 +48,7 @@ class MessageLookup extends MessageLookupByLibrary {
     'subTitle48Hrs': MessageLookupByLibrary.simpleMessage('48Hrs'),
     'titlePostEdits': MessageLookupByLibrary.simpleMessage('Post Edits'),
     'titleDeleteJob': MessageLookupByLibrary.simpleMessage('Delete Job'),
+    'titleDeleteBid': MessageLookupByLibrary.simpleMessage('Delete Bid'),
     'titleJobInfo': MessageLookupByLibrary.simpleMessage('Job Information'),
     'titleDate': MessageLookupByLibrary.simpleMessage('Date'),
     'titleTime': MessageLookupByLibrary.simpleMessage('Time'),

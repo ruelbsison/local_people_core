@@ -107,13 +107,14 @@ class _YourJobCardState extends State<YourJobCard> {
           }
         //}
       },
-      child: Container(
-        //padding: EdgeInsets.all(12),
-        padding: EdgeInsets.only(top: 8.0, bottom: 8.0), //EdgeInsets.all(12.0),
-        margin: EdgeInsets.only(top: 8.0, bottom: 8.0, left: 4, right: 4),
+      child: Container (
+        color: Color(0x7fdee8ec),
+        margin: EdgeInsets.only(top: 10.0, right: 8.0), //EdgeInsets.all(12.0),
+        child: Container(
+        padding: EdgeInsets.only(top: 12.0, bottom: 10.0),
         decoration: BoxDecoration(
-          color: Color.fromRGBO(255, 255, 255, 1.0),
-          borderRadius: BorderRadius.circular(10.0),
+          borderRadius: BorderRadius.circular(5),
+          color: Colors.white,
         ),
         child: Flex(
           direction: Axis.horizontal,
@@ -200,15 +201,8 @@ class _YourJobCardState extends State<YourJobCard> {
                                 DateTime.now(), widget.job.date)
                             : ''),
                     textAlign: TextAlign.left,
-                    style: textTheme.subtitle2,
+                    style: textTheme.bodyText2,
                   ),
-                  //SizedBox(height: 5.0),
-                  //buildLocation(),
-                  // LocationsViewWidget(
-                  //   location: (widget.job.location != null && widget.job.location.name != null)
-                  //       ? widget.job.location.name : '',
-                  //   maxTagViewHeight: 45,
-                  // ),
                   SizedBox(height: 5.0),
                   //buildJobStatus(),
                   Tags(
@@ -269,6 +263,7 @@ class _YourJobCardState extends State<YourJobCard> {
             ),
           ],
         ),
+      ),
       ),
     );
     // BlocProvider.of<QuoteBloc>(context).add(QuoteJobLoadEvent(id: widget.job.id));

@@ -51,7 +51,7 @@ class AppThemeConfig {
       ),
       overline: base.overline.copyWith(
         fontFamily: 'RedHatDisplay',
-        fontWeight: FontWeight.w500,
+        fontWeight: FontWeight.w700,
         fontSize: 10,
       ),
     ).apply(
@@ -329,7 +329,7 @@ class AppThemeConfig {
     Color darkPrimary = Color(0xff1f1f1f);
     Color lightAccent = Color(0xff2ca8e2);
     Color darkAccent = Color(0xff2ca8e2);
-    Color lightBG = Color.fromRGBO(239, 244, 246, 1); // Color.fromRGBO(222, 232, 237, 1.0); //Color(0x7fdee8ec); //Color(0xe5e5e5);//Colors.white;
+    Color lightBG =  Color(0xffeff4f6); //Color.fromRGBO(239, 244, 246, 0.5); //Color.fromRGBO(222, 232, 237, 0.5); //Color.fromRGBO(239, 244, 246, 1); //Color(0x7fdee8ec); //Color(0xe5e5e5);//Colors.white;
     Color darkBG = Color(0xff121212);
     /*colorScheme: ColorScheme.light(
       primary: lightPrimary,
@@ -351,7 +351,7 @@ class AppThemeConfig {
     );
     final ThemeData base = ThemeData.light();
     return base.copyWith(
-      backgroundColor: lightBG,
+      backgroundColor: Colors.white, //Color(0x7fdee8ec),, //Color(0x7f7f3a44), //Colors.white,
       primaryColor: lightPrimary,
       accentColor: lightAccent,
       cursorColor: lightAccent,
@@ -413,12 +413,22 @@ class AppThemeConfig {
         //   size: 24,
         // ),
       ),
-
+      tabBarTheme: base.tabBarTheme.copyWith(
+        labelPadding: EdgeInsets.all(5.0),
+        //labelColor: CustomColor.primaryColor,
+        //unselectedLabelColor: Colors.black12,
+      ),
+      dialogTheme: base.dialogTheme.copyWith(
+        contentTextStyle: TextStyle(
+          fontFamily: 'RedHatDisplay',
+          fontSize: 12,
+        ),
+      ),
       buttonTheme: ButtonThemeData(
         buttonColor: themeMaterialColor.shade500,
         disabledColor: themeMaterialColor.withRed(200),
         splashColor: themeMaterialColor.shade50,
-        textTheme: ButtonTextTheme.primary,
+        textTheme: ButtonTextTheme.accent,
       ),
       textButtonTheme: TextButtonThemeData(
         style: TextButton.styleFrom(
