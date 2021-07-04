@@ -26,7 +26,7 @@ class ChangeRequestRemoteDataSourceImpl implements ChangeRequestRemoteDataSource
           .toList() // create a copy to avoid concurrent modifications
           .forEach(paramData.remove); // remove selected keys
       Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
-      param['ChangeRequest'] = paramData;
+      param['change_request'] = paramData;
       ChangeRequestModel data = await changeRequestRestApiClient.createChangeRequest(param);
       if (data != null) {
         response.fromModel(data);
@@ -114,7 +114,7 @@ class ChangeRequestRemoteDataSourceImpl implements ChangeRequestRemoteDataSource
           .toList() // create a copy to avoid concurrent modifications
           .forEach(paramData.remove); // remove selected keys
       Map<String, Map<String, dynamic>> param = Map<String, Map<String, dynamic>>();
-      param['ChangeRequest'] = paramData;
+      param['change_request'] = paramData;
       ChangeRequestModel data = await changeRequestRestApiClient.updateChangeRequest(model.id, param);
       if (data != null) {
         response.fromModel(data);

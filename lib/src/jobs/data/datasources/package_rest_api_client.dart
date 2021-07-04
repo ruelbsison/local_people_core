@@ -1,4 +1,5 @@
 import 'package:dio/dio.dart';
+import 'dart:async';
 import 'package:retrofit/retrofit.dart';
 import '../models/package_model.dart';
 import '../../../core/configs/rest_api_config.dart';
