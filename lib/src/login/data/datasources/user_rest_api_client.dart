@@ -4,7 +4,7 @@ import '../models/user_model.dart';
 import '../models/response_data_model.dart';
 //import '../../../core/network/server_response.dart';
 
-part 'user_rest_api_client.g.dart';
+ part 'user_rest_api_client.g.dart';
 
 class UserRestApi {
   static const String users = '/users';

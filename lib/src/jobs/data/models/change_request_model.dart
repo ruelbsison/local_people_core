@@ -11,29 +11,29 @@ class ChangeRequestModel extends Equatable {
   String date;
   int duration;
   String status;
-  int traderId;
-  int jobId;
-  String createdAt;
-  String updatedAt;
+  int trader_id;
+  int job_id;
+  int client_id;
+  String created_at;
+  String updated_at;
 
   ChangeRequestModel(
       {this.id,
       @required this.date,
       @required this.duration,
       @required this.status,
-      @required this.traderId,
-      @required this.jobId,
-      this.createdAt,
-      this.updatedAt})
-      : assert(date != null),
-        assert(duration != null),
+      @required this.trader_id,
+      @required this.job_id,
+        @required this.client_id,
+      this.created_at,
+      this.updated_at})
+      : assert(client_id != null),
         assert(status != null),
-        assert(traderId != null),
-        assert(jobId != null);
+        assert(job_id != null);
 
   @override
   List<Object> get props =>
-      [id, date, duration, date, status, traderId, jobId, createdAt, updatedAt];
+      [id, date, duration, date, status, trader_id, job_id, client_id, created_at, updated_at];
 
   factory ChangeRequestModel.fromJson(Map<String, dynamic> json) =>
       _$ChangeRequestModelFromJson(json);

@@ -7,6 +7,7 @@ class ChangeRequest {
   int jobId;
   String createdAt;
   String updatedAt;
+  int clinetId;
 
   ChangeRequest(
       {this.id,
@@ -15,9 +16,10 @@ class ChangeRequest {
       this.status,
       this.traderId,
       this.jobId,
+        this.clinetId,
       this.createdAt,
       this.updatedAt})
-      : assert(traderId != null),
-        assert(jobId != null);
+      : assert(jobId != null),
+        assert(clinetId != null);
 
 }

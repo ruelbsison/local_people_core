@@ -154,6 +154,7 @@ class _JobChangeWidgetState extends State<JobChangeWidget> {
                         //initialValue: _initialValue,
                         //icon: Icon(Icons.access_time),
                         //timeLabelText: "Time",
+                        confirmText: 'Select',
                         decoration: InputDecoration(
                           floatingLabelBehavior: FloatingLabelBehavior.never,
                           enabledBorder: OutlineInputBorder(
@@ -242,17 +243,18 @@ class _JobChangeWidgetState extends State<JobChangeWidget> {
                         lastDate: DateTime.now().add(const Duration(days: 365)),
                         //icon: Icon(Icons.event),
                         textAlign: TextAlign.right,
-                        // decoration: InputDecoration(
-                        //   floatingLabelBehavior: FloatingLabelBehavior.never,
-                        //   enabledBorder: OutlineInputBorder(
-                        //     borderSide: BorderSide.none,
-                        //   ),
-                        //   border: OutlineInputBorder(
-                        //     borderSide: BorderSide.none,
-                        //   ),
-                        // ),
+                        decoration: InputDecoration(
+                          floatingLabelBehavior: FloatingLabelBehavior.never,
+                          enabledBorder: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                          border: OutlineInputBorder(
+                            borderSide: BorderSide.none,
+                          ),
+                        ),
                         //dateLabelText: 'Date',
                         //locale: Locale('en', 'US'),
+                        confirmText: 'Select',
                         onChanged: (val) {
                           setState(() {
                             dateValue = val;
@@ -412,10 +414,10 @@ class _JobChangeWidgetState extends State<JobChangeWidget> {
                       onPressed: () {
                         DateTime startDateTime;
                         try {
-                          startDateTime = startDate;
+                          //startDateTime = startDate;
                           //DateTime date = DateFormat('d MMMM yyyy').parse(dateValue);
                           //DateTime time = DateFormat('HH:mm').parse(timeValue);
-                          //startDateTime = DateFormat('d MMMM yyyy HH:mm').parse(dateValue + ' ' + timeValue);
+                          startDateTime = DateFormat('yyyy-MM-dd HH:mm').parse(dateValue + ' ' + timeValue.replaceFirst(RegExp(r'-\d\d:\d\d'), ''));
                         } catch(fex) {
                           print(fex.toString());
                         }
