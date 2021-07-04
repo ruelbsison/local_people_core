@@ -11,6 +11,9 @@ const String AUTH0_CLIENT_REDIRECT_URI = 'combineai.localpeople.client://login-c
 const String AUTH0_CLIENT_CLIENT_ID_IOS = '8yte3Q9v2T6e8S5zUSSX6RBFZbKkTYP1';
 const String AUTH0_CLIENT_SECRET_IOS = 'ljM3d2wdDMZmh6_fywydC64moG9XAEf01ClN_Sq_1y74Ru5teKmSxKlsqM6Mue6_';
 const String AUTH0_CLIENT_REDIRECT_URI_IOS = 'combineai.localpeople.client://login-callback';
+const String AUTH0_TRADER_CLIENT_ID_IOS = 'AQwXP6iy86Xrq58e6TsEyFeifRM9wnwh';
+const String AUTH0_TRADER_SECRET_IOS = 'Czx8Cb4EYaeQa1IZZtB3wloav92XqSRRmStWm-4ucQRzi6AEItUdZ-g9cfFAzsgX';
+const String AUTH0_TRADER_REDIRECT_URI_IOS = 'combineai.localpeople.trader://login-callback';
 
 const String AUTH0_DOMAIN_PROD = 'local-people.eu.auth0.com';
 const String AUTH0_DOMAIN_DEV = 'dev-pgi9e-14.eu.auth0.com';
@@ -96,10 +99,10 @@ class AuthorizationConfig {
 
   static AuthorizationConfig prodIOSClientAuthorizationConfig() {
     return AuthorizationConfig(
-      authDomain: AUTH0_CLIENT_DOMAIN,
-      authClientId: AUTH0_CLIENT_CLIENT_ID_PROD, //AUTH0_CLIENT_CLIENT_ID_IOS,
-      authSecret: AUTH0_CLIENT_SECRET_PROD, //AUTH0_CLIENT_SECRET_IOS,
-      authRedirectURI: AUTH0_CLIENT_REDIRECT_URI, //AUTH0_CLIENT_REDIRECT_URI_IOS,
+      authDomain: AUTH0_CLIENT_DOMAIN_IOS,
+      authClientId: AUTH0_CLIENT_CLIENT_ID_IOS,
+      authSecret: AUTH0_CLIENT_SECRET_IOS,
+      authRedirectURI: AUTH0_CLIENT_REDIRECT_URI_IOS,
       //authTokenKey: AUTH0_CLIENT_TOKEN_KEY,
       authDebugTag: false,
       authUserBaseKey: 'client',
@@ -121,9 +124,9 @@ class AuthorizationConfig {
   static AuthorizationConfig prodIOSTraderAuthorizationConfig() {
     return AuthorizationConfig(
       authDomain: AUTH0_DOMAIN_PROD,
-      authClientId: AUTH0_TRADER_CLIENT_ID_PROD,
-      authSecret: AUTH0_TRADER_SECRET,
-      authRedirectURI: AUTH0_TRADER_REDIRECT_URI_PROD,
+      authClientId: AUTH0_TRADER_CLIENT_ID_IOS,
+      authSecret: AUTH0_TRADER_SECRET_IOS,
+      authRedirectURI: AUTH0_TRADER_REDIRECT_URI_IOS,
       //authTokenKey: AUTH0_TRADER_TOKEN_KEY,
       authDebugTag: false,
       authUserBaseKey: 'trader',
